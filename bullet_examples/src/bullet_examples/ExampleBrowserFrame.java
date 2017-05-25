@@ -189,6 +189,12 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
   reset_button = new javax.swing.JButton();
   iterations_spinner = new javax.swing.JSpinner();
   broadphase_combo = new javax.swing.JComboBox<>();
+  randomize_check = new javax.swing.JCheckBox();
+  interleave_check = new javax.swing.JCheckBox();
+  friction2_check = new javax.swing.JCheckBox();
+  friction_cache_check = new javax.swing.JCheckBox();
+  warmstarting_check = new javax.swing.JCheckBox();
+  solver_combo = new javax.swing.JComboBox<>();
   params_panel = new javax.swing.JPanel();
   jMenuBar1 = new javax.swing.JMenuBar();
   jMenu1 = new javax.swing.JMenu();
@@ -196,8 +202,9 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
 
   setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
   setTitle("Bullet Physics Example Browser");
-  setMaximumSize(new java.awt.Dimension(640, 480));
+  setMaximumSize(new java.awt.Dimension(700, 680));
   setPreferredSize(new java.awt.Dimension(700, 680));
+  setResizable(false);
   addWindowFocusListener(new java.awt.event.WindowFocusListener() {
    public void windowGainedFocus(java.awt.event.WindowEvent evt) {
     formWindowGainedFocus(evt);
@@ -277,6 +284,7 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
   );
 
   jPanel4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+  jPanel4.setMaximumSize(new java.awt.Dimension(442, 32767));
 
   jTextArea2.setEditable(false);
   jTextArea2.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.background"));
@@ -489,6 +497,18 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
    }
   });
 
+  randomize_check.setText("Solver randomize");
+
+  interleave_check.setText("Interleave contact/friction");
+
+  friction2_check.setText("2 friction directions");
+
+  friction_cache_check.setText("Friction dir caching");
+
+  warmstarting_check.setText("Warmstarting");
+
+  solver_combo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "btSequentialImpulseConstraintSolver" }));
+
   javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
   jPanel8.setLayout(jPanel8Layout);
   jPanel8Layout.setHorizontalGroup(
@@ -496,7 +516,6 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
    .addGroup(jPanel8Layout.createSequentialGroup()
     .addContainerGap()
     .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-     .addComponent(broadphase_combo, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
      .addGroup(jPanel8Layout.createSequentialGroup()
       .addComponent(rate_slider, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
       .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -504,8 +523,23 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
       .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
       .addComponent(cycle_check, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
       .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-      .addComponent(reset_button)))
-    .addContainerGap())
+      .addComponent(reset_button))
+     .addGroup(jPanel8Layout.createSequentialGroup()
+      .addComponent(interleave_check)
+      .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+      .addComponent(friction_cache_check))
+     .addGroup(jPanel8Layout.createSequentialGroup()
+      .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+       .addComponent(broadphase_combo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+       .addComponent(friction2_check, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+      .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+      .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+       .addGroup(jPanel8Layout.createSequentialGroup()
+        .addComponent(warmstarting_check)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(randomize_check))
+       .addComponent(solver_combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+    .addContainerGap(19, Short.MAX_VALUE))
   );
   jPanel8Layout.setVerticalGroup(
    jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -518,8 +552,19 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
       .addComponent(iterations_spinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
      .addComponent(rate_slider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-    .addComponent(broadphase_combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-    .addContainerGap(63, Short.MAX_VALUE))
+    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+     .addComponent(broadphase_combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+     .addComponent(solver_combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+     .addComponent(friction2_check)
+     .addComponent(warmstarting_check)
+     .addComponent(randomize_check))
+    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+     .addComponent(interleave_check)
+     .addComponent(friction_cache_check))
+    .addContainerGap())
   );
 
   params_panel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -910,6 +955,9 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
  private javax.swing.JTextArea description_text;
  private javax.swing.JTree example_browser;
  private javax.swing.JCheckBox frames_check;
+ private javax.swing.JCheckBox friction2_check;
+ private javax.swing.JCheckBox friction_cache_check;
+ private javax.swing.JCheckBox interleave_check;
  private javax.swing.JSpinner iterations_spinner;
  private javax.swing.JMenu jMenu1;
  private javax.swing.JMenu jMenu2;
@@ -929,10 +977,13 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
  private javax.swing.JRadioButton nocap;
  private javax.swing.JCheckBox normals_check;
  private javax.swing.JPanel params_panel;
+ private javax.swing.JCheckBox randomize_check;
  private javax.swing.JSlider rate_slider;
  private javax.swing.JButton reset_button;
  private javax.swing.JPanel root_panel;
+ private javax.swing.JComboBox<String> solver_combo;
  private javax.swing.JCheckBox vsync_check;
+ private javax.swing.JCheckBox warmstarting_check;
  private javax.swing.JCheckBox wireframe_check;
  // End of variables declaration//GEN-END:variables
 }

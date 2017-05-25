@@ -108,7 +108,6 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
  }
 
  public void dispatch_events() {
-  synchronized (sync_mouse) {
    final List<LWJGLMouseEvent> mouse_events = new ArrayList<>(0);
    get_lwjgl_mouse_events(mouse_events);
    queue_lwjgl_events(mouse_events);
@@ -122,11 +121,9 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
     center_mouse_cursor();
    }
   }
- }
  private Point2i grabbed_pos = new Point2i();
 
  private MouseEvent apply_grabbing_to_event(MouseEvent e) {
-  synchronized (sync_mouse) {
    if (!is_grabbed()) {
     return e;
    } else {
@@ -153,13 +150,10 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
      return new_e;
     }
    }
-  }
  }
 
  public void update_display() {
-  synchronized (sync_mouse) {
    Display.update();
-  }
  }
 
  private Point2i lwjgl_mouse_canvas_pos_to_awt_canvas(Point2i pos) {
@@ -189,7 +183,6 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
  final Point2i grabbed_base = new Point2i();
 
  public void set_grabbed(boolean grabbed) {
-  synchronized (sync_mouse) {
    if (grabbed != this.grabbed) {
     this.grabbed = grabbed;
     if (grabbed) {
@@ -224,7 +217,6 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
      } catch (LWJGLException ex) {
       Logger.getLogger(OpenGLFrame.class.getName()).log(Level.SEVERE, null, ex);
      }
-    }
    }
   }
  }
@@ -249,8 +241,7 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
   } catch (Exception ex) {
   }
  }
- final Object sync_mouse = new Object();
-
+ 
  private void queue_lwjgl_events(List<LWJGLMouseEvent> events) {
   /* convete LWJGL events into swing events in a queue
   

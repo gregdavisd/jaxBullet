@@ -337,8 +337,8 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
  private int up_axis = 0;
  private boolean using_blank_cursor = false;
  private boolean is_grabbed = false;
- int mouse_x;
- int mouse_y;
+ private static int mouse_x;
+ private static int mouse_y;
 
  public DemoContainer() {
   init();
