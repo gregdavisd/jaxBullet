@@ -65,7 +65,7 @@ public class btCompoundLeafSweepCallback extends btDbvt.ICollide implements Seri
  @Override
  public void process(btDbvtNode leaf) {
   // Processing leaf node
-  int index = leaf.dataAsInt;
+  int index = leaf.dataAsInt();
   final btTransform childTrans = m_compoundShape.getChildTransform(index);
   btCollisionShape childCollisionShape = m_compoundShape.getChildShape(index);
   processChild(index, childTrans, childCollisionShape);

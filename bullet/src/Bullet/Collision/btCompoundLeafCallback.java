@@ -119,7 +119,7 @@ public class btCompoundLeafCallback extends btDbvt.ICollide  implements Serializ
 
  @Override
  public void process(btDbvtNode leaf) {
-  int index = leaf.dataAsInt;
+  int index = leaf.dataAsInt();
   btCompoundShape compoundShape = (btCompoundShape) (m_compoundColObjWrap.getCollisionShape());
   btCollisionShape childShape = compoundShape.getChildShape(index);
   processChildShape(childShape, index);

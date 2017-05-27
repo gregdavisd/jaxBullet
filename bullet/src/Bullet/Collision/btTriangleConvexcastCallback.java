@@ -52,7 +52,7 @@ public abstract class btTriangleConvexcastCallback implements btTriangleCallback
   * @param triangleIndex
   */
  @Override
- public void processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
+ public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
   btTriangleShape triangleShape = new btTriangleShape(triangle[0], triangle[1], triangle[2]);
   triangleShape.setMargin(m_triangleCollisionMargin);
   btVoronoiSimplexSolver simplexSolver = new btVoronoiSimplexSolver();
@@ -77,6 +77,7 @@ public abstract class btTriangleConvexcastCallback implements btTriangleCallback
     }
    }
   }
+  return true;
  }
 
  abstract float reportHit(final btVector3 hitNormalLocal, final btVector3 hitPointLocal,

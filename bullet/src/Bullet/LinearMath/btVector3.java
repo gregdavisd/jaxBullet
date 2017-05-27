@@ -10,10 +10,8 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.LinearMath;
-
 
 import static Bullet.LinearMath.btScalar.B3_INFINITY;
 import static Bullet.LinearMath.btScalar.SIMDSQRT12;
@@ -27,7 +25,7 @@ import javax.vecmath.Tuple3f;
  *
  * @author Gregery Barton
  */
-public final class btVector3 extends Tuple3f<btVector3>  implements Serializable {
+public final class btVector3 extends Tuple3f<btVector3> implements Serializable {
 
  /**
   *
@@ -134,7 +132,9 @@ public final class btVector3 extends Tuple3f<btVector3>  implements Serializable
   * @param z
   */
  public btVector3(float x, float y, float z) {
-  super(x, y, z);
+  this.x=x;
+  this.y=y;
+  this.z=z;
  }
 
  /**
@@ -150,7 +150,9 @@ public final class btVector3 extends Tuple3f<btVector3>  implements Serializable
   * @param v1
   */
  public btVector3(final btVector3 v1) {
-  super(v1);
+  x = v1.x;
+  y = v1.y;
+  z = v1.z;
  }
 
  /**
@@ -158,7 +160,9 @@ public final class btVector3 extends Tuple3f<btVector3>  implements Serializable
   * @param t1
   */
  public btVector3(Tuple3f t1) {
-  super(t1);
+  x = t1.x;
+  y = t1.y;
+  z = t1.z;
  }
 
  /**
@@ -252,7 +256,7 @@ public final class btVector3 extends Tuple3f<btVector3>  implements Serializable
      ptIndex = i;
     }
    }
-   assert(ptIndex >= 0);
+   assert (ptIndex >= 0);
    if (ptIndex < 0) {
     ptIndex = 0;
    }

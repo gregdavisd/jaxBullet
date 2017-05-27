@@ -22,6 +22,7 @@ import static Bullet.LinearMath.Hull.HullFlag.QF_TRIANGLES;
 import Bullet.LinearMath.Hull.HullLibrary;
 import Bullet.LinearMath.Hull.HullResult;
 import Bullet.LinearMath.btVector3;
+import static Bullet.LinearMath.btVector3.init;
 import java.io.Serializable;
 
 /**
@@ -59,6 +60,7 @@ public class btShapeHull  implements Serializable {
   }
   btVector3[] supportPoints = new btVector3[NUM_UNITSPHERE_POINTS +
    MAX_PREFERRED_PENETRATION_DIRECTIONS * 2];
+  init(supportPoints);
   int i;
   for (i = 0; i < numSampleDirections; i++) {
    supportPoints[i] .set( m_shape.localGetSupportingVertex(getUnitSpherePoints()[i]));

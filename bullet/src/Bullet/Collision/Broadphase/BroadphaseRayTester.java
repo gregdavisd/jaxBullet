@@ -31,7 +31,7 @@ public class BroadphaseRayTester extends btDbvt.ICollide implements Serializable
 
  @Override
  public void process(btDbvtNode leaf) {
-  btDbvtProxy proxy = (btDbvtProxy) leaf.data;
+  btDbvtProxy proxy = (btDbvtProxy) leaf.data();
   m_rayCallback.process(proxy);
  }
 }

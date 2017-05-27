@@ -21,7 +21,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class DebugDrawcallback implements btTriangleCallback, btInternalTriangleIndexCallback,   Serializable  {
+public class DebugDrawcallback implements btTriangleCallback, Serializable  {
 
  final btIDebugDraw m_debugDrawer;
  final btVector3 m_color = new btVector3();
@@ -32,19 +32,7 @@ public class DebugDrawcallback implements btTriangleCallback, btInternalTriangle
   m_color.set(color);
   m_worldTrans.set(worldTrans);
  }
-
- /**
-  *
-  * @param triangle
-  * @param partId
-  * @param triangleIndex
-  * @return
-  */
- @Override
- public boolean internalProcessTriangleIndex(btVector3[] triangle, int partId, int triangleIndex) {
-  processTriangle(triangle, partId, triangleIndex);
-  return true;
- }
+ 
 
  /**
   *
@@ -53,7 +41,7 @@ public class DebugDrawcallback implements btTriangleCallback, btInternalTriangle
   * @param triangleIndex
   */
  @Override
- public void processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
+ public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
   final btVector3 wv0;
   final btVector3 wv1;
   final btVector3 wv2;
@@ -70,5 +58,6 @@ public class DebugDrawcallback implements btTriangleCallback, btInternalTriangle
   m_debugDrawer.drawLine(wv0, wv1, m_color);
   m_debugDrawer.drawLine(wv1, wv2, m_color);
   m_debugDrawer.drawLine(wv2, wv0, m_color);
+ return true;
  }
 };

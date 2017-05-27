@@ -39,6 +39,6 @@ class btDbvtProxy extends btBroadphaseProxy  implements Serializable {
 
  @Override
  public boolean intersect(btBroadphaseProxy other) {
-  return Intersect(leaf.volume, ((btDbvtProxy)other).leaf.volume);
+  return Intersect(leaf.volume(), ((btDbvtProxy)other).leaf.volume());
  }
 }

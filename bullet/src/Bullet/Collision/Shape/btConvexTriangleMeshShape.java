@@ -18,7 +18,6 @@ import static Bullet.Collision.Broadphase.BroadphaseNativeTypes.CONVEX_TRIANGLEM
 import Bullet.Collision.CenterCallback;
 import Bullet.Collision.InertiaCallback;
 import Bullet.Collision.LocalSupportVertexCallback;
-import Bullet.Collision.btStridingMeshInterface;
 import Bullet.LinearMath.btMatrix3x3;
 import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import static Bullet.LinearMath.btScalar.btSqrt;

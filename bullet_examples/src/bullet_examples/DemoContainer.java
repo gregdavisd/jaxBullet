@@ -1,34 +1,39 @@
 /*
-Copyright (c) 2017 Gregery Barton
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Copyright (c) 2017 Gregery Barton
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package bullet_examples;
 
 import static Bullet.Collision.Broadphase.BroadphaseNativeTypes.*;
+import Bullet.Collision.Broadphase.btAxisSweep3;
 import Bullet.Collision.Broadphase.btBroadphaseInterface;
+import Bullet.Collision.Broadphase.btDbvtBroadphase;
 import Bullet.Collision.ClosestRayResultCallback;
 import Bullet.Collision.Shape.btBoxShape;
 import Bullet.Collision.Shape.btCapsuleShape;
 import Bullet.Collision.Shape.btCollisionShape;
 import Bullet.Collision.Shape.btCompoundShape;
 import Bullet.Collision.Shape.btConeShape;
+import Bullet.Collision.Shape.btConvexShape;
 import Bullet.Collision.Shape.btCylinderShape;
 import Bullet.Collision.Shape.btSphereShape;
 import Bullet.Collision.Shape.btStaticPlaneShape;
+import Bullet.Collision.Shape.btTriangleMeshShape;
 import Bullet.Collision.btCollisionConfiguration;
 import Bullet.Collision.btCollisionDispatcher;
 import Bullet.Collision.btCollisionObject;
 import static Bullet.Collision.btCollisionObject.ISLAND_SLEEPING;
 import Bullet.Collision.btIDebugDraw;
+import Bullet.Collision.btShapeHull;
 import Bullet.Dynamics.Constraint.btPoint2PointConstraint;
 import Bullet.Dynamics.ConstraintSolver.btConstraintSolver;
 import Bullet.Dynamics.btDynamicsWorld;
@@ -38,6 +43,7 @@ import static Bullet.Extras.btMinMax.btClamped;
 import Bullet.LinearMath.btClock;
 import Bullet.LinearMath.btDefaultMotionState;
 import Bullet.LinearMath.btMatrix3x3;
+import static Bullet.LinearMath.btScalar.FLT_MAX;
 import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
 import static Bullet.LinearMath.btVector3.btPlaneSpace1;
@@ -52,11 +58,22 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+import java.util.stream.IntStream;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import org.apache.commons.collections.primitives.ArrayFloatList;
+import org.apache.commons.collections.primitives.ArrayIntList;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -331,16 +348,19 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
  private int enabled_light = 0;
  private final FloatBuffer matrix_buffer = BufferUtils.createFloatBuffer(16);
  private final FloatBuffer four_buffer = BufferUtils.createFloatBuffer(16);
- private TriangleStripElement bound = null;
+ private GLDrawElements bound = null;
  btPoint2PointConstraint mouse_constraint;
  private float mouse_length;
  private int up_axis = 0;
- private boolean using_blank_cursor = false;
- private boolean is_grabbed = false;
  private static int mouse_x;
  private static int mouse_y;
+ private static final Map<btCollisionShape, GLDrawElements> shapes = new HashMap<>();
 
  public DemoContainer() {
+  for (Map.Entry<btCollisionShape, GLDrawElements> shape : shapes.entrySet()) {
+   shape.getValue().destroy();
+  }
+  shapes.clear();
   init();
  }
 
@@ -385,8 +405,8 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
   glClearColor(178 / 255.0f, 178 / 255.0f, 204 / 255.0f, 1);
  }
 
- abstract protected void initWorld(String broadphase_class) ;
- 
+ abstract protected void initWorld(String broadphase_class);
+
  private void disable_vertex_arrays() {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -404,11 +424,13 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
   return world;
  }
 
- protected btRigidBody createRigidBody(float mass, final btTransform startTransform, btCollisionShape shape) {
+ protected btRigidBody createRigidBody(float mass, final btTransform startTransform,
+  btCollisionShape shape) {
   return createRigidBody(mass, startTransform, shape, new btVector4(1, 0, 0, 1));
  }
 
- protected btRigidBody createRigidBody(float mass, final btTransform startTransform, btCollisionShape shape,
+ protected btRigidBody createRigidBody(float mass, final btTransform startTransform,
+  btCollisionShape shape,
   btVector4 color) {
   assert (shape == null || shape.getShapeType() != INVALID_SHAPE_PROXYTYPE);
   boolean isDynamic = (mass != 0.f);
@@ -429,6 +451,10 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
  public abstract void initPhysics();
 
  public boolean step_physics(float cap_frametime, float rate) {
+  return step_physics(cap_frametime, rate, 16);
+ }
+
+ public boolean step_physics(float cap_frametime, float rate, int max_substeps) {
   if (physics_clock == null) {
    physics_clock = new btClock();
   }
@@ -441,9 +467,9 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
    if (step_time > ((sub_steps * (fixed + 0.001f)))) {
     ++sub_steps;
    }
-   if (sub_steps > 16) {
-    step_time -= (sub_steps - 16) * fixed;
-    sub_steps = 16;
+   if (sub_steps > max_substeps) {
+    step_time -= (sub_steps - max_substeps) * fixed;
+    sub_steps = max_substeps;
    }
    world.stepSimulation(step_time, sub_steps, fixed);
    return true;
@@ -664,31 +690,30 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
    }
    break;
    case TRIANGLE_SHAPE_PROXYTYPE: {
-    System.out.println(" not");
+    System.out.println("drawing  TRIANGLE_SHAPE_PROXYTYPE not");
    }
    break;
    case TETRAHEDRAL_SHAPE_PROXYTYPE: {
-    System.out.println(" not");
+    System.out.println("drawing  TETRAHEDRAL_SHAPE_PROXYTYPE not");
    }
    break;
    case CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE: {
-    System.out.println(" not");
+    System.out.println("drawing  CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE not");
    }
    break;
-   case CONVEX_HULL_SHAPE_PROXYTYPE: {
-    System.out.println(" not");
-   }
-   break;
+   case CONVEX_HULL_SHAPE_PROXYTYPE:
+    draw_novel_shape(collisionShape);
+    break;
    case CONVEX_POINT_CLOUD_SHAPE_PROXYTYPE: {
-    System.out.println(" not");
+    System.out.println("drawing  CONVEX_POINT_CLOUD_SHAPE_PROXYTYPE not");
    }
    break;
    case CUSTOM_POLYHEDRAL_SHAPE_TYPE: {
-    System.out.println(" not");
+    System.out.println("drawing  CUSTOM_POLYHEDRAL_SHAPE_TYPE not");
    }
    break;
    case IMPLICIT_CONVEX_SHAPES_START_HERE: {
-    System.out.println(" not");
+    System.out.println("drawing  IMPLICIT_CONVEX_SHAPES_START_HERE not");
    }
    break;
    case SPHERE_SHAPE_PROXYTYPE: {
@@ -700,7 +725,7 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
    }
    break;
    case MULTI_SPHERE_SHAPE_PROXYTYPE: {
-    System.out.println(" not");
+    System.out.println("drawing  MULTI_SPHERE_SHAPE_PROXYTYPE not");
    }
    break;
    case CAPSULE_SHAPE_PROXYTYPE: {
@@ -738,7 +763,7 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
    }
    break;
    case CONVEX_SHAPE_PROXYTYPE: {
-    System.out.println("CONVEX_SHAPE_PROXYTYPE not");
+    System.out.println("drawing  CONVEX_SHAPE_PROXYTYPE not");
    }
    break;
    case CYLINDER_SHAPE_PROXYTYPE: {
@@ -751,59 +776,59 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
    }
    break;
    case UNIFORM_SCALING_SHAPE_PROXYTYPE: {
-    System.out.println("draw UNIFORM_SCALING_SHAPE_PROXYTYPE not");
+    System.out.println("drawing  UNIFORM_SCALING_SHAPE_PROXYTYPE not");
    }
    break;
    case MINKOWSKI_SUM_SHAPE_PROXYTYPE: {
-    System.out.println("draw MINKOWSKI_SUM_SHAPE_PROXYTYPE not");
+    System.out.println("drawing  MINKOWSKI_SUM_SHAPE_PROXYTYPE not");
    }
    break;
    case MINKOWSKI_DIFFERENCE_SHAPE_PROXYTYPE: {
-    System.out.println("draw MINKOWSKI_DIFFERENCE_SHAPE_PROXYTYPE not");
+    System.out.println("drawing  MINKOWSKI_DIFFERENCE_SHAPE_PROXYTYPE not");
    }
    break;
    case BOX_2D_SHAPE_PROXYTYPE: {
-    System.out.println("draw BOX_2D_SHAPE_PROXYTYPE not");
+    System.out.println("drawing  BOX_2D_SHAPE_PROXYTYPE not");
    }
    break;
    case CONVEX_2D_SHAPE_PROXYTYPE: {
-    System.out.println("draw CONVEX_2D_SHAPE_PROXYTYPE not");
+    System.out.println("drawing  CONVEX_2D_SHAPE_PROXYTYPE not");
    }
    break;
    case CUSTOM_CONVEX_SHAPE_TYPE: {
-    System.out.println("draw CUSTOM_CONVEX_SHAPE_TYPE not");
+    System.out.println("drawing  CUSTOM_CONVEX_SHAPE_TYPE not");
    }
    break;
    case CONCAVE_SHAPES_START_HERE: {
-    System.out.println("draw CONCAVE_SHAPES_START_HERE not");
+    System.out.println("drawing  CONCAVE_SHAPES_START_HERE not");
    }
    break;
    case TRIANGLE_MESH_SHAPE_PROXYTYPE: {
-    System.out.println("draw TRIANGLE_MESH_SHAPE_PROXYTYPE not");
+    draw_novel_shape(collisionShape);
    }
    break;
    case SCALED_TRIANGLE_MESH_SHAPE_PROXYTYPE: {
-    System.out.println("draw SCALED_TRIANGLE_MESH_SHAPE_PROXYTYPE not");
+    System.out.println("drawing  SCALED_TRIANGLE_MESH_SHAPE_PROXYTYPE not");
    }
    break;
    case FAST_CONCAVE_MESH_PROXYTYPE: {
-    System.out.println("draw FAST_CONCAVE_MESH_PROXYTYPE not");
+    System.out.println("drawing  FAST_CONCAVE_MESH_PROXYTYPE not");
    }
    break;
    case TERRAIN_SHAPE_PROXYTYPE: {
-    System.out.println("draw TERRAIN_SHAPE_PROXYTYPE not");
+    System.out.println("drawing  TERRAIN_SHAPE_PROXYTYPE not");
    }
    break;
    case GIMPACT_SHAPE_PROXYTYPE: {
-    System.out.println("draw GIMPACT_SHAPE_PROXYTYPE not");
+    System.out.println("drawing  GIMPACT_SHAPE_PROXYTYPE not");
    }
    break;
    case MULTIMATERIAL_TRIANGLE_MESH_PROXYTYPE: {
-    System.out.println("draw MULTIMATERIAL_TRIANGLE_MESH_PROXYTYPE not");
+    System.out.println("drawing  MULTIMATERIAL_TRIANGLE_MESH_PROXYTYPE not");
    }
    break;
    case EMPTY_SHAPE_PROXYTYPE: {
-    System.out.println("draw EMPTY_SHAPE_PROXYTYPE not");
+    System.out.println("drawing  EMPTY_SHAPE_PROXYTYPE not");
    }
    break;
    case STATIC_PLANE_PROXYTYPE: {
@@ -828,11 +853,11 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
    }
    break;
    case CUSTOM_CONCAVE_SHAPE_TYPE: {
-    System.out.println("CUSTOM_CONCAVE_SHAPE_TYPE not");
+    System.out.println("drawing  CUSTOM_CONCAVE_SHAPE_TYPE not");
    }
    break;
    case CONCAVE_SHAPES_END_HERE: {
-    System.out.println("CONCAVE_SHAPES_END_HERE not");
+    System.out.println("drawing  CONCAVE_SHAPES_END_HERE not");
    }
    break;
    case COMPOUND_SHAPE_PROXYTYPE: {
@@ -846,30 +871,44 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
    }
    break;
    case SOFTBODY_SHAPE_PROXYTYPE: {
-    System.out.println("SOFTBODY_SHAPE_PROXYTYPE not");
+    System.out.println("drawing  SOFTBODY_SHAPE_PROXYTYPE not");
    }
    break;
    case HFFLUID_SHAPE_PROXYTYPE: {
-    System.out.println("HFFLUID_SHAPE_PROXYTYPE not");
+    System.out.println("drawing  HFFLUID_SHAPE_PROXYTYPE not");
    }
    break;
    case HFFLUID_BUOYANT_CONVEX_SHAPE_PROXYTYPE: {
-    System.out.println("HFFLUID_BUOYANT_CONVEX_SHAPE_PROXYTYPE not");
+    System.out.println("drawing  HFFLUID_BUOYANT_CONVEX_SHAPE_PROXYTYPE not");
    }
    break;
    case INVALID_SHAPE_PROXYTYPE: {
-    System.out.println("INVALID_SHAPE_PROXYTYPE not");
+    System.out.println("drawing  INVALID_SHAPE_PROXYTYPE not");
    }
    break;
    case MAX_BROADPHASE_COLLISION_TYPES: {
-    System.out.println("MAX_BROADPHASE_COLLISION_TYPES not");
+    System.out.println("drawing  MAX_BROADPHASE_COLLISION_TYPES not");
    }
    break;
   }
   glPopMatrix();
  }
 
- private void bind(TriangleStripElement triangles) {
+ private void draw_novel_shape(btCollisionShape collisionShape) {
+  GLDrawElements shape = shapes.get(collisionShape);
+  if (shape == null) {
+   shape = shape_to_mesh(collisionShape);
+   if (shape != null) {
+    shapes.put(collisionShape, shape);
+   }
+  }
+  if (shape != null) {
+   bind(shape);
+   shape.draw();
+  }
+ }
+
+ private void bind(GLDrawElements triangles) {
   if (bound != triangles) {
    triangles.bind();
    bound = triangles;
@@ -937,7 +976,7 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
   if (mouse_constraint != null) {
    final btVector3 ray_from = camera.eye();
    rotate_to_up_axis(up_axis, ray_from);
-   final btVector3 ray_to = unproject(e.getX(), canvas().getHeight()-e.getY(), 1);
+   final btVector3 ray_to = unproject(e.getX(), canvas().getHeight() - e.getY(), 1);
    final btVector3 ray_dir = new btVector3(ray_to).sub(ray_from).normalize();
    final btVector3 new_pos = new btVector3().scaleAdd(mouse_length, ray_dir, ray_from);
    mouse_constraint.setPivotB(new_pos);
@@ -966,7 +1005,7 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
   } else if (e.getButton() == BUTTON3) {
    final btVector3 ray_from = camera.eye();
    rotate_to_up_axis(up_axis, ray_from);
-   final btVector3 ray_to = unproject(e.getX(), canvas().getHeight()-e.getY(), 1);
+   final btVector3 ray_to = unproject(e.getX(), canvas().getHeight() - e.getY(), 1);
    ClosestRayResultCallback callback = new ClosestRayResultCallback(ray_from, ray_to);
    world.rayTest(ray_from, ray_to, callback);
    if (callback.hasHit()) {
@@ -1012,60 +1051,141 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
  public void mouseWheelMoved(MouseWheelEvent e) {
  }
 
- protected void draw_text(String text, float x, float y, float z, float size) {
-  final btVector3 screen_pos = project(x, y, z);
-  Canvas canvas = Display.getParent();
-  Graphics g = canvas.getGraphics();
-  g.drawRect(0, 0, 100, 100);
+ protected void create_broadphase(String broadphase_class) {
+  switch (broadphase_class) {
+   case "btDbvtBroadphase":
+    broadphase = new btDbvtBroadphase();
+    break;
+   case "btAxisSweep3":
+    final btVector3 worldAabbMin = new btVector3(-1000, -1000, -1000);
+    final btVector3 worldAabbMax = new btVector3(1000, 1000, 1000);
+    broadphase = new btAxisSweep3(worldAabbMin, worldAabbMax);
+    break;
+   default:
+    assert (false);
+  }
  }
 
- static class TriangleStripElement {
-
-  int vaa_name;
-  int eab_name;
-  int vaa_size;
-  int eab_size;
-
-  public TriangleStripElement(int[] buffer, int[] indices) {
-   upload_vaa(buffer);
-   upload_eab(indices);
+ private GLDrawElements shape_to_mesh(btCollisionShape collisionShape) {
+  if (collisionShape.isConvex()) {
+   btConvexShape convex = (btConvexShape) collisionShape;
+   btShapeHull hull = new btShapeHull(convex);
+   hull.buildHull(0.0f);
+   ArrayIntList indices = new ArrayIntList(hull.numTriangles() * 3);
+   ArrayFloatList vertices = new ArrayFloatList(hull.numTriangles() * 3 * 6);
+   int vcount = 0;
+   final btVector3 triNormal = new btVector3();
+   for (int t = 0; t < hull.numTriangles(); t++) {
+    int index0 = hull.getIndexPointer()[t * 3 + 0];
+    int index1 = hull.getIndexPointer()[t * 3 + 1];
+    int index2 = hull.getIndexPointer()[t * 3 + 2];
+    final btVector3 pos0 = new btVector3(hull.getVertexPointer()[index0]);
+    final btVector3 pos1 = new btVector3(hull.getVertexPointer()[index1]);
+    final btVector3 pos2 = new btVector3(hull.getVertexPointer()[index2]);
+    triNormal.set(new btVector3(pos1).sub(pos0).cross(new btVector3(pos2).sub(pos0)));
+    triNormal.normalize();
+    for (int v = 0; v < 3; v++) {
+     int index = hull.getIndexPointer()[t * 3 + v];
+     final btVector3 pos = new btVector3(hull.getVertexPointer()[index]);
+     vertices.add(pos.x);
+     vertices.add(pos.y);
+     vertices.add(pos.z);
+     vertices.add(triNormal.x);
+     vertices.add(triNormal.y);
+     vertices.add(triNormal.z);
+     indices.add(vcount);
+     ++vcount;
+    }
+   }
+   return new TriangleElement(vertices.toBackedArray(), indices.toBackedArray());
+  } else if (collisionShape.isConcave()) {
+   btTriangleMeshShape mesh = (btTriangleMeshShape) collisionShape;
+   List<btVector3> triangles = new ArrayList<>();
+   mesh.processAllTriangles(
+    (vertex, part, id) -> {
+    triangles.add(new btVector3(vertex[0]));
+    triangles.add(new btVector3(vertex[1]));
+    triangles.add(new btVector3(vertex[2]));
+    return true;
+   },
+    new btVector3(-FLT_MAX, -FLT_MAX, -FLT_MAX), new btVector3(FLT_MAX, FLT_MAX, FLT_MAX));
+   /*
+    * remove duplicate vertices
+    *
+    */
+   List<btVector3> vertices = triangles.stream()
+    .collect(Collectors.toSet())
+    .stream()
+    .collect(Collectors.toList());
+   ArrayIntList indices;
+   {
+    /*
+     * map triangle vertices to the new index into the deduplicated vertex list
+     *
+     */
+    Map<btVector3, Integer> vertex_lookup = IntStream
+     .range(0, vertices.size())
+     .mapToObj(o -> new SimpleEntry<>(vertices.get(o), o))
+     .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue));
+    /*
+     * Create triangle mesh indices
+     *
+     */
+    indices = triangles.stream()
+     .map(o -> vertex_lookup.get(o))
+     .collect(ArrayIntList::new, ArrayIntList::add, ArrayIntList::addAll);
+   }
+   /*
+     * calculate face normals }
+    */
+   Map<Integer, btVector3> normal_lookup;
+   {
+    List<btVector3> face_normals =
+     IntStream.range(0, indices.size() / 3)
+     .mapToObj(o -> new int[]{indices.get(o * 3), indices.get(o * 3 + 1), indices.get(o * 3 + 2)})
+     .map(o -> new btVector3[]{vertices.get(o[0]), vertices.get(o[1]), vertices.get(o[2])})
+     .map(o -> new btVector3(o[1]).sub(o[0]).cross(new btVector3(o[2]).sub(o[0])))
+     .peek(o -> o.normalize())
+     .collect(Collectors.toList());
+    /*
+      * Find vertex normals by average the shared face normals
+      *
+     */
+    normal_lookup = IntStream.range(0, indices.size())
+     .parallel()
+     .mapToObj(o -> new SimpleEntry<Integer, btVector3>(indices.get(o), face_normals.get(o / 3)))
+     .collect(
+      Collectors.groupingByConcurrent(
+       SimpleEntry::getKey,
+       mapping(SimpleEntry::getValue, toList())))
+     .entrySet()
+     .parallelStream()
+     .map(o -> new SimpleEntry<Integer, btVector3>(
+      o.getKey(),
+      o.getValue().stream()
+      .reduce(new btVector3(),
+       (a, b) -> a.add(b),
+       (a, b) -> a.add(b))
+      .scale(1.0f / o.getValue().size())
+      .normalize()))
+     .collect(toMap(SimpleEntry::getKey, SimpleEntry::getValue));
+   }
+   assert (vertices.size() == normal_lookup.size());
+   ArrayFloatList vaa = new ArrayFloatList((vertices.size() + normal_lookup.size()) * 3);
+   int iv = 0;
+   for (btVector3 v : vertices) {
+    vaa.add(v.x);
+    vaa.add(v.y);
+    vaa.add(v.z);
+    final btVector3 n = normal_lookup.get(iv);
+    vaa.add(n.x);
+    vaa.add(n.y);
+    vaa.add(n.z);
+    ++iv;
+   }
+  GLDrawElements shape = new TriangleElement(vaa.toBackedArray(), indices.toBackedArray());
+  return shape;
   }
-
-  private void upload_eab(int[] buffer) {
-   eab_name = glGenBuffers();
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eab_name);
-   int capacity = buffer.length * 4;
-   eab_size = capacity;
-   ByteBuffer data = BufferUtils.createByteBuffer(capacity);
-   data.asIntBuffer().put(buffer);
-   data.rewind();
-   glBufferData(GL_ELEMENT_ARRAY_BUFFER, data, GL_STATIC_DRAW);
-   glFlush();
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-  }
-
-  private void upload_vaa(int[] buffer) {
-   vaa_name = glGenBuffers();
-   glBindBuffer(GL_ARRAY_BUFFER, vaa_name);
-   int capacity = buffer.length * 4;
-   vaa_size = capacity;
-   ByteBuffer data = BufferUtils.createByteBuffer(capacity);
-   data.asIntBuffer().put(buffer);
-   data.rewind();
-   glBufferData(GL_ARRAY_BUFFER, data, GL_STATIC_DRAW);
-   glFlush();
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-  }
-
-  public void bind() {
-   glBindBuffer(GL_ARRAY_BUFFER, vaa_name);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eab_name);
-   glVertexPointer(3, GL_FLOAT, 6 * 4, 0);
-   glNormalPointer(GL_FLOAT, 6 * 4, 3 * 4);
-  }
-
-  public void draw() {
-   glDrawElements(GL_TRIANGLE_STRIP, eab_size / 4, GL_UNSIGNED_INT, 0);
-  }
+  return null;
  }
 }

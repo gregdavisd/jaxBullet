@@ -102,7 +102,7 @@ public class RollingFrictionDemo extends DiscreteDemoContainer {
    btRigidBodyConstructionInfo rbInfo = new btRigidBodyConstructionInfo(mass, myMotionState,
     groundShape, localInertia);
    btRigidBody body = new btRigidBody(rbInfo);
-   body.setFriction(.1f);
+   body.setFriction(.5f);
    //add the body to the dynamics world
    world().addRigidBody(body);
   }

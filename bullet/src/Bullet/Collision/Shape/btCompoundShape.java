@@ -132,7 +132,7 @@ public class btCompoundShape extends btCollisionShape  implements Serializable {
   if (m_dynamicAabbTree != null) {
    btDbvtNode node = m_children.get(childShapeIndex).m_node;
    if (node != null) {
-    node.dataAsInt = childShapeIndex;
+    node.dataAsInt( childShapeIndex);
    }
   }
   m_children.remove(m_children.size() - 1);

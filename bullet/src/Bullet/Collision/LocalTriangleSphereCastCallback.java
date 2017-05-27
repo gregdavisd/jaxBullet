@@ -43,7 +43,7 @@ public class LocalTriangleSphereCastCallback implements btTriangleCallback  , Se
  }
 
  @Override
- public void processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
+ public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
   BT_PROFILE("processTriangle");
   //do a swept sphere for now
   final btTransform ident = new btTransform();
@@ -61,5 +61,6 @@ public class LocalTriangleSphereCastCallback implements btTriangleCallback  , Se
     m_hitFraction = castResult.m_fraction;
    }
   }
+  return true;
  }
 }

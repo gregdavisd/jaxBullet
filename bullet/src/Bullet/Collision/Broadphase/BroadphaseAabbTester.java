@@ -37,7 +37,7 @@ public class BroadphaseAabbTester extends btDbvt.ICollide implements Serializabl
   */
  @Override
  public void process(btDbvtNode leaf) {
-  btDbvtProxy proxy = (btDbvtProxy) leaf.data;
+  btDbvtProxy proxy = (btDbvtProxy) leaf.data();
   m_aabbCallback.process(proxy);
  }
 }

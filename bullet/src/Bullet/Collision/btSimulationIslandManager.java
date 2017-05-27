@@ -11,7 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Collision;
 
 import Bullet.Collision.Broadphase.btBroadphasePair;
@@ -26,14 +26,17 @@ import static Bullet.LinearMath.btQuickprof.BT_PROFILE;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 
 /**
  * SimulationIslandManager creates and handles simulation islands, using btUnionFind
  *
  * @author Gregery Barton
  */
-public class btSimulationIslandManager  implements Serializable {
+public class btSimulationIslandManager implements Serializable {
 
  btUnionFind m_unionFind = new btUnionFind();
  final ArrayList<btPersistentManifold> m_islandmanifold = new ArrayList<>(0);
@@ -98,7 +101,14 @@ public class btSimulationIslandManager  implements Serializable {
    btOverlappingPairCache pairCachePtr = colWorld.getPairCache();
    int numOverlappingPairs = pairCachePtr.getNumOverlappingPairs();
    if (numOverlappingPairs != 0) {
-    Collection<btBroadphasePair> pairPtr = pairCachePtr.getOverlappingPairArray ();
+    Collection<btBroadphasePair> pairPtr = pairCachePtr.getOverlappingPairArray();
+//    if (DEBUG_BLOCKS) {
+//     Set<btBroadphasePair> pair_set = new HashSet<>();
+//     for (btBroadphasePair broadphasePair : pairPtr) {
+//      assert (!pair_set.contains(broadphasePair));
+//      pair_set.add(broadphasePair);
+//     }
+//    }
     for (btBroadphasePair collisionPair : pairPtr) {
      btCollisionObject colObj0 = (btCollisionObject) collisionPair.m_pProxy0.m_clientObject;
      btCollisionObject colObj1 = (btCollisionObject) collisionPair.m_pProxy1.m_clientObject;
@@ -209,7 +219,7 @@ public class btSimulationIslandManager  implements Serializable {
     if ((colObj0.getIslandTag() != islandId) && (colObj0.getIslandTag() != -1)) {
 //				printf("error in island management\n");
     }
-    assert((colObj0.getIslandTag() == islandId) || (colObj0.getIslandTag() == -1));
+    assert ((colObj0.getIslandTag() == islandId) || (colObj0.getIslandTag() == -1));
     if (colObj0.getIslandTag() == islandId) {
      if (colObj0.getActivationState() == ACTIVE_TAG) {
       allSleeping = false;
@@ -226,7 +236,7 @@ public class btSimulationIslandManager  implements Serializable {
      if ((colObj0.getIslandTag() != islandId) && (colObj0.getIslandTag() != -1)) {
 //					printf("error in island management\n");
      }
-     assert((colObj0.getIslandTag() == islandId) || (colObj0.getIslandTag() == -1));
+     assert ((colObj0.getIslandTag() == islandId) || (colObj0.getIslandTag() == -1));
      if (colObj0.getIslandTag() == islandId) {
       colObj0.setActivationState(ISLAND_SLEEPING);
      }
@@ -239,7 +249,7 @@ public class btSimulationIslandManager  implements Serializable {
      if ((colObj0.getIslandTag() != islandId) && (colObj0.getIslandTag() != -1)) {
 //					printf("error in island management\n");
      }
-     assert((colObj0.getIslandTag() == islandId) || (colObj0.getIslandTag() == -1));
+     assert ((colObj0.getIslandTag() == islandId) || (colObj0.getIslandTag() == -1));
      if (colObj0.getIslandTag() == islandId) {
       if (colObj0.getActivationState() == ISLAND_SLEEPING) {
        colObj0.setActivationState(WANTS_DEACTIVATION);

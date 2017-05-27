@@ -203,7 +203,7 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
     docollide = true;
    } else {/* dynamic set				*/
     ++m_updates_call;
-    if (Intersect(proxy.leaf.volume, aabb)) {/* Moving				*/
+    if (Intersect(proxy.leaf.volume(), aabb)) {/* Moving				*/
 
      final btVector3 delta = new btVector3(aabbMin).sub(proxy.m_aabbMin);
      final btVector3 velocity = new btVector3(proxy.m_aabbMax).sub(proxy.m_aabbMin).scale(1.0f /
@@ -304,13 +304,13 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
   btDbvtAabbMm bounds = new btDbvtAabbMm();
   if (!m_sets[0].empty()) {
    if (!m_sets[1].empty()) {
-    Merge(m_sets[0].m_root.volume,
-     m_sets[1].m_root.volume, bounds);
+    Merge(m_sets[0].m_root.volume(),
+     m_sets[1].m_root.volume(), bounds);
    } else {
-    bounds = m_sets[0].m_root.volume;
+    bounds = m_sets[0].m_root.volume();
    }
   } else if (!m_sets[1].empty()) {
-   bounds = m_sets[1].m_root.volume;
+   bounds = m_sets[1].m_root.volume();
   } else {
    bounds = btDbvtAabbMm.fromCR(new btVector3(), 0);
   }
@@ -370,7 +370,7 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
      //important to perform AABB check that is consistent with the broadphase
      btDbvtProxy pa = (btDbvtProxy) pair.m_pProxy0;
      btDbvtProxy pb = (btDbvtProxy) pair.m_pProxy1;
-     boolean hasOverlap = Intersect(pa.leaf.volume, pb.leaf.volume);
+     boolean hasOverlap = Intersect(pa.leaf.volume(), pb.leaf.volume());
      needsRemoval = !hasOverlap;
     } else {
      //remove duplicate

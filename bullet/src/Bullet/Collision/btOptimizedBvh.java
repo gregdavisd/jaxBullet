@@ -13,6 +13,8 @@ subject to the following restrictions:
  */
 package Bullet.Collision;
 
+import Bullet.Collision.Shape.btStridingMeshLock;
+import Bullet.Collision.Shape.btStridingMeshInterface;
 import static Bullet.LinearMath.btAabbUtil2.testQuantizedAabbAgainstQuantizedAabb;
 import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import Bullet.LinearMath.btVector3;
@@ -127,11 +129,12 @@ import java.io.Serializable;
   assert(m_useQuantization);
   int curNodeSubPart = -1;
   //get access info to trianglemesh data
-  final btVector3 meshScaling = meshInterface.getScaling();
+  // InternalProcessSubPart does the scaling for us
+//  final btVector3 meshScaling = meshInterface.getScaling();
   UpdateOptimizedBvhNodeCallback callback = new UpdateOptimizedBvhNodeCallback(this);
   final btVector3 aabbMin = new btVector3();
   final btVector3 aabbMax = new btVector3();
-  StridingMeshLock mesh_lock = null;
+  btStridingMeshLock mesh_lock = null;
   int i;
   for (i = endNode - 1; i >= firstNode; i--) {
    btQuantizedBvhNode curNode = m_quantizedContiguousNodes.get(i);

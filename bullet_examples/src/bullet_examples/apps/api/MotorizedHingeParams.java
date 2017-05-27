@@ -13,6 +13,8 @@
  */
 package bullet_examples.apps.api;
 
+import bullet_examples.Throttle;
+
 /**
  *
  * @author Gregery Barton
@@ -33,8 +35,7 @@ public class MotorizedHingeParams extends javax.swing.JPanel {
  private float max_impulse;
  private float actual_vel;
  private float angle;
- private long last_update_nano = System.nanoTime();
- private int updates_allowed;
+private final Throttle throttle=new Throttle(12,2);
 
  /**
   * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify
@@ -196,26 +197,10 @@ public class MotorizedHingeParams extends javax.swing.JPanel {
   return angle;
  }
 
- private boolean update_now() {
-  // Throttle GUI updates to avoid non-responsiveness
-  if (updates_allowed > 0) {
-   --updates_allowed;
-   return true;
-  } else {
-   long now = System.nanoTime();
-   if ((now - last_update_nano) > (1_000_000_000 / 16)) {
-    last_update_nano = now;
-    updates_allowed = 2;
-    return true;
-   } else {
-    return false;
-   }
-  }
- }
 
  public void set_actual_vel(float value) {
   actual_vel = value;
-  if (update_now()) {
+  if (throttle.update_now()) {
    java.awt.EventQueue.invokeLater(new Runnable() {
     @Override
     public void run() {
@@ -228,7 +213,7 @@ public class MotorizedHingeParams extends javax.swing.JPanel {
 
  public void set_angle(float value) {
   angle = value;
-  if (update_now()) {
+  if (throttle.update_now()) {
    java.awt.EventQueue.invokeLater(new Runnable() {
     @Override
     public void run() {

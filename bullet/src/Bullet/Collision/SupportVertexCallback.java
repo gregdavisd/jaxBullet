@@ -45,7 +45,7 @@ public class SupportVertexCallback implements btTriangleCallback,   Serializable
   * @param triangleIndex
   */
  @Override
- public void processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
+ public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
   for (int i = 0; i < 3; i++) {
    float dot = m_supportVecLocal.dot(triangle[i]);
    if (dot > m_maxDot) {
@@ -53,6 +53,7 @@ public class SupportVertexCallback implements btTriangleCallback,   Serializable
     m_supportVertexLocal.set(triangle[i]);
    }
   }
+  return true;
  }
 
   public btVector3 getSupportVertexWorldSpace() {

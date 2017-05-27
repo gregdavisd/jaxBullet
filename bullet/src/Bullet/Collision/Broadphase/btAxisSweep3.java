@@ -47,16 +47,6 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
 
   public Edge() {
   }
-
-  public Edge(Edge o) {
-   m_pos = o.m_pos;
-   m_handle = o.m_handle;
-  }
-
-  public void set(Edge o) {
-   m_pos = o.m_pos;
-   m_handle = o.m_handle;
-  }
  }
 
  public class Handle extends btBroadphaseProxy {
@@ -158,9 +148,8 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
    pHandleEdge.m_minEdges[axis]--;
    assert (pHandleEdge.m_minEdges[axis] >= 0);
    // swap the edges
-   Edge swap = new Edge(pEdge);
-   pEdge.set(pPrev);
-   pPrev.set(swap);
+   m_pEdges[axis][i_pEdge] = pPrev;
+   m_pEdges[axis][i_pPrev] = pEdge;
    // decrement
    i_pEdge--;
    i_pPrev--;
@@ -206,9 +195,8 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
    pHandleEdge.m_minEdges[axis]++;
    assert (pHandleNext.m_minEdges[axis] >= 0);
    // swap the edges
-   Edge swap = new Edge(pEdge);
-   pEdge.set(pNext);
-   pNext.set(swap);
+   m_pEdges[axis][i_pEdge] = pNext;
+   m_pEdges[axis][i_pNext] = pEdge;
    // increment
    i_pEdge++;
    i_pNext++;
@@ -254,9 +242,8 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
    }
    pHandleEdge.m_maxEdges[axis]--;
    // swap the edges
-   Edge swap = new Edge(pEdge);
-   pEdge.set(pPrev);
-   pPrev.set(swap);
+   m_pEdges[axis][i_pEdge] = pPrev;
+   m_pEdges[axis][i_pPrev] = pEdge;
    // decrement
    i_pEdge--;
    i_pPrev--;
@@ -335,9 +322,8 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
    }
    pHandleEdge.m_maxEdges[axis]++;
    // swap the edges
-   Edge swap = new Edge(pEdge);
-   pEdge.set(pNext);
-   pNext.set(swap);
+   m_pEdges[axis][i_pEdge] = pNext;
+   m_pEdges[axis][i_pNext] = pEdge;
    // increment
    i_pEdge++;
    i_pNext++;
@@ -381,6 +367,7 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
   short maxHandles = (short) (userMaxHandles + 1);//need to add one sentinel handle
   if (null == m_pairCache) {
    m_pairCache = new btSortedOverlappingPairCache();
+   //m_pairCache = new btHashedOverlappingPairCache();
    m_ownsPairCache = true;
   }
   if (!disableRaycastAccelerator) {
@@ -408,7 +395,7 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
    for (short i = m_firstFreeHandle; i < maxHandles; i++) {
     m_pHandles[i].SetNextFree((short) (i + 1));
    }
-   m_pHandles[maxHandles - (short) 1].SetNextFree((short) 0);
+   m_pHandles[maxHandles - 1].SetNextFree((short) 0);
   }
   {
    // allocate edge buffers
@@ -441,7 +428,11 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
    ArrayList<btBroadphasePair> overlappingPairArray = m_pairCache.getOverlappingPairArrayPtr();
    //perform a sort, to find duplicates and to sort 'invalid' pairs to the end
    overlappingPairArray.sort(new btBroadphasePairSortPredicate());
-   short i;
+   if (m_invalidPair > 0) {
+    remove_invalid_pairs(overlappingPairArray, m_invalidPair);
+    m_invalidPair = 0;
+   }
+   int i;
    btBroadphasePair previousPair = new btBroadphasePair();
    previousPair.m_pProxy0 = null;
    previousPair.m_pProxy1 = null;
@@ -517,7 +508,9 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
   for (short axis = 0; axis < 3; axis++) {
    assert (min[axis] <= max[axis]);
    m_pHandles[0].m_maxEdges[axis] += 2;
-   m_pEdges[axis][limit + 1].set(m_pEdges[axis][limit - 1]);
+   Edge swapper = m_pEdges[axis][limit + 1];
+   m_pEdges[axis][limit + 1] = m_pEdges[axis][limit - 1];
+   m_pEdges[axis][limit - 1] = swapper;
    m_pEdges[axis][limit - 1].m_pos = min[axis];
    assert (m_pEdges[axis][limit - 1].m_pos >= 0);
    m_pEdges[axis][limit - 1].m_handle = handle;
@@ -597,8 +590,8 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
     assert (emin >= 0);
     assert (emax >= 0);
    }
-   int dmin =  ( min[axis] -   m_pEdges[axis][emin].m_pos);
-   int dmax =  ( max[axis] - m_pEdges[axis][emax].m_pos);
+   int dmin = (min[axis] - m_pEdges[axis][emin].m_pos);
+   int dmax = (max[axis] - m_pEdges[axis][emax].m_pos);
    m_pEdges[axis][emin].m_pos = min[axis];
    assert (m_pEdges[axis][emin].m_pos >= 0);
    m_pEdges[axis][emax].m_pos = max[axis];
@@ -617,6 +610,11 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
    if (dmax < 0) {
     sortMaxDown(axis, emax, dispatcher, true);
    }
+  }
+  if (DEBUG_BLOCKS)
+  {
+   verify_edges();
+   verify_edges_sorted();
   }
  }
 
@@ -761,7 +759,17 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
   for (short axis = 0; axis < 3; axis++) {
    if (pHandleA.m_maxEdges[axis] < pHandleB.m_minEdges[axis] ||
     pHandleB.m_maxEdges[axis] < pHandleA.m_minEdges[axis]) {
+    assert (!TestAabbAgainstAabb2(proxy0.m_aabbMin, proxy0.m_aabbMax, proxy1.m_aabbMin,
+     proxy1.m_aabbMax));
     return false;
+   }
+  }
+  if (DEBUG_BLOCKS) {
+   for (short axis = 0; axis < 3; axis++) {
+    if (pHandleB.m_maxEdges[axis] < pHandleA.m_minEdges[axis] ||
+     pHandleA.m_maxEdges[axis] < pHandleB.m_minEdges[axis]) {
+     assert(false);
+    }
    }
   }
   return true;

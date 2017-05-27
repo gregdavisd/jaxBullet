@@ -75,7 +75,7 @@ abstract public class btTriangleRaycastCallback implements btTriangleCallback , 
   * @param triangleIndex
   */
  @Override
- public void processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
+ public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
   final btVector3 vert0 = triangle[0];
   final btVector3 vert1 = triangle[1];
   final btVector3 vert2 = triangle[2];
@@ -88,11 +88,11 @@ abstract public class btTriangleRaycastCallback implements btTriangleCallback , 
   float dist_b = triangleNormal.dot(m_to);
   dist_b -= dist;
   if (dist_a * dist_b >= 0) {
-   return; // same sign
+   return true; // same sign
   }
   if (((m_flags & kF_FilterBackfaces) != 0) && (dist_a <= 0)) {
    // Backface, skip check
-   return;
+   return true;
   }
   float proj_length = dist_a - dist_b;
   float distance = (dist_a) / (proj_length);
@@ -130,6 +130,7 @@ abstract public class btTriangleRaycastCallback implements btTriangleCallback , 
     }
    }
   }
+  return true;
  }
 
  abstract float reportHit(final btVector3 hitNormalLocal, float hitFraction, int partId,

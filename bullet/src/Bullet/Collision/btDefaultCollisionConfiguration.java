@@ -15,6 +15,7 @@ subject to the following restrictions:
 
 package Bullet.Collision;
 
+import Bullet.Collision.Algorithm.btEmptyAlgorithm;
 import Bullet.Collision.Algorithm.btBoxBoxCollisionAlgorithm;
 import Bullet.Collision.Algorithm.btCollisionAlgorithmCreateFunc;
 import Bullet.Collision.Algorithm.btCompoundCollisionAlgorithm;
@@ -83,6 +84,7 @@ public class btDefaultCollisionConfiguration implements btCollisionConfiguration
   m_triangleSphereCF.m_swapped = true;
   m_boxBoxCF = new btBoxBoxCollisionAlgorithm.CreateFunc();
 //  m_boxBoxCF = new btConvexConvexAlgorithm.CreateFunc(m_pdSolver);
+//m_boxBoxCF=new btEmptyAlgorithm.CreateFunc();
   //convex versus plane
   m_convexPlaneCF = new btConvexPlaneCollisionAlgorithm.CreateFunc();
   m_planeConvexCF = new btConvexPlaneCollisionAlgorithm.CreateFunc();

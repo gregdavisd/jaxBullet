@@ -33,8 +33,8 @@ public class btDbvtTreeCollider extends btDbvt.ICollide  implements Serializable
  @Override
  public void process(btDbvtNode na, btDbvtNode nb) {
   if (na != nb) {
-   btDbvtProxy pa = (btDbvtProxy) na.data;
-   btDbvtProxy pb = (btDbvtProxy) nb.data;
+   btDbvtProxy pa = (btDbvtProxy) na.data();
+   btDbvtProxy pb = (btDbvtProxy) nb.data();
    pbp.m_paircache.addOverlappingPair(pa, pb);
    ++pbp.m_newpairs;
   }

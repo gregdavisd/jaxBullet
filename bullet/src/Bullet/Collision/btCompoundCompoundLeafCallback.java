@@ -68,8 +68,8 @@ public class btCompoundCompoundLeafCallback extends btDbvt.ICollide  implements 
  public  void process(btDbvtNode leaf0, btDbvtNode leaf1) {
   BT_PROFILE("btCompoundCompoundLeafCallback.Process");
   m_numOverlapPairs++;
-  int childIndex0 = leaf0.dataAsInt;
-  int childIndex1 = leaf1.dataAsInt;
+  int childIndex0 = leaf0.dataAsInt();
+  int childIndex1 = leaf1.dataAsInt();
   assert(childIndex0 >= 0);
   assert(childIndex1 >= 0);
   btCompoundShape compoundShape0 = (btCompoundShape) (m_compound0ColObjWrap.getCollisionShape());

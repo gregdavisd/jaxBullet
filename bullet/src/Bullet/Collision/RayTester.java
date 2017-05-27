@@ -65,6 +65,6 @@ public class RayTester extends btDbvt.ICollide  implements Serializable {
 
  @Override
  public void process(btDbvtNode leaf) {
-  processLeaf(leaf.dataAsInt);
+  processLeaf(leaf.dataAsInt());
  }
 };

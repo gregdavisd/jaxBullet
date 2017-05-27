@@ -20,7 +20,6 @@ import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import static Bullet.LinearMath.btScalar.SIMD_EPSILON;
 import static Bullet.LinearMath.btScalar.btSqrt;
 import Bullet.LinearMath.btVector3;
-import static Bullet.LinearMath.btVector3.btMul;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -82,7 +81,7 @@ public class btConvexPointCloudShape extends btPolyhedralConvexAabbCachingShape 
  }
 
  btVector3 getScaledPoint(int index) {
-  return btMul(m_unscaledPoints[index], m_localScaling);
+  return new btVector3(m_unscaledPoints[index]).mul(m_localScaling);
  }
 
  @Override
@@ -125,7 +124,7 @@ public class btConvexPointCloudShape extends btPolyhedralConvexAabbCachingShape 
   btVector3[] supportVerticesOut, int numVectors) {
   float[] maxDot = new float[1];
   for (int j = 0; j < numVectors; j++) {
-   final btVector3 vec = btMul(vectors[j], m_localScaling);  // dot( a*c, b) = dot(a, b*c)
+   final btVector3 vec = new btVector3(vectors[j]).mul(m_localScaling);  // dot( a*c, b) = dot(a, b*c)
    int index = vec.maxDot(m_unscaledPoints, m_numPoints, maxDot);
    if (supportVerticesOut[j] == null) {
     supportVerticesOut[j] = new btVector3();
@@ -164,7 +163,7 @@ public class btConvexPointCloudShape extends btPolyhedralConvexAabbCachingShape 
 
  @Override
  public void getVertex(int i, final btVector3 vtx) {
-  vtx.set(btMul(m_unscaledPoints[i], m_localScaling));
+  vtx.set(m_unscaledPoints[i]).mul( m_localScaling);
  }
 
  @Override

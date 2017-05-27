@@ -229,20 +229,20 @@ public   btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConst
    stkStack.push(new btDbvt.sStkNN(root0, root1));
    do {
     btDbvt.sStkNN p = stkStack.pop();
-    if (MyIntersect(p.a.volume, p.b.volume, xform, distanceThreshold)) {
+    if (MyIntersect(p.a.volume(), p.b.volume(), xform, distanceThreshold)) {
      if (p.a.isinternal()) {
       if (p.b.isinternal()) {
-       stkStack.push(new btDbvt.sStkNN(p.a.childs[0], p.b.childs[0]));
-       stkStack.push(new btDbvt.sStkNN(p.a.childs[1], p.b.childs[0]));
-       stkStack.push(new btDbvt.sStkNN(p.a.childs[0], p.b.childs[1]));
-       stkStack.push(new btDbvt.sStkNN(p.a.childs[1], p.b.childs[1]));
+       stkStack.push(new btDbvt.sStkNN(p.a.child0(), p.b.child0()));
+       stkStack.push(new btDbvt.sStkNN(p.a.child1(), p.b.child0()));
+       stkStack.push(new btDbvt.sStkNN(p.a.child0(), p.b.child1()));
+       stkStack.push(new btDbvt.sStkNN(p.a.child1(), p.b.child1()));
       } else {
-       stkStack.push(new btDbvt.sStkNN(p.a.childs[0], p.b));
-       stkStack.push(new btDbvt.sStkNN(p.a.childs[1], p.b));
+       stkStack.push(new btDbvt.sStkNN(p.a.child0(), p.b));
+       stkStack.push(new btDbvt.sStkNN(p.a.child1(), p.b));
       }
      } else if (p.b.isinternal()) {
-      stkStack.push(new btDbvt.sStkNN(p.a, p.b.childs[0]));
-      stkStack.push(new btDbvt.sStkNN(p.a, p.b.childs[1]));
+      stkStack.push(new btDbvt.sStkNN(p.a, p.b.child0()));
+      stkStack.push(new btDbvt.sStkNN(p.a, p.b.child1()));
      } else {
       callback.process(p.a, p.b);
      }

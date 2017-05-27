@@ -23,7 +23,7 @@ import java.io.Serializable;
  */
 public class btSolverMode  implements Serializable {
 
- public static final int SOLVER_RANDMIZE_ORDER = 1;
+ public static final int SOLVER_RANDOMIZE_ORDER = 1;
  public static final int SOLVER_FRICTION_SEPARATE = 2;
  public static final int SOLVER_USE_WARMSTARTING = 4;
  public static final int SOLVER_USE_2_FRICTION_DIRECTIONS = 16;

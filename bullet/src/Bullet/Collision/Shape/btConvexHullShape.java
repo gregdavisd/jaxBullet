@@ -22,6 +22,7 @@ import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
 import static Bullet.LinearMath.btVector3.btMul;
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  *
@@ -31,13 +32,13 @@ public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape implem
 
  /* have roll own growing array because can't get a backed array from ArrayList
   */
- final btVector3[] m_unscaledPoints;
+ btVector3[] m_unscaledPoints;
  int point_count;
 
  ///this constructor optionally takes in a pointer to points. Each point is assumed to be 3 consecutive float (x,y,z), the striding defines the number of floats between each point, in memory.
  ///It is easier to not pass any points in the constructor, and just add one point at a time, using addPoint.
  ///btConvexHullShape make an internal copy of the points.
- btConvexHullShape(float[] points, int numPoints, int stride) {
+  public btConvexHullShape(float[] points, int numPoints, int stride) {
   super();
   m_shapeType = CONVEX_HULL_SHAPE_PROXYTYPE;
   m_unscaledPoints = new btVector3[numPoints];
@@ -50,22 +51,21 @@ public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape implem
   recalcLocalAabb();
  }
 
- btConvexHullShape(float[] points, int numPoints) {
+  public btConvexHullShape(float[] points, int numPoints) {
   this(points, numPoints, 3);
  }
 
- btConvexHullShape(float[] points) {
+  public btConvexHullShape(float[] points) {
   this(points, points.length / 3, 3);
  }
 
- btConvexHullShape() {
+ public btConvexHullShape() {
   this(null, 0, 0);
  }
 
- void addPoint(final btVector3 point, boolean recalculateLocalAabb) {
+  public void addPoint(final btVector3 point, boolean recalculateLocalAabb) {
   if (point_count == m_unscaledPoints.length) {
-   btVector3[] new_array = new btVector3[Math.max(point_count * 2, 16)];
-   System.arraycopy(m_unscaledPoints, 0, new_array, 0, point_count);
+   m_unscaledPoints=Arrays.copyOf(m_unscaledPoints, Math.max(point_count * 2, 16));
   }
   m_unscaledPoints[point_count] = new btVector3(point);
   ++point_count;
@@ -74,11 +74,11 @@ public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape implem
   }
  }
 
- void addPoint(final btVector3 point) {
+ public void addPoint(final btVector3 point) {
   addPoint(point, true);
  }
 
- btVector3[] getUnscaledPoints() {
+ public  btVector3[] getUnscaledPoints() {
   return m_unscaledPoints;
  }
 
@@ -92,11 +92,11 @@ public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape implem
   assert (false);
  }
 
- btVector3 getScaledPoint(int i) {
-  return btMul(m_unscaledPoints[i], m_localScaling);
+  public btVector3 getScaledPoint(int i) {
+  return new btVector3(m_unscaledPoints[i]).mul( m_localScaling);
  }
 
- int getNumPoints() {
+  public int getNumPoints() {
   return point_count;
  }
 
@@ -120,9 +120,9 @@ public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape implem
   float[] maxDot = new float[]{(-BT_LARGE_FLOAT)};
   // Here we take advantage of dot(a, b*c) = dot(a*b, c).  Note: This is true mathematically, but not numerically. 
   if (0 < point_count) {
-   final btVector3 scaled = btMul(vec, m_localScaling);
+   final btVector3 scaled = new btVector3(vec).mul( m_localScaling);
    int index = scaled.maxDot(getUnscaledPoints(), point_count, maxDot); // FIXME: may violate encapsulation of m_unscaledPoints
-   return btMul(m_unscaledPoints[index], m_localScaling);
+   return new btVector3(m_unscaledPoints[index]).mul( m_localScaling);
   }
   return supVec;
  }
@@ -142,7 +142,7 @@ public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape implem
   float[] newDot = new float[1];
   btVector3[] unscaled_points = getUnscaledPoints();
   for (int j = 0; j < numVectors; j++) {
-   final btVector3 vec = btMul(vectors[j], m_localScaling);        // dot(a*b,c) = dot(a,b*c)
+   final btVector3 vec =new btVector3(vectors[j]).mul(m_localScaling);        // dot(a*b,c) = dot(a,b*c)
    if (0 < point_count) {
     int i = vec.maxDot(unscaled_points, point_count, newDot);
     //(supportVerticesOut[j].set(getScaledPoint(i))).w = newDot[0];
@@ -160,7 +160,7 @@ public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape implem
   maxProj[0] = -FLT_MAX;
   int numVerts = point_count;
   for (int i = 0; i < numVerts; i++) {
-   final btVector3 vtx = btMul(m_unscaledPoints[i], m_localScaling);
+   final btVector3 vtx = new btVector3(m_unscaledPoints[i]).mul( m_localScaling);
    final btVector3 pt = trans.transform(new btVector3(vtx));
    float dp = pt.dot(dir);
    if (dp < minProj[0]) {

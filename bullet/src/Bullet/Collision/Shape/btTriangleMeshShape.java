@@ -11,13 +11,12 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Collision.Shape;
 
 import static Bullet.Collision.Broadphase.BroadphaseNativeTypes.TRIANGLE_MESH_SHAPE_PROXYTYPE;
 import Bullet.Collision.FilteredCallback;
 import Bullet.Collision.SupportVertexCallback;
-import Bullet.Collision.btStridingMeshInterface;
 import Bullet.Collision.btTriangleCallback;
 import Bullet.LinearMath.btMatrix3x3;
 import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
@@ -29,7 +28,9 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btTriangleMeshShape extends btConcaveShape  implements Serializable {
+public class btTriangleMeshShape extends btConcaveShape implements Serializable {
+
+ private static final long serialVersionUID = -7257815420118793857L;
 
  final btVector3 m_localAabbMin;
  final btVector3 m_localAabbMax;
@@ -50,7 +51,7 @@ public class btTriangleMeshShape extends btConcaveShape  implements Serializable
   }
  }
 
- btVector3 localGetSupportingVertex(final btVector3 vec) {
+ public btVector3 localGetSupportingVertex(final btVector3 vec) {
   final btVector3 supportVertex;
   final btTransform ident = new btTransform();
   ident.setIdentity();
@@ -61,8 +62,28 @@ public class btTriangleMeshShape extends btConcaveShape  implements Serializable
   return supportVertex;
  }
 
+ /* building the AABB in the constructor relies on C++ calling non-derived methods from base constructor.
+Whereas Java calls the derived methods from the constructor of the base class. Hence the non virtual duplicates used only in the constructor.
+  */
+ private btVector3 localGetSupportingVertexNV(final btVector3 vec) {
+  final btVector3 supportVertex;
+  final btTransform ident = new btTransform();
+  ident.setIdentity();
+  SupportVertexCallback supportCallback = new SupportVertexCallback(vec, ident);
+  final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT), (BT_LARGE_FLOAT));
+  processAllTrianglesNV(supportCallback, new btVector3(aabbMax).negate(), aabbMax);
+  supportVertex = supportCallback.getSupportVertexLocal();
+  return supportVertex;
+ }
+
+ private void processAllTrianglesNV(btTriangleCallback callback, final btVector3 aabbMin,
+  final btVector3 aabbMax) {
+  FilteredCallback filterCallback = new FilteredCallback(callback, aabbMin, aabbMax);
+  m_meshInterface.InternalProcessAllTriangles(filterCallback, aabbMin, aabbMax);
+ }
+
  btVector3 localGetSupportingVertexWithoutMargin(final btVector3 vec) {
-  assert(false);
+  assert (false);
   return localGetSupportingVertex(vec);
  }
 
@@ -70,10 +91,10 @@ public class btTriangleMeshShape extends btConcaveShape  implements Serializable
   for (int i = 0; i < 3; i++) {
    final btVector3 vec = new btVector3();
    vec.setElement(i, 1.f);
-   final btVector3 tmp = localGetSupportingVertex(vec);
+   final btVector3 tmp = localGetSupportingVertexNV(vec);
    m_localAabbMax.setElement(i, tmp.getElement(i) + m_collisionMargin);
    vec.setElement(i, -1.f);
-   tmp.set(localGetSupportingVertex(vec));
+   tmp.set(localGetSupportingVertexNV(vec));
    m_localAabbMin.setElement(i, tmp.getElement(i) - m_collisionMargin);
   }
  }
@@ -100,7 +121,7 @@ public class btTriangleMeshShape extends btConcaveShape  implements Serializable
  @Override
  public void calculateLocalInertia(float mass, final btVector3 inertia) {
   //moving concave objects not supported
-  assert(false);
+  assert (false);
   inertia.set(0, 0, 0);
  }
 

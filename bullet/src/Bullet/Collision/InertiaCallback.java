@@ -24,7 +24,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
- public class InertiaCallback implements btInternalTriangleIndexCallback  , Serializable {
+ public class InertiaCallback implements btTriangleCallback  , Serializable {
 
  final btMatrix3x3 sum = new btMatrix3x3();
  final btVector3 center = new btVector3();
@@ -34,7 +34,7 @@ import java.io.Serializable;
  }
 
  @Override
- public boolean internalProcessTriangleIndex(btVector3[] triangle, int partId, int triangleIndex) {
+ public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
   final btVector3 _a = new btVector3(triangle[0]).sub(center);
   final btVector3 _b = new btVector3(triangle[1]).sub(center);
   final btVector3 _c = new btVector3(triangle[2]).sub(center);

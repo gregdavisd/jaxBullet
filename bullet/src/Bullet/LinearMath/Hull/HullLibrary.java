@@ -37,7 +37,7 @@ import org.apache.commons.collections.primitives.ArrayIntList;
  * ComputeHull method. The btShapeHull class uses this HullLibrary to create a approximate convex
  * mesh given a general (non-polyhedral) convex shape.
  */
-public class HullLibrary  implements Serializable {
+public class HullLibrary implements Serializable {
 
  static final float EPSILON = 0.000001f;
 
@@ -167,7 +167,7 @@ public class HullLibrary  implements Serializable {
  }
 
  void deAllocateTriangle(btHullTriangle tri) {
-  assert(m_tris.get(tri.id) == tri);
+  assert (m_tris.get(tri.id) == tri);
   m_tris.set(tri.id, null);
  }
 
@@ -178,10 +178,10 @@ public class HullLibrary  implements Serializable {
    int i2 = (i + 2) % 3;
    int a = s.getElement(i1);
    int b = s.getElement(i2);
-   assert(m_tris.get(s.neib(a, b)).neib(b, a) == s.id);
-   assert(m_tris.get(t.neib(a, b)).neib(b, a) == t.id);
-   m_tris.get(s.neib(a, b)).neib_set(b, a, t.neib(b, a));
-   m_tris.get(t.neib(b, a)).neib_set(a, b, s.neib(a, b));
+   assert (m_tris.get(s.neib(a, b).get()).neib(b, a).get() == s.id);
+   assert (m_tris.get(t.neib(a, b).get()).neib(b, a).get() == t.id);
+   m_tris.get(s.neib(a, b).get()).neib(b, a).set(t.neib(b, a).get());
+   m_tris.get(t.neib(b, a).get()).neib(a, b).set(s.neib(a, b).get());
   }
  }
 
@@ -193,14 +193,14 @@ public class HullLibrary  implements Serializable {
 
  void checkit(btHullTriangle t) {
   int i;
-  assert(m_tris.get(t.id) == t);
+  assert (m_tris.get(t.id) == t);
   for (i = 0; i < 3; i++) {
    int i1 = (i + 1) % 3;
    int i2 = (i + 2) % 3;
    int a = t.getElement(i1);
    int b = t.getElement(i2);
-   assert(a != b);
-   assert(m_tris.get(t.n.getElement(i)).neib(b, a) == t.id);
+   assert (a != b);
+   assert (m_tris.get(t.n.getElement(i)).neib(b, a).get() == t.id);
   }
  }
 
@@ -225,23 +225,19 @@ public class HullLibrary  implements Serializable {
    do_vlimit = 1000000000;
   }
   int j;
-  ArrayIntList isextreme = new ArrayIntList();
-  isextreme.ensureCapacity(verts_count);
-  ArrayIntList allow = new ArrayIntList();
-  allow.ensureCapacity(verts_count);
+  final btVector3 bmin = new btVector3(verts[0]);
+  final btVector3 bmax = new btVector3(verts[0]);
+  ArrayIntList isextreme = new ArrayIntList(verts_count);
+  ArrayIntList allow = new ArrayIntList(verts_count);
   float epsilon;
-  {
-   final btVector3 bmin = new btVector3(verts[0]);
-   final btVector3 bmax = new btVector3(verts[0]);
-   for (j = 0; j < verts_count; j++) {
-    allow.add(1);
-    isextreme.add(0);
-    bmin.setMin(verts[j]);
-    bmax.setMax(verts[j]);
-   }
-   epsilon = bmax.sub(bmin).length() * (0.001f);
+  for (j = 0; j < verts_count; j++) {
+   allow.add(1);
+   isextreme.add(0);
+   bmin.setMin(verts[j]);
+   bmax.setMax(verts[j]);
   }
-  assert(epsilon != 0.0);
+  epsilon = new btVector3(bmax).sub(bmin).length() * (0.001f);
+  assert (epsilon != 0.0);
   Int4 p = FindSimplex(verts, verts_count, allow.toBackedArray());
   if (p.x == -1) {
    return 0; // simplex failed
@@ -250,7 +246,7 @@ public class HullLibrary  implements Serializable {
    .scale(1.0f / 4.0f);  // a valid interior point
   btHullTriangle t0 = allocateTriangle(p.z, p.w, p.y);
   t0.n.set(2, 3, 1);
-  btHullTriangle t1 = allocateTriangle(p.w, p.y, p.x);
+  btHullTriangle t1 = allocateTriangle(p.w, p.z, p.x);
   t1.n.set(3, 2, 0);
   btHullTriangle t2 = allocateTriangle(p.x, p.y, p.w);
   t2.n.set(0, 1, 3);
@@ -266,8 +262,8 @@ public class HullLibrary  implements Serializable {
   checkit(t3);
   for (j = 0; j < m_tris.size(); j++) {
    btHullTriangle t = m_tris.get(j);
-   assert(t != null);
-   assert(t.vmax < 0);
+   assert (t != null);
+   assert (t.vmax < 0);
    final btVector3 n = TriNormal(verts[t.x], verts[t.y], verts[t.z]);
    t.vmax = maxdirsterid(verts, verts_count, n, allow.toBackedArray());
    t.rise = n.dot(new btVector3(verts[t.vmax]).sub(verts[t.x]));
@@ -277,8 +273,8 @@ public class HullLibrary  implements Serializable {
   while (do_vlimit > 0 && ((te = extrudable(epsilon)) != null)) {
    //int3 ti=*te;
    int v = te.vmax;
-   assert(v != -1);
-   assert(isextreme.get(v) == 0);  // wtf we've already done this vertex
+   assert (v != -1);
+   assert (isextreme.get(v) == 0);  // wtf we've already done this vertex
    isextreme.set(v, 1);
    //if(v==p0 || v==p1 || v==p2 || v==p3) continue; // done these already
    j = m_tris.size();
@@ -295,21 +291,20 @@ public class HullLibrary  implements Serializable {
    // now check for those degenerate cases where we have a flipped triangle or a really skinny triangle
    j = m_tris.size();
    while (j-- > 0) {
-    btHullTriangle triangle = m_tris.get(j);
-    if (triangle == null) {
+    btHullTriangle nt = m_tris.get(j);
+    if (nt == null) {
      continue;
     }
-    if (!hasvert(triangle, v)) {
+    if (!hasvert(nt, v)) {
      break;
     }
-    Int3 nt = triangle;
     if (above(verts, nt, center, (0.01f) * epsilon) != 0 || (new btVector3(verts[nt.y]).sub(
      verts[nt.x])).cross(new btVector3(verts[nt.z]).sub(verts[nt.y])).length() < epsilon * epsilon *
      (0.1f)) {
      btHullTriangle nb = m_tris.get(m_tris.get(j).n.x);
-     assert(nb != null);
-     assert(!hasvert(nb, v));
-     assert(nb.id < j);
+     assert (nb != null);
+     assert (!hasvert(nb, v));
+     assert (nb.id < j);
      extrude(nb, v);
      j = m_tris.size();
     }
@@ -325,7 +320,7 @@ public class HullLibrary  implements Serializable {
     }
     final btVector3 n = TriNormal(verts[t.x], verts[t.y], verts[t.z]);
     t.vmax = maxdirsterid(verts, verts_count, n, allow.toBackedArray());
-    if (isextreme.get(t.vmax) == 1) {
+    if (isextreme.get(t.vmax) != 0) {
      t.vmax = -1; // already done that vertex - algorithm needs to be able to terminate.
     } else {
      t.rise = (n.dot(new btVector3(verts[t.vmax]).sub(verts[t.x])));
@@ -337,7 +332,8 @@ public class HullLibrary  implements Serializable {
  }
 
  Int4 FindSimplex(btVector3[] verts, int verts_count, int[] allow) {
-  btVector3[] basis = new btVector3[3];init(basis);
+  btVector3[] basis = new btVector3[3];
+  init(basis);
   basis[0].set(0.01f, 0.02f, 1.0f);
   int p0 = maxdirsterid(verts, verts_count, basis[0], allow);
   int p1 = maxdirsterid(verts, verts_count, new btVector3(basis[0]).negate(), allow);
@@ -369,11 +365,11 @@ public class HullLibrary  implements Serializable {
   if (p3 == p0 || p3 == p1 || p3 == p2) {
    return new Int4(-1, -1, -1, -1);
   }
-  assert(!(p0 == p1 || p0 == p2 || p0 == p3 || p1 == p2 || p1 == p3 || p2 == p3));
-  if ((new btVector3(verts[p3])
-   .sub(verts[p0]))
-   .dot((new btVector3(verts[p1])
-    .sub(verts[p0]))
+  assert (!(p0 == p1 || p0 == p2 || p0 == p3 || p1 == p2 || p1 == p3 || p2 == p3));
+  if (new btVector3(verts[p3])
+   .sub(verts[p0])
+   .dot(new btVector3(verts[p1])
+    .sub(verts[p0])
     .cross(new btVector3(verts[p2])
      .sub(verts[p0]))) < 0) {
    int swapper = p2;
@@ -388,13 +384,13 @@ public class HullLibrary  implements Serializable {
   int n = m_tris.size();
   btHullTriangle ta = allocateTriangle(v, t.y, t.z);
   ta.n.set(t0.n.x, n + 1, n + 2);
-  m_tris.get(t0.n.x).neib_set(t.y, t.z, n + 0);
+  m_tris.get(t0.n.x).neib(t.y, t.z).set(n + 0);
   btHullTriangle tb = allocateTriangle(v, t.z, t.x);
   tb.n.set(t0.n.y, n + 2, n + 0);
-  m_tris.get(t0.n.y).neib_set(t.z, t.x, n + 1);
+  m_tris.get(t0.n.y).neib(t.z, t.x).set(n + 1);
   btHullTriangle tc = allocateTriangle(v, t.x, t.y);
   tc.n.set(t0.n.z, n + 0, n + 1);
-  m_tris.get(t0.z).neib_set(t.x, t.y, n + 2);
+  m_tris.get(t0.n.z).neib(t.x, t.y).set(n + 2);
   checkit(ta);
   checkit(tb);
   checkit(tc);
@@ -421,7 +417,7 @@ public class HullLibrary  implements Serializable {
   ocount[0] = 0;
   for (int i = 0; i < (indexcount); i++) {
    int v = indices[i]; // original array index
-   assert(v >= 0 && v < vcount);
+   assert (v >= 0 && v < vcount);
    if (usedIndices[v] != 0) // if already remapped
    {
     indices[i] = usedIndices[v] - 1; // index to new array
@@ -434,7 +430,7 @@ public class HullLibrary  implements Serializable {
      }
     }
     ocount[0]++; // increment output vert count
-    assert(ocount[0] >= 0 && ocount[0] <= vcount);
+    assert (ocount[0] >= 0 && ocount[0] <= vcount);
     usedIndices[v] = ocount[0]; // assign new index remapping
    }
   }
@@ -612,7 +608,7 @@ public class HullLibrary  implements Serializable {
    float _dx = bmax[0] - bmin[0];
    float _dy = bmax[1] - bmin[1];
    float _dz = bmax[2] - bmin[2];
-   if (_dx < EPSILON || _dy < EPSILON || _dz < EPSILON || vcount[3] < 3) {
+   if (_dx < EPSILON || _dy < EPSILON || _dz < EPSILON || vcount[0] < 3) {
     float cx = dx * (0.5f) + bmin[0];
     float cy = dy * (0.5f) + bmin[1];
     float cz = dz * (0.5f) + bmin[2];
@@ -715,10 +711,10 @@ public class HullLibrary  implements Serializable {
     float c = btCos(SIMD_RADS_PER_DEG * (x));
     int mb = maxdirfiltered(p, count,
      new btVector3(dir)
-     .add(((new btVector3(u)
+     .add((new btVector3(u)
       .scale(s))
-      .add((new btVector3(v)
-       .scale(c))))
+      .add(new btVector3(v)
+       .scale(c))
       .scale(0.025f)),
      allow);
     if (ma == m && mb == m) {
@@ -733,10 +729,10 @@ public class HullLibrary  implements Serializable {
       c = btCos(SIMD_RADS_PER_DEG * (xx));
       int md = maxdirfiltered(p, count,
        new btVector3(dir)
-       .add(((new btVector3(u)
+       .add((new btVector3(u)
         .scale(s))
-        .add((new btVector3(v)
-         .scale(c))))
+        .add(new btVector3(v)
+         .scale(c))
         .scale(0.025f)),
        allow);
       if (mc == m && md == m) {
@@ -751,7 +747,7 @@ public class HullLibrary  implements Serializable {
    allow[m] = 0;
    m = -1;
   }
-  assert(false);
+  assert (false);
   return m;
  }
 
@@ -766,7 +762,7 @@ public class HullLibrary  implements Serializable {
  }
 
  int maxdirfiltered(btVector3[] p, int count, final btVector3 dir, int[] allow) {
-  assert(count != 0);
+  assert (count != 0);
   int m = -1;
   for (int i = 0; i < count; i++) {
    if (allow[i] != 0) {
@@ -775,7 +771,7 @@ public class HullLibrary  implements Serializable {
     }
    }
   }
-  assert(m != -1);
+  assert (m != -1);
   return m;
  }
 

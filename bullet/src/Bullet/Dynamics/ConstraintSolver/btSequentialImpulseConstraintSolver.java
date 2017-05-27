@@ -38,7 +38,6 @@ import Bullet.Dynamics.Constraint.btTypedConstraint;
 import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_DISABLE_VELOCITY_DEPENDENT_FRICTION_DIRECTION;
 import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_ENABLE_FRICTION_DIRECTION_CACHING;
 import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_INTERLEAVE_CONTACT_AND_FRICTION_CONSTRAINTS;
-import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_RANDMIZE_ORDER;
 import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_SIMD;
 import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_USE_2_FRICTION_DIRECTIONS;
 import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_USE_WARMSTARTING;
@@ -61,6 +60,8 @@ import java.util.Collections;
 import java.util.List;
 import javax.vecmath.FloatSmartPointer;
 import static javax.vecmath.VecMath.DEBUG_BLOCKS;
+import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_RANDOMIZE_ORDER;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
@@ -69,7 +70,7 @@ import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 public class btSequentialImpulseConstraintSolver extends btConstraintSolver implements Serializable {
 
  static int gNumSplitImpulseRecoveries = 0;
- long m_btSeed2;
+ long m_btSeed2=ThreadLocalRandom.current().nextLong();
 
  static float gResolveSingleConstraintRowGeneric_scalar_reference(btSolverBody body1,
   btSolverBody body2,
@@ -816,7 +817,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
        solverConstraint, cp, rel_pos1,
        rel_pos2, colObj0, colObj1, relaxation[0]));
       if ((infoGlobal.m_solverMode & SOLVER_USE_2_FRICTION_DIRECTIONS) != 0) {
-       assert (solverConstraint.m_solverFriction2 != null);
+       assert (solverConstraint.m_solverFriction2 == null);
        applyAnisotropicFriction(colObj0, cp.m_lateralFrictionDir2,
         btCollisionObject.CF_ANISOTROPIC_FRICTION);
        applyAnisotropicFriction(colObj1, cp.m_lateralFrictionDir2,
@@ -1092,7 +1093,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   List<btTypedConstraint> constraints, int numConstraints,
   btContactSolverInfo infoGlobal, btIDebugDraw debugDrawer) {
   float leastSquaresResidual = 0.f;
-  if ((infoGlobal.m_solverMode & SOLVER_RANDMIZE_ORDER) != 0) {
+  if ((infoGlobal.m_solverMode & SOLVER_RANDOMIZE_ORDER) != 0) {
    //contact/friction constraints are not solved more than
    shuffle_list(non_contact);
    if (iteration < infoGlobal.m_numIterations) {
@@ -1113,13 +1114,13 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
     }
    }
    if (iteration < infoGlobal.m_numIterations) {
-    for (btTypedConstraint constraint : constraints.subList(0, numConstraints)) {
-     if (constraint.isEnabled()) {
-      btSolverBody bodyA = getOrInitSolverBody(constraint.getRigidBodyA(), infoGlobal.m_timeStep);
-      btSolverBody bodyB = getOrInitSolverBody(constraint.getRigidBodyB(), infoGlobal.m_timeStep);
-      constraint.solveConstraintObsolete(bodyA, bodyB, infoGlobal.m_timeStep);
-     }
-    }
+//    for (btTypedConstraint constraint : constraints.subList(0, numConstraints)) {
+//     if (constraint.isEnabled()) {
+//      btSolverBody bodyA = getOrInitSolverBody(constraint.getRigidBodyA(), infoGlobal.m_timeStep);
+//      btSolverBody bodyB = getOrInitSolverBody(constraint.getRigidBodyB(), infoGlobal.m_timeStep);
+//      constraint.solveConstraintObsolete(bodyA, bodyB, infoGlobal.m_timeStep);
+//     }
+//    }
     ///solve all contact constraints using SIMD, if available
     if ((infoGlobal.m_solverMode & SOLVER_INTERLEAVE_CONTACT_AND_FRICTION_CONSTRAINTS) != 0) {
      for (btSolverConstraint solveContact : contact) {
@@ -1308,10 +1309,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
        break;
       }
      }
-     if (!found) {
-      int x = 1;
-     }
-     //assert(found);
+     assert(found);
     }
    }
   }
@@ -1348,7 +1346,6 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    }
   }
   {
-   int totalNumRows = 0;
    int constraint_num = 0;
    //calculate the total number of contraint rows
    resize_info1(numConstraints);
@@ -1376,7 +1373,6 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
      info1.m_numConstraintRows = 0;
      info1.nub = 0;
     }
-    totalNumRows += info1.m_numConstraintRows;
    }
    ///setup the btSolverConstraints
    assert (non_contact.isEmpty());

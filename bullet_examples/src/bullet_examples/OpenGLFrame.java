@@ -66,7 +66,7 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
   blank_cursor = Toolkit.getDefaultToolkit().createCustomCursor(Toolkit.getDefaultToolkit()
    .createImage(new byte[0]), new Point(), "blank");
  }
- private final ArrayBlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(256);
+ private final ArrayBlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(16);
  private MouseListener mouse;
  private MouseMotionListener mouse_motion;
  private MouseWheelListener mouse_wheel;
@@ -304,7 +304,7 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
   }
  }
 
- public void setMouseListener(Object listener) {
+ public void set_mouse_listener(Object listener) {
   mouse = (MouseListener) listener;
   mouse_motion = (MouseMotionListener) listener;
   mouse_wheel = (MouseWheelListener) listener;
@@ -576,17 +576,17 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
 
  @Override
  public void mouseEntered(MouseEvent e) {
-  //mouse.mouseEntered(adjust_event_coords(e));
+  mouse.mouseEntered(apply_grabbing_to_event(e));
  }
 
  @Override
  public void mouseExited(MouseEvent e) {
-  //mouse.mouseExited(adjust_event_coords(e));
+  mouse.mouseExited(apply_grabbing_to_event(e));
  }
 
  @Override
  public void mouseDragged(MouseEvent e) {
-  //mouse_motion.mouseDragged(adjust_event_coords(e));
+  mouse_motion.mouseDragged(apply_grabbing_to_event(e));
  }
 
  @Override

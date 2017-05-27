@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision;
 
 import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
@@ -23,7 +22,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-class UpdateOptimizedBvhNodeCallback implements btInternalTriangleIndexCallback ,   Serializable {
+class UpdateOptimizedBvhNodeCallback implements btTriangleCallback, Serializable {
 
  final btOptimizedBvh owner;
  btQuantizedBvhNode curNode;
@@ -38,7 +37,7 @@ class UpdateOptimizedBvhNodeCallback implements btInternalTriangleIndexCallback 
  }
 
  @Override
- public boolean internalProcessTriangleIndex(btVector3[] triangle, int partId, int triangleIndex) {
+ public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
   btOptimizedBvhNode node = new btOptimizedBvhNode();
   final btVector3 aabbMin = new btVector3();
   final btVector3 aabbMax = new btVector3();

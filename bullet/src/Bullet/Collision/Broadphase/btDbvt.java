@@ -11,9 +11,8 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 ///btDbvt implementation by Nathanael Presson
-
 package Bullet.Collision.Broadphase;
 ///btDbvt implementation by Nathanael Presson
 
@@ -28,6 +27,7 @@ import static Bullet.LinearMath.btVector3.init;
 import static Bullet.common.btAlignedObjectArray.findLinearSearch;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import static java.util.Collections.swap;
 import org.apache.commons.collections.primitives.ArrayIntList;
@@ -36,10 +36,10 @@ import org.apache.commons.collections.primitives.ArrayIntList;
  *
  * @author Gregery Barton
  */
-public class btDbvt  implements Serializable  {
+public class btDbvt implements Serializable {
 
  /* Stack element	*/
- public static class sStkNN  implements Serializable{
+ public static class sStkNN implements Serializable {
 
   public btDbvtNode a;
   public btDbvtNode b;
@@ -53,7 +53,7 @@ public class btDbvt  implements Serializable  {
   }
  };
 
- public static class sStkNP  implements Serializable{
+ public static class sStkNP implements Serializable {
 
   final btDbvtNode node;
   int mask;
@@ -64,7 +64,7 @@ public class btDbvt  implements Serializable  {
   }
  };
 
- public static class sStkNPS  implements Serializable{
+ public static class sStkNPS implements Serializable {
 
   btDbvtNode node;
   int mask;
@@ -80,7 +80,7 @@ public class btDbvt  implements Serializable  {
   }
  };
 
- public static class sStkCLN  implements Serializable{
+ public static class sStkCLN implements Serializable {
 
   final btDbvtNode node;
   final btDbvtNode parent;
@@ -93,7 +93,7 @@ public class btDbvt  implements Serializable  {
  // Policies/Interfaces
 
  /* ICollide	*/
- public static class ICollide  implements Serializable{
+ public static class ICollide implements Serializable {
 
   public void process(btDbvtNode a, btDbvtNode b) {
   }
@@ -115,7 +115,7 @@ public class btDbvt  implements Serializable  {
  }
 
  /* IWriter	*/
- public static abstract class IWriter  implements Serializable{
+ public static abstract class IWriter implements Serializable {
 
   abstract void prepare(btDbvtNode root, int numnodes);
 
@@ -125,7 +125,7 @@ public class btDbvt  implements Serializable  {
  }
 
  /* IClone	*/
- public static class IClone  implements Serializable{
+ public static class IClone implements Serializable {
 
   void cloneLeaf(btDbvtNode n) {
   }
@@ -138,10 +138,10 @@ public class btDbvt  implements Serializable  {
  public int m_lkhd;
  public int m_leaves;
  public int m_opath;
- final ArrayList<sStkNN> m_stkStack = new ArrayList<>(0);
+ sStkNN[] m_stkStack = new sStkNN[0];
 
  // Methods
-  public btDbvt() {
+ public btDbvt() {
   {
    m_root = null;
    m_lkhd = -1;
@@ -150,20 +150,20 @@ public class btDbvt  implements Serializable  {
   }
  }
 
-  public void clear() {
+ public void clear() {
   if (m_root != null) {
    recursedeletenode(this, m_root);
   }
   m_lkhd = -1;
-  m_stkStack.clear();
+  m_stkStack = new sStkNN[0];
   m_opath = 0;
  }
 
-  public boolean empty() {
+ public boolean empty() {
   return (null == m_root);
  }
 
-  public void optimizeBottomUp() {
+ public void optimizeBottomUp() {
   if (m_root != null) {
    ArrayList<btDbvtNode> leaves = new ArrayList<>(m_leaves);
    fetchleaves(this, m_root, leaves);
@@ -172,7 +172,7 @@ public class btDbvt  implements Serializable  {
   }
  }
 
-  public void optimizeTopDown(int bu_treshold) {
+ public void optimizeTopDown(int bu_treshold) {
   if (m_root != null) {
    ArrayList<btDbvtNode> leaves = new ArrayList<>(m_leaves);
    fetchleaves(this, m_root, leaves);
@@ -180,11 +180,11 @@ public class btDbvt  implements Serializable  {
   }
  }
 
-  public void optimizeTopDown() {
+ public void optimizeTopDown() {
   optimizeTopDown(128);
  }
 
- public  void optimizeIncremental(int passes) {
+ public void optimizeIncremental(int passes) {
   return;
 //  int do_passes = passes;
 //  if (do_passes < 0) {
@@ -206,19 +206,19 @@ public class btDbvt  implements Serializable  {
 //  }
  }
 
-  public btDbvtNode insert(btDbvtAabbMm volume, int dataAsInt, Object data) {
+ public btDbvtNode insert(btDbvtAabbMm volume, int dataAsInt, Object data) {
   btDbvtNode leaf = createnode(this, null, volume, dataAsInt, data);
   insertleaf(this, m_root, leaf);
   ++m_leaves;
   return (leaf);
  }
 
-  public void update(btDbvtNode leaf, int lookahead) {
+ public void update(btDbvtNode leaf, int lookahead) {
   btDbvtNode root = removeleaf(this, leaf);
   if (root != null) {
    if (lookahead >= 0) {
-    for (int i = 0; (i < lookahead) && root.parent != null; ++i) {
-     root = root.parent;
+    for (int i = 0; (i < lookahead) && root.parent() != null; ++i) {
+     root = root.parent();
     }
    } else {
     root = m_root;
@@ -227,27 +227,27 @@ public class btDbvt  implements Serializable  {
   insertleaf(this, root, leaf);
  }
 
-  public void update(btDbvtNode leaf) {
+ public void update(btDbvtNode leaf) {
   update(leaf, -1);
  }
 
-  public void update(btDbvtNode leaf, btDbvtAabbMm volume) {
+ public void update(btDbvtNode leaf, btDbvtAabbMm volume) {
   btDbvtNode root = removeleaf(this, leaf);
   if (root != null) {
    if (m_lkhd >= 0) {
-    for (int i = 0; (i < m_lkhd) && root.parent != null; ++i) {
-     root = root.parent;
+    for (int i = 0; (i < m_lkhd) && root.parent() != null; ++i) {
+     root = root.parent();
     }
    } else {
     root = m_root;
    }
   }
-  leaf.volume.set(volume);
+  leaf.volume().set(volume);
   insertleaf(this, root, leaf);
  }
 
-  public boolean update(btDbvtNode leaf, btDbvtAabbMm volume, final btVector3 velocity, float margin) {
-  if (leaf.volume.contain(volume)) {
+ public boolean update(btDbvtNode leaf, btDbvtAabbMm volume, final btVector3 velocity, float margin) {
+  if (leaf.volume().contain(volume)) {
    return (false);
   }
   volume.expand(new btVector3(margin, margin, margin));
@@ -256,8 +256,8 @@ public class btDbvt  implements Serializable  {
   return (true);
  }
 
-  public boolean update(btDbvtNode leaf, btDbvtAabbMm volume, final btVector3 velocity) {
-  if (leaf.volume.contain(volume)) {
+ public boolean update(btDbvtNode leaf, btDbvtAabbMm volume, final btVector3 velocity) {
+  if (leaf.volume().contain(volume)) {
    return (false);
   }
   volume.signedExpand(velocity);
@@ -265,8 +265,8 @@ public class btDbvt  implements Serializable  {
   return (true);
  }
 
-  public boolean update(btDbvtNode leaf, btDbvtAabbMm volume, float margin) {
-  if (leaf.volume.contain(volume)) {
+ public boolean update(btDbvtNode leaf, btDbvtAabbMm volume, float margin) {
+  if (leaf.volume().contain(volume)) {
    return (false);
   }
   volume.expand(new btVector3(margin, margin, margin));
@@ -274,7 +274,7 @@ public class btDbvt  implements Serializable  {
   return (true);
  }
 
-  public void remove(btDbvtNode leaf) {
+ public void remove(btDbvtNode leaf) {
   removeleaf(this, leaf);
   deletenode(this, leaf);
   --m_leaves;
@@ -288,12 +288,12 @@ public class btDbvt  implements Serializable  {
   for (int i = 0; i < nodes.nodes.size(); ++i) {
    btDbvtNode n = nodes.nodes.get(i);
    int p = -1;
-   if (n.parent != null) {
-    p = findLinearSearch(nodes.nodes, n.parent);
+   if (n.parent() != null) {
+    p = findLinearSearch(nodes.nodes, n.parent());
    }
    if (n.isinternal()) {
-    int c0 = findLinearSearch(nodes.nodes, n.childs[0]);
-    int c1 = findLinearSearch(nodes.nodes, n.childs[1]);
+    int c0 = findLinearSearch(nodes.nodes, n.child0());
+    int c1 = findLinearSearch(nodes.nodes, n.child1());
     iwriter.writeNode(n, i, p, c0, c1);
    } else {
     iwriter.writeLeaf(n, i, p);
@@ -309,17 +309,18 @@ public class btDbvt  implements Serializable  {
    do {
     int i = stack.size() - 1;
     sStkCLN e = stack.get(i);
-    btDbvtNode n = createnode(dest, e.parent, e.node.volume, e.node.dataAsInt, e.node.data);
-    System.arraycopy(e.node.childs, 0, n.childs, 0, n.childs.length);
+    btDbvtNode n = createnode(dest, e.parent, e.node.volume(), e.node.dataAsInt(), e.node.data());
+    n.child0(e.node.child0());
+    n.child1(e.node.child1());
     stack.remove(stack.size() - 1);
     if (e.parent != null) {
-     e.parent.childs[i & 1] = n;
+     e.parent.childs(i & 1, n);
     } else {
      dest.m_root = n;
     }
     if (e.node.isinternal()) {
-     stack.add(new sStkCLN(e.node.childs[0], n));
-     stack.add(new sStkCLN(e.node.childs[1], n));
+     stack.add(new sStkCLN(e.node.child0(), n));
+     stack.add(new sStkCLN(e.node.child1(), n));
     } else {
      iclone.cloneLeaf(n);
     }
@@ -341,7 +342,7 @@ public class btDbvt  implements Serializable  {
 
  static int countLeaves(btDbvtNode node) {
   if (node.isinternal()) {
-   return (countLeaves(node.childs[0]) + countLeaves(node.childs[1]));
+   return (countLeaves(node.child0()) + countLeaves(node.child1()));
   } else {
    return (1);
   }
@@ -349,8 +350,8 @@ public class btDbvt  implements Serializable  {
 
  static void extractLeaves(btDbvtNode node, ArrayList<btDbvtNode> leaves) {
   if (node.isinternal()) {
-   extractLeaves(node.childs[0], leaves);
-   extractLeaves(node.childs[1], leaves);
+   extractLeaves(node.child0(), leaves);
+   extractLeaves(node.child1(), leaves);
   } else {
    leaves.add(node);
   }
@@ -364,16 +365,16 @@ public class btDbvt  implements Serializable  {
   ICollide policy) {
   policy.process(root);
   if (root.isinternal()) {
-   enumNodes(root.childs[0], policy);
-   enumNodes(root.childs[1], policy);
+   enumNodes(root.child0(), policy);
+   enumNodes(root.child1(), policy);
   }
  }
 
  static void enumLeaves(btDbvtNode root,
   ICollide policy) {
   if (root.isinternal()) {
-   enumLeaves(root.childs[0], policy);
-   enumLeaves(root.childs[1], policy);
+   enumLeaves(root.child0(), policy);
+   enumLeaves(root.child1(), policy);
   } else {
    policy.process(root);
   }
@@ -396,24 +397,24 @@ public class btDbvt  implements Serializable  {
     }
     if (p.a == p.b) {
      if (p.a.isinternal()) {
-      stkStack.set(depth++, new sStkNN(p.a.childs[0], p.a.childs[0]));
-      stkStack.set(depth++, new sStkNN(p.a.childs[1], p.a.childs[1]));
-      stkStack.set(depth++, new sStkNN(p.a.childs[0], p.a.childs[1]));
+      stkStack.set(depth++, new sStkNN(p.a.child0(), p.a.child0()));
+      stkStack.set(depth++, new sStkNN(p.a.child1(), p.a.child1()));
+      stkStack.set(depth++, new sStkNN(p.a.child0(), p.a.child1()));
      }
-    } else if (Intersect(p.a.volume, p.b.volume)) {
+    } else if (Intersect(p.a.volume(), p.b.volume())) {
      if (p.a.isinternal()) {
       if (p.b.isinternal()) {
-       stkStack.set(depth++, new sStkNN(p.a.childs[0], p.b.childs[0]));
-       stkStack.set(depth++, new sStkNN(p.a.childs[1], p.b.childs[0]));
-       stkStack.set(depth++, new sStkNN(p.a.childs[0], p.b.childs[1]));
-       stkStack.set(depth++, new sStkNN(p.a.childs[1], p.b.childs[1]));
+       stkStack.set(depth++, new sStkNN(p.a.child0(), p.b.child0()));
+       stkStack.set(depth++, new sStkNN(p.a.child1(), p.b.child0()));
+       stkStack.set(depth++, new sStkNN(p.a.child0(), p.b.child1()));
+       stkStack.set(depth++, new sStkNN(p.a.child1(), p.b.child1()));
       } else {
-       stkStack.set(depth++, new sStkNN(p.a.childs[0], p.b));
-       stkStack.set(depth++, new sStkNN(p.a.childs[1], p.b));
+       stkStack.set(depth++, new sStkNN(p.a.child0(), p.b));
+       stkStack.set(depth++, new sStkNN(p.a.child1(), p.b));
       }
      } else if (p.b.isinternal()) {
-      stkStack.set(depth++, new sStkNN(p.a, p.b.childs[0]));
-      stkStack.set(depth++, new sStkNN(p.a, p.b.childs[1]));
+      stkStack.set(depth++, new sStkNN(p.a, p.b.child0()));
+      stkStack.set(depth++, new sStkNN(p.a, p.b.child1()));
      } else {
       policy.process(p.a, p.b);
      }
@@ -422,42 +423,45 @@ public class btDbvt  implements Serializable  {
   }
  }
 
-   void collideTTpersistentStack(btDbvtNode root0,
+ void collideTTpersistentStack(btDbvtNode root0,
   btDbvtNode root1,
   ICollide policy) {
   if (root0 != null && root1 != null) {
    int depth = 1;
-   while (m_stkStack.size() < DOUBLE_STACKSIZE) {
-    m_stkStack.add(null);
+   while (m_stkStack.length < DOUBLE_STACKSIZE) {
+    m_stkStack = Arrays.copyOf(m_stkStack, DOUBLE_STACKSIZE);
    }
-   int treshold = m_stkStack.size() - 4;
-   m_stkStack.set(0, new sStkNN(root0, root1));
+   int treshold = m_stkStack.length - 4;
+   m_stkStack[0] = new sStkNN(root0, root1);
    do {
-    sStkNN p = m_stkStack.get(--depth);
+    sStkNN p = m_stkStack[--depth];
     if (depth > treshold) {
-     m_stkStack.addAll(Collections.nCopies(m_stkStack.size(), (sStkNN) null));
-     treshold = m_stkStack.size() - 4;
+     m_stkStack = Arrays.copyOf(m_stkStack, m_stkStack.length * 2);
+     treshold = m_stkStack.length - 4;
     }
     if (p.a == p.b) {
-     if (p.a.isinternal()) {
-      m_stkStack.set(depth++, new sStkNN(p.a.childs[0], p.a.childs[0]));
-      m_stkStack.set(depth++, new sStkNN(p.a.childs[1], p.a.childs[1]));
-      m_stkStack.set(depth++, new sStkNN(p.a.childs[0], p.a.childs[1]));
+     boolean a_isinternal = p.a.isinternal();
+     if (a_isinternal) {
+      m_stkStack[depth++] = new sStkNN(p.a.child0(), p.a.child0());
+      m_stkStack[depth++] = new sStkNN(p.a.child1(), p.a.child1());
+      m_stkStack[depth++] = new sStkNN(p.a.child0(), p.a.child1());
      }
-    } else if (Intersect(p.a.volume, p.b.volume)) {
-     if (p.a.isinternal()) {
-      if (p.b.isinternal()) {
-       m_stkStack.set(depth++, new sStkNN(p.a.childs[0], p.b.childs[0]));
-       m_stkStack.set(depth++, new sStkNN(p.a.childs[1], p.b.childs[0]));
-       m_stkStack.set(depth++, new sStkNN(p.a.childs[0], p.b.childs[1]));
-       m_stkStack.set(depth++, new sStkNN(p.a.childs[1], p.b.childs[1]));
+    } else if (Intersect(p.a.volume(), p.b.volume())) {
+     boolean a_isinternal = p.a.isinternal();
+     boolean b_isinternal = p.b.isinternal();
+     if (a_isinternal) {
+      if (b_isinternal) {
+       m_stkStack[depth++] = new sStkNN(p.a.child0(), p.b.child0());
+       m_stkStack[depth++] = new sStkNN(p.a.child1(), p.b.child0());
+       m_stkStack[depth++] = new sStkNN(p.a.child0(), p.b.child1());
+       m_stkStack[depth++] = new sStkNN(p.a.child1(), p.b.child1());
       } else {
-       m_stkStack.set(depth++, new sStkNN(p.a.childs[0], p.b));
-       m_stkStack.set(depth++, new sStkNN(p.a.childs[1], p.b));
+       m_stkStack[depth++] = new sStkNN(p.a.child0(), p.b);
+       m_stkStack[depth++] = new sStkNN(p.a.child1(), p.b);
       }
-     } else if (p.b.isinternal()) {
-      m_stkStack.set(depth++, new sStkNN(p.a, p.b.childs[0]));
-      m_stkStack.set(depth++, new sStkNN(p.a, p.b.childs[1]));
+     } else if (b_isinternal) {
+      m_stkStack[depth++] = new sStkNN(p.a, p.b.child0());
+      m_stkStack[depth++] = new sStkNN(p.a, p.b.child1());
      } else {
       policy.process(p.a, p.b);
      }
@@ -475,10 +479,10 @@ public class btDbvt  implements Serializable  {
    do {
     btDbvtNode n = stack.get(stack.size() - 1);
     stack.remove(stack.size() - 1);
-    if (Intersect(n.volume, volume)) {
+    if (Intersect(n.volume(), volume)) {
      if (n.isinternal()) {
-      stack.add(n.childs[0]);
-      stack.add(n.childs[1]);
+      stack.add(n.child0());
+      stack.add(n.child1());
      } else {
       policy.process(n);
      }
@@ -498,10 +502,10 @@ public class btDbvt  implements Serializable  {
    do {
     btDbvtNode n = stack.get(stack.size() - 1);
     stack.remove(stack.size() - 1);
-    if (Intersect(n.volume, volume)) {
+    if (Intersect(n.volume(), volume)) {
      if (n.isinternal()) {
-      stack.add(n.childs[0]);
-      stack.add(n.childs[1]);
+      stack.add(n.child0());
+      stack.add(n.child1());
      } else {
       policy.process(n);
      }
@@ -512,7 +516,7 @@ public class btDbvt  implements Serializable  {
 
  ///rayTest is a re-entrant ray test, and can be called in parallel as long as the btAlignedAlloc is thread-safe (uses locking etc)
  ///rayTest is slower than rayTestInternal, because it builds a local stack, using memory allocations, and it recomputes signs/rayDirectionInverses each time
-public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVector3 rayTo,
+ public static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVector3 rayTo,
   ICollide policy) {
   if (root != null) {
    final btVector3 rayDir = new btVector3(rayTo).sub(rayFrom);
@@ -535,8 +539,8 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
    init(bounds);
    do {
     btDbvtNode node = stack.get(--depth);
-    bounds[0].set(node.volume.mins());
-    bounds[1].set( node.volume.maxs());
+    bounds[0].set(node.volume().mins());
+    bounds[1].set(node.volume().maxs());
     float lambda_min = 0.f;
     float[] tmin = new float[]{1.f};
     boolean result1 = btRayAabb2(rayFrom, rayDirectionInverse, signs, bounds, tmin, lambda_min,
@@ -547,8 +551,8 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
        stack.addAll(Collections.nCopies(stack.size(), (btDbvtNode) null));
        treshold = stack.size() - 2;
       }
-      stack.set(depth++, node.childs[0]);
-      stack.set(depth++, node.childs[1]);
+      stack.set(depth++, node.child0());
+      stack.set(depth++, node.child1());
      } else {
       policy.process(node);
      }
@@ -577,8 +581,8 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
    init(bounds);
    do {
     btDbvtNode node = stack.get(--depth);
-    bounds[0].set(node.volume.mins()).sub(aabbMax);
-    bounds[1].set(node.volume.maxs()).sub(aabbMin);
+    bounds[0].set(node.volume().mins()).sub(aabbMax);
+    bounds[1].set(node.volume().maxs()).sub(aabbMin);
     float[] tmin = new float[]{1.f};
     float lambda_min = 0.f;
     boolean result1 = btRayAabb2(rayFrom, rayDirectionInverse, signs, bounds, tmin, lambda_min,
@@ -589,8 +593,8 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
        stack.addAll(Collections.nCopies(stack.size(), (btDbvtNode) null));
        treshold = stack.size() - 2;
       }
-      stack.set(depth++, node.childs[0]);
-      stack.set(depth++, node.childs[1]);
+      stack.set(depth++, node.child0());
+      stack.set(depth++, node.child1());
      } else {
       policy.process(node);
      }
@@ -608,7 +612,7 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
    int inside = (1 << count) - 1;
    ArrayList<sStkNP> stack = new ArrayList<>(0);
    int[] signs = new int[4 * 8];
-   assert(count < signs.length);
+   assert (count < signs.length);
    for (int i = 0; i < count; ++i) {
     signs[i] = ((normals[i].x() >= 0) ? 1 : 0) +
      ((normals[i].y() >= 0) ? 2 : 0) +
@@ -622,7 +626,7 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
     stack.remove(stack.size() - 1);
     for (int i = 0, j = 1; (!out) && (i < count); ++i, j <<= 1) {
      if (0 == (se.mask & j)) {
-      int side = se.node.volume.classify(normals[i], offsets[i], signs[i]);
+      int side = se.node.volume().classify(normals[i], offsets[i], signs[i]);
       switch (side) {
        case -1:
         out = true;
@@ -635,8 +639,8 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
     }
     if (!out) {
      if ((se.mask != inside) && (se.node.isinternal())) {
-      stack.add(new sStkNP(se.node.childs[0], se.mask));
-      stack.add(new sStkNP(se.node.childs[1], se.mask));
+      stack.add(new sStkNP(se.node.child0(), se.mask));
+      stack.add(new sStkNP(se.node.child1(), se.mask));
      } else if (policy.allLeaves(se.node)) {
       enumLeaves(se.node, policy);
      }
@@ -660,7 +664,7 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
    final ArrayIntList ifree = new ArrayIntList();
    final ArrayIntList stack = new ArrayIntList();
    int[] signs = new int[4 * 8];
-   assert(count < signs.length);
+   assert (count < signs.length);
    for (int i = 0; i < count; ++i) {
     signs[i] = ((normals[i].x() >= 0) ? 1 : 0) +
      ((normals[i].y() >= 0) ? 2 : 0) +
@@ -669,7 +673,7 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
    stock.ensureCapacity(SIMPLE_STACKSIZE);
    stack.ensureCapacity(SIMPLE_STACKSIZE);
    ifree.ensureCapacity(SIMPLE_STACKSIZE);
-   stack.add(allocate(ifree, stock, new sStkNPS(root, 0, root.volume.projectMinimum(sortaxis,
+   stack.add(allocate(ifree, stock, new sStkNPS(root, 0, root.volume().projectMinimum(sortaxis,
     srtsgns))));
    do {
     int id = stack.get(stack.size() - 1);
@@ -680,7 +684,7 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
      boolean out = false;
      for (int i = 0, j = 1; (!out) && (i < count); ++i, j <<= 1) {
       if (0 == (se.mask & j)) {
-       int side = se.node.volume.classify(normals[i], offsets[i], signs[i]);
+       int side = se.node.volume().classify(normals[i], offsets[i], signs[i]);
        switch (side) {
         case -1:
          out = true;
@@ -697,10 +701,10 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
     }
     if (policy.descent(se.node)) {
      if (se.node.isinternal()) {
-      btDbvtNode[] pns = new btDbvtNode[]{se.node.childs[0], se.node.childs[1]};
-      sStkNPS[] nes = new sStkNPS[]{new sStkNPS(pns[0], se.mask, pns[0].volume.projectMinimum(
+      btDbvtNode[] pns = new btDbvtNode[]{se.node.child0(), se.node.child1()};
+      sStkNPS[] nes = new sStkNPS[]{new sStkNPS(pns[0], se.mask, pns[0].volume().projectMinimum(
        sortaxis, srtsgns)),
-       new sStkNPS(pns[1], se.mask, pns[1].volume.projectMinimum(sortaxis, srtsgns))};
+       new sStkNPS(pns[1], se.mask, pns[1].volume().projectMinimum(sortaxis, srtsgns))};
       int q = nes[0].value < nes[1].value ? 1 : 0;
       int j = stack.size();
       if (fullsort && (j > 0)) {
@@ -749,8 +753,8 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
     stack.remove(stack.size() - 1);
     if (policy.descent(n)) {
      if (n.isinternal()) {
-      stack.add(n.childs[0]);
-      stack.add(n.childs[1]);
+      stack.add(n.child0());
+      stack.add(n.child1());
      } else {
       policy.process(n);
      }
@@ -794,8 +798,8 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
  static void recursedeletenode(btDbvt pdbvt,
   btDbvtNode node) {
   if (!node.isleaf()) {
-   recursedeletenode(pdbvt, node.childs[0]);
-   recursedeletenode(pdbvt, node.childs[1]);
+   recursedeletenode(pdbvt, node.child0());
+   recursedeletenode(pdbvt, node.child1());
   }
   if (node == pdbvt.m_root) {
    pdbvt.m_root = null;
@@ -820,8 +824,8 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
   ArrayList<btDbvtNode> leaves,
   int depth) {
   if (root.isinternal() && depth > 0) {
-   fetchleaves(pdbvt, root.childs[0], leaves, depth - 1);
-   fetchleaves(pdbvt, root.childs[1], leaves, depth - 1);
+   fetchleaves(pdbvt, root.child0(), leaves, depth - 1);
+   fetchleaves(pdbvt, root.child1(), leaves, depth - 1);
    deletenode(pdbvt, root);
   } else {
    leaves.add(root);
@@ -836,7 +840,7 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
    int[] minidx = new int[]{-1, -1};
    for (int i = 0; i < leaves.size(); ++i) {
     for (int j = i + 1; j < leaves.size(); ++j) {
-     float sz = size(merge(leaves.get(i).volume, leaves.get(j).volume));
+     float sz = size(merge(leaves.get(i).volume(), leaves.get(j).volume()));
      if (sz < minsize) {
       minsize = sz;
       minidx[0] = i;
@@ -845,11 +849,11 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
     }
    }
    btDbvtNode[] n = new btDbvtNode[]{leaves.get(minidx[0]), leaves.get(minidx[1])};
-   btDbvtNode p = createnode(pdbvt, null, n[0].volume, n[1].volume, 0, null);
-   p.childs[0] = n[0];
-   p.childs[1] = n[1];
-   n[0].parent = p;
-   n[1].parent = p;
+   btDbvtNode p = createnode(pdbvt, null, n[0].volume(), n[1].volume(), 0, null);
+   p.child0(n[0]);
+   p.child1(n[1]);
+   n[0].parent(p);
+   n[1].parent(p);
    leaves.set(minidx[0], p);
    swap(leaves, minidx[1], leaves.size() - 1);
    leaves.remove(leaves.size() - 1);
@@ -873,7 +877,7 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
     int[][] splitcount = new int[][]{{0, 0}, {0, 0}, {0, 0}};
     //int i;
     for (int i = 0; i < leaves.size(); ++i) {
-     final btVector3 x = new btVector3(leaves.get(i).volume.center()).sub(org);
+     final btVector3 x = new btVector3(leaves.get(i).volume().center()).sub(org);
      for (int j = 0; j < 3; ++j) {
       ++splitcount[j][btDot(x, axis[j]) > 0 ? 1 : 0];
      }
@@ -899,10 +903,10 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
      }
     }
     btDbvtNode node = createnode(pdbvt, null, vol, 0, null);
-    node.childs[0] = topdown(pdbvt, sets[0], bu_treshold);
-    node.childs[1] = topdown(pdbvt, sets[1], bu_treshold);
-    node.childs[0].parent = node;
-    node.childs[1].parent = node;
+    node.child0(topdown(pdbvt, sets[0], bu_treshold));
+    node.child1(topdown(pdbvt, sets[1], bu_treshold));
+    node.child0().parent(node);
+    node.child1().parent(node);
     return (node);
    } else {
     bottomup(pdbvt, leaves);
@@ -914,32 +918,32 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
 
 //
  static btDbvtNode sort(btDbvtNode n, btDbvtNode[] r) {
- // btDbvtNode p = n.parent;
+  // btDbvtNode p = n.parent();
   //assert(n.isinternal());
   // C++ code compared pointers if (p>n), maybe it optimizes by moving data close together, not really possible in java.
 //  if (p!=null && p  > n ) {
 //   int i = indexof(n);
 //   int j = 1 - i;
 //   btDbvtNode s = p.childs[j];
-//   btDbvtNode q = p.parent;
+//   btDbvtNode q = p.parent();
 //   assert(n == p.childs[i]);
 //   if (q != null) {
 //    q.childs[indexof(p)] = n;
 //   } else {
 //    r[0] = n;
 //   }
-//   s.parent = n;
-//   p.parent = n;
-//   n.parent = q;
-//   p.childs[0] = n.childs[0];
-//   p.childs[1] = n.childs[1];
-//   n.childs[0].parent = p;
-//   n.childs[1].parent = p;
+//   s.parent() = n;
+//   p.parent() = n;
+//   n.parent() = q;
+//   p.child0() = n.child0();
+//   p.child1() = n.child1();
+//   n.child0().parent() = p;
+//   n.child1().parent() = p;
 //   n.childs[i] = p;
 //   n.childs[j] = s;
-//   btDbvtAabbMm swapper = p.volume;
-//   p.volume = n.volume;
-//   n.volume = swapper;
+//   btDbvtAabbMm swapper = p.volume();
+//   p.volume() = n.volume();
+//   n.volume() = swapper;
 //   return (p);
 //  }
   return (n);
@@ -951,10 +955,10 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
   Object data) {
   btDbvtNode node;
   node = new btDbvtNode();
-  node.parent = parent;
-  node.dataAsInt = dataAsInt;
-  node.data = data;
-  node.childs[1] = null;
+  node.parent(parent);
+  node.dataAsInt(dataAsInt);
+  node.data(data);
+  //node.child1(  null);
   return (node);
  }
 //
@@ -966,7 +970,7 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
   Object data
  ) {
   btDbvtNode node = createnode(pdbvt, parent, dataAsInt, data);
-  node.volume.set(volume);
+  node.volume().set(volume);
   return (node);
  }
 
@@ -978,7 +982,7 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
   int dataAsInt,
   Object data) {
   btDbvtNode node = createnode(pdbvt, parent, dataAsInt, data);
-  Merge(volume0, volume1, node.volume);
+  Merge(volume0, volume1, node.volume());
   return (node);
  }
 
@@ -989,36 +993,36 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
   btDbvtNode do_root = root;
   if (pdbvt.m_root == null) {
    pdbvt.m_root = leaf;
-   leaf.parent = null;
+   leaf.parent(null);
   } else {
    if (!do_root.isleaf()) {
     do {
-     do_root = do_root.childs[Select(leaf.volume,
-      do_root.childs[0].volume,
-      do_root.childs[1].volume)];
+     do_root = do_root.childs(Select(leaf.volume(),
+      do_root.child0().volume(),
+      do_root.child1().volume()));
     } while (!do_root.isleaf());
    }
-   btDbvtNode prev = do_root.parent;
-   btDbvtNode node = createnode(pdbvt, prev, leaf.volume, do_root.volume, 0, null);
+   btDbvtNode prev = do_root.parent();
+   btDbvtNode node = createnode(pdbvt, prev, leaf.volume(), do_root.volume(), 0, null);
    if (prev != null) {
-    prev.childs[indexof(do_root)] = node;
-    node.childs[0] = do_root;
-    do_root.parent = node;
-    node.childs[1] = leaf;
-    leaf.parent = node;
+    prev.childs(indexof(do_root), node);
+    node.child0(do_root);
+    do_root.parent(node);
+    node.child1(leaf);
+    leaf.parent(node);
     do {
-     if (!prev.volume.contain(node.volume)) {
-      Merge(prev.childs[0].volume, prev.childs[1].volume, prev.volume);
+     if (!prev.volume().contain(node.volume())) {
+      Merge(prev.child0().volume(), prev.child1().volume(), prev.volume());
      } else {
       break;
      }
      node = prev;
-    } while (null != (prev = node.parent));
+    } while (null != (prev = node.parent()));
    } else {
-    node.childs[0] = do_root;
-    do_root.parent = node;
-    node.childs[1] = leaf;
-    leaf.parent = node;
+    node.child0(do_root);
+    do_root.parent(node);
+    node.child1(leaf);
+    leaf.parent(node);
     pdbvt.m_root = node;
    }
   }
@@ -1031,18 +1035,18 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
    pdbvt.m_root = null;
    return (null);
   } else {
-   btDbvtNode parent = leaf.parent;
-   btDbvtNode prev = parent.parent;
-   btDbvtNode sibling = parent.childs[1 - indexof(leaf)];
+   btDbvtNode parent = leaf.parent();
+   btDbvtNode prev = parent.parent();
+   btDbvtNode sibling = parent.childs(1 - indexof(leaf));
    if (prev != null) {
-    prev.childs[indexof(parent)] = sibling;
-    sibling.parent = prev;
+    prev.childs(indexof(parent), sibling);
+    sibling.parent(prev);
     deletenode(pdbvt, parent);
     while (prev != null) {
-     btDbvtAabbMm pb = prev.volume;
-     Merge(prev.childs[0].volume, prev.childs[1].volume, prev.volume);
-     if (NotEqual(pb, prev.volume)) {
-      prev = prev.parent;
+     btDbvtAabbMm pb = prev.volume();
+     Merge(prev.child0().volume(), prev.child1().volume(), prev.volume());
+     if (NotEqual(pb, prev.volume())) {
+      prev = prev.parent();
      } else {
       break;
      }
@@ -1050,7 +1054,7 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
     return (prev != null ? prev : pdbvt.m_root);
    } else {
     pdbvt.m_root = sibling;
-    sibling.parent = null;
+    sibling.parent(null);
     deletenode(pdbvt, parent);
     return (pdbvt.m_root);
    }
@@ -1060,8 +1064,8 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
 
  static void getmaxdepth(btDbvtNode node, int depth, int[] maxdepth) {
   if (node.isinternal()) {
-   getmaxdepth(node.childs[0], depth + 1, maxdepth);
-   getmaxdepth(node.childs[1], depth + 1, maxdepth);
+   getmaxdepth(node.child0(), depth + 1, maxdepth);
+   getmaxdepth(node.child1(), depth + 1, maxdepth);
   } else {
    maxdepth[0] = btMax(maxdepth[0], depth);
   }
@@ -1140,9 +1144,9 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
 //
 
  static btDbvtAabbMm bounds(ArrayList<btDbvtNode> leaves) {
-  btDbvtAabbMm volume = leaves.get(0).volume;
+  btDbvtAabbMm volume = leaves.get(0).volume();
   for (int i = 1, ni = leaves.size(); i < ni; ++i) {
-   Merge(volume, leaves.get(i).volume, volume);
+   Merge(volume, leaves.get(i).volume(), volume);
   }
   return (volume);
  }
@@ -1154,7 +1158,7 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
   left.clear();
   right.clear();
   for (int i = 0, ni = leaves.size(); i < ni; ++i) {
-   if (btDot(axis, leaves.get(i).volume.center().sub(org)) < 0) {
+   if (btDot(axis, leaves.get(i).volume().center().sub(org)) < 0) {
     left.add(leaves.get(i));
    } else {
     right.add(leaves.get(i));
@@ -1164,7 +1168,7 @@ public  static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVe
 //
 
  static int indexof(btDbvtNode node) {
-  return (node.parent.childs[1] == node ? 1 : 0);
+  return (node.parent().child1() == node ? 1 : 0);
  }
 //
 

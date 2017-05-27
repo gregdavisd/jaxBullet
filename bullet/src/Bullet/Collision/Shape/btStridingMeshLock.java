@@ -11,8 +11,9 @@ subject to the following restrictions:
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
  */
-package Bullet.Collision;
+package Bullet.Collision.Shape;
 
+import Bullet.Collision.btTriangleCallback;
 import Bullet.LinearMath.btVector3;
 
 /**
@@ -25,7 +26,7 @@ import Bullet.LinearMath.btVector3;
  *
  * @author Gregery Barton
  */
-public class StridingMeshLock    {
+public class btStridingMeshLock    {
 
  /**
   *
@@ -67,7 +68,7 @@ public class StridingMeshLock    {
  private final GenericIndexBuffer gen_indices;
  private final TriangleIndicesCallback triangle_internal;
  private int part;
- private btInternalTriangleIndexCallback vertex_callback;
+ private btTriangleCallback vertex_callback;
 
  /**
   *
@@ -80,7 +81,7 @@ public class StridingMeshLock    {
   * @param indexStride distance between subsequent indices (in Java style array indices not bytes)
   * @param numIndices number of indices to process_all_triangles in the indexBuffer
   */
- public StridingMeshLock(Object vertexBuffer, int stride, Object indexBuffer, int indexBufferType,
+ public btStridingMeshLock(Object vertexBuffer, int stride, Object indexBuffer, int indexBufferType,
   int indexBase, int indexStride, int numIndices) {
   this.vertexBuffer = vertexBuffer;
   this.stride = stride;
@@ -183,13 +184,13 @@ public class StridingMeshLock    {
   * @param callback
   * @param part
   */
- void process_all_triangles(btInternalTriangleIndexCallback callback, int part) {
+ public void process_all_triangles(btTriangleCallback callback, int part) {
   this.part = part;
   vertex_callback = callback;
   stream_indices(0);
  }
 
- void process_all_triangles(btInternalTriangleIndexCallback callback, int part,
+ public void process_all_triangles(btTriangleCallback callback, int part,
   int base_triangle_index) {
   this.part = part;
   vertex_callback = callback;
@@ -323,12 +324,12 @@ public class StridingMeshLock    {
    for (int i = 0; i < 3; ++i) {
     set(v[i], indices[i]);
    }
-   return vertex_callback.internalProcessTriangleIndex(v, part, index);
+   return vertex_callback.processTriangle(v, part, index);
   }
 
   void set(final btVector3 vec, int index) {
    int offset = index * stride;
-   vec.set(gen_buffer.get(offset), gen_buffer.get(offset) + 1, gen_buffer.get(offset + 2));
+   vec.set(gen_buffer.get(offset), gen_buffer.get(offset + 1), gen_buffer.get(offset + 2));
   }
  }
 }

@@ -28,7 +28,18 @@ import static Bullet.Collision.btIDebugDraw.DBG_DrawContactPoints;
 import static Bullet.Collision.btIDebugDraw.DBG_DrawFrames;
 import static Bullet.Collision.btIDebugDraw.DBG_DrawNormals;
 import static Bullet.Collision.btIDebugDraw.DBG_DrawWireframe;
+import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_ENABLE_FRICTION_DIRECTION_CACHING;
+import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_INTERLEAVE_CONTACT_AND_FRICTION_CONSTRAINTS;
+import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_USE_2_FRICTION_DIRECTIONS;
+import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_USE_WARMSTARTING;
+import Bullet.Dynamics.btContactSolverInfo;
 import bullet_examples.apps.api.RigidBodySoftContact;
+import bullet_examples.apps.benchmarks.ConvexStack;
+import bullet_examples.apps.benchmarks.ConvexVsMesh;
+import bullet_examples.apps.benchmarks.PrimVsMesh;
+import bullet_examples.apps.benchmarks.RagDollsBenchmark;
+import bullet_examples.apps.benchmarks.ThousandBoxes;
+import bullet_examples.apps.benchmarks.ThousandStack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -39,6 +50,7 @@ import javax.swing.tree.DefaultTreeModel;
 import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.PixelFormat;
+import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_RANDOMIZE_ORDER;
 
 /**
  *
@@ -64,11 +76,22 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
  static final String NODE_MOTOR_DEMO = "Motor Demo";
  static final String NODE_GYROSCOPIC_DEMO = "Gyroscopic Demo";
  static final String NODE_RIGID_BODY_SOFT_CONTACT = "Soft Contact";
- static final String DEFAULT_DEMO = NODE_BASIC_EXAMPLE;
- static boolean cycle;
- static boolean activate_window = false;
- static boolean backgrounded = false;
- static int user_debug_mode = 0;
+ static final String NODE_THOUSAND_BOXES = "3000 boxes";
+ static final String NODE_THOUSAND_STACK = "1000 stack";
+ static final String NODE_RAGDOLLS = "Rag Dolls";
+ static final String NODE_CONVEX_STACK = "Convex Stack";
+ static final String NODE_PRIM_VS_MESH = "Prim vs. Mesh";
+ static final String NODE_CONVEX_VS_MESH = "Convex vs. Mesh";
+ static final String DEFAULT_DEMO = NODE_THOUSAND_BOXES;
+ private static boolean cycle;
+ private static boolean activate_window = false;
+ private static boolean backgrounded = false;
+ private static int user_debug_mode = 0;
+ private static int user_solver_mode = new btContactSolverInfo().m_solverMode;
+ private static final Throttle fps_throttle = new Throttle(1, 1);
+ private static long last_frametime;
+ private static int fps_samples;
+ private static double fps;
 
  private static void update_debug_checks() {
   java.awt.EventQueue.invokeLater(new Runnable() {
@@ -83,6 +106,14 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
      frame.frames_check.setSelected((mode & DBG_DrawFrames) != 0);
      frame.normals_check.setSelected((mode & DBG_DrawNormals) != 0);
      frame.contact_points_check.setSelected((mode & DBG_DrawContactPoints) != 0);
+     btContactSolverInfo info = demo.world().getSolverInfo();
+     frame.friction2_check.setSelected((info.m_solverMode & SOLVER_USE_2_FRICTION_DIRECTIONS) != 0);
+     frame.warmstarting_check.setSelected((info.m_solverMode & SOLVER_USE_WARMSTARTING) != 0);
+     frame.randomize_check.setSelected((info.m_solverMode & SOLVER_RANDOMIZE_ORDER) != 0);
+     frame.interleave_check.setSelected((info.m_solverMode &
+      SOLVER_INTERLEAVE_CONTACT_AND_FRICTION_CONSTRAINTS) != 0);
+     frame.friction_cache_check.setSelected((info.m_solverMode &
+      SOLVER_ENABLE_FRICTION_DIRECTION_CACHING) != 0);
     }
    }
   });
@@ -96,56 +127,74 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
  }
 
  private static DemoContainer build_example(String selection) {
-  final DemoContainer demo;
+  final DemoContainer new_demo;
   switch (selection) {
    case NODE_BASIC_EXAMPLE:
-    demo = new BasicExample();
+    new_demo = new BasicExample();
     break;
    case NODE_ROLLING_FRICTION_DEMO:
-    demo = new RollingFrictionDemo();
+    new_demo = new RollingFrictionDemo();
     break;
    case NODE_ALL_CONSTRAINTS:
-    demo = new AllConstraintDemo();
+    new_demo = new AllConstraintDemo();
     break;
    case NODE_MOTORIZED_HINGE:
-    demo = new MotorizedHingeDemo();
+    new_demo = new MotorizedHingeDemo();
     break;
    case NODE_TEST_HINGE_TORQUE:
-    demo = new TestHingeTorque();
+    new_demo = new TestHingeTorque();
     break;
    case NODE_6DOF_SPRING2:
-    demo = new Dof6Spring2Demo();
+    new_demo = new Dof6Spring2Demo();
     break;
    case NODE_MOTOR_DEMO:
-    demo = new MotorDemo();
+    new_demo = new MotorDemo();
     break;
    case NODE_GYROSCOPIC_DEMO:
-    demo = new GyroscopicDemo();
+    new_demo = new GyroscopicDemo();
     break;
    case NODE_RIGID_BODY_SOFT_CONTACT:
-    demo = new RigidBodySoftContact();
+    new_demo = new RigidBodySoftContact();
+    break;
+   case NODE_THOUSAND_BOXES:
+    new_demo = new ThousandBoxes();
+    break;
+   case NODE_THOUSAND_STACK:
+    new_demo = new ThousandStack();
+    break;
+   case NODE_RAGDOLLS:
+    new_demo = new RagDollsBenchmark();
+    break;
+   case NODE_CONVEX_STACK:
+    new_demo = new ConvexStack();
+    break;
+   case NODE_PRIM_VS_MESH:
+    new_demo = new PrimVsMesh();
+    break;
+   case NODE_CONVEX_VS_MESH:
+    new_demo = new ConvexVsMesh();
     break;
    default:
-    demo = null;
+    new_demo = null;
   }
-  java.awt.EventQueue.invokeLater(new Runnable() {
-   @Override
-   public void run() {
-    gl_frame.garbage_collect();
-    frame.params_panel.removeAll();
-    if (demo != null) {
-     JPanel panel = demo.getParams();
+  if (new_demo != null) {
+   java.awt.EventQueue.invokeLater(new Runnable() {
+    @Override
+    public void run() {
+     gl_frame.garbage_collect();
+     frame.params_panel.removeAll();
+     JPanel panel = new_demo.getParams();
      if (panel != null) {
       frame.params_panel.add(panel);
       panel.setVisible(true);
      }
-     frame.description_text.setText(demo.get_description());
+     frame.description_text.setText(new_demo.get_description());
+     SwingUtilities.updateComponentTreeUI(frame);
+     gl_frame.set_mouse_listener(new_demo);
     }
-    SwingUtilities.updateComponentTreeUI(frame);
-    gl_frame.setMouseListener(demo);
-   }
-  });
-  return demo;
+   });
+  }
+  return new_demo;
  }
 
  /**
@@ -175,6 +224,7 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
   cap120 = new javax.swing.JRadioButton();
   cap30 = new javax.swing.JRadioButton();
   nocap = new javax.swing.JRadioButton();
+  fps_label = new javax.swing.JLabel();
   jPanel7 = new javax.swing.JPanel();
   wireframe_check = new javax.swing.JCheckBox();
   aabb_check = new javax.swing.JCheckBox();
@@ -202,7 +252,7 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
 
   setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
   setTitle("Bullet Physics Example Browser");
-  setMaximumSize(new java.awt.Dimension(700, 680));
+  setMaximumSize(new java.awt.Dimension(700, 650));
   setPreferredSize(new java.awt.Dimension(700, 680));
   setResizable(false);
   addWindowFocusListener(new java.awt.event.WindowFocusListener() {
@@ -248,7 +298,7 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
   jPanel5.setLayout(jPanel5Layout);
   jPanel5Layout.setHorizontalGroup(
    jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-   .addComponent(example_browser, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+   .addComponent(example_browser, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
   );
   jPanel5Layout.setVerticalGroup(
    jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -292,7 +342,7 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
   jTextArea2.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
   jTextArea2.setForeground(javax.swing.UIManager.getDefaults().getColor("Button.focus"));
   jTextArea2.setLineWrap(true);
-  jTextArea2.setText("WASD to move, Shift to quick move, left click to look, right click to interact. Performance improves over time as Java optimizes bytecode.");
+  jTextArea2.setText("WASD to move, Shift to quick move, left click to look, right click to interact. .");
   jTextArea2.setWrapStyleWord(true);
   jTextArea2.setAutoscrolls(false);
   jScrollPane3.setViewportView(jTextArea2);
@@ -338,18 +388,27 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
    }
   });
 
+  fps_label.setFont(new java.awt.Font("DialogInput", 3, 36)); // NOI18N
+  fps_label.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+  fps_label.setText("9999");
+  fps_label.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
   javax.swing.GroupLayout monitor_settingsLayout = new javax.swing.GroupLayout(monitor_settings);
   monitor_settings.setLayout(monitor_settingsLayout);
   monitor_settingsLayout.setHorizontalGroup(
    monitor_settingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
    .addGroup(monitor_settingsLayout.createSequentialGroup()
-    .addGroup(monitor_settingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-     .addComponent(vsync_check, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-     .addComponent(cap120)
-     .addComponent(cap30)
-     .addComponent(cap60)
-     .addComponent(nocap, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-    .addGap(0, 12, Short.MAX_VALUE))
+    .addGroup(monitor_settingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+     .addComponent(vsync_check, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+     .addComponent(cap120, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+     .addComponent(cap30, javax.swing.GroupLayout.Alignment.LEADING)
+     .addComponent(cap60, javax.swing.GroupLayout.Alignment.LEADING)
+     .addComponent(nocap, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    .addGap(0, 0, Short.MAX_VALUE))
+   .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, monitor_settingsLayout.createSequentialGroup()
+    .addContainerGap()
+    .addComponent(fps_label)
+    .addContainerGap())
   );
   monitor_settingsLayout.setVerticalGroup(
    monitor_settingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -363,7 +422,9 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
     .addComponent(cap120)
     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
     .addComponent(nocap)
-    .addGap(0, 0, Short.MAX_VALUE))
+    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+    .addComponent(fps_label, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+    .addContainerGap())
   );
 
   jPanel7.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -421,16 +482,13 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
   jPanel7.setLayout(jPanel7Layout);
   jPanel7Layout.setHorizontalGroup(
    jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-   .addGroup(jPanel7Layout.createSequentialGroup()
-    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-     .addComponent(constraint_limits_check, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-     .addComponent(normals_check, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-     .addComponent(constraints_check, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-     .addComponent(contact_points_check, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-     .addComponent(aabb_check, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-     .addComponent(wireframe_check, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-     .addComponent(frames_check, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-    .addGap(0, 25, Short.MAX_VALUE))
+   .addComponent(constraint_limits_check, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+   .addComponent(normals_check, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+   .addComponent(constraints_check, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+   .addComponent(contact_points_check, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+   .addComponent(aabb_check, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+   .addComponent(wireframe_check, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+   .addComponent(frames_check, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
   );
   jPanel7Layout.setVerticalGroup(
    jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -498,14 +556,39 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
   });
 
   randomize_check.setText("Solver randomize");
+  randomize_check.addActionListener(new java.awt.event.ActionListener() {
+   public void actionPerformed(java.awt.event.ActionEvent evt) {
+    randomize_checkActionPerformed(evt);
+   }
+  });
 
   interleave_check.setText("Interleave contact/friction");
+  interleave_check.addActionListener(new java.awt.event.ActionListener() {
+   public void actionPerformed(java.awt.event.ActionEvent evt) {
+    interleave_checkActionPerformed(evt);
+   }
+  });
 
   friction2_check.setText("2 friction directions");
+  friction2_check.addActionListener(new java.awt.event.ActionListener() {
+   public void actionPerformed(java.awt.event.ActionEvent evt) {
+    friction2_checkActionPerformed(evt);
+   }
+  });
 
   friction_cache_check.setText("Friction dir caching");
+  friction_cache_check.addActionListener(new java.awt.event.ActionListener() {
+   public void actionPerformed(java.awt.event.ActionEvent evt) {
+    friction_cache_checkActionPerformed(evt);
+   }
+  });
 
   warmstarting_check.setText("Warmstarting");
+  warmstarting_check.addActionListener(new java.awt.event.ActionListener() {
+   public void actionPerformed(java.awt.event.ActionEvent evt) {
+    warmstarting_checkActionPerformed(evt);
+   }
+  });
 
   solver_combo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "btSequentialImpulseConstraintSolver" }));
 
@@ -539,7 +622,7 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(randomize_check))
        .addComponent(solver_combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-    .addContainerGap(19, Short.MAX_VALUE))
+    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
   );
   jPanel8Layout.setVerticalGroup(
    jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -577,14 +660,14 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
    .addGroup(jPanel4Layout.createSequentialGroup()
     .addContainerGap()
-    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
      .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
      .addGroup(jPanel4Layout.createSequentialGroup()
-      .addComponent(monitor_settings, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+      .addComponent(monitor_settings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
       .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
       .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
       .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-      .addComponent(params_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+      .addComponent(params_panel, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))
     .addContainerGap())
   );
   jPanel4Layout.setVerticalGroup(
@@ -594,11 +677,11 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
     .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-    .addGap(18, 18, 18)
+    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-     .addComponent(monitor_settings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
      .addComponent(params_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+     .addComponent(monitor_settings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     .addContainerGap())
   );
 
@@ -640,15 +723,107 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
 
   pack();
  }// </editor-fold>//GEN-END:initComponents
+
+ private void example_browserValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_example_browserValueChanged
+  Object s = example_browser.getSelectionPath().getLastPathComponent();
+  browser_selection = s.toString();
+ }//GEN-LAST:event_example_browserValueChanged
+
+ private void user_set_debug_flag(boolean flag, int bit) {
+  if (demo != null && demo.world() != null && demo.world().getDebugDrawer() != null) {
+   int prev_mode = demo.world().getDebugDrawer().getDebugMode();
+   demo.set_debug_flag(flag, bit);
+   /* store user changes to debug flags for restoring when another demo is chosen
+  
+    */
+   if (prev_mode != demo.world().getDebugDrawer().getDebugMode()) {
+    if (flag) {
+     user_debug_mode |= bit;
+    } else {
+     user_debug_mode &= ~bit;
+    }
+   }
+   update_debug_flags = true;
+  }
+ }
+
+ private void user_set_solver_mode(boolean flag, int bit) {
+  if (flag) {
+   user_solver_mode |= bit;
+  } else {
+   user_solver_mode &= ~bit;
+  }
+  update_debug_flags = true;
+ }
+ private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+  if (backgrounded) {
+   activate_window = true;
+  }
+ }//GEN-LAST:event_formWindowGainedFocus
+
+ private void broadphase_comboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_broadphase_comboActionPerformed
+  reset = true;
+ }//GEN-LAST:event_broadphase_comboActionPerformed
+
+ private void iterations_spinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_iterations_spinnerStateChanged
+  if (demo != null && demo.world() != null && demo.world().getSolverInfo() != null) {
+   set_world_iterations();
+  }
+ }//GEN-LAST:event_iterations_spinnerStateChanged
+
  private void reset_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reset_buttonActionPerformed
   if (demo != null) {
    reset = true;
   }
  }//GEN-LAST:event_reset_buttonActionPerformed
 
- private void vsync_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vsync_checkActionPerformed
-  vsync = vsync_check.isSelected();
- }//GEN-LAST:event_vsync_checkActionPerformed
+ private void rate_sliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rate_sliderStateChanged
+  int value = rate_slider.getValue();
+  if (value >= 0) {
+   rate = value;
+  } else {
+   int d = (-value + 1);
+   rate = 1.0f / (d * d);
+  }
+ }//GEN-LAST:event_rate_sliderStateChanged
+
+ private void cycle_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cycle_checkActionPerformed
+  cycle = cycle_check.isSelected();
+ }//GEN-LAST:event_cycle_checkActionPerformed
+
+ private void frames_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_frames_checkActionPerformed
+  user_set_debug_flag(frames_check.isSelected(), DBG_DrawFrames);
+ }//GEN-LAST:event_frames_checkActionPerformed
+
+ private void normals_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_normals_checkActionPerformed
+  user_set_debug_flag(normals_check.isSelected(), DBG_DrawNormals);
+ }//GEN-LAST:event_normals_checkActionPerformed
+
+ private void constraint_limits_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_constraint_limits_checkActionPerformed
+  user_set_debug_flag(constraint_limits_check.isSelected(), DBG_DrawConstraintLimits);
+ }//GEN-LAST:event_constraint_limits_checkActionPerformed
+
+ private void constraints_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_constraints_checkActionPerformed
+  user_set_debug_flag(constraints_check.isSelected(), DBG_DrawConstraints);
+ }//GEN-LAST:event_constraints_checkActionPerformed
+
+ private void contact_points_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contact_points_checkActionPerformed
+  user_set_debug_flag(contact_points_check.isSelected(), DBG_DrawContactPoints);
+ }//GEN-LAST:event_contact_points_checkActionPerformed
+
+ private void aabb_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aabb_checkActionPerformed
+  user_set_debug_flag(aabb_check.isSelected(), DBG_DrawAabb);
+ }//GEN-LAST:event_aabb_checkActionPerformed
+
+ private void wireframe_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wireframe_checkActionPerformed
+  user_set_debug_flag(wireframe_check.isSelected(), DBG_DrawWireframe);
+ }//GEN-LAST:event_wireframe_checkActionPerformed
+
+ private void nocapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nocapActionPerformed
+  if (nocap.isSelected()) {
+   cap = 0.0f;
+  }
+ }//GEN-LAST:event_nocapActionPerformed
 
  private void cap30ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cap30ActionPerformed
   if (cap30.isSelected()) {
@@ -668,96 +843,29 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
   }
  }//GEN-LAST:event_cap60ActionPerformed
 
- private void nocapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nocapActionPerformed
-  if (nocap.isSelected()) {
-   cap = 0.0f;
-  }
- }//GEN-LAST:event_nocapActionPerformed
+ private void vsync_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vsync_checkActionPerformed
+  vsync = vsync_check.isSelected();
+ }//GEN-LAST:event_vsync_checkActionPerformed
 
- private void example_browserValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_example_browserValueChanged
-  Object s = example_browser.getSelectionPath().getLastPathComponent();
-  browser_selection = s.toString();
- }//GEN-LAST:event_example_browserValueChanged
+ private void friction2_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_friction2_checkActionPerformed
+  user_set_solver_mode(frame.friction2_check.isSelected(), SOLVER_USE_2_FRICTION_DIRECTIONS);
+ }//GEN-LAST:event_friction2_checkActionPerformed
 
- private void rate_sliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rate_sliderStateChanged
-  int value = rate_slider.getValue();
-  if (value >= 0) {
-   rate = value;
-  } else {
-   int d = (-value + 1);
-   rate = 1.0f / (d * d);
-  }
- }//GEN-LAST:event_rate_sliderStateChanged
+ private void warmstarting_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_warmstarting_checkActionPerformed
+  user_set_solver_mode(frame.warmstarting_check.isSelected(), SOLVER_USE_WARMSTARTING);
+ }//GEN-LAST:event_warmstarting_checkActionPerformed
 
- private void cycle_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cycle_checkActionPerformed
-  cycle = cycle_check.isSelected();
- }//GEN-LAST:event_cycle_checkActionPerformed
+ private void randomize_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomize_checkActionPerformed
+  user_set_solver_mode(frame.randomize_check.isSelected(), SOLVER_RANDOMIZE_ORDER);
+ }//GEN-LAST:event_randomize_checkActionPerformed
 
- private void wireframe_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wireframe_checkActionPerformed
-  user_set_debug_flag(wireframe_check.isSelected(), DBG_DrawWireframe);
+ private void interleave_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_interleave_checkActionPerformed
+  user_set_solver_mode(frame.interleave_check.isSelected(), SOLVER_INTERLEAVE_CONTACT_AND_FRICTION_CONSTRAINTS);
+ }//GEN-LAST:event_interleave_checkActionPerformed
 
- }//GEN-LAST:event_wireframe_checkActionPerformed
-
- private void aabb_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aabb_checkActionPerformed
-  user_set_debug_flag(aabb_check.isSelected(), DBG_DrawAabb);
-
- }//GEN-LAST:event_aabb_checkActionPerformed
-
- private void contact_points_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contact_points_checkActionPerformed
-  user_set_debug_flag(contact_points_check.isSelected(), DBG_DrawContactPoints);
- }//GEN-LAST:event_contact_points_checkActionPerformed
-
- private void user_set_debug_flag(boolean flag, int bit) {
-  synchronized (SYNC_DEMO) {
-   if (demo != null) {
-    int prev_mode = demo.world().getDebugDrawer().getDebugMode();
-    demo.set_debug_flag(flag, bit);
-    /* store user changes to debug flags for restoring when another demo is chosen
-  
-     */
-    if (prev_mode != demo.world().getDebugDrawer().getDebugMode()) {
-     if (flag) {
-      user_debug_mode |= bit;
-     } else {
-      user_debug_mode &= ~bit;
-     }
-    }
-   }
-   update_debug_flags = true;
-  }
- }
- private void constraints_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_constraints_checkActionPerformed
-  user_set_debug_flag(constraints_check.isSelected(), DBG_DrawConstraints);
-
- }//GEN-LAST:event_constraints_checkActionPerformed
-
- private void constraint_limits_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_constraint_limits_checkActionPerformed
-  user_set_debug_flag(constraint_limits_check.isSelected(), DBG_DrawConstraintLimits);
- }//GEN-LAST:event_constraint_limits_checkActionPerformed
-
- private void normals_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_normals_checkActionPerformed
-  user_set_debug_flag(normals_check.isSelected(), DBG_DrawNormals);
- }//GEN-LAST:event_normals_checkActionPerformed
-
- private void frames_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_frames_checkActionPerformed
-  user_set_debug_flag(frames_check.isSelected(), DBG_DrawFrames);
- }//GEN-LAST:event_frames_checkActionPerformed
-
- private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
-  if (backgrounded) {
-   activate_window = true;
-  }
- }//GEN-LAST:event_formWindowGainedFocus
-
- private void iterations_spinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_iterations_spinnerStateChanged
-  if (demo != null && demo.world() != null && demo.world().getSolverInfo() != null) {
-   set_world_iterations();
-  }
- }//GEN-LAST:event_iterations_spinnerStateChanged
-
- private void broadphase_comboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_broadphase_comboActionPerformed
-  reset = true;
- }//GEN-LAST:event_broadphase_comboActionPerformed
+ private void friction_cache_checkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_friction_cache_checkActionPerformed
+  user_set_solver_mode(frame.friction_cache_check.isSelected(), SOLVER_ENABLE_FRICTION_DIRECTION_CACHING);
+ }//GEN-LAST:event_friction_cache_checkActionPerformed
 
  private void set_world_iterations() {
   if (demo != null && demo.world() != null && demo.world().getSolverInfo() != null) {
@@ -773,10 +881,16 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
  static ExampleBrowserFrame frame;
  static OpenGLFrame gl_frame;
 
+ static {
+  System.setProperty("org.lwjgl.util.Debug", "false");
+  System.setProperty("org.lwjgl.util.NoChecks", "true");
+ }
+
  /**
   * @param args the command line arguments
   */
  public static void main(String args[]) {
+
   /*
    * Set the Nimbus look and feel
    */
@@ -831,8 +945,16 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
     node_API.add(new DefaultMutableTreeNode(NODE_MOTOR_DEMO));
     node_API.add(new DefaultMutableTreeNode(NODE_GYROSCOPIC_DEMO));
     node_API.add(new DefaultMutableTreeNode(NODE_RIGID_BODY_SOFT_CONTACT));
+    DefaultMutableTreeNode node_benchmarks = new DefaultMutableTreeNode("Benchmarks");
+    node_benchmarks.add(new DefaultMutableTreeNode(NODE_THOUSAND_BOXES));
+    node_benchmarks.add(new DefaultMutableTreeNode(NODE_THOUSAND_STACK));
+    node_benchmarks.add(new DefaultMutableTreeNode(NODE_RAGDOLLS));
+    node_benchmarks.add(new DefaultMutableTreeNode(NODE_CONVEX_STACK));
+    node_benchmarks.add(new DefaultMutableTreeNode(NODE_PRIM_VS_MESH));
+    node_benchmarks.add(new DefaultMutableTreeNode(NODE_CONVEX_VS_MESH));
     DefaultMutableTreeNode node_Examples = new DefaultMutableTreeNode("Examples");
     node_Examples.add(node_API);
+    node_Examples.add(node_benchmarks);
     DefaultTreeModel model = new DefaultTreeModel(node_Examples);
     tree.setModel(model);
     tree.setRootVisible(false);
@@ -853,7 +975,9 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
    activate_window = true;
    boolean _vsync = !vsync;
    int _debug_mode = 0;
+   int _solver_mode = 0;
    browser_selection = DEFAULT_DEMO;
+   last_frametime = System.nanoTime();
    while (!Display.isCloseRequested()) {
     synchronized (SYNC_DEMO) {
      backgrounded = (!frame.isActive() && !gl_frame.isActive());
@@ -905,6 +1029,7 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
        demo.initWorld((String) frame.broadphase_combo.getSelectedItem());
        demo.initPhysics();
        new_demo.set_debug_mode(user_debug_mode | demo.world().getDebugDrawer().getDebugMode());
+       update_debug_flags = true;
        java.awt.EventQueue.invokeLater(new Runnable() {
         @Override
         public void run() {
@@ -917,9 +1042,11 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
       _vsync = vsync;
       Display.setVSyncEnabled(_vsync);
      }
-     if (update_debug_flags || _debug_mode != demo.world().getDebugDrawer().getDebugMode()) {
+     if (update_debug_flags || _debug_mode != demo.world().getDebugDrawer().getDebugMode() ||
+      user_solver_mode != demo.world().getSolverInfo().m_solverMode) {
       demo.world().getDebugDrawer().setDebugMode(demo.world().getDebugDrawer().getDebugMode() |
        user_debug_mode);
+      _solver_mode = demo.world().getSolverInfo().m_solverMode = user_solver_mode;
       update_debug_checks();
       _debug_mode = demo.world().getDebugDrawer().getDebugMode();
       update_debug_flags = false;
@@ -931,6 +1058,21 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
        reset = true;
       }
       gl_frame.update_display();
+      ++fps_samples;
+      if (fps_throttle.update_now()) {
+       long now = System.nanoTime();
+       long duration = now - last_frametime;
+       fps = fps_samples / (duration / 1e9);
+       last_frametime = now;
+       fps_samples = 0;
+       java.awt.EventQueue.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+         String t = String.format("%04d", ((int) (fps + 0.5f)));
+         frame.fps_label.setText(t);
+        }
+       });
+      }
      }
     }
    }
@@ -954,6 +1096,7 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
  private javax.swing.JCheckBox cycle_check;
  private javax.swing.JTextArea description_text;
  private javax.swing.JTree example_browser;
+ private javax.swing.JLabel fps_label;
  private javax.swing.JCheckBox frames_check;
  private javax.swing.JCheckBox friction2_check;
  private javax.swing.JCheckBox friction_cache_check;

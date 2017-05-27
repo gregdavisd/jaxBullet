@@ -20,7 +20,6 @@ import Bullet.Collision.MyNodeOverlapCallbackAllTriangles;
 import Bullet.Collision.MyNodeOverlapCallbackConvexcast;
 import Bullet.Collision.MyNodeOverlapCallbackRaycast;
 import Bullet.Collision.btOptimizedBvh;
-import Bullet.Collision.btStridingMeshInterface;
 import Bullet.Collision.btTriangleCallback;
 import Bullet.Collision.btTriangleInfoMap;
 import static Bullet.LinearMath.btScalar.SIMD_EPSILON;
@@ -44,12 +43,14 @@ import java.io.Serializable;
  */
 public class btBvhTriangleMeshShape extends btTriangleMeshShape  implements Serializable {
 
+ private static final long serialVersionUID = -6792520148457019195L;
+
  btOptimizedBvh m_bvh;
  btTriangleInfoMap m_triangleInfoMap;
  boolean m_useQuantizedAabbCompression;
  boolean m_ownsBvh;
 
- btBvhTriangleMeshShape(btStridingMeshInterface meshInterface, boolean useQuantizedAabbCompression,
+public btBvhTriangleMeshShape(btStridingMeshInterface meshInterface, boolean useQuantizedAabbCompression,
   boolean buildBvh) {
   super(meshInterface);
   m_bvh = null;
@@ -63,12 +64,12 @@ public class btBvhTriangleMeshShape extends btTriangleMeshShape  implements Seri
   }
  }
 
- btBvhTriangleMeshShape(btStridingMeshInterface meshInterface, boolean useQuantizedAabbCompression) {
+ public btBvhTriangleMeshShape(btStridingMeshInterface meshInterface, boolean useQuantizedAabbCompression) {
   this(meshInterface, useQuantizedAabbCompression, true);
  }
 
  ///optionally pass in a larger bvh aabb, used for quantization. This allows for deformations within this aabb
- btBvhTriangleMeshShape(btStridingMeshInterface meshInterface, boolean useQuantizedAabbCompression,
+  public btBvhTriangleMeshShape(btStridingMeshInterface meshInterface, boolean useQuantizedAabbCompression,
   final btVector3 bvhAabbMin, final btVector3 bvhAabbMax, boolean buildBvh) {
   super(meshInterface);
   m_triangleInfoMap = null;
@@ -85,7 +86,7 @@ public class btBvhTriangleMeshShape extends btTriangleMeshShape  implements Seri
   }
  }
 
- btBvhTriangleMeshShape(btStridingMeshInterface meshInterface, boolean useQuantizedAabbCompression,
+  public btBvhTriangleMeshShape(btStridingMeshInterface meshInterface, boolean useQuantizedAabbCompression,
   final btVector3 bvhAabbMin, final btVector3 bvhAabbMax) {
   this(meshInterface, useQuantizedAabbCompression, bvhAabbMin, bvhAabbMax, true);
  }

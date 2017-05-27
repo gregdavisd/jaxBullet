@@ -25,6 +25,8 @@ import java.io.Serializable;
  */
 class RemovePairCallback implements btOverlapCallback , Serializable  {
 
+ private static final long serialVersionUID = 1L;
+
  final btBroadphaseProxy m_obsoleteProxy;
 
  RemovePairCallback(btBroadphaseProxy obsoleteProxy) {

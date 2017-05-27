@@ -11,10 +11,11 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
+package Bullet.Collision.Shape;
 
-package Bullet.Collision;
-
+import Bullet.Collision.btTriangleCallback;
+import Bullet.Collision.btTriangleCallback;
 import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
@@ -23,39 +24,44 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-abstract public class btStridingMeshInterface  implements Serializable {
+abstract public class btStridingMeshInterface implements Serializable {
 
+ private static final long serialVersionUID = 1L;
  final btVector3 m_scaling = new btVector3();
- final btInternalTriangleIndexCallback vertex_scaling;
- btInternalTriangleIndexCallback callback;
+ final btTriangleCallback vertex_scaling;
+ btTriangleCallback callback;
 
  btStridingMeshInterface() {
   m_scaling.set(1, 1, 1);
-  vertex_scaling = new btInternalTriangleIndexCallback() {
+  vertex_scaling = new btTriangleCallback() {
+   private static final long serialVersionUID = 1L;
+
    @Override
-   public boolean internalProcessTriangleIndex(btVector3[] triangle, int partId, int triangleIndex) {
+   public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
     for (int i = 0; i < 3; i++) {
-     triangle[i].mul(getScaling());
+     triangle[i].mul(m_scaling);
     }
-    callback.internalProcessTriangleIndex(triangle, partId, triangleIndex);
+    callback.processTriangle(triangle, partId, triangleIndex);
     return true;
    }
   };
  }
 
-  public void InternalProcessAllTriangles(btInternalTriangleIndexCallback callback, final btVector3 aabbMin,
+ public void InternalProcessAllTriangles(btTriangleCallback callback,
+  final btVector3 aabbMin,
   final btVector3 aabbMax) {
   this.callback = callback;
   int graphicssubparts = getNumSubParts();
   ///if the number of parts is big, the performance might drop due to the innerloop switch on indextype
   for (int part = 0; part < graphicssubparts; part++) {
-   StridingMeshLock mesh = getLockedReadOnlyVertexIndexBase(part);
+   btStridingMeshLock mesh = getLockedReadOnlyVertexIndexBase(part);
    mesh.process_all_triangles(vertex_scaling, part);
    //unLockReadOnlyVertexBase(part);
   }
  }
 
- void InternalProcessSubPart(btInternalTriangleIndexCallback callback, StridingMeshLock mesh,
+ public void InternalProcessSubPart(btTriangleCallback callback,
+  btStridingMeshLock mesh,
   final btVector3 aabbMin, final btVector3 aabbMax, int part, int baseTriangleIndex) {
   this.callback = callback;
   mesh.process_all_triangles(vertex_scaling, part);
@@ -63,11 +69,11 @@ abstract public class btStridingMeshInterface  implements Serializable {
  }
 
  ///brute force method to calculate aabb
- void calculateAabbBruteForce(final btVector3 aabbMin, final btVector3 aabbMax) {
+ public void calculateAabbBruteForce(final btVector3 aabbMin, final btVector3 aabbMax) {
   //first calculate the total aabb for all triangles
   aabbMin.set((-BT_LARGE_FLOAT), (-BT_LARGE_FLOAT), (-BT_LARGE_FLOAT));
   aabbMax.set((BT_LARGE_FLOAT), (BT_LARGE_FLOAT), (BT_LARGE_FLOAT));
-  btInternalTriangleIndexCallback aabbCallback = new btInternalTriangleIndexCallbackImpl(aabbMin,
+  btTriangleCallback aabbCallback = new btTriangleCallbackImpl(aabbMin,
    aabbMax);
   InternalProcessAllTriangles(aabbCallback, aabbMin, aabbMax);
  }
@@ -77,59 +83,56 @@ abstract public class btStridingMeshInterface  implements Serializable {
  /// in this way the mesh can be handled as chunks of memory with striding
  /// very similar to OpenGL vertexarray support
  /// make a call to unLockVertexBase when the read and write access is finished	
- abstract StridingMeshLock getLockedReadOnlyVertexIndexBase(int subpart);
+ public abstract btStridingMeshLock getLockedReadOnlyVertexIndexBase(int subpart);
 
- StridingMeshLock getLockedReadOnlyVertexIndexBase() {
+ public btStridingMeshLock getLockedReadOnlyVertexIndexBase() {
   return getLockedReadOnlyVertexIndexBase(0);
  }
 
  /// unLockVertexBase finishes the access to a subpart of the triangle mesh
  /// make a call to unLockVertexBase when the read and write access (using getLockedVertexIndexBase) is finished
- abstract void unLockVertexBase(int subpart);
+ public abstract void unLockVertexBase(int subpart);
 
- final void unLockReadOnlyVertexBase(int subpart) {
-  // put  synchronization somewhere else if you must
-  throw new AssertionError();
+ public  final void unLockReadOnlyVertexBase(int subpart) {
+ 
  }
 
  /// getNumSubParts returns the number of seperate subparts
  /// each subpart has a continuous array of vertices and indices
- abstract int getNumSubParts();
+ public abstract int getNumSubParts();
 
- abstract void preallocateVertices(int numverts);
+ public abstract void preallocateVertices(int numverts);
 
- abstract void preallocateIndices(int numindices);
+ public abstract void preallocateIndices(int numindices);
 
-  public boolean hasPremadeAabb() {
-  return false;
- }
+ public abstract boolean hasPremadeAabb() ;
+ 
 
- void setPremadeAabb(final btVector3 aabbMin, final btVector3 aabbMax) {
- }
+ public abstract void setPremadeAabb(final btVector3 aabbMin, final btVector3 aabbMax);
 
-  public void getPremadeAabb(final btVector3 aabbMin, final btVector3 aabbMax) {
- }
+ public abstract void getPremadeAabb(final btVector3 aabbMin, final btVector3 aabbMax);
 
-  public btVector3 getScaling() {
+ public btVector3 getScaling() {
   return new btVector3(m_scaling);
  }
 
-  public void setScaling(final btVector3 scaling) {
+ public void setScaling(final btVector3 scaling) {
   m_scaling.set(scaling);
  }
 
- private static class btInternalTriangleIndexCallbackImpl implements btInternalTriangleIndexCallback {
+ private static class btTriangleCallbackImpl implements btTriangleCallback {
 
+  private static final long serialVersionUID = 1L;
   private final btVector3 aabbMin;
   private final btVector3 aabbMax;
 
-  public btInternalTriangleIndexCallbackImpl(final btVector3 aabbMin, final btVector3 aabbMax) {
+  public btTriangleCallbackImpl(final btVector3 aabbMin, final btVector3 aabbMax) {
    this.aabbMin = aabbMin;
    this.aabbMax = aabbMax;
   }
 
   @Override
-  public boolean internalProcessTriangleIndex(btVector3[] triangle, int partId, int triangleIndex) {
+  public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
    aabbMin.setMin(triangle[0]);
    aabbMax.setMax(triangle[0]);
    aabbMin.setMin(triangle[1]);

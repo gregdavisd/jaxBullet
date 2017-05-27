@@ -12,12 +12,13 @@ subject to the following restrictions:
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
  */
-package Bullet.Collision;
+package Bullet.Collision.Algorithm;
 
-import Bullet.Collision.Algorithm.btCollisionAlgorithm;
-import Bullet.Collision.Algorithm.btCollisionAlgorithmConstructionInfo;
-import Bullet.Collision.Algorithm.btCollisionAlgorithmCreateFunc;
 import Bullet.Collision.Broadphase.btDispatcherInfo;
+import Bullet.Collision.btCollisionObject;
+import Bullet.Collision.btCollisionObjectWrapper;
+import Bullet.Collision.btManifoldResult;
+import Bullet.Collision.btPersistentManifold;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ import java.util.ArrayList;
  */
 public class btEmptyAlgorithm extends btCollisionAlgorithm  implements Serializable {
 
- btEmptyAlgorithm(btCollisionAlgorithmConstructionInfo ci) {
+public btEmptyAlgorithm(btCollisionAlgorithmConstructionInfo ci) {
   super(ci);
  }
 

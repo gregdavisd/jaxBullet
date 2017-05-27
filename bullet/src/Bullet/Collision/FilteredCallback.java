@@ -22,7 +22,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class FilteredCallback implements btInternalTriangleIndexCallback,   Serializable  {
+public class FilteredCallback implements btTriangleCallback,   Serializable  {
 
   public final btTriangleCallback m_callback;
   public final btVector3 m_aabbMin = new btVector3();
@@ -42,7 +42,7 @@ public class FilteredCallback implements btInternalTriangleIndexCallback,   Seri
   * @return
   */
  @Override
- public boolean internalProcessTriangleIndex(btVector3[] triangle, int partId, int triangleIndex) {
+ public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
   if (TestTriangleAgainstAabb2(triangle, m_aabbMin, m_aabbMax)) {
    //check aabb in triangle-space, before doing this
    m_callback.processTriangle(triangle, partId, triangleIndex);

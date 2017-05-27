@@ -92,10 +92,10 @@ public class btConvexTriangleCallback implements btTriangleCallback  , Serializa
  }
 
  @Override
- public void processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
+ public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
   BT_PROFILE("btConvexTriangleCallback.processTriangle");
   if (!TestTriangleAgainstAabb2(triangle, m_aabbMin, m_aabbMax)) {
-   return;
+   return true;
   }
   btCollisionAlgorithmConstructionInfo ci = new btCollisionAlgorithmConstructionInfo();
   ci.m_dispatcher1 = m_dispatcher;
@@ -130,6 +130,7 @@ public class btConvexTriangleCallback implements btTriangleCallback  , Serializa
    }
    colAlgo.destroy();
   }
+  return true;
  }
 
  public final void clearCache() {

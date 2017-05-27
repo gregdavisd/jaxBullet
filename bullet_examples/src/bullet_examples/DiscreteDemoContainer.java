@@ -31,18 +31,7 @@ abstract public class DiscreteDemoContainer extends DemoContainer {
  protected void initWorld(String broadphase_class) {
   collision_configuration = new btDefaultCollisionConfiguration();
   dispatcher = new btCollisionDispatcher(collision_configuration);
-  switch (broadphase_class) {
-   case "btDbvtBroadphase":
-    broadphase = new btDbvtBroadphase();
-    break;
-   case "btAxisSweep3":
-    final btVector3 worldAabbMin = new btVector3(-100, -100, -100);
-    final btVector3 worldAabbMax = new btVector3(100, 100, 100);
-    broadphase = new btAxisSweep3(worldAabbMin, worldAabbMax);
-    break;
-   default:
-    assert (false);
-  }
+  create_broadphase(broadphase_class);
   constraint_solver = new btSequentialImpulseConstraintSolver();
   world = new btDiscreteDynamicsWorld(dispatcher, broadphase, constraint_solver,
    collision_configuration);
@@ -50,4 +39,5 @@ abstract public class DiscreteDemoContainer extends DemoContainer {
   debug_draw = new DebugDraw();
   world.setDebugDrawer(debug_draw);
  }
+
 }

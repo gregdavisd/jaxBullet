@@ -14,7 +14,6 @@ subject to the following restrictions:
  */
 package Bullet.LinearMath.Hull;
 
-
 import java.io.Serializable;
 import javax.vecmath.Tuple3i;
 
@@ -22,9 +21,9 @@ import javax.vecmath.Tuple3i;
  *
  * @author Gregery Barton
  */
-class btHullTriangle extends Int3 implements Serializable  {
+class btHullTriangle extends Int3 implements Serializable {
 
- final Tuple3i n = new Int3();
+ final Int3 n = new Int3();
  int id;
  int vmax;
  float rise;
@@ -35,27 +34,26 @@ class btHullTriangle extends Int3 implements Serializable  {
   vmax = -1;
  }
 
- int _neib(int a, int b) {
+ btHullTriangle(btHullTriangle o) {
+  set(o);
+  n.set(o.n);
+  id = o.id;
+  vmax = o.vmax;
+  rise = o.rise;
+ }
+
+ Int3.Pointer neib(int a, int b) {
   int i;
   for (i = 0; i < 3; i++) {
    int i1 = (i + 1) % 3;
    int i2 = (i + 2) % 3;
    if (getElement(i) == a && getElement(i1) == b) {
-    return i2;
+    return new Int3.Pointer(n, i2);
    }
    if (getElement(i) == b && getElement(i1) == a) {
-    return i2;
+    return new Int3.Pointer(n, i2);
    }
   }
-  assert(false);
-  return -1;
- }
-
- int neib(int a, int b) {
-  return n.getElement(_neib(a, b));
- }
-
- void neib_set(int a, int b, int value) {
-  n.setElement(_neib(a, b), value);
+  throw new AssertionError();
  }
 }

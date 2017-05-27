@@ -15,6 +15,8 @@ subject to the following restrictions:
 
 package Bullet.Collision;
 
+import Bullet.Collision.Shape.btStridingMeshLock;
+import Bullet.Collision.Shape.btStridingMeshInterface;
 import Bullet.Collision.Broadphase.btNodeOverlapCallback;
 import Bullet.LinearMath.btVector3;
 import static Bullet.LinearMath.btVector3.init;
@@ -28,17 +30,17 @@ public class MyNodeOverlapCallbackRaycast implements btNodeOverlapCallback  , Se
 
  final btStridingMeshInterface m_meshInterface;
  final btTriangleCallback m_callback;
- final btInternalTriangleIndexCallback vert_scaling_callback;
+ final btTriangleCallback vert_scaling_callback;
  final btVector3 mesh_scaling = new btVector3();
  int part = -1;
- StridingMeshLock mesh_lock;
+ btStridingMeshLock mesh_lock;
 
  public MyNodeOverlapCallbackRaycast(btTriangleCallback callback, btStridingMeshInterface meshInterface) {
   m_meshInterface = meshInterface;
   m_callback = callback;
-  vert_scaling_callback = new btInternalTriangleIndexCallback() {
+  vert_scaling_callback = new btTriangleCallback() {
    @Override
-   public boolean internalProcessTriangleIndex(btVector3[] triangle, int partId, int triangleIndex) {
+   public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
     for (int i = 0; i < 3; i++) {
      triangle[i].mul(mesh_scaling);
     }

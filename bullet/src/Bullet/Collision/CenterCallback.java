@@ -22,7 +22,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
- public class CenterCallback implements btInternalTriangleIndexCallback,   Serializable  {
+ public class CenterCallback implements btTriangleCallback,   Serializable  {
 
  boolean first;
  final btVector3 ref = new btVector3();
@@ -34,7 +34,7 @@ import java.io.Serializable;
  }
 
  @Override
- public boolean internalProcessTriangleIndex(btVector3[] triangle, int partId, int triangleIndex) {
+ public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
   if (first) {
    ref.set(triangle[0]);
    first = false;

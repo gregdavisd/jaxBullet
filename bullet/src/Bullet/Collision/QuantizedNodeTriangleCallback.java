@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  *
  * @author Gregery Barton
  */
-class QuantizedNodeTriangleCallback implements btInternalTriangleIndexCallback ,   Serializable {
+class QuantizedNodeTriangleCallback implements btTriangleCallback ,   Serializable {
 
  final ArrayList<btQuantizedBvhNode> m_triangleNodes;
  final btQuantizedBvh m_optimizedTree; // for quantization
@@ -52,7 +52,7 @@ class QuantizedNodeTriangleCallback implements btInternalTriangleIndexCallback ,
  }
 
  @Override
- public boolean internalProcessTriangleIndex(btVector3[] triangle, int partId, int triangleIndex) {
+ public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
   // The partId and triangle index must fit in the same (positive) integer
   assert(partId < (1 << MAX_NUM_PARTS_IN_BITS));
   assert(triangleIndex < (1 << (31 - MAX_NUM_PARTS_IN_BITS)));

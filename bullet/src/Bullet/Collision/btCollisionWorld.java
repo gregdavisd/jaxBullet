@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision;
 
 import Bullet.Collision.Algorithm.btCollisionAlgorithm;
@@ -68,12 +67,14 @@ import static java.util.Collections.swap;
 import static java.util.Collections.swap;
 
 /**
-  CollisionWorld is interface and container for the collision detection
+ * CollisionWorld is interface and container for the collision detection
+ *
  * @author Gregery Barton
  */
-public class btCollisionWorld  implements Serializable {
+public class btCollisionWorld implements Serializable {
 
  static boolean reportMe = true;
+ private static final long serialVersionUID = 1L;
 
  /// rayTestSingle performs a raycast call and calls the resultCallback. It is used internally by rayTest.
  /// In a future implementation, we consider moving the ray test as a   method in btCollisionShape.
@@ -427,7 +428,7 @@ public class btCollisionWorld  implements Serializable {
   BT_PROFILE("updateAabbs");
   for (int i = 0; i < m_collisionObjects.size(); i++) {
    btCollisionObject colObj = m_collisionObjects.get(i);
-   assert(colObj.getWorldArrayIndex() == i);
+   assert (colObj.getWorldArrayIndex() == i);
    //only update aabb of active objects
    if (m_forceUpdateAllAabbs || colObj.isActive()) {
     updateSingleAabb(colObj);
@@ -452,7 +453,7 @@ public class btCollisionWorld  implements Serializable {
 
  public boolean debugDrawWorld() {
   if (getDebugDrawer() != null) {
-   boolean all_sleeping=true;
+   boolean all_sleeping = true;
    DefaultColors defaultColors = getDebugDrawer().getDefaultColors();
    if ((getDebugDrawer().getDebugMode() & DBG_DrawContactPoints) != 0) {
     if (getDispatcher() != null) {
@@ -482,18 +483,18 @@ public class btCollisionWorld  implements Serializable {
        switch (colObj.getActivationState()) {
         case btCollisionObject.ACTIVE_TAG:
          color.set(defaultColors.m_activeObject);
-         all_sleeping=false;
+         all_sleeping = false;
          break;
         case btCollisionObject.ISLAND_SLEEPING:
          color.set(defaultColors.m_deactivatedObject);
          break;
         case btCollisionObject.WANTS_DEACTIVATION:
          color.set(defaultColors.m_wantsDeactivationObject);
-         all_sleeping=false;
+         all_sleeping = false;
          break;
         case btCollisionObject.DISABLE_DEACTIVATION:
          color.set(defaultColors.m_disabledDeactivationObject);
-         all_sleeping=false;
+         all_sleeping = false;
          break;
         case btCollisionObject.DISABLE_SIMULATION:
          color.set(defaultColors.m_disabledSimulationObject);
@@ -532,8 +533,9 @@ public class btCollisionWorld  implements Serializable {
     }
    }
    return !all_sleeping;
-  }else{
-  return false;}
+  } else {
+   return false;
+  }
  }
 
  public void debugDrawObject(final btTransform worldTransform, btCollisionShape shape,
@@ -642,7 +644,13 @@ public class btCollisionWorld  implements Serializable {
         }
        }
       } else {
+        final btVector3 a = new btVector3();
+        final btVector3 b = new btVector3();
        for (i = 0; i < polyshape.getNumEdges(); i++) {
+        polyshape.getEdge(i, a, b);
+        final btVector3 wa = worldTransform.transform(a);
+        final btVector3 wb = worldTransform.transform(b);
+        getDebugDrawer().drawLine(wa, wb, color);
        }
       }
      }
@@ -778,10 +786,10 @@ public class btCollisionWorld  implements Serializable {
 
  public void addCollisionObject(btCollisionObject collisionObject, int collisionFilterGroup,
   int collisionFilterMask) {
-  assert(collisionObject != null);
+  assert (collisionObject != null);
   //check that the object isn't already added
-  assert(findLinearSearch(m_collisionObjects, collisionObject) == m_collisionObjects.size());
-  assert(collisionObject.getWorldArrayIndex() == -1);  // do not add the same object to more than one collision world
+  assert (findLinearSearch(m_collisionObjects, collisionObject) == m_collisionObjects.size());
+  assert (collisionObject.getWorldArrayIndex() == -1);  // do not add the same object to more than one collision world
   collisionObject.setWorldArrayIndex(m_collisionObjects.size());
   m_collisionObjects.add(collisionObject);
   //calculate new AABB
@@ -820,7 +828,7 @@ public class btCollisionWorld  implements Serializable {
   int iObj = collisionObject.getWorldArrayIndex();
 //    assert(iObj >= 0 && iObj < m_collisionObjects.size()); // trying to remove an object that was never added or already removed previously?
   if (iObj >= 0 && iObj < m_collisionObjects.size()) {
-   assert(collisionObject == m_collisionObjects.get(iObj));
+   assert (collisionObject == m_collisionObjects.get(iObj));
    //m_collisionObjects.swap(iObj, m_collisionObjects.size()-1);
    swap(m_collisionObjects, iObj, m_collisionObjects.size() - 1);
    m_collisionObjects.remove(m_collisionObjects.size() - 1);

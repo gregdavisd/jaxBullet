@@ -11,7 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Collision.Shape;
 
 import static Bullet.Collision.Broadphase.BroadphaseNativeTypes.BOX_SHAPE_PROXYTYPE;
@@ -29,24 +29,23 @@ import static Bullet.LinearMath.btScalar.btFsels;
 import static Bullet.LinearMath.btScalar.btSqrt;
 import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
-import static Bullet.LinearMath.btVector3.btMul;
 import java.io.Serializable;
 
 /**
  *
  * @author Gregery Barton
  */
-public abstract class btConvexShape extends btCollisionShape  implements Serializable {
+public abstract class btConvexShape extends btCollisionShape implements Serializable {
 
  public static final int MAX_PREFERRED_PENETRATION_DIRECTIONS = 10;
 
  static btVector3 convexHullSupport(final btVector3 localDirOrg, btVector3[] points, int numPoints,
   final btVector3 localScaling) {
-  final btVector3 vec = btMul(localDirOrg, localScaling);
+  final btVector3 vec = new btVector3(localDirOrg).mul(localScaling);
   float[] maxDot = new float[1];
   int ptIndex = vec.maxDot(points, numPoints, maxDot);
-  assert(ptIndex >= 0);
-  final btVector3 supVec = btMul(points[ptIndex], localScaling);
+  assert (ptIndex >= 0);
+  final btVector3 supVec = new btVector3(points[ptIndex]).mul(localScaling);
   return supVec;
  }
 
@@ -104,7 +103,7 @@ public abstract class btConvexShape extends btCollisionShape  implements Seriali
      }
      break;
      default:
-      assert(false);
+      assert (false);
       break;
     }
     float radius = halfExtents.getElement(XX);
@@ -305,7 +304,7 @@ public abstract class btConvexShape extends btCollisionShape  implements Seriali
     break;
   }
   // should never reach here
-  assert(false);
+  assert (false);
  }
 
  public void project(final btTransform trans, final btVector3 dir, float[] min, float[] max,

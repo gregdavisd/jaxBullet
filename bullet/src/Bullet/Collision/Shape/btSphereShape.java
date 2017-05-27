@@ -26,6 +26,8 @@ import java.io.Serializable;
  */
 public class btSphereShape extends btConvexInternalShape implements Serializable  {
 
+ private static final long serialVersionUID = 1L;
+
  public btSphereShape(float radius) {
   super();
   m_shapeType = SPHERE_SHAPE_PROXYTYPE;

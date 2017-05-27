@@ -25,7 +25,9 @@ import java.util.logging.Logger;
  *
  * @author Gregery Barton
  */
-class BuildOptimizedBvhNodeCallback implements btInternalTriangleIndexCallback,  Serializable  {
+class BuildOptimizedBvhNodeCallback implements btTriangleCallback,  Serializable  {
+
+ private static final long serialVersionUID = 1L;
 
  final ArrayList<btOptimizedBvhNode> m_triangleNodes;
 
@@ -48,7 +50,7 @@ class BuildOptimizedBvhNodeCallback implements btInternalTriangleIndexCallback, 
  }
 
  @Override
- public boolean internalProcessTriangleIndex(btVector3[] triangle, int partId, int triangleIndex) {
+ public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
   btOptimizedBvhNode node = new btOptimizedBvhNode();
   final btVector3 aabbMin = new btVector3();
   final btVector3 aabbMax = new btVector3();

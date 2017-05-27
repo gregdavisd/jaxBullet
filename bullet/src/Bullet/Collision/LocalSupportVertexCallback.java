@@ -22,7 +22,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class LocalSupportVertexCallback implements btInternalTriangleIndexCallback,   Serializable  {
+public class LocalSupportVertexCallback implements btTriangleCallback,   Serializable  {
 
   public final btVector3 m_supportVertexLocal = new btVector3();
   public float m_maxDot;
@@ -41,7 +41,7 @@ public class LocalSupportVertexCallback implements btInternalTriangleIndexCallba
   * @return
   */
  @Override
- public boolean internalProcessTriangleIndex(btVector3[] triangle, int partId, int triangleIndex) {
+ public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
   for (int i = 0; i < 3; i++) {
    float dot = m_supportVecLocal.dot(triangle[i]);
    if (dot > m_maxDot) {

@@ -11,22 +11,19 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Collision.Broadphase;
-
 
 import static Bullet.common.btAlignedObjectArray.findLinearSearch;
 import java.io.Serializable;
 import java.util.ArrayList;
 import static java.util.Collections.swap;
-///btSortedOverlappingPairCache maintains the objects with overlapping AABB
-///Typically managed by the Broadphase, Axis3Sweep or btSimpleBroadphase
 
 /**
  *
  * @author Gregery Barton
  */
-public class btSortedOverlappingPairCache extends btOverlappingPairCache  implements Serializable {
+public class btSortedOverlappingPairCache extends btOverlappingPairCache implements Serializable {
 
  //avoid brute-force finding all the time
  final ArrayList<btBroadphasePair> m_overlappingPairArray = new ArrayList<>(0);
@@ -43,8 +40,6 @@ public class btSortedOverlappingPairCache extends btOverlappingPairCache  implem
   m_hasDeferredRemoval = true;
   m_overlapFilterCallback = null;
   m_ghostPairCallback = null;
-  int initialAllocatedSize = 2;
-  m_overlappingPairArray.ensureCapacity(initialAllocatedSize);
  }
 
  @Override
@@ -72,15 +67,22 @@ public class btSortedOverlappingPairCache extends btOverlappingPairCache  implem
  @Override
  public Object removeOverlappingPair(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1,
   btDispatcher dispatcher) {
+  btBroadphaseProxy do_proxy0 = proxy0;
+  btBroadphaseProxy do_proxy1 = proxy1;
+  if (do_proxy0.m_uniqueId > do_proxy1.m_uniqueId) {
+   btBroadphaseProxy swapper = do_proxy0;
+   do_proxy0 = do_proxy1;
+   do_proxy1 = swapper;
+  }
   if (!hasDeferredRemoval()) {
-   btBroadphasePair findPair = new btBroadphasePair(proxy0, proxy1);
+   btBroadphasePair findPair = new btBroadphasePair(do_proxy0, do_proxy1);
    int findIndex = findLinearSearch(m_overlappingPairArray, findPair);
    if (findIndex < m_overlappingPairArray.size()) {
     btBroadphasePair pair = m_overlappingPairArray.get(findIndex);
 //    Object userData = pair.m_internalInfo1;
     cleanOverlappingPair(pair, dispatcher);
     if (m_ghostPairCallback != null) {
-     m_ghostPairCallback.removeOverlappingPair(proxy0, proxy1, dispatcher);
+     m_ghostPairCallback.removeOverlappingPair(do_proxy0, do_proxy1, dispatcher);
     }
     swap(m_overlappingPairArray, findIndex, m_overlappingPairArray.size() - 1);
     m_overlappingPairArray.remove(m_overlappingPairArray.size() - 1);
@@ -92,7 +94,7 @@ public class btSortedOverlappingPairCache extends btOverlappingPairCache  implem
 
  @Override
  public void cleanOverlappingPair(btBroadphasePair pair, btDispatcher dispatcher) {
-   pair.m_algorithm = null;
+  pair.m_algorithm = null;
  }
 
  /**
@@ -103,25 +105,39 @@ public class btSortedOverlappingPairCache extends btOverlappingPairCache  implem
   */
  @Override
  public btBroadphasePair addOverlappingPair(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1) {
-  //don't add overlap with own
-  assert(proxy0 != proxy1);
-  if (!needsBroadphaseCollision(proxy0, proxy1)) {
+  btBroadphaseProxy do_proxy0 = proxy0;
+  btBroadphaseProxy do_proxy1 = proxy1;
+  if (do_proxy0.m_uniqueId > do_proxy1.m_uniqueId) {
+   btBroadphaseProxy swapper = do_proxy0;
+   do_proxy0 = do_proxy1;
+   do_proxy1 = swapper;
+  }
+//don't add overlap with own
+  assert (proxy0 != proxy1);
+  if (!needsBroadphaseCollision(do_proxy0, do_proxy1)) {
    return null;
   }
-  btBroadphasePair pair = new btBroadphasePair(proxy0, proxy1);
+  btBroadphasePair pair = new btBroadphasePair(do_proxy0, do_proxy1);
   m_overlappingPairArray.add(pair);
   if (m_ghostPairCallback != null) {
-   m_ghostPairCallback.addOverlappingPair(proxy0, proxy1);
+   m_ghostPairCallback.addOverlappingPair(do_proxy0, do_proxy1);
   }
   return pair;
  }
 
  @Override
  public btBroadphasePair findPair(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1) {
-  if (!needsBroadphaseCollision(proxy0, proxy1)) {
+  btBroadphaseProxy do_proxy0 = proxy0;
+  btBroadphaseProxy do_proxy1 = proxy1;
+  if (do_proxy0.m_uniqueId > do_proxy1.m_uniqueId) {
+   btBroadphaseProxy swapper = do_proxy0;
+   do_proxy0 = do_proxy1;
+   do_proxy1 = swapper;
+  }
+  if (!needsBroadphaseCollision(do_proxy0, do_proxy1)) {
    return null;
   }
-  btBroadphasePair tmpPair = new btBroadphasePair(proxy0, proxy1);
+  btBroadphasePair tmpPair = new btBroadphasePair(do_proxy0, do_proxy1);
   int findIndex = findLinearSearch(m_overlappingPairArray, (tmpPair));
   if (findIndex < m_overlappingPairArray.size()) {
    //assert(it != m_overlappingPairSet.end());
@@ -198,6 +214,6 @@ public class btSortedOverlappingPairCache extends btOverlappingPairCache  implem
 
  @Override
  public void incrementalCleanup(int ni, btDispatcher dispatcher) {
-  assert(false);
+  assert (false);
  }
 };
