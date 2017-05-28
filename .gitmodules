@@ -1,0 +1,6 @@
+[submodule "vecmath"]
+	path = vecmath
+	url = https://github.com/gregeryb/vecmath
+[submodule "apache_primitives"]
+	path = apache_primitives
+	url = https://github.com/gregeryb/apache_primitives
