@@ -61,7 +61,7 @@ public class btSingleRayCallback extends btBroadphaseRayCallback  implements Ser
  }
 
  @Override
- boolean process(btBroadphaseProxy proxy) {
+ public boolean process(btBroadphaseProxy proxy) {
   ///terminate further ray tests, once the closestHitFraction reached zero
   if (m_resultCallback.m_closestHitFraction == (0.f)) {
    return false;

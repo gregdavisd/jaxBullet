@@ -23,6 +23,8 @@ import java.io.Serializable;
  */
 public class CleanPairCallback implements btOverlapCallback  , Serializable {
 
+ private static final long serialVersionUID = 1L;
+
  final btBroadphaseProxy m_cleanProxy;
  final btOverlappingPairCache m_pairCache;
  final btDispatcher m_dispatcher;

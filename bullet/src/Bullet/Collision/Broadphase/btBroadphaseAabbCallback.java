@@ -23,5 +23,5 @@ import java.io.Serializable;
  */
 abstract public class btBroadphaseAabbCallback  implements Serializable {
 
- abstract boolean process(btBroadphaseProxy proxy);
+ public abstract boolean process(btBroadphaseProxy proxy);
 }

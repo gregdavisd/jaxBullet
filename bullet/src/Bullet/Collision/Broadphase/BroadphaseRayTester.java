@@ -23,6 +23,8 @@ import java.io.Serializable;
  */
 public class BroadphaseRayTester extends btDbvt.ICollide implements Serializable  {
 
+ private static final long serialVersionUID = 1L;
+
  final btBroadphaseRayCallback m_rayCallback;
 
  public BroadphaseRayTester(btBroadphaseRayCallback orgCallback) {

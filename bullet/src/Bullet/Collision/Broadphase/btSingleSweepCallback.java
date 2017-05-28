@@ -61,7 +61,7 @@ public class btSingleSweepCallback extends btBroadphaseRayCallback implements Se
  }
 
  @Override
- boolean process(btBroadphaseProxy proxy) {
+ public boolean process(btBroadphaseProxy proxy) {
   ///terminate further convex sweep tests, once the closestHitFraction reached zero
   if (m_resultCallback.m_closestHitFraction == (0.f)) {
    return false;

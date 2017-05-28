@@ -67,4 +67,5 @@ public class BroadphaseNativeTypes implements Serializable  {
  public static final int HFFLUID_BUOYANT_CONVEX_SHAPE_PROXYTYPE = 34;
  public static final int INVALID_SHAPE_PROXYTYPE = 35;
  public static final int MAX_BROADPHASE_COLLISION_TYPES = 36;
+ private static final long serialVersionUID = 1L;
 }

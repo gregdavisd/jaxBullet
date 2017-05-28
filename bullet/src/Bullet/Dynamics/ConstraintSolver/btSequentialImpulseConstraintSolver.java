@@ -70,6 +70,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class btSequentialImpulseConstraintSolver extends btConstraintSolver implements Serializable {
 
  static int gNumSplitImpulseRecoveries = 0;
+ private static final long serialVersionUID = 1L;
  long m_btSeed2=ThreadLocalRandom.current().nextLong();
 
  static float gResolveSingleConstraintRowGeneric_scalar_reference(btSolverBody body1,
@@ -978,7 +979,6 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
     for (iteration = 0; iteration < infoGlobal.m_numIterations; iteration++) {
      float leastSquaresResidual = 0.f;
      {
-      int j;
       for (btSolverConstraint solveManifold : contact) {
        float residual = resolveSplitPenetrationSIMD(
         solveManifold.m_solverBodyA,
@@ -1209,13 +1209,13 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
     }
    }
    if (iteration < infoGlobal.m_numIterations) {
-    for (btTypedConstraint constraint : constraints.subList(0, numConstraints)) {
-     if (constraint.isEnabled()) {
-      btSolverBody bodyA = getOrInitSolverBody(constraint.getRigidBodyA(), infoGlobal.m_timeStep);
-      btSolverBody bodyB = getOrInitSolverBody(constraint.getRigidBodyB(), infoGlobal.m_timeStep);
-      constraint.solveConstraintObsolete(bodyA, bodyB, infoGlobal.m_timeStep);
-     }
-    }
+//    for (btTypedConstraint constraint : constraints.subList(0, numConstraints)) {
+//     if (constraint.isEnabled()) {
+//      btSolverBody bodyA = getOrInitSolverBody(constraint.getRigidBodyA(), infoGlobal.m_timeStep);
+//      btSolverBody bodyB = getOrInitSolverBody(constraint.getRigidBodyB(), infoGlobal.m_timeStep);
+//      constraint.solveConstraintObsolete(bodyA, bodyB, infoGlobal.m_timeStep);
+//     }
+//    }
     ///solve all contact constraints
     for (btSolverConstraint solveManifold : contact) {
      float residual = resolveSingleConstraintRowLowerLimit(solveManifold.m_solverBodyA,
@@ -1732,6 +1732,8 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
  private static class btSingleConstraintRowSolverImpl extends btSingleConstraintRowSolver implements
   Serializable {
 
+  private static final long serialVersionUID = 1L;
+
   public btSingleConstraintRowSolverImpl() {
   }
 
@@ -1768,6 +1770,8 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
  private static class btSingleConstraintRowSolverImpl3 extends btSingleConstraintRowSolver
   implements Serializable {
 
+  private static final long serialVersionUID = 1L;
+
   public btSingleConstraintRowSolverImpl3() {
   }
 
@@ -1780,6 +1784,8 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
  private static class btSingleConstraintRowSolverImpl4 extends btSingleConstraintRowSolver
   implements Serializable {
 
+  private static final long serialVersionUID = 1L;
+
   public btSingleConstraintRowSolverImpl4() {
   }
 
@@ -1791,6 +1797,8 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
 
  private static class btSingleConstraintRowSolverImpl5 extends btSingleConstraintRowSolver
   implements Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   public btSingleConstraintRowSolverImpl5() {
   }

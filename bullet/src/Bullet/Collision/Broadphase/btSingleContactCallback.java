@@ -30,6 +30,8 @@ import java.io.Serializable;
  */
 public class btSingleContactCallback extends btBroadphaseAabbCallback  implements Serializable {
 
+ private static final long serialVersionUID = 1L;
+
  final btCollisionObject m_collisionObject;
  final btCollisionWorld m_world;
  public final ContactResultCallback m_resultCallback;
@@ -42,7 +44,7 @@ public class btSingleContactCallback extends btBroadphaseAabbCallback  implement
  }
 
  @Override
- boolean process(btBroadphaseProxy proxy) {
+ public boolean process(btBroadphaseProxy proxy) {
   btCollisionObject collisionObject = (btCollisionObject) proxy.m_clientObject;
   if (collisionObject == m_collisionObject) {
    return true;
