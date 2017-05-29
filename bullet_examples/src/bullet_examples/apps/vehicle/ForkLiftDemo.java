@@ -11,7 +11,7 @@
  * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
  */
-package bullet_examples.vehicle;
+package bullet_examples.apps.vehicle;
 
 import static Bullet.Collision.Broadphase.BroadphaseNativeTypes.INVALID_SHAPE_PROXYTYPE;
 import Bullet.Collision.Shape.btBoxShape;

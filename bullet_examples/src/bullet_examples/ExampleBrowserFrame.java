@@ -50,7 +50,7 @@ import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.PixelFormat;
 import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_RANDOMIZE_ORDER;
-import bullet_examples.vehicle.ForkLiftDemo;
+import bullet_examples.apps.vehicle.ForkLiftDemo;
 
 /**
  *
