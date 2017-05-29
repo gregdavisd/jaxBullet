@@ -34,6 +34,7 @@ import Bullet.Dynamics.vehicle.btVehicleTuning;
 import Bullet.Dynamics.vehicle.btWheelInfo;
 import Bullet.LinearMath.btDefaultMotionState;
 import Bullet.LinearMath.btMatrix3x3;
+import Bullet.LinearMath.btQuaternion;
 import static Bullet.LinearMath.btScalar.M_PI;
 import static Bullet.LinearMath.btScalar.M_PI_2;
 import Bullet.LinearMath.btTransform;
@@ -169,7 +170,6 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
  public void initPhysics() {
   int upAxis = 1;
   setUpAxis(upAxis);
-  camera().set(camera().dir(), new btVector3(30, 30, 30));
   final btVector3 groundExtents = new btVector3(50, 50, 50);
   groundExtents.setElement(upAxis, 3);
   btCollisionShape groundShape = new btBoxShape(groundExtents);
@@ -321,6 +321,8 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
 
  @Override
  public void resetCamera() {
+  camera().set(new btQuaternion(0.16222472f, -0.8316988f, -0.31638032f, 0.4264551f), new btVector3(
+   33.699688f, 37.90326f, -21.042444f));
  }
 
  @Override
@@ -335,7 +337,8 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
 
  @Override
  public String get_description() {
-  return "";
+  return "Simulate a fork lift vehicle with a working fork lift that can be moved using the cursor keys. The wheels collision is simplified using ray tests."+
+   "Use arrow keys to drive the forklift, hold shift and arrows to drive the fork. ";
  }
 
  void resetForklift() {
