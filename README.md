@@ -2,6 +2,10 @@
 Java port of Bullet physics 2.86.1
 Rigid bodies,shapes, btDiscreteDynamicsWorld.
 
-Depends on custom Vecmath and Apache Primitives package in other repos. Also LWJGL2 for the demos.
+![Image of Examples](https://github.com/gregeryb/jaxBullet/blob/master/demo1.png?raw=true)
+![Image of Examples](https://github.com/gregeryb/jaxBullet/blob/master/demo2.png?raw=true)
+![Image of Examples](https://github.com/gregeryb/jaxBullet/blob/master/demo3.png?raw=true)
+![Image of Examples](https://github.com/gregeryb/jaxBullet/blob/master/demo4.png?raw=true)
+![Image of Examples](https://github.com/gregeryb/jaxBullet/blob/master/demo5.png?raw=true)
 
-![Image of Examples](https://github.com/gregeryb/bullet4java/blob/master/bullet4java.png?raw=true)
+
