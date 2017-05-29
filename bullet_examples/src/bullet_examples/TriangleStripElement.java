@@ -31,7 +31,6 @@ class TriangleStripElement extends GLDrawElements {
 
  @Override
  protected int get_mode() {
- return GL_TRIANGLE_STRIP;
+  return GL_TRIANGLE_STRIP;
  }
-
 }

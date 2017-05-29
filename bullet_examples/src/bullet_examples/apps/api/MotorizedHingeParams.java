@@ -35,7 +35,7 @@ public class MotorizedHingeParams extends javax.swing.JPanel {
  private float max_impulse;
  private float actual_vel;
  private float angle;
-private final Throttle throttle=new Throttle(12,2);
+ private final Throttle throttle = new Throttle(12, 2);
 
  /**
   * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify
@@ -197,7 +197,6 @@ private final Throttle throttle=new Throttle(12,2);
   return angle;
  }
 
-
  public void set_actual_vel(float value) {
   actual_vel = value;
   if (throttle.update_now()) {
@@ -223,7 +222,6 @@ private final Throttle throttle=new Throttle(12,2);
    });
   }
  }
-
  // Variables declaration - do not modify//GEN-BEGIN:variables
  private javax.swing.JSlider actual_vel_slider;
  private javax.swing.JTextArea actual_vel_text;

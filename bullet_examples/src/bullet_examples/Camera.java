@@ -28,18 +28,20 @@ public class Camera {
 
  private final btVector3 eye = new btVector3(0, 3, 20);
  private final btQuaternion dir = new btQuaternion().set(new AxisAngle4f(1, 0, 0, 0.1f));
-private  btClock clock;
+ private btClock clock;
 
  public btVector3 forward() {
   return dir.conjugateTransform(new btVector3(0, 0, -1));
  }
 
- public btVector3 eye()
- {
+ public btVector3 eye() {
   return new btVector3(eye);
  }
-  
-  public void animate_camera(float speed, boolean forward_pressed, boolean backward_pressed,
+public btQuaternion dir()
+{
+ return new btQuaternion(dir);
+}
+ public void animate_camera(float speed, boolean forward_pressed, boolean backward_pressed,
   boolean left_pressed, boolean right_pressed) {
   final btVector3 forward = forward();
   final btVector3 sideways = new btVector3(forward.z, 0, -forward.x);

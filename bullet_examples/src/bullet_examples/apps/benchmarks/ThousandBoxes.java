@@ -11,9 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
-
+ */
 package bullet_examples.apps.benchmarks;
 
 import Bullet.Collision.Shape.btBoxShape;
@@ -33,7 +31,6 @@ public class ThousandBoxes extends BenchmarkDemoContainer {
  public void initPhysics() {
   setUpAxis(1);
   create_ground();
-  
   // 3000
   int size = 8;
   float cubeSize = 1.0f;
@@ -65,7 +62,8 @@ public class ThousandBoxes extends BenchmarkDemoContainer {
 
  @Override
  public void resetCamera() {
-  camera().set(new btQuaternion(0.17830886f, -0.37305543f, -0.07329426f, 0.90755916f), new btVector3(195.00221f, 156.78822f, 193.49379f));
+  camera().set(new btQuaternion(0.17830886f, -0.37305543f, -0.07329426f, 0.90755916f),
+   new btVector3(195.00221f, 156.78822f, 193.49379f));
  }
 
  @Override

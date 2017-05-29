@@ -33,7 +33,7 @@ import Bullet.Collision.btCollisionDispatcher;
 import Bullet.Collision.btCollisionObject;
 import static Bullet.Collision.btCollisionObject.ISLAND_SLEEPING;
 import Bullet.Collision.btIDebugDraw;
-import Bullet.Collision.btShapeHull;
+import Bullet.Collision.Shape.btShapeHull;
 import Bullet.Dynamics.Constraint.btPoint2PointConstraint;
 import Bullet.Dynamics.ConstraintSolver.btConstraintSolver;
 import Bullet.Dynamics.btDynamicsWorld;
@@ -499,10 +499,12 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
   int debug = world().getDebugDrawer().getDebugMode() | getDebugMode();
   if (debug != 0) {
    world().getDebugDrawer().setDebugMode(debug);
+disable_vertex_arrays();
    activity = world.debugDrawWorld();
   }
   if ((world.getDebugDrawer().getDebugMode() & btIDebugDraw.DBG_DrawWireframe) == 0) {
    glEnable(GL_LIGHTING);
+     enable_vertex_arrays();
    return draw_collision_shapes();
   } else {
    return activity;
@@ -530,6 +532,7 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
      quick_pressed = Keyboard.getEventKeyState();
      break;
    }
+     keyboardCallback(key,Keyboard.getEventKeyState()?1:0);
   }
  }
 
@@ -593,8 +596,8 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
 
  private boolean draw_collision_shapes() {
   boolean all_sleeping = true;
-  enable_vertex_arrays();
-  for (btCollisionObject collisionObject : world.getCollisionObjectArray()) {
+
+ for (btCollisionObject collisionObject : world.getCollisionObjectArray()) {
    btRigidBody body = btRigidBody.upcast(collisionObject);
    if (body == null) {
     continue;
@@ -612,7 +615,6 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
    draw_color();
    draw_shape(object_trans, collisionObject.getCollisionShape());
   }
-  disable_vertex_arrays();
   return !all_sleeping;
  }
 
@@ -673,7 +675,7 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
   return four_buffer;
  }
 
- private void draw_shape(final btTransform object_trans, btCollisionShape collisionShape) {
+ protected void draw_shape(final btTransform object_trans, btCollisionShape collisionShape) {
   glPushMatrix();
   {
    float[] matrix = new float[16];
@@ -1183,8 +1185,8 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
     vaa.add(n.z);
     ++iv;
    }
-  GLDrawElements shape = new TriangleElement(vaa.toBackedArray(), indices.toBackedArray());
-  return shape;
+   GLDrawElements shape = new TriangleElement(vaa.toBackedArray(), indices.toBackedArray());
+   return shape;
   }
   return null;
  }

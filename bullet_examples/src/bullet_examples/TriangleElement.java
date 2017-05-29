@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
  *
  * @author Gregery Barton
  */
-public class TriangleElement extends GLDrawElements{
+public class TriangleElement extends GLDrawElements {
 
  public TriangleElement(int[] buffer, int[] indices) {
   super(buffer, indices);
@@ -33,5 +33,4 @@ public class TriangleElement extends GLDrawElements{
  protected int get_mode() {
   return GL_TRIANGLES;
  }
- 
 }

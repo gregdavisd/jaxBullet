@@ -41,8 +41,8 @@ public class DebugDraw extends btIDebugDraw {
  @Override
  public void drawContactPoint(final btVector3 PointOnB, final btVector3 normalOnB, float distance,
   int lifeTime, final btVector3 color) {
-  drawLine(PointOnB, new btVector3().scaleAdd(distance*10.0f, normalOnB, PointOnB), color);
-  drawLine(PointOnB, new btVector3().scaleAdd(0.1f, normalOnB, PointOnB), new btVector3(1,0,0));
+  drawLine(PointOnB, new btVector3().scaleAdd(distance * 10.0f, normalOnB, PointOnB), color);
+  drawLine(PointOnB, new btVector3().scaleAdd(0.1f, normalOnB, PointOnB), new btVector3(1, 0, 0));
  }
 
  @Override

@@ -46,7 +46,7 @@ public class RollingFrictionDemo extends DiscreteDemoContainer {
 
  static final int ARRAY_SIZE_X = 5;
  static final int ARRAY_SIZE_Y = 5;
- static final int ARRAY_SIZE_Z =5;
+ static final int ARRAY_SIZE_Z = 5;
 //maximum number of objects (and allow user to shoot additional boxes)
  static final int MAX_PROXIES = (ARRAY_SIZE_X * ARRAY_SIZE_Y * ARRAY_SIZE_Z + 1024);
 ///scaling of the objects (0.1 = 20 centimeter boxes )
@@ -56,7 +56,7 @@ public class RollingFrictionDemo extends DiscreteDemoContainer {
  static final float START_POS_Z = -3;
 
  public void initPhysics() {
- setUpAxis(2);
+  setUpAxis(2);
 //	world()->getSolverInfo().m_singleAxisRollingFrictionThreshold = 0.f;//faster but lower quality
   world().setGravity(new btVector3(0, 0, -10));
   {
@@ -166,7 +166,8 @@ public class RollingFrictionDemo extends DiscreteDemoContainer {
 
  @Override
  public void resetCamera() {
-  camera().set(new btQuaternion(-0.10754126f, -0.0019145795f, -2.0712907E-4f, -0.99419874f), new btVector3(2.3444018f, 25.343372f, 109.90401f));
+  camera().set(new btQuaternion(-0.10754126f, -0.0019145795f, -2.0712907E-4f, -0.99419874f),
+   new btVector3(2.3444018f, 25.343372f, 109.90401f));
  }
 
  @Override
@@ -176,14 +177,13 @@ public class RollingFrictionDemo extends DiscreteDemoContainer {
 
  @Override
  public String get_description() {
- return "Damping is often not good enough to keep rounded objects from rolling down a sloped surface. " +
-  "Instead, you can set the rolling friction for a rigid body. Generally it is best to leave the rolling friction " +
-  "to zero, to avoid artifacts.";
+  return "Damping is often not good enough to keep rounded objects from rolling down a sloped surface. " +
+   "Instead, you can set the rolling friction for a rigid body. Generally it is best to leave the rolling friction " +
+   "to zero, to avoid artifacts.";
  }
 
  @Override
  protected int getDebugMode() {
   return 0;
  }
- 
 }

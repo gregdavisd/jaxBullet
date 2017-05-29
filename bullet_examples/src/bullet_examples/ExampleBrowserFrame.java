@@ -28,7 +28,6 @@ import static Bullet.Collision.btIDebugDraw.DBG_DrawContactPoints;
 import static Bullet.Collision.btIDebugDraw.DBG_DrawFrames;
 import static Bullet.Collision.btIDebugDraw.DBG_DrawNormals;
 import static Bullet.Collision.btIDebugDraw.DBG_DrawWireframe;
-import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_ENABLE_FRICTION_DIRECTION_CACHING;
 import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_INTERLEAVE_CONTACT_AND_FRICTION_CONSTRAINTS;
 import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_USE_2_FRICTION_DIRECTIONS;
 import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_USE_WARMSTARTING;
@@ -51,6 +50,7 @@ import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.PixelFormat;
 import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_RANDOMIZE_ORDER;
+import bullet_examples.vehicle.ForkLiftDemo;
 
 /**
  *
@@ -82,7 +82,8 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
  static final String NODE_CONVEX_STACK = "Convex Stack";
  static final String NODE_PRIM_VS_MESH = "Prim vs. Mesh";
  static final String NODE_CONVEX_VS_MESH = "Convex vs. Mesh";
- static final String DEFAULT_DEMO = NODE_THOUSAND_BOXES;
+ static final String NODE_FORK_LIFT="Fork Lift";
+ static final String DEFAULT_DEMO = NODE_FORK_LIFT;
  private static boolean cycle;
  private static boolean activate_window = false;
  private static boolean backgrounded = false;
@@ -174,6 +175,9 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
     break;
    case NODE_CONVEX_VS_MESH:
     new_demo = new ConvexVsMesh();
+    break;
+   case NODE_FORK_LIFT:
+    new_demo = new ForkLiftDemo();
     break;
    default:
     new_demo = null;
@@ -655,7 +659,6 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
   );
 
   params_panel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-  params_panel.setPreferredSize(null);
   params_panel.setLayout(new java.awt.BorderLayout());
 
   javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -959,9 +962,13 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
     node_benchmarks.add(new DefaultMutableTreeNode(NODE_CONVEX_STACK));
     node_benchmarks.add(new DefaultMutableTreeNode(NODE_PRIM_VS_MESH));
     node_benchmarks.add(new DefaultMutableTreeNode(NODE_CONVEX_VS_MESH));
+    DefaultMutableTreeNode node_vehicles = new DefaultMutableTreeNode("Vehicle");
+    node_vehicles.add(new DefaultMutableTreeNode(NODE_FORK_LIFT));
+    
     DefaultMutableTreeNode node_Examples = new DefaultMutableTreeNode("Examples");
     node_Examples.add(node_API);
     node_Examples.add(node_benchmarks);
+    node_Examples.add(node_vehicles);
     DefaultTreeModel model = new DefaultTreeModel(node_Examples);
     tree.setModel(model);
     tree.setRootVisible(false);
@@ -970,7 +977,7 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
   });
   while (frame == null) {
    try {
-    Thread.sleep(100);
+    Thread.sleep(1000);
    } catch (InterruptedException ex) {
    }
   }
@@ -1055,7 +1062,6 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
       _debug_mode = demo.world().getDebugDrawer().getDebugMode();
       update_debug_flags = false;
      }
-     gl_frame.dispatch_events();
      if (demo.step_physics(cap, rate)) {
       boolean activity = demo.render_scene();
       if (cycle && !activity) {
@@ -1086,7 +1092,6 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
   }
   //</editor-fold>
  }
-
  // Variables declaration - do not modify//GEN-BEGIN:variables
  private javax.swing.JCheckBox aabb_check;
  private javax.swing.JComboBox<String> broadphase_combo;

@@ -15,11 +15,49 @@ subject to the following restrictions:
 ///original version written by Erwin Coumans, October 2013
 package Bullet.stubs;
 
+import Bullet.Collision.Broadphase.btDispatcher;
+import Bullet.Collision.btCollisionObject;
+import Bullet.Collision.btIDebugDraw;
+import Bullet.Collision.btPersistentManifold;
+import Bullet.Dynamics.Constraint.btTypedConstraint;
+import Bullet.Dynamics.ConstraintSolver.btConstraintSolver;
+import Bullet.Dynamics.btContactSolverInfo;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
  * @author Gregery Barton
  */
-public class btMLCPSolver implements Serializable {
+public class btMLCPSolver extends btConstraintSolver implements Serializable {
+
+ public btMLCPSolver(btDantzigSolver mlcp) {
+  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+ }
+ 
+
+ @Override
+ public float solveGroup(List<btCollisionObject> bodies, int numBodies,
+  List<btPersistentManifold> manifold, int numManifolds, List<btTypedConstraint> constraints,
+  int numConstraints, btContactSolverInfo info, btIDebugDraw debugDrawer, btDispatcher dispatcher) {
+  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+ }
+
+ @Override
+ public void reset() {
+  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+ }
+
+ @Override
+ public int getSolverType() {
+  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+ }
+
+ public int getNumFallbacks() {
+  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+ }
+
+ public void setNumFallbacks(int i) {
+  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+ }
 }

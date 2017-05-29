@@ -18,5 +18,6 @@ package bullet_examples;
  * @author Gregery Barton
  */
 public interface PhysicsExample {
-   void initPhysics( );
+
+ void initPhysics();
 }

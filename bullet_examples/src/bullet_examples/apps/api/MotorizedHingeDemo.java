@@ -47,7 +47,7 @@ public class MotorizedHingeDemo extends DiscreteDemoContainer {
 
  @Override
  public void initPhysics() {
-setUpAxis(1);
+  setUpAxis(1);
   set_debug_flag(true, DBG_DrawWireframe);
   { // create a door using hinge constraint attached to the world
    btCollisionShape pDoorShape = new btBoxShape(new btVector3(2.0f, 5.0f, 0.2f));

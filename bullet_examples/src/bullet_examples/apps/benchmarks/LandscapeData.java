@@ -49,7 +49,7 @@ public class LandscapeData {
  private static float[] string_to_floats(String s) {
   String[] split = s.replace('\n', ' ').split(",");
   return Arrays.stream(split)
-   .map(o->o.trim())
+   .map(o -> o.trim())
    .mapToDouble(o -> Double.parseDouble(o))
    .collect(ArrayFloatList::new, ArrayFloatList::add, ArrayFloatList::addAll)
    .toBackedArray();
@@ -58,7 +58,7 @@ public class LandscapeData {
  private static int[] string_to_ints(String s) {
   String[] split = s.replace('\n', ' ').split(",");
   return Arrays.stream(split)
-   .map(o->o.trim())
+   .map(o -> o.trim())
    .mapToInt(o -> Integer.parseInt(o))
    .collect(ArrayIntList::new, ArrayIntList::add, ArrayIntList::addAll)
    .toBackedArray();

@@ -18,16 +18,17 @@ package bullet_examples;
  * @author Gregery Barton
  */
 public class Throttle {
+
  private final int tps;
  private final int max_updates;
-  private int updates_allowed;
+ private int updates_allowed;
  private long last_update_nano = System.nanoTime();
 
  public Throttle(int tps, int max_updates) {
   this.tps = tps;
   this.max_updates = max_updates;
  }
- 
+
  public boolean update_now() {
   // Throttle GUI updates to avoid non-responsiveness
   if (updates_allowed > 0) {
@@ -37,7 +38,7 @@ public class Throttle {
    long now = System.nanoTime();
    if ((now - last_update_nano) > (1_000_000_000l / tps)) {
     last_update_nano = now;
-    updates_allowed = max_updates-1;
+    updates_allowed = max_updates - 1;
     return true;
    } else {
     return false;

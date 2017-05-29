@@ -52,7 +52,7 @@ public class TestHingeTorque extends DiscreteDemoContainer {
  }
 
  public void initPhysics() {
- int upAxis = 1;
+  int upAxis = 1;
   setUpAxis(upAxis);
   world().getSolverInfo().m_splitImpulse = false;
   world().setGravity(new btVector3(0f, 0f, -10f));
@@ -151,7 +151,8 @@ public class TestHingeTorque extends DiscreteDemoContainer {
  }
 
  public void resetCamera() {
-  camera().set(new btQuaternion(0.07323081f, -0.69297534f, -0.07110454f, 0.7136992f), new btVector3(9.543488f, 4.484767f, -0.20902833f));
+  camera().set(new btQuaternion(0.07323081f, -0.69297534f, -0.07110454f, 0.7136992f), new btVector3(
+   9.543488f, 4.484767f, -0.20902833f));
  }
 
  @Override

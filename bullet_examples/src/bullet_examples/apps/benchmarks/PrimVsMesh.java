@@ -95,7 +95,8 @@ public class PrimVsMesh extends BenchmarkDemoContainer {
 
  @Override
  public void resetCamera() {
-  camera().set(new btQuaternion(-0.19792123f, -0.3747349f, -0.08222372f, -0.9020201f),new btVector3(-452.2333f, 324.1984f, 456.52335f));
+  camera().set(new btQuaternion(-0.19792123f, -0.3747349f, -0.08222372f, -0.9020201f),
+   new btVector3(-452.2333f, 324.1984f, 456.52335f));
  }
 
  @Override

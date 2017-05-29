@@ -34,7 +34,7 @@ public class BasicExample extends DiscreteDemoContainer {
 
  @Override
  public void initPhysics() {
- setUpAxis(1);
+  setUpAxis(1);
   // world.setGravity(new btVector3());
   ///create a few basic rigid bodies
   btBoxShape groundShape = new btBoxShape(new btVector3((50.f), (50.f), (50.f)));
@@ -87,9 +87,9 @@ public class BasicExample extends DiscreteDemoContainer {
  @Override
  public String get_description() {
   return "A block of blocks crashing down. Changing parameters will yield differently shaped piles of blocks. " +
-   "At high precisions conservation of momentum will cause a shockwave that bounces the top blocks. "+
+   "At high precisions conservation of momentum will cause a shockwave that bounces the top blocks. " +
    "Box to Box collision is performed by the btBoxBoxDetector class. Select cycle check box for the simulation " +
-  "to automatically reset once all blocks are deactivated.";
+   "to automatically reset once all blocks are deactivated.";
  }
 
  @Override

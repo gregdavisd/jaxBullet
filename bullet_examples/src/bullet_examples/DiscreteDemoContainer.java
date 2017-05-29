@@ -39,5 +39,4 @@ abstract public class DiscreteDemoContainer extends DemoContainer {
   debug_draw = new DebugDraw();
   world.setDebugDrawer(debug_draw);
  }
-
 }

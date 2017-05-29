@@ -36,9 +36,8 @@ import javax.swing.JPanel;
  * @author Gregery Barton
  */
 public class Dof6Spring2Demo extends DiscreteDemoContainer {
- 
+
  Dof6Spring2SetupInternalData m_data = new Dof6Spring2SetupInternalData();
- 
 
  static class Dof6Spring2SetupInternalData {
 

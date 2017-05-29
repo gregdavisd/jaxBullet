@@ -43,10 +43,12 @@ abstract public class GLDrawElements {
   upload_vaa(buffer);
   upload_eab(indices);
  }
+
  public GLDrawElements(float[] buffer, int[] indices) {
   upload_vaa(buffer);
   upload_eab(indices);
  }
+
  private void upload_eab(int[] buffer) {
   eab_name = GL15.glGenBuffers();
   GL15.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eab_name);
@@ -67,9 +69,10 @@ abstract public class GLDrawElements {
   ByteBuffer data = BufferUtils.createByteBuffer(capacity);
   data.asIntBuffer().put(buffer);
   data.rewind();
-   glBufferData(GL_ARRAY_BUFFER, data, GL15.GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, data, GL15.GL_STATIC_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
  }
+
  private void upload_vaa(float[] buffer) {
   vaa_name = GL15.glGenBuffers();
   GL15.glBindBuffer(GL_ARRAY_BUFFER, vaa_name);
@@ -78,14 +81,15 @@ abstract public class GLDrawElements {
   ByteBuffer data = BufferUtils.createByteBuffer(capacity);
   data.asFloatBuffer().put(buffer);
   data.rewind();
-   glBufferData(GL_ARRAY_BUFFER, data, GL15.GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, data, GL15.GL_STATIC_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
  }
+
  public void bind() {
- glBindBuffer(GL_ARRAY_BUFFER, vaa_name);
- glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eab_name);
- glVertexPointer(3, GL_FLOAT, 6 * 4, 0);
- glNormalPointer(GL_FLOAT, 6 * 4, 3 * 4);
+  glBindBuffer(GL_ARRAY_BUFFER, vaa_name);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eab_name);
+  glVertexPointer(3, GL_FLOAT, 6 * 4, 0);
+  glNormalPointer(GL_FLOAT, 6 * 4, 3 * 4);
  }
 
  abstract protected int get_mode();

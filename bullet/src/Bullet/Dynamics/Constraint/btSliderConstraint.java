@@ -598,11 +598,11 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   return new btTransform(m_calculatedTransformB);
  }
 
- btTransform getCalculatedTransformAPtr() {
+ public btTransform getCalculatedTransformAPtr() {
   return m_calculatedTransformA;
  }
 
- btTransform getCalculatedTransformBPtr() {
+ public btTransform getCalculatedTransformBPtr() {
   return m_calculatedTransformB;
  }
 
@@ -666,7 +666,7 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   return m_restitutionDirLin;
  }
 
- float getDampingDirLin() {
+ public float getDampingDirLin() {
   return m_dampingDirLin;
  }
 
@@ -678,7 +678,7 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   return m_restitutionDirAng;
  }
 
- float getDampingDirAng() {
+ public float getDampingDirAng() {
   return m_dampingDirAng;
  }
 
@@ -690,7 +690,7 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   return m_restitutionLimLin;
  }
 
- float getDampingLimLin() {
+ public float getDampingLimLin() {
   return m_dampingLimLin;
  }
 
@@ -702,7 +702,7 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   return m_restitutionLimAng;
  }
 
- float getDampingLimAng() {
+ public float getDampingLimAng() {
   return m_dampingLimAng;
  }
 
@@ -714,7 +714,7 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   return m_restitutionOrthoLin;
  }
 
- float getDampingOrthoLin() {
+ public float getDampingOrthoLin() {
   return m_dampingOrthoLin;
  }
 
@@ -726,7 +726,7 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   return m_restitutionOrthoAng;
  }
 
- float getDampingOrthoAng() {
+ public float getDampingOrthoAng() {
   return m_dampingOrthoAng;
  }
 
@@ -822,7 +822,7 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   m_maxLinMotorForce = maxLinMotorForce;
  }
 
- float getMaxLinMotorForce() {
+ public float getMaxLinMotorForce() {
   return m_maxLinMotorForce;
  }
 
@@ -846,15 +846,15 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   m_maxAngMotorForce = maxAngMotorForce;
  }
 
- float getMaxAngMotorForce() {
+ public float getMaxAngMotorForce() {
   return m_maxAngMotorForce;
  }
 
- float getLinearPos() {
+ public float getLinearPos() {
   return m_linPos;
  }
 
- float getAngularPos() {
+ public float getAngularPos() {
   return m_angPos;
  }
 
@@ -863,7 +863,7 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   return m_solveLinLim;
  }
 
- float getLinDepth() {
+ public float getLinDepth() {
   return m_depth.x;
  }
 
@@ -871,12 +871,12 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   return m_solveAngLim;
  }
 
- float getAngDepth() {
+ public float getAngDepth() {
   return m_angDepth;
  }
  // shared code used by ODE solver
 
- void calculateTransforms(final btTransform transA, final btTransform transB) {
+ public void calculateTransforms(final btTransform transA, final btTransform transB) {
   if (m_useLinearReferenceFrameA || (!m_useSolveConstraintObsolete)) {
    m_calculatedTransformA.set(transA).mul(m_frameInA);
    m_calculatedTransformB.set(transB).mul(m_frameInB);
@@ -961,7 +961,7 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   return m_useOffsetForConstraintFrame;
  }
 
- void setUseFrameOffset(boolean frameOffsetOnOff) {
+ public void setUseFrameOffset(boolean frameOffsetOnOff) {
   m_useOffsetForConstraintFrame = frameOffsetOnOff;
  }
 
@@ -1079,7 +1079,7 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   return retVal;
  }
 
- int getFlags() {
+ public int getFlags() {
   return m_flags;
  }
 };

@@ -107,7 +107,7 @@ public class btRaycastVehicle extends btActionInterface implements Serializable 
    new btVehicleRaycaster.btVehicleRaycasterResult();
   assert (m_vehicleRaycaster != null);
   Object object = m_vehicleRaycaster.castRay(source, target, rayResults);
-  wheel.m_raycastInfo.m_groundObject = 0;
+  wheel.m_raycastInfo.m_groundObject = null;
   if (object != null) {
    param = rayResults.m_distFraction;
    depth = raylen * rayResults.m_distFraction;
@@ -304,7 +304,7 @@ public class btRaycastVehicle extends btActionInterface implements Serializable 
   return wheel;
  }
 
- int getNumWheels() {
+ public int getNumWheels() {
   return (m_wheelInfo.size());
  }
  protected final ArrayList<btWheelInfo> m_wheelInfo = new ArrayList<>();
@@ -422,6 +422,7 @@ public class btRaycastVehicle extends btActionInterface implements Serializable 
      m_sideImpulse.set(i, sideImpulse[0] * sideFrictionStiffness2);
     } else {
      m_axle.add(new btVector3());
+      m_forwardWS.add(new btVector3());
     }
    }
   }

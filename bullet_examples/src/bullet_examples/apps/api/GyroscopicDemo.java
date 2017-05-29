@@ -100,7 +100,7 @@ public class GyroscopicDemo extends DiscreteDemoContainer {
     groundBody.setFriction(btSqrt(2));
    }
   }
-  final JFrame frame=frame();
+  final JFrame frame = frame();
   java.awt.EventQueue.invokeLater(new Runnable() {
    @Override
    public void run() {
@@ -157,8 +157,8 @@ public class GyroscopicDemo extends DiscreteDemoContainer {
      final btVector3 pos = tr.getOrigin().add(new btVector3(0, 2, 0));
      final int label_i = i;
      if (new btVector3(pos).sub(camera().eye()).dot(camera_dir) > 0) {
-      final btVector3 screen_pos = project(pos.x , pos.y , pos.z );
-      screen_pos.x-=50;
+      final btVector3 screen_pos = project(pos.x, pos.y, pos.z);
+      screen_pos.x -= 50;
       java.awt.EventQueue.invokeLater(new Runnable() {
        @Override
        public void run() {

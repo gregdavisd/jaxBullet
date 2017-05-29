@@ -86,7 +86,7 @@ public class AllConstraintDemo extends DiscreteDemoContainer {
 
  @Override
  public void initPhysics() {
- setUpAxis(1);
+  setUpAxis(1);
   m_Time = 0;
   btCollisionShape groundShape = new btStaticPlaneShape(new btVector3(0f, 1f, 0f), 40f);
   final btTransform groundTransform = new btTransform();

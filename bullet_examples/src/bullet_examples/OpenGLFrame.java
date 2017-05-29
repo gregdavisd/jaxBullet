@@ -13,15 +13,15 @@
  */
 package bullet_examples;
 
+import java.awt.AWTException;
 import java.awt.Canvas;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Insets;
 import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.Robot;
 import java.awt.Toolkit;
-import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import static java.awt.event.MouseEvent.BUTTON1;
 import static java.awt.event.MouseEvent.BUTTON2;
@@ -33,17 +33,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.vecmath.Point2i;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
@@ -57,6 +51,7 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
  private static final long serialVersionUID = 3281858039089406479L;
  private final Cursor blank_cursor;
  private org.lwjgl.input.Cursor lwjgl_blank_cursor;
+ private final Point2i grabbed_pos = new Point2i();
 
  /**
   * Creates new form BulletOpenGLFrame
@@ -96,64 +91,64 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
  }
 
  private void get_lwjgl_mouse_events(List<LWJGLMouseEvent> events) {
-  /* turn polled LWJGL events into a list
+  /*
+   * turn polled LWJGL events into a list
    */
   if (Mouse.isCreated()) {
    while (Mouse.next()) {
     events.add(new LWJGLMouseEvent(Mouse.getEventButton(), Mouse.getEventButtonState(), Mouse
-     .getEventDWheel(), Mouse.getEventDX(), Mouse.getEventDY(),
+     .getEventDWheel(), Mouse.getDX(), Mouse.getDY(),
      Mouse.getEventNanoseconds(), Mouse.getEventX(), Mouse.getEventY()));
    }
   }
  }
 
  public void dispatch_events() {
-   final List<LWJGLMouseEvent> mouse_events = new ArrayList<>(0);
-   get_lwjgl_mouse_events(mouse_events);
-   queue_lwjgl_events(mouse_events);
-   if (mouse != null && mouse_motion != null && mouse_wheel != null) {
-    Runnable runnable;
-    while ((runnable = queue.poll()) != null) {
-     runnable.run();
-    }
-   }
-   if (grabbed) {
-    center_mouse_cursor();
+  final List<LWJGLMouseEvent> mouse_events = new ArrayList<>(0);
+  get_lwjgl_mouse_events(mouse_events);
+  queue_lwjgl_events(mouse_events);
+  if (mouse != null && mouse_motion != null && mouse_wheel != null) {
+   Runnable runnable;
+   while ((runnable = queue.poll()) != null) {
+    runnable.run();
    }
   }
- private Point2i grabbed_pos = new Point2i();
+ }
 
  private MouseEvent apply_grabbing_to_event(MouseEvent e) {
-   if (!is_grabbed()) {
-    return e;
+  if (!is_grabbed()) {
+   return e;
+  } else {
+   /*
+    * use grabbed_base as reference and add deltas to grabbed_pos which is a large virtual mouse
+    * space. grabbed_base is the previous mouse position for calculating the delta, grabbed_base is
+    * also reset by center_mouse_cursor
+    */
+   Point2i current = new Point2i(e.getX(), e.getY());
+   Point2i delta = new Point2i(current).sub(grabbed_base);
+   grabbed_pos.add(delta);
+   grabbed_base.add(delta);
+   if (!(e instanceof MouseWheelEvent)) {
+    MouseEvent new_e = new MouseEvent((Component) e.getSource(), e.getID(), e.getWhen(),
+     e.getModifiers(), grabbed_pos.getX(), grabbed_pos.getY(), 0, 0, e.getClickCount(), e
+     .isPopupTrigger(),
+     e.getButton());
+    return new_e;
    } else {
-    /* use grabbed_base as reference and add deltas to grabbed_pos which is a large virtual mouse space.
-    grabbed_base is the previous mouse position for calculating the delta, grabbed_base is also reset by center_mouse_cursor
-     */
-    Point2i current = new Point2i(e.getX(), e.getY());
-    Point2i delta = new Point2i(current).sub(grabbed_base);
-    grabbed_pos.add(delta);
-    grabbed_base.add(delta);
-    if (!(e instanceof MouseWheelEvent)) {
-     MouseEvent new_e = new MouseEvent((Component) e.getSource(), e.getID(), e.getWhen(), e
-      .getModifiers(),
-      grabbed_pos.getX(), grabbed_pos.getY(), 0, 0, e.getClickCount(), e.isPopupTrigger(), e
-      .getButton());
-     return new_e;
-    } else {
-     MouseWheelEvent we = (MouseWheelEvent) e;
-     MouseWheelEvent new_e = new MouseWheelEvent((Component) e.getSource(), e.getID(), e.getWhen(),
-      e.getModifiers(), grabbed_pos.getX(), grabbed_pos.getY(), e.getXOnScreen(), e.getYOnScreen(),
-      e.getClickCount(),
-      e.isPopupTrigger(), we.getScrollType(), we.getScrollAmount(), we.getWheelRotation(), we
-      .getPreciseWheelRotation());
-     return new_e;
-    }
+    MouseWheelEvent we = (MouseWheelEvent) e;
+    MouseWheelEvent new_e = new MouseWheelEvent((Component) e.getSource(), e.getID(), e.getWhen(),
+     e.getModifiers(), grabbed_pos.getX(), grabbed_pos.getY(), e.getXOnScreen(), e.getYOnScreen(),
+     e.getClickCount(),
+     e.isPopupTrigger(), we.getScrollType(), we.getScrollAmount(), we.getWheelRotation(), we
+     .getPreciseWheelRotation());
+    return new_e;
    }
+  }
  }
 
  public void update_display() {
-   Display.update();
+  Display.update();
+  dispatch_events();
  }
 
  private Point2i lwjgl_mouse_canvas_pos_to_awt_canvas(Point2i pos) {
@@ -165,15 +160,6 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
   pos.set(pos.x, canvas.getHeight() - pos.y + 1);
   return pos;
  }
-
- private void center_mouse_cursor() {
-  int x = canvas.getWidth() / 2;
-  int y = canvas.getHeight() / 2;
-  Mouse.setCursorPosition(x, y);
-  if (grabbed) {
-   grabbed_base.set(get_mouse_position());
-  }
- }
  private boolean grabbed = false;
 
  public boolean is_grabbed() {
@@ -183,41 +169,42 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
  final Point2i grabbed_base = new Point2i();
 
  public void set_grabbed(boolean grabbed) {
-   if (grabbed != this.grabbed) {
-    this.grabbed = grabbed;
-    if (grabbed) {
-     if (lwjgl_blank_cursor == null) {
-      try {
-       Mouse.create();
-       lwjgl_blank_cursor = new org.lwjgl.input.Cursor(32, 32, 0, 0, 1, BufferUtils.createIntBuffer(
-        32 * 32),
-        BufferUtils.createIntBuffer(32 * 32));
-      } catch (LWJGLException ex) {
-      }
-     }
-     try {
-      Mouse.setNativeCursor(lwjgl_blank_cursor);
-      Mouse.updateCursor();
-     } catch (LWJGLException ex) {
-      Logger.getLogger(OpenGLFrame.class.getName()).log(Level.SEVERE, null, ex);
-     }
-     setCursor(blank_cursor);
-     getGlassPane().setCursor(blank_cursor);
-     start_grabbed.set(get_mouse_position());
-     grabbed_pos.set(start_grabbed);
-     grabbed_base.set(start_grabbed);
-    } else {
-     awt_mouse_canvas_pos_to_lwjgl_canvas(start_grabbed);
-     Mouse.setCursorPosition(start_grabbed.x, start_grabbed.y);
-     Mouse.updateCursor();
-     setCursor(null);
-     getGlassPane().setCursor(null);
-     try {
-      Mouse.setNativeCursor(null);
-     } catch (LWJGLException ex) {
-      Logger.getLogger(OpenGLFrame.class.getName()).log(Level.SEVERE, null, ex);
-     }
+  if (grabbed != this.grabbed) {
+   this.grabbed = grabbed;
+   if (grabbed) {
+//    if (lwjgl_blank_cursor == null) {
+//     try {
+//      Mouse.create();
+//      lwjgl_blank_cursor = new org.lwjgl.input.Cursor(32, 32, 0, 0, 1, BufferUtils.createIntBuffer(
+//       32 * 32),
+//       BufferUtils.createIntBuffer(32 * 32));
+//     } catch (LWJGLException ex) {
+//     }
+//    }
+//    try {
+//     Mouse.setNativeCursor(lwjgl_blank_cursor);
+//     Mouse.updateCursor();
+//    } catch (LWJGLException ex) {
+//     Logger.getLogger(OpenGLFrame.class.getName()).log(Level.SEVERE, null, ex);
+//    }
+    setCursor(blank_cursor);
+    getGlassPane().setCursor(blank_cursor);
+    start_grabbed.set(get_mouse_position());
+    grabbed_pos.set(start_grabbed);
+    grabbed_base.set(start_grabbed);
+   } else {
+    awt_mouse_canvas_pos_to_lwjgl_canvas(start_grabbed);
+    //Mouse.setCursorPosition(start_grabbed.x, start_grabbed.y);
+    //Mouse.updateCursor();
+    setCursor(null);
+    getGlassPane().setCursor(null);
+//    try {
+//     Mouse.setNativeCursor(null);
+//    } catch (LWJGLException ex) {
+//     Logger.getLogger(OpenGLFrame.class.getName()).log(Level.SEVERE, null, ex);
+//    }
    }
+   Mouse.setGrabbed(grabbed);
   }
  }
 
@@ -241,24 +228,27 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
   } catch (Exception ex) {
   }
  }
- 
+
  private void queue_lwjgl_events(List<LWJGLMouseEvent> events) {
-  /* convete LWJGL events into swing events in a queue
-  
+  /*
+   * convete LWJGL events into swing events in a queue
+   *
    */
   try {
    for (LWJGLMouseEvent event : events) {
     Point2i e_pos = lwjgl_mouse_canvas_pos_to_awt_canvas(new Point2i(event.getEventX,
      event.getEventY));
+//    Point2i e_pos = new Point2i(event.getEventX, event.getEventY);
     if (event.getEventDX != 0 || event.getEventDY != 0) {
-     final MouseEvent e = new MouseEvent(canvas, MOUSE_MOVED, event.getEventNanoseconds, 0,
-      e_pos.x, e_pos.y, 0, 0, 1, false, 0);
-     queue.add(new Runnable() {
-      @Override
-      public void run() {
-       mouseMoved(e);
-      }
-     });
+     final MouseEvent e;
+     if (!grabbed) {
+      e = new MouseEvent(canvas, MOUSE_MOVED, event.getEventNanoseconds, 0,
+       e_pos.x, e_pos.y, 0, 0, 1, false, 0);
+     } else {
+      e = new MouseEvent(canvas, MOUSE_MOVED, event.getEventNanoseconds, 0,
+       grabbed_pos.x + event.getEventDX, grabbed_pos.y - event.getEventDY, 0, 0, 1, false, 0);
+     }
+     queue.add((Runnable) () -> mouseMoved(e));
     }
     if (event.getEventButton != -1) {
      int button;
@@ -309,112 +299,74 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
   mouse_motion = (MouseMotionListener) listener;
   mouse_wheel = (MouseWheelListener) listener;
   final OpenGLFrame me = this;
-  /* Swing mouse events are captured and put into a queue for later processing on the OpenGL thread
-  *
+  /*
+   * Swing mouse events are captured and put into a queue for later processing on the OpenGL thread
+   *
    */
   java.awt.EventQueue.invokeLater(new Runnable() {
    @Override
    public void run() {
-    getGlassPane().setVisible(true);
+    //getGlassPane().setVisible(true);
     for (MouseListener l : getMouseListeners()) {
      removeMouseListener(l);
     }
-    addMouseListener(new MouseListener() {
-     @Override
-     public void mouseClicked(final MouseEvent e) {
-      add(new Runnable() {
-       @Override
-       public void run() {
-        me.mouseClicked(event_glass_to_canvas(e));
-       }
-      });
-     }
-
-     @Override
-     public void mousePressed(final MouseEvent e) {
-      add(new Runnable() {
-       @Override
-       public void run() {
-        me.mousePressed(event_glass_to_canvas(e));
-       }
-      });
-     }
-
-     @Override
-     public void mouseReleased(final MouseEvent e) {
-      add(new Runnable() {
-       @Override
-       public void run() {
-        me.mouseReleased(event_glass_to_canvas(e));
-       }
-      });
-     }
-
-     @Override
-     public void mouseEntered(final MouseEvent e) {
-      add(new Runnable() {
-       @Override
-       public void run() {
-        me.mouseEntered(event_glass_to_canvas(e));
-       }
-      });
-     }
-
-     @Override
-     public void mouseExited(final MouseEvent e) {
-      add(new Runnable() {
-       @Override
-       public void run() {
-        me.mouseExited(event_glass_to_canvas(e));
-       }
-      });
-     }
-    });
+//    addMouseListener(new MouseListener() {
+//     @Override
+//     public void mouseClicked(final MouseEvent e) {
+//      add(() -> me.mouseClicked(event_glass_to_canvas(e)));
+//     }
+//
+//     @Override
+//     public void mousePressed(final MouseEvent e) {
+//      add(() -> me.mousePressed(event_glass_to_canvas(e)));
+//     }
+//
+//     @Override
+//     public void mouseReleased(final MouseEvent e) {
+//      add(() -> me.mouseReleased(event_glass_to_canvas(e)));
+//     }
+//
+//     @Override
+//     public void mouseEntered(final MouseEvent e) {
+//      add(() ->      me.mouseEntered(e)   );
+//     }
+//
+//     @Override
+//     public void mouseExited(final MouseEvent e) {
+//      add(() -> me.mouseExited(event_glass_to_canvas(e)));
+//     }
+//    });
     for (MouseMotionListener l : getMouseMotionListeners()) {
      removeMouseMotionListener(l);
     }
-    addMouseMotionListener(new MouseMotionListener() {
-     @Override
-     public void mouseDragged(final MouseEvent e) {
-      add(new Runnable() {
-       @Override
-       public void run() {
-        me.mouseDragged(event_glass_to_canvas(e));
-       }
-      });
-     }
-
-     @Override
-     public void mouseMoved(final MouseEvent e) {
-      add(new Runnable() {
-       @Override
-       public void run() {
-        me.mouseMoved(event_glass_to_canvas(e));
-       }
-      });
-     }
-    });
+//    addMouseMotionListener(new MouseMotionListener() {
+//     @Override
+//     public void mouseDragged(final MouseEvent e) {
+//      add(() -> me.mouseDragged(event_glass_to_canvas(e)));
+//     }
+//
+//     @Override
+//     public void mouseMoved(final MouseEvent e) {
+//      //add(() -> me.mouseMoved(event_glass_to_canvas(e)));
+//     }
+//    });
     for (MouseWheelListener l : getMouseWheelListeners()) {
      removeMouseWheelListener(l);
     }
-    addMouseWheelListener(new MouseWheelListener() {
-     @Override
-     public void mouseWheelMoved(final MouseWheelEvent e) {
-      add(new Runnable() {
-       @Override
-       public void run() {
-        me.mouseWheelMoved((MouseWheelEvent) event_glass_to_canvas(e));
-       }
-      });
-     }
-    });
+//    addMouseWheelListener(new MouseWheelListener() {
+//     @Override
+//     public void mouseWheelMoved(final MouseWheelEvent e) {
+//      add(() -> me.mouseWheelMoved((MouseWheelEvent) event_glass_to_canvas(e)));
+//     }
+//    });
    }
   });
  }
 
  public void garbage_collect() {
-  /* remove all components that aren't the canvas
-  
+  /*
+   * remove all components that aren't the canvas
+   *
    */
   garbage_collect(getRootPane());
  }
@@ -504,7 +456,6 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
   Insets insets = getInsets();
   canvas.setBounds(0, 0, getWidth() - insets.left - insets.right, getHeight() - insets.top -
    insets.bottom);
-
  }//GEN-LAST:event_formComponentResized
 
  private void formWindowLostFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowLostFocus
@@ -548,13 +499,8 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
   /*
    * Create and display the form
    */
-  java.awt.EventQueue.invokeLater(new Runnable() {
-   public void run() {
-    new OpenGLFrame().setVisible(true);
-   }
-  });
+  java.awt.EventQueue.invokeLater(() -> new OpenGLFrame().setVisible(true));
  }
-
  // Variables declaration - do not modify//GEN-BEGIN:variables
  private java.awt.Canvas canvas;
  // End of variables declaration//GEN-END:variables
@@ -591,7 +537,6 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
 
  @Override
  public void mouseMoved(MouseEvent e) {
-//  System.out.println(e.getX() + " " + e.getY());
   mouse_motion.mouseMoved(apply_grabbing_to_event(e));
  }
 

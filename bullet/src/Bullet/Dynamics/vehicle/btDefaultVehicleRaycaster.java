@@ -21,7 +21,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btDefaultVehicleRaycaster implements Serializable {
+public class btDefaultVehicleRaycaster extends btVehicleRaycaster implements Serializable {
 
  private static final long serialVersionUID = 1L;
  private btDynamicsWorld m_dynamicsWorld;
