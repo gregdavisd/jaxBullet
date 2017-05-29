@@ -43,33 +43,33 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btRotationalLimitMotor2 implements Serializable  {
+public class btRotationalLimitMotor2 implements Serializable {
 
 // upper < lower means free
 // upper == lower means locked
 // upper > lower means limited
-public  float m_loLimit;
-public  float m_hiLimit;
-public  float m_bounce;
-public  float m_stopERP;
-public  float m_stopCFM;
-public  float m_motorERP;
-public  float m_motorCFM;
-public  boolean m_enableMotor;
-public  float m_targetVelocity;
-public  float m_maxMotorForce;
-public  boolean m_servoMotor;
-public  float m_servoTarget;
-public  boolean m_enableSpring;
-public  float m_springStiffness;
-public  boolean m_springStiffnessLimited;
-public  float m_springDamping;
-public  boolean m_springDampingLimited;
-public  float m_equilibriumPoint;
-public  float m_currentLimitError;
-public  float m_currentLimitErrorHi;
-public  float m_currentPosition;
-public  int m_currentLimit;
+ public float m_loLimit;
+ public float m_hiLimit;
+ public float m_bounce;
+ public float m_stopERP;
+ public float m_stopCFM;
+ public float m_motorERP;
+ public float m_motorCFM;
+ public boolean m_enableMotor;
+ public float m_targetVelocity;
+ public float m_maxMotorForce;
+ public boolean m_servoMotor;
+ public float m_servoTarget;
+ public boolean m_enableSpring;
+ public float m_springStiffness;
+ public boolean m_springStiffnessLimited;
+ public float m_springDamping;
+ public boolean m_springDampingLimited;
+ public float m_equilibriumPoint;
+ public float m_currentLimitError;
+ public float m_currentLimitErrorHi;
+ public float m_currentPosition;
+ public int m_currentLimit;
 
  btRotationalLimitMotor2() {
   m_loLimit = 1.0f;

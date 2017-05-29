@@ -22,7 +22,7 @@ import java.util.ArrayList;
  *
  * @author Gregery Barton
  */
-public class ConvexH  implements Serializable {
+public class ConvexH implements Serializable {
 
  public static class HalfEdge {
 

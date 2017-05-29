@@ -19,7 +19,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class CollisionFlags  implements Serializable  {
+public class CollisionFlags implements Serializable {
 
  public static final int CF_STATIC_OBJECT = 1;
  public static final int CF_KINEMATIC_OBJECT = 2;

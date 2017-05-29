@@ -35,7 +35,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btCompoundCompoundLeafCallback extends btDbvt.ICollide  implements Serializable {
+public class btCompoundCompoundLeafCallback extends btDbvt.ICollide implements Serializable {
 
  int m_numOverlapPairs;
  static btShapePairCallback gCompoundCompoundChildShapePairCallback = null;
@@ -65,17 +65,17 @@ public class btCompoundCompoundLeafCallback extends btDbvt.ICollide  implements 
  }
 
  @Override
- public  void process(btDbvtNode leaf0, btDbvtNode leaf1) {
+ public void process(btDbvtNode leaf0, btDbvtNode leaf1) {
   BT_PROFILE("btCompoundCompoundLeafCallback.Process");
   m_numOverlapPairs++;
   int childIndex0 = leaf0.dataAsInt();
   int childIndex1 = leaf1.dataAsInt();
-  assert(childIndex0 >= 0);
-  assert(childIndex1 >= 0);
+  assert (childIndex0 >= 0);
+  assert (childIndex1 >= 0);
   btCompoundShape compoundShape0 = (btCompoundShape) (m_compound0ColObjWrap.getCollisionShape());
-  assert(childIndex0 < compoundShape0.getNumChildShapes());
+  assert (childIndex0 < compoundShape0.getNumChildShapes());
   btCompoundShape compoundShape1 = (btCompoundShape) (m_compound1ColObjWrap.getCollisionShape());
-  assert(childIndex1 < compoundShape1.getNumChildShapes());
+  assert (childIndex1 < compoundShape1.getNumChildShapes());
   btCollisionShape childShape0 = compoundShape0.getChildShape(childIndex0);
   btCollisionShape childShape1 = compoundShape1.getChildShape(childIndex1);
   //backup
@@ -117,10 +117,10 @@ public class btCompoundCompoundLeafCallback extends btDbvt.ICollide  implements 
     colAlgo = m_dispatcher.findAlgorithm(compoundWrap0, compoundWrap1, m_sharedManifold,
      BT_CONTACT_POINT_ALGORITHMS);
     pair = m_childCollisionAlgorithmCache.addOverlappingPair(childIndex0, childIndex1);
-    assert(pair != null);
+    assert (pair != null);
     pair.m_userPointer = colAlgo;
    }
-   assert(colAlgo != null);
+   assert (colAlgo != null);
    btCollisionObjectWrapper tmpWrap0;
    btCollisionObjectWrapper tmpWrap1;
    tmpWrap0 = m_resultOut.getBody0Wrap();

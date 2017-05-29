@@ -10,9 +10,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
-
+ */
 package Bullet.LinearMath;
 
 import java.io.Serializable;
@@ -28,7 +26,7 @@ import static javax.vecmath.VecMath.sqrt;
  *
  * @author Gregery Barton
  */
-public class btScalar  implements Serializable {
+public class btScalar implements Serializable {
 
  /**
   *
@@ -75,7 +73,7 @@ public class btScalar  implements Serializable {
   *
   */
  public static final float B3_INFINITY = FLT_MAX;
-public static final float SIMD_DEGS_PER_RAD = ((360.0f) / SIMD_2_PI);
+ public static final float SIMD_DEGS_PER_RAD = ((360.0f) / SIMD_2_PI);
  public static final int BT_BULLET_VERSION = 286;
  public static final float BT_ONE = 1.0f;
  public static final float BT_ZERO = 0.0f;
@@ -86,7 +84,7 @@ public static final float SIMD_DEGS_PER_RAD = ((360.0f) / SIMD_2_PI);
   * @return
   */
  public static float btSin(float r) {
-  return  sin(r);
+  return sin(r);
  }
 
  /**
@@ -95,19 +93,25 @@ public static final float SIMD_DEGS_PER_RAD = ((360.0f) / SIMD_2_PI);
   * @return
   */
  public static float btAcos(float x) {
-	if (x< (-1f))	
-		x= (-1f); 
-	if (x> (1f))	
-		x= (1f);
-	return acos(x); 
+  float rx=x;
+  if (rx < (-1f)) {
+   rx = (-1f);
+  }
+  if (rx > (1f)) {
+   rx = (1f);
+  }
+  return acos(rx);
  }
 
  public static float btAsin(float x) {
-	if (x< (-1f))	
-		x= (-1f); 
-	if (x> (1f))	
-		x= (1f);
-	return asin (x); 
+  float rx=x;
+  if (rx < (-1f)) {
+   rx = (-1f);
+  }
+  if (rx > (1f)) {
+   rx = (1f);
+  }
+  return asin(rx);
  }
 
  public static float btAtan2(float y, float x) {
@@ -120,7 +124,7 @@ public static final float SIMD_DEGS_PER_RAD = ((360.0f) / SIMD_2_PI);
   * @return
   */
  public static float btCos(float r) {
-  return  cos(r);
+  return cos(r);
  }
 
  /**
@@ -147,7 +151,7 @@ public static final float SIMD_DEGS_PER_RAD = ((360.0f) / SIMD_2_PI);
   * @return
   */
  public static float btSqrt(float x) {
-  return  sqrt(x);
+  return sqrt(x);
  }
 
  /**
@@ -189,9 +193,9 @@ public static final float SIMD_DEGS_PER_RAD = ((360.0f) / SIMD_2_PI);
  }
 
  public static float btFmod(float x, float y) {
-  return  x % y;
+  return x % y;
  }
- 
+
  // returns normalized value in range [-SIMD_PI, SIMD_PI]
  public static float btNormalizeAngle(float angleInRadians) {
   float _angleInRadians = btFmod(angleInRadians, SIMD_2_PI);

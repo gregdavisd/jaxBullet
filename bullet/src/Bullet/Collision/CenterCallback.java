@@ -22,14 +22,14 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
- public class CenterCallback implements btTriangleCallback,   Serializable  {
+public class CenterCallback implements btTriangleCallback, Serializable {
 
  boolean first;
  final btVector3 ref = new btVector3();
  final btVector3 sum = new btVector3();
  float volume;
 
-  public CenterCallback() {
+ public CenterCallback() {
   first = true;
  }
 
@@ -49,11 +49,11 @@ import java.io.Serializable;
   return true;
  }
 
-  public btVector3 getCenter() {
+ public btVector3 getCenter() {
   return (volume > 0f) ? new btVector3(sum).scale(1.0f / volume) : new btVector3(ref);
  }
 
-  public float getVolume() {
+ public float getVolume() {
   return volume * (1.f / 6f);
  }
 };

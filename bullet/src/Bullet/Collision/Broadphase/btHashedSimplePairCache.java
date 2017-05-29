@@ -11,9 +11,8 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Collision.Broadphase;
-
 
 import Bullet.Collision.btSimplePair;
 import java.io.Serializable;
@@ -26,7 +25,7 @@ import javax.vecmath.Tuple2i;
  *
  * @author Gregery Barton
  */
-public class btHashedSimplePairCache  implements Serializable {
+public class btHashedSimplePairCache implements Serializable {
 
  static int gOverlappingSimplePairs = 0;
  static int gRemoveSimplePairs = 0;
@@ -51,10 +50,10 @@ public class btHashedSimplePairCache  implements Serializable {
    return null;
   }
   Object userData = pair.m_userPointer != null ? pair.m_userPointer : pair.m_userValue;
-  assert(pair.m_indexA == indexA);
-  assert(pair.m_indexB == indexB);
+  assert (pair.m_indexA == indexA);
+  assert (pair.m_indexB == indexB);
   int find_pair = m_simplePairArray.indexOf(pair);
-  assert(find_pair >= 0);
+  assert (find_pair >= 0);
   m_simplePairArray.set(find_pair, m_simplePairArray.get(m_simplePairArray.size() - 1));
   m_simplePairArray.remove(m_simplePairArray.size() - 1);
   return userData;

@@ -34,7 +34,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class MinkowskiDiff  implements Serializable {
+public class MinkowskiDiff implements Serializable {
 
  final btConvexShape[] m_shapes = new btConvexShape[2];
  final btMatrix3x3 m_toshape1 = new btMatrix3x3();

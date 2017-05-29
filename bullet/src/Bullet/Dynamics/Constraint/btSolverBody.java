@@ -24,7 +24,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btSolverBody  implements Serializable {
+public class btSolverBody implements Serializable {
 
  public final btTransform m_worldTransform = new btTransform();
  public final btVector3 m_deltaLinearVelocity = new btVector3();
@@ -156,11 +156,12 @@ public class btSolverBody  implements Serializable {
   return m_pushVelocity;
  }
 
-public  btVector3 internalGetTurnVelocity() {
+ public btVector3 internalGetTurnVelocity() {
   return m_turnVelocity;
  }
 
- public void internalGetVelocityInLocalPointObsolete(final btVector3 rel_pos, final btVector3 velocity) {
+ public void internalGetVelocityInLocalPointObsolete(final btVector3 rel_pos,
+  final btVector3 velocity) {
   velocity
    .set(m_angularVelocity)
    .add(m_deltaAngularVelocity)
@@ -177,18 +178,15 @@ public  btVector3 internalGetTurnVelocity() {
  public void internalApplyImpulse(final btVector3 linearComponent, final btVector3 angularComponent,
   float impulseMagnitude) {
   if (m_originalBody != null) {
- 
    m_deltaLinearVelocity
     .add(new btVector3(linearComponent)
      .scale(impulseMagnitude)
      .mul(m_linearFactor));
-
    m_deltaAngularVelocity
     .add(new btVector3(m_angularFactor)
      .scale(impulseMagnitude)
      .mul(angularComponent));
   }
- 
  }
 
  public void writebackVelocity() {

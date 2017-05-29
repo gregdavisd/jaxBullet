@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Dynamics;
 
 import Bullet.Collision.Shape.btCollisionShape;
@@ -32,7 +31,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btRigidBodyConstructionInfo  implements Serializable {
+public class btRigidBodyConstructionInfo implements Serializable {
 
  public float m_mass;
  ///When a motionState is provided, the rigid body will initialize its world transform from the motion state

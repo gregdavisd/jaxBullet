@@ -19,7 +19,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public final class btClock  implements Serializable {
+public final class btClock implements Serializable {
 
  public btClock() {
   m_data = new btClockData();

@@ -57,7 +57,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btGeneric6DofSpring2Constraint extends btTypedConstraint  implements Serializable {
+public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements Serializable {
  //enum RotateOrder
 
  public static final int RO_XYZ = 0;
@@ -80,7 +80,7 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint  implement
   new btJacobianEntry(),};
  final btTranslationalLimitMotor2 m_linearLimits = new btTranslationalLimitMotor2();
  final btRotationalLimitMotor2[] m_angularLimits = {new btRotationalLimitMotor2(),
-  new btRotationalLimitMotor2(),new btRotationalLimitMotor2()};
+  new btRotationalLimitMotor2(), new btRotationalLimitMotor2()};
  int m_rotateOrder;
  final btTransform m_calculatedTransformA = new btTransform();
  final btTransform m_calculatedTransformB = new btTransform();
@@ -123,7 +123,7 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint  implement
     cIdx[1] = 1;
     cIdx[2] = 0;
     break;
-   default: assert(false);
+   default: assert (false);
   }
   for (int ii = 0; ii < 3; ii++) {
    int i = cIdx[ii];
@@ -245,7 +245,7 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint  implement
     break;
    case RO_ZYX: matrixToEulerZYX(relative_frame, m_calculatedAxisAngleDiff);
     break;
-   default: assert(false);
+   default: assert (false);
   }
   // in euler angle mode we do not actually constrain the angular velocity
   // along the axes axis[0] and axis[2] (although we do use axis[1]) :
@@ -348,7 +348,7 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint  implement
     break;
    }
    default:
-    assert(false);
+    assert (false);
   }
   m_calculatedAxis[0].normalize();
   m_calculatedAxis[1].normalize();
@@ -642,7 +642,7 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint  implement
   return m_angularLimits[index];
  }
 
-public  btTranslationalLimitMotor2 getTranslationalLimitMotor() {
+ public btTranslationalLimitMotor2 getTranslationalLimitMotor() {
   return m_linearLimits;
  }
 
@@ -674,7 +674,7 @@ public  btTranslationalLimitMotor2 getTranslationalLimitMotor() {
  }
  // Gets the global transform of the offset for body B
 
-public  btTransform getCalculatedTransformB() {
+ public btTransform getCalculatedTransformB() {
   return new btTransform(m_calculatedTransformB);
  }
 
@@ -709,36 +709,36 @@ public  btTransform getCalculatedTransformB() {
   return m_calculatedLinearDiff.getElement(axis_index);
  }
 
-public  void setFrames(final btTransform frameA, final btTransform frameB) {
+ public void setFrames(final btTransform frameA, final btTransform frameB) {
   m_frameInA.set(frameA);
   m_frameInB.set(frameB);
   buildJacobian();
   calculateTransforms();
  }
 
- final public  void setLinearLowerLimit(final btVector3 linearLower) {
+ final public void setLinearLowerLimit(final btVector3 linearLower) {
   m_linearLimits.m_lowerLimit.set(linearLower);
  }
 
-public  void getLinearLowerLimit(final btVector3 linearLower) {
+ public void getLinearLowerLimit(final btVector3 linearLower) {
   linearLower.set(m_linearLimits.m_lowerLimit);
  }
 
- final public  void setLinearUpperLimit(final btVector3 linearUpper) {
+ final public void setLinearUpperLimit(final btVector3 linearUpper) {
   m_linearLimits.m_upperLimit.set(linearUpper);
  }
 
-public  void getLinearUpperLimit(final btVector3 linearUpper) {
+ public void getLinearUpperLimit(final btVector3 linearUpper) {
   linearUpper.set(m_linearLimits.m_upperLimit);
  }
 
- final public  void setAngularLowerLimit(final btVector3 angularLower) {
+ final public void setAngularLowerLimit(final btVector3 angularLower) {
   for (int i = 0; i < 3; i++) {
    m_angularLimits[i].m_loLimit = btNormalizeAngle(angularLower.getElement(i));
   }
  }
 
-public  void setAngularLowerLimitReversed(final btVector3 angularLower) {
+ public void setAngularLowerLimitReversed(final btVector3 angularLower) {
   for (int i = 0; i < 3; i++) {
    m_angularLimits[i].m_hiLimit = btNormalizeAngle(-angularLower.getElement(i));
   }
@@ -750,13 +750,13 @@ public  void setAngularLowerLimitReversed(final btVector3 angularLower) {
   }
  }
 
-public  void getAngularLowerLimitReversed(final btVector3 angularLower) {
+ public void getAngularLowerLimitReversed(final btVector3 angularLower) {
   for (int i = 0; i < 3; i++) {
    angularLower.setElement(i, -m_angularLimits[i].m_hiLimit);
   }
  }
 
-  final public void setAngularUpperLimit(final btVector3 angularUpper) {
+ final public void setAngularUpperLimit(final btVector3 angularUpper) {
   for (int i = 0; i < 3; i++) {
    m_angularLimits[i].m_hiLimit = btNormalizeAngle(angularUpper.getElement(i));
   }
@@ -836,7 +836,7 @@ public  void getAngularLowerLimitReversed(final btVector3 angularLower) {
  }
 
  public void setBounce(int index, float bounce) {
-  assert((index >= 0) && (index < 6));
+  assert ((index >= 0) && (index < 6));
   if (index < 3) {
    m_linearLimits.m_bounce.setElement(index, bounce);
   } else {
@@ -845,7 +845,7 @@ public  void getAngularLowerLimitReversed(final btVector3 angularLower) {
  }
 
  public void enableMotor(int index, boolean onOff) {
-  assert((index >= 0) && (index < 6));
+  assert ((index >= 0) && (index < 6));
   if (index < 3) {
    m_linearLimits.m_enableMotor[index] = onOff;
   } else {
@@ -855,7 +855,7 @@ public  void getAngularLowerLimitReversed(final btVector3 angularLower) {
 // set the type of the motor (servo or not) (the motor has to be turned on for servo also)
 
  public void setServo(int index, boolean onOff) {
-  assert((index >= 0) && (index < 6));
+  assert ((index >= 0) && (index < 6));
   if (index < 3) {
    m_linearLimits.m_servoMotor[index] = onOff;
   } else {
@@ -864,7 +864,7 @@ public  void getAngularLowerLimitReversed(final btVector3 angularLower) {
  }
 
  public void setTargetVelocity(int index, float velocity) {
-  assert((index >= 0) && (index < 6));
+  assert ((index >= 0) && (index < 6));
   if (index < 3) {
    m_linearLimits.m_targetVelocity.setElement(index, velocity);
   } else {
@@ -873,7 +873,7 @@ public  void getAngularLowerLimitReversed(final btVector3 angularLower) {
  }
 
  public void setServoTarget(int index, float target) {
-  assert((index >= 0) && (index < 6));
+  assert ((index >= 0) && (index < 6));
   if (index < 3) {
    m_linearLimits.m_servoTarget.setElement(index, target);
   } else {
@@ -882,7 +882,7 @@ public  void getAngularLowerLimitReversed(final btVector3 angularLower) {
  }
 
  public void setMaxMotorForce(int index, float force) {
-  assert((index >= 0) && (index < 6));
+  assert ((index >= 0) && (index < 6));
   if (index < 3) {
    m_linearLimits.m_maxMotorForce.setElement(index, force);
   } else {
@@ -890,8 +890,8 @@ public  void getAngularLowerLimitReversed(final btVector3 angularLower) {
   }
  }
 
-  final public void enableSpring(int index, boolean onOff) {
-  assert((index >= 0) && (index < 6));
+ final public void enableSpring(int index, boolean onOff) {
+  assert ((index >= 0) && (index < 6));
   if (index < 3) {
    m_linearLimits.m_enableSpring[index] = onOff;
   } else {
@@ -900,12 +900,12 @@ public  void getAngularLowerLimitReversed(final btVector3 angularLower) {
  }
 
  // if limitIfNeeded is true the system will automatically limit the stiffness in necessary situations where otherwise the spring would move unrealistically too widely	
-  final public void setStiffness(int index, float stiffness) {
+ final public void setStiffness(int index, float stiffness) {
   setStiffness(index, stiffness, true);
  }
 
  public void setStiffness(int index, float stiffness, boolean limitIfNeeded) {
-  assert((index >= 0) && (index < 6));
+  assert ((index >= 0) && (index < 6));
   if (index < 3) {
    m_linearLimits.m_springStiffness.setElement(index, stiffness);
    m_linearLimits.m_springStiffnessLimited[index] = limitIfNeeded;
@@ -915,24 +915,22 @@ public  void getAngularLowerLimitReversed(final btVector3 angularLower) {
   }
  }
 
-  final public void  setDamping(int index, float damping)
- {
-  setDamping(index,damping,true);
+ final public void setDamping(int index, float damping) {
+  setDamping(index, damping, true);
  }
 
 // if limitIfNeeded is true the system will automatically limit the damping in necessary situations where otherwise the spring would blow up	void setDamping(int index, float damping, boolean limitIfNeeded = true); 
 // set the current constraint position/orientation as an equilibrium point for all DOF
-public void  setDamping(int index, float damping, boolean limitIfNeeded)
-{
-	assert((index >= 0) && (index < 6));
-	if (index<3) {
-		m_linearLimits.m_springDamping.setElement(index, damping);
-		m_linearLimits.m_springDampingLimited[index] = limitIfNeeded;
-	} else {
-		m_angularLimits[index - 3].m_springDamping = damping;
-		m_angularLimits[index - 3].m_springDampingLimited = limitIfNeeded;
-	}
-}
+ public void setDamping(int index, float damping, boolean limitIfNeeded) {
+  assert ((index >= 0) && (index < 6));
+  if (index < 3) {
+   m_linearLimits.m_springDamping.setElement(index, damping);
+   m_linearLimits.m_springDampingLimited[index] = limitIfNeeded;
+  } else {
+   m_angularLimits[index - 3].m_springDamping = damping;
+   m_angularLimits[index - 3].m_springDampingLimited = limitIfNeeded;
+  }
+ }
 
  final public void setEquilibriumPoint() {
   calculateTransforms();
@@ -945,7 +943,7 @@ public void  setDamping(int index, float damping, boolean limitIfNeeded)
 
 // set the current constraint position/orientation as an equilibrium point for given DOF
  public void setEquilibriumPoint(int index) {
-  assert((index >= 0) && (index < 6));
+  assert ((index >= 0) && (index < 6));
   calculateTransforms();
   if (index < 3) {
    m_linearLimits.m_equilibriumPoint.setElement(index, m_calculatedLinearDiff.getElement(index));
@@ -955,7 +953,7 @@ public void  setDamping(int index, float damping, boolean limitIfNeeded)
  }
 
  public void setEquilibriumPoint(int index, float val) {
-  assert((index >= 0) && (index < 6));
+  assert ((index >= 0) && (index < 6));
   if (index < 3) {
    m_linearLimits.m_equilibriumPoint.setElement(index, val);
   } else {
@@ -986,7 +984,7 @@ public void  setDamping(int index, float damping, boolean limitIfNeeded)
      m_flags |= BT_6DOF_FLAGS_CFM_MOTO2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2);
      break;
     default:
-     assert(false);
+     assert (false);
    }
   } else if ((axis >= 3) && (axis < 6)) {
    switch (num) {
@@ -1007,10 +1005,10 @@ public void  setDamping(int index, float damping, boolean limitIfNeeded)
      m_flags |= BT_6DOF_FLAGS_CFM_MOTO2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2);
      break;
     default:
-     assert(false);
+     assert (false);
    }
   } else {
-   assert(false);
+   assert (false);
   }
  }
 
@@ -1020,47 +1018,47 @@ public void  setDamping(int index, float damping, boolean limitIfNeeded)
   if ((axis >= 0) && (axis < 3)) {
    switch (num) {
     case BT_CONSTRAINT_STOP_ERP:
-     assert((m_flags & (BT_6DOF_FLAGS_ERP_STOP2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_ERP_STOP2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_linearLimits.m_stopERP.getElement(axis);
      break;
     case BT_CONSTRAINT_STOP_CFM:
-     assert((m_flags & (BT_6DOF_FLAGS_CFM_STOP2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_CFM_STOP2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_linearLimits.m_stopCFM.getElement(axis);
      break;
     case BT_CONSTRAINT_ERP:
-     assert((m_flags & (BT_6DOF_FLAGS_ERP_MOTO2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_ERP_MOTO2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_linearLimits.m_motorERP.getElement(axis);
      break;
     case BT_CONSTRAINT_CFM:
-     assert((m_flags & (BT_6DOF_FLAGS_CFM_MOTO2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_CFM_MOTO2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_linearLimits.m_motorCFM.getElement(axis);
      break;
     default:
-     assert(false);
+     assert (false);
    }
   } else if ((axis >= 3) && (axis < 6)) {
    switch (num) {
     case BT_CONSTRAINT_STOP_ERP:
-     assert((m_flags & (BT_6DOF_FLAGS_ERP_STOP2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_ERP_STOP2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_angularLimits[axis - 3].m_stopERP;
      break;
     case BT_CONSTRAINT_STOP_CFM:
-     assert((m_flags & (BT_6DOF_FLAGS_CFM_STOP2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_CFM_STOP2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_angularLimits[axis - 3].m_stopCFM;
      break;
     case BT_CONSTRAINT_ERP:
-     assert((m_flags & (BT_6DOF_FLAGS_ERP_MOTO2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_ERP_MOTO2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_angularLimits[axis - 3].m_motorERP;
      break;
     case BT_CONSTRAINT_CFM:
-     assert((m_flags & (BT_6DOF_FLAGS_CFM_MOTO2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_CFM_MOTO2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_angularLimits[axis - 3].m_motorCFM;
      break;
     default:
-     assert(false);
+     assert (false);
    }
   } else {
-   assert(false);
+   assert (false);
   }
   return retVal;
  }

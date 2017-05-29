@@ -69,7 +69,8 @@ import static javax.vecmath.VecMath.is_good_matrix;
  *
  * @author Gregery Barton
  */
-public class btDiscreteDynamicsWorld extends btDynamicsWorld  implements Serializable {
+public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializable {
+
  ///internal debugging variable. this value shouldn't be too high
  static int gNumClampedCcdMotions = 0;
 
@@ -101,6 +102,7 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld  implements Seriali
  final ArrayList<btPersistentManifold> m_predictiveManifolds = new ArrayList<>(0);
  final Object m_predictiveManifoldsMutex = new Object();  // used to synchronize threads creating predictive contacts
  ///this btDiscreteDynamicsWorld constructor gets created objects from the user, and will not delete those
+
  public btDiscreteDynamicsWorld(btDispatcher dispatcher, btBroadphaseInterface pairCache,
   btConstraintSolver constraintSolver, btCollisionConfiguration collisionConfiguration) {
   super(dispatcher, pairCache, collisionConfiguration);
@@ -213,8 +215,10 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld  implements Seriali
      {
       final btVector3 imp = new btVector3(pt.m_normalWorldOnB).scale(-pt.m_appliedImpulse *
        combinedRestitution);
-      final btVector3 rel_pos0 = pt.getPositionWorldOnA().sub(body0.getWorldTransformPtr().getOrigin());
-      final btVector3 rel_pos1 = pt.getPositionWorldOnB().sub(body1.getWorldTransformPtr().getOrigin());
+      final btVector3 rel_pos0 = pt.getPositionWorldOnA().sub(body0.getWorldTransformPtr()
+       .getOrigin());
+      final btVector3 rel_pos1 = pt.getPositionWorldOnB().sub(body1.getWorldTransformPtr()
+       .getOrigin());
       body0.applyImpulse(imp, rel_pos0);
       body1.applyImpulse(new btVector3(imp).negate(), rel_pos1);
      }
@@ -427,7 +431,6 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld  implements Seriali
   }
  }
 
-
  ///if maxSubSteps > 0, it will interpolate motion between fixedTimeStep's
  @Override
  public int stepSimulation(float timeStep, int maxSubSteps, float fixedTimeStep) {
@@ -509,7 +512,7 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld  implements Seriali
 
  ///this can be useful to synchronize a single rigid body . graphics object
  void synchronizeSingleMotionState(btRigidBody body) {
-  assert(body != null);
+  assert (body != null);
   if (body.getMotionState() != null && !body.isStaticOrKinematicObject()) {
    //we need to call the update at least once, even for sleeping objects
    //otherwise the 'graphics' transform never updates properly
@@ -532,7 +535,7 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld  implements Seriali
   boolean disableCollisionsBetweenLinkedBodies) {
   m_constraints.add(constraint);
   //Make sure the two bodies of a type constraint are different (possibly add this to the btTypedConstraint constructor?)
-  assert(constraint.getRigidBodyA() != constraint.getRigidBodyB());
+  assert (constraint.getRigidBodyA() != constraint.getRigidBodyB());
   if (disableCollisionsBetweenLinkedBodies) {
    constraint.getRigidBodyA().addConstraintRef(constraint);
    constraint.getRigidBodyB().addConstraintRef(constraint);
@@ -887,7 +890,7 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld  implements Seriali
  @Override
  public boolean debugDrawWorld() {
   BT_PROFILE("debugDrawWorld");
-  boolean activity=super.debugDrawWorld();
+  boolean activity = super.debugDrawWorld();
   boolean drawConstraints = false;
   if (getDebugDrawer() != null) {
    int mode = getDebugDrawer().getDebugMode();

@@ -12,7 +12,7 @@ subject to the following restrictions:
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 
-*/
+ */
 package Bullet.Collision;
 
 import Bullet.Collision.Shape.btCollisionShape;
@@ -22,7 +22,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-interface btShapePairCallback extends Serializable  {
+interface btShapePairCallback extends Serializable {
 
  boolean callback(btCollisionShape pShape0, btCollisionShape pShape1);
 }

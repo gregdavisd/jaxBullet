@@ -14,6 +14,7 @@ subject to the following restrictions:
  */
 package Bullet.Dynamics;
 
+import Bullet.stubs.btStackAlloc;
 import Bullet.Collision.Broadphase.btDispatcher;
 import Bullet.Collision.btCollisionObject;
 import Bullet.Collision.btIDebugDraw;
@@ -30,7 +31,8 @@ import java.util.List;
  *
  * @author Gregery Barton
  */
-public class InplaceSolverIslandCallback extends btSimulationIslandManager.IslandCallback  implements Serializable {
+public class InplaceSolverIslandCallback extends btSimulationIslandManager.IslandCallback implements
+ Serializable {
 
  btContactSolverInfo m_solverInfo;
  btConstraintSolver m_solver;
@@ -56,7 +58,7 @@ public class InplaceSolverIslandCallback extends btSimulationIslandManager.Islan
 
  void setup(btContactSolverInfo solverInfo, ArrayList<btTypedConstraint> sortedConstraints,
   int numConstraints, btIDebugDraw debugDrawer) {
-  assert(solverInfo != null);
+  assert (solverInfo != null);
   m_solverInfo = solverInfo;
   m_sortedConstraints = sortedConstraints;
   m_numConstraints = numConstraints;

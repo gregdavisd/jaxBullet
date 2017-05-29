@@ -22,7 +22,7 @@ import org.apache.commons.collections.primitives.ArrayIntList;
  *
  * @author Gregery Barton
  */
-public class PHullResult  implements Serializable {
+public class PHullResult implements Serializable {
 
  public PHullResult() {
   mVcount = 0;

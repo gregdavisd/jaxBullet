@@ -17,8 +17,7 @@ but is not required.
 2. Altered source versions must be plainly marked as such, and must not be
 misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision;
 
 import static Bullet.Extras.btMinMax.btMax;
@@ -34,7 +33,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class GJK  implements Serializable {
+public class GJK implements Serializable {
 
  static final float GJK_ACCURACY = (0.0001f);
  static final float GJK_MIN_DISTANCE = (0.0001f);
@@ -114,9 +113,9 @@ public class GJK  implements Serializable {
   m_ray.set(m_simplices[0].c[0].w);
   sqdist = sqrl;
   lastw[0].set(m_ray);
-   lastw[1].set(m_ray);
-   lastw[2].set(m_ray);
-   lastw[3].set(m_ray);
+  lastw[1].set(m_ray);
+  lastw[2].set(m_ray);
+  lastw[3].set(m_ray);
   /* Loop						*/
   do {
    int next = 1 - m_current;
@@ -174,7 +173,7 @@ public class GJK  implements Serializable {
       weights, mask);
      break;
     default:
-     assert(false);
+     assert (false);
    }
    if (sqdist >= 0) {/* Valid	*/
     ns.rank = 0;

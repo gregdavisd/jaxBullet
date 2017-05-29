@@ -22,13 +22,13 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class LocalSupportVertexCallback implements btTriangleCallback,   Serializable  {
+public class LocalSupportVertexCallback implements btTriangleCallback, Serializable {
 
-  public final btVector3 m_supportVertexLocal = new btVector3();
-  public float m_maxDot;
-  public final btVector3 m_supportVecLocal = new btVector3();
+ public final btVector3 m_supportVertexLocal = new btVector3();
+ public float m_maxDot;
+ public final btVector3 m_supportVecLocal = new btVector3();
 
-  public LocalSupportVertexCallback(final btVector3 supportVecLocal) {
+ public LocalSupportVertexCallback(final btVector3 supportVecLocal) {
   m_maxDot = -BT_LARGE_FLOAT;
   m_supportVecLocal.set(supportVecLocal);
  }
@@ -52,7 +52,7 @@ public class LocalSupportVertexCallback implements btTriangleCallback,   Seriali
   return true;
  }
 
-  public btVector3 getSupportVertexLocal() {
+ public btVector3 getSupportVertexLocal() {
   return new btVector3(m_supportVertexLocal);
  }
 }

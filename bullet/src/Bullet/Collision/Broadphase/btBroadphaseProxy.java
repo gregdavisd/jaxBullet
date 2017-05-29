@@ -11,7 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Collision.Broadphase;
 
 import static Bullet.Collision.Broadphase.BroadphaseNativeTypes.BOX_2D_SHAPE_PROXYTYPE;
@@ -30,7 +30,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public abstract class btBroadphaseProxy  implements Serializable {
+public abstract class btBroadphaseProxy implements Serializable {
 
  public static final int DefaultFilter = 1;
  public static final int StaticFilter = 2;
@@ -52,7 +52,7 @@ public abstract class btBroadphaseProxy  implements Serializable {
   return (isConcave(proxyType) && !(proxyType == GIMPACT_SHAPE_PROXYTYPE));
  }
 
-  public static boolean isConcave(int proxyType) {
+ public static boolean isConcave(int proxyType) {
   return ((proxyType > CONCAVE_SHAPES_START_HERE) &&
    (proxyType < CONCAVE_SHAPES_END_HERE));
  }
@@ -61,11 +61,11 @@ public abstract class btBroadphaseProxy  implements Serializable {
   return (proxyType == COMPOUND_SHAPE_PROXYTYPE);
  }
 
-  public static boolean isSoftBody(int proxyType) {
+ public static boolean isSoftBody(int proxyType) {
   return (proxyType == SOFTBODY_SHAPE_PROXYTYPE);
  }
 
-  public static boolean isInfinite(int proxyType) {
+ public static boolean isInfinite(int proxyType) {
   return (proxyType == STATIC_PLANE_PROXYTYPE);
  }
 
@@ -73,7 +73,7 @@ public abstract class btBroadphaseProxy  implements Serializable {
   return (proxyType == BOX_2D_SHAPE_PROXYTYPE) || (proxyType == CONVEX_2D_SHAPE_PROXYTYPE);
  }
  //Usually the client btCollisionObject or Rigidbody class
-   public Object m_clientObject;
+ public Object m_clientObject;
  public int m_collisionFilterGroup;
  public int m_collisionFilterMask;
  int m_uniqueId;//m_uniqueId is introduced for paircache. could get rid of this, by calculating the address offset etc.
@@ -98,6 +98,6 @@ public abstract class btBroadphaseProxy  implements Serializable {
  public int getUid() {
   return m_uniqueId;
  }
- 
+
  public abstract boolean intersect(btBroadphaseProxy other);
 }

@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision.Algorithm;
 
 import Bullet.Collision.Broadphase.btDispatcherInfo;
@@ -33,7 +32,8 @@ import java.util.ArrayList;
  *
  * @author Gregery Barton
  */
-public class btSphereSphereCollisionAlgorithm extends btActivatingCollisionAlgorithm implements Serializable  {
+public class btSphereSphereCollisionAlgorithm extends btActivatingCollisionAlgorithm implements
+ Serializable {
 
  boolean m_ownManifold;
  btPersistentManifold m_manifoldPtr;
@@ -112,10 +112,10 @@ public class btSphereSphereCollisionAlgorithm extends btActivatingCollisionAlgor
   }
  }
 
- public  static class CreateFunc extends btCollisionAlgorithmCreateFunc {
+ public static class CreateFunc extends btCollisionAlgorithmCreateFunc {
 
   @Override
-public   btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
+  public btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
    btCollisionObjectWrapper col0Wrap, btCollisionObjectWrapper col1Wrap) {
    return new btSphereSphereCollisionAlgorithm(null, ci, col0Wrap, col1Wrap);
   }

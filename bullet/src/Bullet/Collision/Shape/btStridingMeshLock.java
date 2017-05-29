@@ -26,7 +26,7 @@ import Bullet.LinearMath.btVector3;
  *
  * @author Gregery Barton
  */
-public class btStridingMeshLock    {
+public class btStridingMeshLock {
 
  /**
   *

@@ -20,7 +20,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btContactManifoldTypes  implements Serializable {
+public class btContactManifoldTypes implements Serializable {
 
  public static final int MIN_CONTACT_MANIFOLD_TYPE = 1024;
  public static final int BT_PERSISTENT_MANIFOLD_TYPE = 1025;

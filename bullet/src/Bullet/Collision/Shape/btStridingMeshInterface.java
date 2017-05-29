@@ -15,7 +15,6 @@ subject to the following restrictions:
 package Bullet.Collision.Shape;
 
 import Bullet.Collision.btTriangleCallback;
-import Bullet.Collision.btTriangleCallback;
 import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
@@ -93,8 +92,7 @@ abstract public class btStridingMeshInterface implements Serializable {
  /// make a call to unLockVertexBase when the read and write access (using getLockedVertexIndexBase) is finished
  public abstract void unLockVertexBase(int subpart);
 
- public  final void unLockReadOnlyVertexBase(int subpart) {
- 
+ public final void unLockReadOnlyVertexBase(int subpart) {
  }
 
  /// getNumSubParts returns the number of seperate subparts
@@ -105,8 +103,7 @@ abstract public class btStridingMeshInterface implements Serializable {
 
  public abstract void preallocateIndices(int numindices);
 
- public abstract boolean hasPremadeAabb() ;
- 
+ public abstract boolean hasPremadeAabb();
 
  public abstract void setPremadeAabb(final btVector3 aabbMin, final btVector3 aabbMax);
 

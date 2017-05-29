@@ -19,7 +19,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class CollisionObjectTypes  implements Serializable {
+public class CollisionObjectTypes implements Serializable {
 
  public static final int CO_COLLISION_OBJECT = 1;
  public static final int CO_RIGID_BODY = 2;

@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Dynamics.Constraint;
 
 import static Bullet.Dynamics.Constraint.btPoint2PointFlags.BT_P2P_FLAGS_CFM;
@@ -28,7 +27,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btPoint2PointConstraint extends btTypedConstraint  implements Serializable {
+public class btPoint2PointConstraint extends btTypedConstraint implements Serializable {
 
  final btJacobianEntry[] m_jac = new btJacobianEntry[3]; //3 orthogonal linear constraints
  final btVector3 m_pivotInA = new btVector3();
@@ -104,7 +103,7 @@ public class btPoint2PointConstraint extends btTypedConstraint  implements Seria
 
  public final void getInfo2NonVirtual(btConstraintInfo2 info, final btTransform body0_trans,
   final btTransform body1_trans) {
-  assert(!m_useSolveConstraintObsolete);
+  assert (!m_useSolveConstraintObsolete);
   //retrieve matrices
   // anchor points in global coordinates with respect to body PORs.
   // set jacobian
@@ -180,7 +179,7 @@ public class btPoint2PointConstraint extends btTypedConstraint  implements Seria
  @Override
  public void setParam(int num, float value, int axis) {
   if (axis != -1) {
-   assert(false);
+   assert (false);
   } else {
    switch (num) {
     case BT_CONSTRAINT_ERP:
@@ -194,7 +193,7 @@ public class btPoint2PointConstraint extends btTypedConstraint  implements Seria
      m_flags |= BT_P2P_FLAGS_CFM;
      break;
     default:
-     assert(false);
+     assert (false);
    }
   }
  }
@@ -204,21 +203,21 @@ public class btPoint2PointConstraint extends btTypedConstraint  implements Seria
  public float getParam(int num, int axis) {
   float retVal = SIMD_INFINITY;
   if (axis != -1) {
-   assert(false);
+   assert (false);
   } else {
    switch (num) {
     case BT_CONSTRAINT_ERP:
     case BT_CONSTRAINT_STOP_ERP:
-     assert((m_flags & BT_P2P_FLAGS_ERP) != 0);
+     assert ((m_flags & BT_P2P_FLAGS_ERP) != 0);
      retVal = m_erp;
      break;
     case BT_CONSTRAINT_CFM:
     case BT_CONSTRAINT_STOP_CFM:
-     assert((m_flags & BT_P2P_FLAGS_CFM) != 0);
+     assert ((m_flags & BT_P2P_FLAGS_CFM) != 0);
      retVal = m_cfm;
      break;
     default:
-     assert(false);
+     assert (false);
    }
   }
   return retVal;

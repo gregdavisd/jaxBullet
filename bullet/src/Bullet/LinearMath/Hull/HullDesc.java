@@ -23,7 +23,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class HullDesc  implements Serializable {
+public class HullDesc implements Serializable {
 
  public HullDesc() {
   mFlags = QF_DEFAULT;

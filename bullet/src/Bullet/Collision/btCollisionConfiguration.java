@@ -22,11 +22,11 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public interface btCollisionConfiguration  extends Serializable {
+public interface btCollisionConfiguration extends Serializable {
 
- abstract btCollisionAlgorithmCreateFunc getCollisionAlgorithmCreateFunc(int proxyType0,
+   btCollisionAlgorithmCreateFunc getCollisionAlgorithmCreateFunc(int proxyType0,
   int proxyType1);
 
- abstract btCollisionAlgorithmCreateFunc getClosestPointsAlgorithmCreateFunc(int proxyType0,
+   btCollisionAlgorithmCreateFunc getClosestPointsAlgorithmCreateFunc(int proxyType0,
   int proxyType1);
 }

@@ -23,7 +23,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btCollisionPairCallback implements btOverlapCallback , Serializable  {
+public class btCollisionPairCallback implements btOverlapCallback, Serializable {
 
  final btDispatcherInfo m_dispatchInfo;
  final btCollisionDispatcher m_dispatcher;

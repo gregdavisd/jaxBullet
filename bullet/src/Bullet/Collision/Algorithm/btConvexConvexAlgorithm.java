@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision.Algorithm;
 
 import Bullet.Collision.Algorithm.Detector.btDiscreteCollisionDetectorInterface;
@@ -60,7 +59,7 @@ import javax.vecmath.AxisAngle4f;
  *
  * @author Gregery Barton
  */
-public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm  implements Serializable {
+public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm implements Serializable {
 
  static float capsuleCapsuleDistance(
   final btVector3 normalOnB, final btVector3 pointOnB,
@@ -98,7 +97,8 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm  imp
    // compute the contact normal
    normalOnB.set(ptsVector).scale(-btRecipSqrt(lenSqr));
   }
-  pointOnB.set(transformB.getOrigin().add(new btVector3().scaleAdd(capsuleRadiusB, normalOnB, offsetB)));
+  pointOnB.set(transformB.getOrigin().add(new btVector3().scaleAdd(capsuleRadiusB, normalOnB,
+   offsetB)));
   return distance;
  }
 
@@ -207,7 +207,7 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm  imp
     capsuleB.getHalfHeight(), capsuleB.getRadius(), capsuleA.getUpAxis(), capsuleB.getUpAxis(),
     body0Wrap.getWorldTransform(), body1Wrap.getWorldTransform(), threshold);
    if (dist < threshold) {
-    assert(normalOnB.lengthSquared() >= (SIMD_EPSILON * SIMD_EPSILON));
+    assert (normalOnB.lengthSquared() >= (SIMD_EPSILON * SIMD_EPSILON));
     resultOut.addContactPoint(normalOnB, pointOnBWorld, dist);
    }
    resultOut.refreshContactPoints();
@@ -224,7 +224,7 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm  imp
     0.f, capsuleB.getRadius(), capsuleA.getUpAxis(), 1,
     body0Wrap.getWorldTransform(), body1Wrap.getWorldTransform(), threshold);
    if (dist < threshold) {
-    assert(normalOnB.lengthSquared() >= (SIMD_EPSILON * SIMD_EPSILON));
+    assert (normalOnB.lengthSquared() >= (SIMD_EPSILON * SIMD_EPSILON));
     resultOut.addContactPoint(normalOnB, pointOnBWorld, dist);
    }
    resultOut.refreshContactPoints();
@@ -240,7 +240,7 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm  imp
     capsuleB.getHalfHeight(), capsuleB.getRadius(), 1, capsuleB.getUpAxis(),
     body0Wrap.getWorldTransform(), body1Wrap.getWorldTransform(), threshold);
    if (dist < threshold) {
-    assert(normalOnB.lengthSquared() >= (SIMD_EPSILON * SIMD_EPSILON));
+    assert (normalOnB.lengthSquared() >= (SIMD_EPSILON * SIMD_EPSILON));
     resultOut.addContactPoint(normalOnB, pointOnBWorld, dist);
    }
    resultOut.refreshContactPoints();
@@ -287,7 +287,7 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm  imp
        body1Wrap.getWorldTransform(),
        sepNormalWorldSpace, resultOut);
      } else {
-      gjkPairDetector.getClosestPoints(input,  withoutMargin, dispatchInfo.m_debugDraw);
+      gjkPairDetector.getClosestPoints(input, withoutMargin, dispatchInfo.m_debugDraw);
       //gjkPairDetector.getClosestPoints(input,dummy,dispatchInfo.m_debugDraw);
       //float l2 = gjkPairDetector.getCachedSeparatingAxis().lengthSquared();
       //if (l2>SIMD_EPSILON)
@@ -312,6 +312,7 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm  imp
      }
      return;
     } else //we can also deal with convex versus triangle (without connectivity data)
+    {
      if (polyhedronA.getConvexPolyhedron() != null && polyhedronB.getShapeType() ==
       TRIANGLE_SHAPE_PROXYTYPE) {
       ArrayList<btVector3> vertices = new ArrayList<>(0);
@@ -349,6 +350,7 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm  imp
       }
       return;
      }
+    }
    }
    gjkPairDetector.getClosestPoints(input, resultOut, dispatchInfo.m_debugDraw);
    //now perform 'm_numPerturbationIterations' collision queries with the perturbated collision objects
@@ -420,9 +422,11 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm  imp
   ///Linear motion for one of objects needs to exceed m_ccdSquareMotionThreshold
   ///col0.m_worldTransform,
   float resultFraction = (1.f);
-  float squareMot0 = (col0.getInterpolationWorldTransform().getOrigin().sub(col0.getWorldTransformPtr()
+  float squareMot0 = (col0.getInterpolationWorldTransform().getOrigin().sub(col0
+   .getWorldTransformPtr()
    .getOrigin())).lengthSquared();
-  float squareMot1 = (col1.getInterpolationWorldTransform().getOrigin().sub(col1.getWorldTransformPtr()
+  float squareMot1 = (col1.getInterpolationWorldTransform().getOrigin().sub(col1
+   .getWorldTransformPtr()
    .getOrigin())).lengthSquared();
   if (squareMot0 < col0.getCcdSquareMotionThreshold() &&
    squareMot1 < col1.getCcdSquareMotionThreshold()) {
@@ -514,7 +518,8 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm  imp
   }
 
   @Override
-  public void addContactPoint(final btVector3 normalOnBInWorld, final btVector3 pointInWorld, float depth) {
+  public void addContactPoint(final btVector3 normalOnBInWorld, final btVector3 pointInWorld,
+   float depth) {
   }
  }
 
@@ -564,14 +569,14 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm  imp
   int m_numPerturbationIterations;
   int m_minimumPointsPerturbationThreshold;
 
- public  CreateFunc(btConvexPenetrationDepthSolver pdSolver) {
+  public CreateFunc(btConvexPenetrationDepthSolver pdSolver) {
    m_numPerturbationIterations = 0;
    m_minimumPointsPerturbationThreshold = 3;
    m_pdSolver = pdSolver;
   }
 
   @Override
-public   btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
+  public btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
    btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap) {
    return new btConvexConvexAlgorithm(ci.m_manifold, ci, body0Wrap, body1Wrap, m_pdSolver,
     m_numPerturbationIterations, m_minimumPointsPerturbationThreshold);

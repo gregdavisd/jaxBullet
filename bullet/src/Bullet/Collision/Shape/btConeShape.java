@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision.Shape;
 
 import static Bullet.Collision.Broadphase.BroadphaseNativeTypes.CONE_SHAPE_PROXYTYPE;
@@ -26,14 +25,14 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btConeShape extends btConvexInternalShape  implements Serializable {
+public class btConeShape extends btConvexInternalShape implements Serializable {
 
  float m_sinAngle;
  float m_radius;
  float m_height;
  final int[] m_coneIndices = new int[3];
 
-public  btVector3 coneLocalSupport(final btVector3 v) {
+ public btVector3 coneLocalSupport(final btVector3 v) {
   float halfHeight = m_height * (0.5f);
   if (v.getElement(m_coneIndices[1]) > v.length() * m_sinAngle) {
    final btVector3 tmp = new btVector3();
@@ -98,7 +97,7 @@ public  btVector3 coneLocalSupport(final btVector3 v) {
    if (supportVerticesOut[i] == null) {
     supportVerticesOut[i] = new btVector3();
    }
-   supportVerticesOut[i].set( coneLocalSupport(vec));
+   supportVerticesOut[i].set(coneLocalSupport(vec));
   }
  }
 
@@ -161,7 +160,7 @@ public  btVector3 coneLocalSupport(final btVector3 v) {
     m_coneIndices[2] = 1;
     break;
    default:
-    assert(false);
+    assert (false);
   }
   m_implicitShapeDimensions.setElement(m_coneIndices[0], m_radius);
   m_implicitShapeDimensions.setElement(m_coneIndices[1], m_height);

@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Dynamics.Constraint;
 
 import Bullet.Dynamics.btRigidBody;
@@ -33,7 +32,7 @@ public class btGeneric6DofSpringConstraint extends btGeneric6DofConstraint imple
  public final float[] m_springStiffness = new float[6];
  public final float[] m_springDamping = new float[6]; // between 0 and 1 (1 == no damping)
 
-   void internalUpdateSprings(btConstraintInfo2 info) {
+ void internalUpdateSprings(btConstraintInfo2 info) {
   // it is assumed that calculateTransforms() have been called before this call
   int i;
   //btVector3 relVel = m_rbB.getLinearVelocity() - m_rbA.getLinearVelocity();

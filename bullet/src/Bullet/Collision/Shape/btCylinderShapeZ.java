@@ -34,8 +34,9 @@ public class btCylinderShapeZ extends btCylinderShape implements Serializable {
 
  public void batchedUnitVectorGetSupportingVertexWithoutMargin(btVector3[] vectors,
   btVector3[] supportVerticesOut, int numVectors) {
-  for (int i = 0; i < numVectors; i++) {   if (supportVerticesOut[i]==null){
-    supportVerticesOut[i]=new btVector3();
+  for (int i = 0; i < numVectors; i++) {
+   if (supportVerticesOut[i] == null) {
+    supportVerticesOut[i] = new btVector3();
    }
    supportVerticesOut[i].set(CylinderLocalSupportZ(getHalfExtentsWithoutMargin(), vectors[i]));
   }

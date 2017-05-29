@@ -299,7 +299,8 @@ public class btConeTwistConstraint extends btTypedConstraint implements Serializ
    .getInvInertiaTensorWorld(), m_rbB.getInvInertiaTensorWorld());
  }
 
- final void getInfo2NonVirtual(btConstraintInfo2 info, final btTransform transA, final btTransform transB,
+ final void getInfo2NonVirtual(btConstraintInfo2 info, final btTransform transA,
+  final btTransform transB,
   final btMatrix3x3 invInertiaWorldA, final btMatrix3x3 invInertiaWorldB) {
   calcAngleInfo2(transA, transB, invInertiaWorldA, invInertiaWorldB);
   assert (!m_useSolveConstraintObsolete);
@@ -722,7 +723,8 @@ public class btConeTwistConstraint extends btTypedConstraint implements Serializ
   float fact;
   // Get Frame into world space
   if (m_swingSpan1 >= (0.05f)) {
-   b1Axis2.set(getRigidBodyA().getCenterOfMassTransform().transform3x3(m_rbAFrame.getBasisColumn(1)));
+   b1Axis2
+    .set(getRigidBodyA().getCenterOfMassTransform().transform3x3(m_rbAFrame.getBasisColumn(1)));
    swx = b2Axis1.dot(b1Axis1);
    swy = b2Axis1.dot(b1Axis2);
    swing1 = btAtan2Fast(swy, swx);
@@ -731,7 +733,8 @@ public class btConeTwistConstraint extends btTypedConstraint implements Serializ
    swing1 *= fact;
   }
   if (m_swingSpan2 >= (0.05f)) {
-   b1Axis3.set(getRigidBodyA().getCenterOfMassTransform().transform3x3(m_rbAFrame.getBasisColumn(2)));
+   b1Axis3
+    .set(getRigidBodyA().getCenterOfMassTransform().transform3x3(m_rbAFrame.getBasisColumn(2)));
    swx = b2Axis1.dot(b1Axis1);
    swy = b2Axis1.dot(b1Axis3);
    swing2 = btAtan2Fast(swy, swx);
@@ -759,7 +762,8 @@ public class btConeTwistConstraint extends btTypedConstraint implements Serializ
   }
   // Twist limits
   if (m_twistSpan >= (0.f)) {
-   b2Axis2.set(getRigidBodyB().getCenterOfMassTransform().transform3x3(m_rbBFrame.getBasisColumn(1)));
+   b2Axis2
+    .set(getRigidBodyB().getCenterOfMassTransform().transform3x3(m_rbBFrame.getBasisColumn(1)));
    final btQuaternion rotationArc = shortestArcQuat(b2Axis1, b1Axis1);
    final btVector3 TwistRef = quatRotate(rotationArc, b2Axis2);
    float twist = btAtan2Fast(TwistRef.dot(b1Axis3), TwistRef.dot(b1Axis2));
@@ -942,7 +946,7 @@ public class btConeTwistConstraint extends btTypedConstraint implements Serializ
   return m_swingSpan1;
  }
 
-public  float getSwingSpan2() {
+ public float getSwingSpan2() {
   return m_swingSpan2;
  }
 

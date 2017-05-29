@@ -23,7 +23,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-class btDbvtProxy extends btBroadphaseProxy  implements Serializable {
+class btDbvtProxy extends btBroadphaseProxy implements Serializable {
 
  /* Fields		*/
  //btDbvtAabbMm	aabb;
@@ -39,6 +39,6 @@ class btDbvtProxy extends btBroadphaseProxy  implements Serializable {
 
  @Override
  public boolean intersect(btBroadphaseProxy other) {
-  return Intersect(leaf.volume(), ((btDbvtProxy)other).leaf.volume());
+  return Intersect(leaf.volume(), ((btDbvtProxy) other).leaf.volume());
  }
 }

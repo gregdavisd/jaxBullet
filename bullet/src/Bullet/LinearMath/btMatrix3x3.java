@@ -10,10 +10,9 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.LinearMath;
- 
+
 import static Bullet.LinearMath.btScalar.SIMD_EPSILON;
 import static Bullet.LinearMath.btScalar.btCos;
 import static Bullet.LinearMath.btScalar.btFabs;
@@ -28,7 +27,7 @@ import javax.vecmath.Matrix4f;
  *
  * @author Gregery Barton
  */
-public final class btMatrix3x3 extends Matrix3f<btMatrix3x3> implements Serializable  {
+public final class btMatrix3x3 extends Matrix3f<btMatrix3x3> implements Serializable {
 
  static final int M00 = 0;
  static final int M01 = 4;
@@ -114,12 +113,10 @@ public final class btMatrix3x3 extends Matrix3f<btMatrix3x3> implements Serializ
   return v;
  }
 
- public btMatrix3x3(final btQuaternion q)
- {
-  super();
+ public btMatrix3x3(final btQuaternion q) {
   set(q);
  }
- 
+
  /**
   *
   * @param i
@@ -259,32 +256,32 @@ public final class btMatrix3x3 extends Matrix3f<btMatrix3x3> implements Serializ
   m[M32] = 0;
   m[M33] = 1.0f;
  }
- 
- /** @brief Set the matrix from euler angles YPR around ZYX axes
-	* @param eulerX Roll about X axis
-	* @param eulerY Pitch around Y axis
-	* @param eulerZ Yaw aboud Z axis
-	* 
-	* These angles are used to produce a rotation matrix. The euler
-	* angles are applied in ZYX order. I.e a vector is first rotated 
-	* about X then Y and then Z
-	**/
-	public btMatrix3x3 setEulerZYX(float eulerX,float eulerY,float eulerZ) { 
-		///@todo proposed to reverse this since it's labeled zyx but takes arguments xyz and it will match all other parts of the code
-		float ci = btCos(eulerX); 
-		float cj = btCos(eulerY); 
-		float ch = btCos(eulerZ); 
-		float si =btSin(eulerX); 
-		float sj = btSin(eulerY); 
-		float sh = btSin(eulerZ); 
-		float cc = ci * ch; 
-		float cs = ci * sh; 
-		float sc = si * ch; 
-		float ss = si * sh;
 
-		set (cj * ch, sj * sc - cs, sj * cc + ss,
-			cj * sh, sj * ss + cc, sj * cs - sc, 
-			-sj,      cj * si,      cj * ci);
+ /**
+  * @brief Set the matrix from euler angles YPR around ZYX axes
+  * @param eulerX Roll about X axis
+  * @param eulerY Pitch around Y axis
+  * @param eulerZ Yaw aboud Z axis
+  *
+  * These angles are used to produce a rotation matrix. The euler angles are applied in ZYX order.
+  * I.e a vector is first rotated about X then Y and then Z
+	*
+  */
+ public btMatrix3x3 setEulerZYX(float eulerX, float eulerY, float eulerZ) {
+  ///@todo proposed to reverse this since it's labeled zyx but takes arguments xyz and it will match all other parts of the code
+  float ci = btCos(eulerX);
+  float cj = btCos(eulerY);
+  float ch = btCos(eulerZ);
+  float si = btSin(eulerX);
+  float sj = btSin(eulerY);
+  float sh = btSin(eulerZ);
+  float cc = ci * ch;
+  float cs = ci * sh;
+  float sc = si * ch;
+  float ss = si * sh;
+  set(cj * ch, sj * sc - cs, sj * cc + ss,
+   cj * sh, sj * ss + cc, sj * cs - sc,
+   -sj, cj * si, cj * ci);
   return this;
-	}
+ }
 }

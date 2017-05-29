@@ -36,6 +36,7 @@ public final class btDbvtNode implements Serializable {
 
  /**
   * equivalent to child[1]==null
+  *
   * @return
   */
  public boolean isleaf() {
@@ -44,6 +45,7 @@ public final class btDbvtNode implements Serializable {
 
  /**
   * equivalent to childs[1]!=null
+  *
   * @return
   */
  public boolean isinternal() {
@@ -52,6 +54,7 @@ public final class btDbvtNode implements Serializable {
 
  /**
   * getter instead of accessing volume directly
+  *
   * @return
   */
  public btDbvtAabbMm volume() {
@@ -60,6 +63,7 @@ public final class btDbvtNode implements Serializable {
 
  /**
   * getter instead of accessing parent directly
+  *
   * @return
   */
  public btDbvtNode parent() {
@@ -68,6 +72,7 @@ public final class btDbvtNode implements Serializable {
 
  /**
   * setter instead of accessing parent directly
+  *
   * @param p
   * @return
   */
@@ -77,6 +82,7 @@ public final class btDbvtNode implements Serializable {
 
  /**
   * getter instead of childs[0]
+  *
   * @return
   */
  public btDbvtNode child0() {
@@ -84,7 +90,8 @@ public final class btDbvtNode implements Serializable {
  }
 
  /**
-  *getter instead of childs[1]
+  * getter instead of childs[1]
+  *
   * @return
   */
  public btDbvtNode child1() {
@@ -93,6 +100,7 @@ public final class btDbvtNode implements Serializable {
 
  /**
   * setter instead of childs[0]=child
+  *
   * @param c
   * @return
   */
@@ -102,6 +110,7 @@ public final class btDbvtNode implements Serializable {
 
  /**
   * setter instead of childs[1]=child
+  *
   * @param c
   * @return
   */
@@ -112,6 +121,7 @@ public final class btDbvtNode implements Serializable {
 
  /**
   * getter instead of childs[i]
+  *
   * @param i
   * @return
   */
@@ -129,6 +139,7 @@ public final class btDbvtNode implements Serializable {
 
  /**
   * setter instead of childs[i]=child
+  *
   * @param i
   * @param c
   * @return
@@ -148,6 +159,7 @@ public final class btDbvtNode implements Serializable {
 
  /**
   * getter for dataAsInt
+  *
   * @return
   */
  public int dataAsInt() {
@@ -155,7 +167,8 @@ public final class btDbvtNode implements Serializable {
  }
 
  /**
-  *setter for dataAsInt
+  * setter for dataAsInt
+  *
   * @param d
   * @return
   */
@@ -165,6 +178,7 @@ public final class btDbvtNode implements Serializable {
 
  /**
   * getter for data
+  *
   * @return
   */
  public Object data() {
@@ -173,6 +187,7 @@ public final class btDbvtNode implements Serializable {
 
  /**
   * setter instead of accessing data directly
+  *
   * @param d
   * @return
   */

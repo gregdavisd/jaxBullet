@@ -132,9 +132,9 @@ public final class btVector3 extends Tuple3f<btVector3> implements Serializable 
   * @param z
   */
  public btVector3(float x, float y, float z) {
-  this.x=x;
-  this.y=y;
-  this.z=z;
+  this.x = x;
+  this.y = y;
+  this.z = z;
  }
 
  /**

@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision.Shape;
 
 import static Bullet.Collision.Broadphase.BroadphaseNativeTypes.TRIANGLE_MESH_SHAPE_PROXYTYPE;
@@ -21,7 +20,7 @@ import Bullet.Collision.MyNodeOverlapCallbackConvexcast;
 import Bullet.Collision.MyNodeOverlapCallbackRaycast;
 import Bullet.Collision.btOptimizedBvh;
 import Bullet.Collision.btTriangleCallback;
-import Bullet.Collision.btTriangleInfoMap;
+import Bullet.stubs.btTriangleInfoMap;
 import static Bullet.LinearMath.btScalar.SIMD_EPSILON;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
@@ -41,16 +40,16 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btBvhTriangleMeshShape extends btTriangleMeshShape  implements Serializable {
+public class btBvhTriangleMeshShape extends btTriangleMeshShape implements Serializable {
 
  private static final long serialVersionUID = -6792520148457019195L;
-
  btOptimizedBvh m_bvh;
  btTriangleInfoMap m_triangleInfoMap;
  boolean m_useQuantizedAabbCompression;
  boolean m_ownsBvh;
 
-public btBvhTriangleMeshShape(btStridingMeshInterface meshInterface, boolean useQuantizedAabbCompression,
+ public btBvhTriangleMeshShape(btStridingMeshInterface meshInterface,
+  boolean useQuantizedAabbCompression,
   boolean buildBvh) {
   super(meshInterface);
   m_bvh = null;
@@ -64,12 +63,14 @@ public btBvhTriangleMeshShape(btStridingMeshInterface meshInterface, boolean use
   }
  }
 
- public btBvhTriangleMeshShape(btStridingMeshInterface meshInterface, boolean useQuantizedAabbCompression) {
+ public btBvhTriangleMeshShape(btStridingMeshInterface meshInterface,
+  boolean useQuantizedAabbCompression) {
   this(meshInterface, useQuantizedAabbCompression, true);
  }
 
  ///optionally pass in a larger bvh aabb, used for quantization. This allows for deformations within this aabb
-  public btBvhTriangleMeshShape(btStridingMeshInterface meshInterface, boolean useQuantizedAabbCompression,
+ public btBvhTriangleMeshShape(btStridingMeshInterface meshInterface,
+  boolean useQuantizedAabbCompression,
   final btVector3 bvhAabbMin, final btVector3 bvhAabbMax, boolean buildBvh) {
   super(meshInterface);
   m_triangleInfoMap = null;
@@ -86,7 +87,8 @@ public btBvhTriangleMeshShape(btStridingMeshInterface meshInterface, boolean use
   }
  }
 
-  public btBvhTriangleMeshShape(btStridingMeshInterface meshInterface, boolean useQuantizedAabbCompression,
+ public btBvhTriangleMeshShape(btStridingMeshInterface meshInterface,
+  boolean useQuantizedAabbCompression,
   final btVector3 bvhAabbMin, final btVector3 bvhAabbMax) {
   this(meshInterface, useQuantizedAabbCompression, bvhAabbMin, bvhAabbMax, true);
  }
@@ -152,8 +154,8 @@ public btBvhTriangleMeshShape(btStridingMeshInterface meshInterface, boolean use
  }
 
  void setOptimizedBvh(btOptimizedBvh bvh, final btVector3 localScaling) {
-  assert(m_bvh != null);
-  assert(!m_ownsBvh);
+  assert (m_bvh != null);
+  assert (!m_ownsBvh);
   m_bvh = bvh;
   m_ownsBvh = false;
   // update the scaling without rebuilding the bvh

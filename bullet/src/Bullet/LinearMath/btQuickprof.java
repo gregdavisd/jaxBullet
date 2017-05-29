@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btQuickprof  implements Serializable {
+public class btQuickprof implements Serializable {
 
  /**
   *

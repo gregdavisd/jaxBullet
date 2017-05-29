@@ -38,7 +38,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btHingeConstraint extends btTypedConstraint implements Serializable  {
+public class btHingeConstraint extends btTypedConstraint implements Serializable {
 
  public static final boolean HINGE_USE_OBSOLETE_SOLVER = false;
  public static final boolean HINGE_USE_FRAME_OFFSET = true;
@@ -332,7 +332,7 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
  public void getInfo2Internal(btConstraintInfo2 info, final btTransform transA,
   final btTransform transB,
   final btVector3 angVelA, final btVector3 angVelB) {
-  assert(!m_useSolveConstraintObsolete);
+  assert (!m_useSolveConstraintObsolete);
   int i, skip = info.rowskip;
   // transforms in world space
   final btTransform trA = new btTransform(transA).mul(m_rbAFrame);
@@ -493,8 +493,7 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
 
  public void getInfo2InternalUsingFrameOffset(btConstraintInfo2 info, final btTransform transA,
   final btTransform transB, final btVector3 angVelA, final btVector3 angVelB) {
- 
-  assert(!m_useSolveConstraintObsolete);
+  assert (!m_useSolveConstraintObsolete);
   int i, s = info.rowskip;
   // transforms in world space
   final btTransform trA = new btTransform(transA).mul(m_rbAFrame);
@@ -524,26 +523,26 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
   ax1.normalize();
   // fill first 3 rows 
   // we want: velA + wA x relA == velB + wB x relB
-  	final btTransform bodyA_trans = new btTransform(transA);
-	final btTransform bodyB_trans = new btTransform(transB);
+  final btTransform bodyA_trans = new btTransform(transA);
+  final btTransform bodyB_trans = new btTransform(transB);
   int s0 = 0;
   int s1 = s;
   int s2 = s * 2;
   int nrow = 2; // last filled row
-  final btVector3 tmpA=new btVector3();
-  final btVector3 tmpB=new btVector3();
-  final btVector3 relA=new btVector3();
-  final btVector3 relB=new btVector3();
-  final btVector3 p=new btVector3();
-  final btVector3 q=new btVector3();
+  final btVector3 tmpA = new btVector3();
+  final btVector3 tmpB = new btVector3();
+  final btVector3 relA = new btVector3();
+  final btVector3 relB = new btVector3();
+  final btVector3 p = new btVector3();
+  final btVector3 q = new btVector3();
   // get vector from bodyB to frameB in WCS
-  relB .set( trB.getOrigin().sub(bodyB_trans.getOrigin()));
+  relB.set(trB.getOrigin().sub(bodyB_trans.getOrigin()));
   // get its projection to hinge axis
   final btVector3 projB = new btVector3(ax1).scale(relB.dot(ax1));
   // get vector directed from bodyB to hinge axis (and orthogonal to it)
   final btVector3 orthoB = new btVector3(relB).sub(projB);
   // same for bodyA
-  relA .set(trA.getOrigin().sub(bodyA_trans.getOrigin()));
+  relA.set(trA.getOrigin().sub(bodyA_trans.getOrigin()));
   final btVector3 projA = new btVector3(ax1).scale(relA.dot(ax1));
   final btVector3 orthoA = new btVector3(relA).sub(projA);
   final btVector3 totalDist = new btVector3(projA).sub(projB);
@@ -551,7 +550,7 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
   relA.scaleAdd(factA, totalDist, orthoA);
   relB.scaleAdd(-factB, totalDist, orthoB);
   // now choose average ortho to hinge axis
-  p .set(orthoB).scale(factA).add(new btVector3(orthoA).scale(factB));
+  p.set(orthoB).scale(factA).add(new btVector3(orthoA).scale(factB));
   float len2 = p.lengthSquared();
   if (len2 > SIMD_EPSILON) {
    p.scale(1.0f / btSqrt(len2));
@@ -559,10 +558,10 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
    p.set(trA.getBasisColumn(1));
   }
   // make one more ortho
-  q .set(ax1).cross(p);
+  q.set(ax1).cross(p);
   // fill three rows
-  tmpA .set(relA).cross(p);
-  tmpB .set(relB).cross(p);
+  tmpA.set(relA).cross(p);
+  tmpB.set(relB).cross(p);
   info.m_J1angularAxis[s0].set(tmpA);
   info.m_J2angularAxis[s0].set(tmpB).negate();
   tmpA.set(relA).cross(q);
@@ -589,9 +588,9 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
    info.m_J1linearAxis[s0].set(p);
    info.m_J1linearAxis[s1].set(q);
    info.m_J1linearAxis[s2].set(ax1);
-   info.m_J2linearAxis[s0].set( p).negate() ;
-   info.m_J2linearAxis[s1].set( q).negate() ;
-   info.m_J2linearAxis[s2].set( ax1).negate() ;
+   info.m_J2linearAxis[s0].set(p).negate();
+   info.m_J2linearAxis[s1].set(q).negate();
+   info.m_J2linearAxis[s2].set(ax1).negate();
    // compute three elements of right hand side
    float rhs = k * p.dot(ofs);
    info.m_constraintError[s0].set(rhs);
@@ -650,7 +649,7 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
    nrow++;
    srow = nrow * info.rowskip;
    info.m_J1angularAxis[srow].set(ax1);
-   info.m_J2angularAxis[srow].set( ax1).negate() ;
+   info.m_J2angularAxis[srow].set(ax1).negate();
    float lostop = getLowerLimit();
    float histop = getUpperLimit();
    if (limit != 0 && (lostop == histop)) {  // the joint motor is ineffective
@@ -710,7 +709,6 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
     info.m_constraintError[srow].timesEquals(m_limit.getBiasFactor());
    } // if(limit)
   } // if angular limit or powered
- 
  }
 
  public void updateRHS(float timeStep) {
@@ -953,10 +951,10 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
      m_flags |= BT_HINGE_FLAGS_ERP_NORM;
      break;
     default:
-     assert(false);
+     assert (false);
    }
   } else {
-   assert(false);
+   assert (false);
   }
  }
 
@@ -967,26 +965,26 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
   if ((axis == -1) || (axis == 5)) {
    switch (num) {
     case BT_CONSTRAINT_STOP_ERP:
-     assert((m_flags & BT_HINGE_FLAGS_ERP_STOP) != 0);
+     assert ((m_flags & BT_HINGE_FLAGS_ERP_STOP) != 0);
      retVal = m_stopERP;
      break;
     case BT_CONSTRAINT_STOP_CFM:
-     assert((m_flags & BT_HINGE_FLAGS_CFM_STOP) != 0);
+     assert ((m_flags & BT_HINGE_FLAGS_CFM_STOP) != 0);
      retVal = m_stopCFM;
      break;
     case BT_CONSTRAINT_CFM:
-     assert((m_flags & BT_HINGE_FLAGS_CFM_NORM) != 0);
+     assert ((m_flags & BT_HINGE_FLAGS_CFM_NORM) != 0);
      retVal = m_normalCFM;
      break;
     case BT_CONSTRAINT_ERP:
-     assert((m_flags & BT_HINGE_FLAGS_ERP_NORM) != 0);
+     assert ((m_flags & BT_HINGE_FLAGS_ERP_NORM) != 0);
      retVal = m_normalERP;
      break;
     default:
-     assert(false);
+     assert (false);
    }
   } else {
-   assert(false);
+   assert (false);
   }
   return retVal;
  }

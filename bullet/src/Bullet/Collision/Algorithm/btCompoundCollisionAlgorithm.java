@@ -12,7 +12,7 @@ subject to the following restrictions:
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 
-*/
+ */
 package Bullet.Collision.Algorithm;
 
 import Bullet.Collision.Broadphase.btDbvt;
@@ -37,7 +37,8 @@ import java.util.ArrayList;
  *
  * @author Gregery Barton
  */
-public class btCompoundCollisionAlgorithm extends btActivatingCollisionAlgorithm implements Serializable  {
+public class btCompoundCollisionAlgorithm extends btActivatingCollisionAlgorithm implements
+ Serializable {
 
  final ArrayList<btDbvtNode> stack2 = new ArrayList<>(0);
  final ArrayList<btPersistentManifold> manifoldArray = new ArrayList<>(0);
@@ -61,7 +62,7 @@ public class btCompoundCollisionAlgorithm extends btActivatingCollisionAlgorithm
   btCollisionObjectWrapper body1Wrap) {
   btCollisionObjectWrapper colObjWrap = m_isSwapped ? body1Wrap : body0Wrap;
   btCollisionObjectWrapper otherObjWrap = m_isSwapped ? body0Wrap : body1Wrap;
-  assert(colObjWrap.getCollisionShape().isCompound());
+  assert (colObjWrap.getCollisionShape().isCompound());
   btCompoundShape compoundShape = (btCompoundShape) (colObjWrap.getCollisionShape());
   int numChildren = compoundShape.getNumChildShapes();
   int i;
@@ -86,7 +87,7 @@ public class btCompoundCollisionAlgorithm extends btActivatingCollisionAlgorithm
   m_sharedManifold = (ci.m_manifold);
   m_ownsManifold = false;
   btCollisionObjectWrapper colObjWrap = m_isSwapped ? body1Wrap : body0Wrap;
-  assert(colObjWrap.getCollisionShape().isCompound());
+  assert (colObjWrap.getCollisionShape().isCompound());
   btCompoundShape compoundShape = (btCompoundShape) (colObjWrap.getCollisionShape());
   m_compoundShapeRevision = compoundShape.getUpdateRevision();
   preallocateChildAlgorithms(body0Wrap, body1Wrap);
@@ -106,7 +107,7 @@ public class btCompoundCollisionAlgorithm extends btActivatingCollisionAlgorithm
   btDispatcherInfo dispatchInfo, btManifoldResult resultOut) {
   btCollisionObjectWrapper colObjWrap = m_isSwapped ? body1Wrap : body0Wrap;
   btCollisionObjectWrapper otherObjWrap = m_isSwapped ? body0Wrap : body1Wrap;
-  assert(colObjWrap.getCollisionShape().isCompound());
+  assert (colObjWrap.getCollisionShape().isCompound());
   btCompoundShape compoundShape = (btCompoundShape) (colObjWrap.getCollisionShape());
   ///btCompoundShape might have changed:
   ////make sure the internal child collision algorithm caches are still valid
@@ -198,7 +199,7 @@ public class btCompoundCollisionAlgorithm extends btActivatingCollisionAlgorithm
  @Override
  public float calculateTimeOfImpact(btCollisionObject body0, btCollisionObject body1,
   btDispatcherInfo dispatchInfo, btManifoldResult resultOut) {
-  assert(false);
+  assert (false);
   return 0;
   /*	//needs to be fixed, using btCollisionObjectWrapper and NOT modifying internal data structures
 	btCollisionObject* colObj = m_isSwapped? body1 : body0;
@@ -257,19 +258,19 @@ public class btCompoundCollisionAlgorithm extends btActivatingCollisionAlgorithm
   }
  }
 
-public   static class CreateFunc extends btCollisionAlgorithmCreateFunc {
+ public static class CreateFunc extends btCollisionAlgorithmCreateFunc {
 
   @Override
-public   btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
+  public btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
    btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap) {
    return new btCompoundCollisionAlgorithm(ci, body0Wrap, body1Wrap, false);
   }
  };
 
-public   static class SwappedCreateFunc extends btCollisionAlgorithmCreateFunc {
+ public static class SwappedCreateFunc extends btCollisionAlgorithmCreateFunc {
 
   @Override
-public   btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
+  public btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
    btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap) {
    return new btCompoundCollisionAlgorithm(ci, body0Wrap, body1Wrap, true);
   }

@@ -24,12 +24,12 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
- public class btOptimizedBvh extends btQuantizedBvh  implements Serializable {
+public class btOptimizedBvh extends btQuantizedBvh implements Serializable {
 
- public  btOptimizedBvh() {
+ public btOptimizedBvh() {
  }
 
- public  void build(btStridingMeshInterface triangles, boolean useQuantizedAabbCompression,
+ public void build(btStridingMeshInterface triangles, boolean useQuantizedAabbCompression,
   final btVector3 bvhAabbMin, final btVector3 bvhAabbMax) {
   m_useQuantization = useQuantizedAabbCompression;
   int numLeafNodes;
@@ -79,7 +79,8 @@ import java.io.Serializable;
   m_leafNodes.trimToSize();
  }
 
-  public void refit(btStridingMeshInterface meshInterface, final btVector3 aabbMin, final btVector3 aabbMax) {
+ public void refit(btStridingMeshInterface meshInterface, final btVector3 aabbMin,
+  final btVector3 aabbMax) {
   if (m_useQuantization) {
    setQuantizationValues(aabbMin, aabbMax);
    updateBvhNodes(meshInterface, 0, m_curNodeIndex, 0);
@@ -91,20 +92,20 @@ import java.io.Serializable;
    }
   } else {
    // don't know why this is empty
-   assert(false);
+   assert (false);
   }
  }
 
-  public void refitPartial(btStridingMeshInterface meshInterface, final btVector3 aabbMin,
+ public void refitPartial(btStridingMeshInterface meshInterface, final btVector3 aabbMin,
   final btVector3 aabbMax) {
   //incrementally initialize quantization values
-  assert(m_useQuantization);
-  assert(aabbMin.getX() > m_bvhAabbMin.getX());
-  assert(aabbMin.getY() > m_bvhAabbMin.getY());
-  assert(aabbMin.getZ() > m_bvhAabbMin.getZ());
-  assert(aabbMax.getX() < m_bvhAabbMax.getX());
-  assert(aabbMax.getY() < m_bvhAabbMax.getY());
-  assert(aabbMax.getZ() < m_bvhAabbMax.getZ());
+  assert (m_useQuantization);
+  assert (aabbMin.getX() > m_bvhAabbMin.getX());
+  assert (aabbMin.getY() > m_bvhAabbMin.getY());
+  assert (aabbMin.getZ() > m_bvhAabbMin.getZ());
+  assert (aabbMax.getX() < m_bvhAabbMax.getX());
+  assert (aabbMax.getY() < m_bvhAabbMax.getY());
+  assert (aabbMax.getZ() < m_bvhAabbMax.getZ());
   ///we should update all quantization values, using updateBvhNodes(meshInterface);
   ///but we only update chunks that overlap the given aabb
   int[] quantizedQueryAabbMin = new int[3];
@@ -125,8 +126,9 @@ import java.io.Serializable;
   }
  }
 
-  public void updateBvhNodes(btStridingMeshInterface meshInterface, int firstNode, int endNode, int index) {
-  assert(m_useQuantization);
+ public void updateBvhNodes(btStridingMeshInterface meshInterface, int firstNode, int endNode,
+  int index) {
+  assert (m_useQuantization);
   int curNodeSubPart = -1;
   //get access info to trianglemesh data
   // InternalProcessSubPart does the scaling for us

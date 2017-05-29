@@ -20,7 +20,6 @@
  3. This notice may not be removed or altered from any source distribution.
  
  */
-
 package Bullet.Dynamics.featherstone;
 
 import java.io.Serializable;
@@ -30,4 +29,4 @@ import java.io.Serializable;
  * @author Gregery Barton
  */
 public class btMultiBody implements Serializable {
- };
+};

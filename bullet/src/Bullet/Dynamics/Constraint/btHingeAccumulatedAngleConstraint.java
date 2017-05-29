@@ -33,10 +33,9 @@ import Bullet.LinearMath.btVector3;
 public class btHingeAccumulatedAngleConstraint extends btHingeConstraint {
 
  private static final long serialVersionUID = 5127670227845110667L;
-
  float m_accumulatedAngle;
 
-public btHingeAccumulatedAngleConstraint(btRigidBody rbA, btRigidBody rbB, final btVector3 pivotInA,
+ public btHingeAccumulatedAngleConstraint(btRigidBody rbA, btRigidBody rbB, final btVector3 pivotInA,
   final btVector3 pivotInB, final btVector3 axisInA, final btVector3 axisInB) {
   this(rbA, rbB, pivotInA, pivotInB, axisInA, axisInB, false);
  }
@@ -53,35 +52,36 @@ public btHingeAccumulatedAngleConstraint(btRigidBody rbA, btRigidBody rbB, final
   this(rbA, pivotInA, axisInA, false);
  }
 
-  public btHingeAccumulatedAngleConstraint(btRigidBody rbA, final btVector3 pivotInA,
+ public btHingeAccumulatedAngleConstraint(btRigidBody rbA, final btVector3 pivotInA,
   final btVector3 axisInA, boolean useReferenceFrameA) {
   super(rbA, pivotInA, axisInA, useReferenceFrameA);
   m_accumulatedAngle = getHingeAngle();
  }
 
-  public btHingeAccumulatedAngleConstraint(btRigidBody rbA, btRigidBody rbB, final btTransform rbAFrame,
+ public btHingeAccumulatedAngleConstraint(btRigidBody rbA, btRigidBody rbB,
+  final btTransform rbAFrame,
   final btTransform rbBFrame, boolean useReferenceFrameA) {
   super(rbA, rbB, rbAFrame, rbBFrame, useReferenceFrameA);
   m_accumulatedAngle = getHingeAngle();
  }
 
-  public btHingeAccumulatedAngleConstraint(btRigidBody rbA, final btTransform rbAFrame) {
+ public btHingeAccumulatedAngleConstraint(btRigidBody rbA, final btTransform rbAFrame) {
   this(rbA, rbAFrame, false);
  }
 
-  public btHingeAccumulatedAngleConstraint(btRigidBody rbA, final btTransform rbAFrame,
+ public btHingeAccumulatedAngleConstraint(btRigidBody rbA, final btTransform rbAFrame,
   boolean useReferenceFrameA) {
   super(rbA, rbAFrame, useReferenceFrameA);
   m_accumulatedAngle = getHingeAngle();
  }
 
-  public float getAccumulatedHingeAngle() {
+ public float getAccumulatedHingeAngle() {
   float hingeAngle = getHingeAngle();
   m_accumulatedAngle = btShortestAngleUpdate(m_accumulatedAngle, hingeAngle);
   return m_accumulatedAngle;
  }
 
-  public void setAccumulatedHingeAngle(float accAngle) {
+ public void setAccumulatedHingeAngle(float accAngle) {
   m_accumulatedAngle = accAngle;
  }
 

@@ -27,7 +27,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btContinuousConvexCollision extends btConvexCast  implements Serializable {
+public class btContinuousConvexCollision extends btConvexCast implements Serializable {
 
  static final int MAX_ITERATIONS = 64;
  final btSimplexSolverInterface m_simplexSolver;

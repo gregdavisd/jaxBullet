@@ -22,7 +22,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-abstract class btActivatingCollisionAlgorithm extends btCollisionAlgorithm  implements Serializable {
+abstract class btActivatingCollisionAlgorithm extends btCollisionAlgorithm implements Serializable {
 
  btActivatingCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci) {
   super(ci);

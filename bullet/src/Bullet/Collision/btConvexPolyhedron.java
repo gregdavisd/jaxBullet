@@ -17,7 +17,6 @@ subject to the following restrictions:
 ///And contact clipping based on work from Simon Hobbs
 package Bullet.Collision;
 
-
 import static Bullet.LinearMath.btScalar.FLT_MAX;
 import static Bullet.LinearMath.btScalar.btFabs;
 import static Bullet.LinearMath.btScalar.btSqrt;
@@ -31,7 +30,7 @@ import java.util.HashMap;
  *
  * @author Gregery Barton
  */
-public class btConvexPolyhedron  implements Serializable {
+public class btConvexPolyhedron implements Serializable {
 
  public final ArrayList<btVector3> m_vertices = new ArrayList<>(0);
  public final ArrayList<btFace> m_faces = new ArrayList<>(0);
@@ -71,8 +70,8 @@ public class btConvexPolyhedron  implements Serializable {
      m_uniqueEdges.add(edge);
     }
     if (edptr != null) {
-     assert(edptr.m_face0 >= 0);
-     assert(edptr.m_face1 < 0);
+     assert (edptr.m_face0 >= 0);
+     assert (edptr.m_face1 < 0);
      edptr.m_face1 = i;
     } else {
      btInternalEdge ed = new btInternalEdge();

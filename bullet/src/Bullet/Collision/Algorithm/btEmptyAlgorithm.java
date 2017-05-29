@@ -28,9 +28,9 @@ import java.util.ArrayList;
  *
  * @author Gregery Barton
  */
-public class btEmptyAlgorithm extends btCollisionAlgorithm  implements Serializable {
+public class btEmptyAlgorithm extends btCollisionAlgorithm implements Serializable {
 
-public btEmptyAlgorithm(btCollisionAlgorithmConstructionInfo ci) {
+ public btEmptyAlgorithm(btCollisionAlgorithmConstructionInfo ci) {
   super(ci);
  }
 
@@ -53,7 +53,7 @@ public btEmptyAlgorithm(btCollisionAlgorithmConstructionInfo ci) {
  public void destroy() {
  }
 
-public  static class CreateFunc extends btCollisionAlgorithmCreateFunc {
+ public static class CreateFunc extends btCollisionAlgorithmCreateFunc {
 
   @Override
   public btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,

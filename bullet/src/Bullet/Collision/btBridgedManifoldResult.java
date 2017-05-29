@@ -20,7 +20,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btBridgedManifoldResult extends btManifoldResult implements Serializable  {
+public class btBridgedManifoldResult extends btManifoldResult implements Serializable {
 
  final ContactResultCallback m_resultCallback;
 
@@ -31,9 +31,11 @@ public class btBridgedManifoldResult extends btManifoldResult implements Seriali
  }
 
  @Override
- public void addContactPoint(final btVector3 normalOnBInWorld, final btVector3 pointInWorld, float depth) {
+ public void addContactPoint(final btVector3 normalOnBInWorld, final btVector3 pointInWorld,
+  float depth) {
   boolean isSwapped = m_manifoldPtr.getBody0() != m_body0Wrap.getCollisionObject();
-  final btVector3 pointA = new btVector3(pointInWorld).add(new btVector3(normalOnBInWorld).scale(depth));
+  final btVector3 pointA = new btVector3(pointInWorld).add(new btVector3(normalOnBInWorld).scale(
+   depth));
   final btVector3 localA;
   final btVector3 localB;
   if (isSwapped) {

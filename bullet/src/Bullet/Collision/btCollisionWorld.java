@@ -644,8 +644,8 @@ public class btCollisionWorld implements Serializable {
         }
        }
       } else {
-        final btVector3 a = new btVector3();
-        final btVector3 b = new btVector3();
+       final btVector3 a = new btVector3();
+       final btVector3 b = new btVector3();
        for (i = 0; i < polyshape.getNumEdges(); i++) {
         polyshape.getEdge(i, a, b);
         final btVector3 wa = worldTransform.transform(a);

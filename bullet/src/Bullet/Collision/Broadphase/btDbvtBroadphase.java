@@ -390,8 +390,8 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
    {
     int new_size = overlappingPairArray.size() - invalidPair;
     while (overlappingPairArray.size() > new_size) {
-     assert(overlappingPairArray.get(overlappingPairArray.size()-1).m_pProxy0==null);
-     assert(overlappingPairArray.get(overlappingPairArray.size()-1).m_pProxy1==null);
+     assert (overlappingPairArray.get(overlappingPairArray.size() - 1).m_pProxy0 == null);
+     assert (overlappingPairArray.get(overlappingPairArray.size() - 1).m_pProxy1 == null);
      overlappingPairArray.remove(overlappingPairArray.size() - 1);
     }
    }

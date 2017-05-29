@@ -33,7 +33,7 @@ import static javax.vecmath.VecMath.DEBUG_BLOCKS;
  *
  * @author Gregery Barton
  */
-public class btCollisionDispatcher implements btDispatcher   , Serializable {
+public class btCollisionDispatcher implements btDispatcher, Serializable {
 
  int m_dispatcherFlags;
  final ArrayList<btPersistentManifold> m_manifoldsPtr = new ArrayList<>(0);
@@ -116,7 +116,7 @@ public class btCollisionDispatcher implements btDispatcher   , Serializable {
    for (int j = 0; j < MAX_BROADPHASE_COLLISION_TYPES; j++) {
     m_doubleDispatchContactPoints[i][j] = m_collisionConfiguration
      .getCollisionAlgorithmCreateFunc(i, j);
-    assert(m_doubleDispatchContactPoints[i][j] != null);
+    assert (m_doubleDispatchContactPoints[i][j] != null);
     m_doubleDispatchClosestPoints[i][j] = m_collisionConfiguration
      .getClosestPointsAlgorithmCreateFunc(i, j);
    }
@@ -164,7 +164,7 @@ public class btCollisionDispatcher implements btDispatcher   , Serializable {
   assert (m_manifoldsPtr.get(manifold.m_index1a) == manifold);
   clearManifold(manifold);
   int findIndex = manifold.m_index1a;
-  assert(findIndex < m_manifoldsPtr.size());
+  assert (findIndex < m_manifoldsPtr.size());
   Collections.swap(m_manifoldsPtr, findIndex, m_manifoldsPtr.size() - 1);
   assert (m_manifoldsPtr.get(findIndex).m_index1a == m_manifoldsPtr.size() - 1);
   m_manifoldsPtr.get(findIndex).m_index1a = findIndex;
@@ -195,8 +195,8 @@ public class btCollisionDispatcher implements btDispatcher   , Serializable {
 
  @Override
  public boolean needsCollision(btCollisionObject body0, btCollisionObject body1) {
-  assert(body0 != null);
-  assert(body1 != null);
+  assert (body0 != null);
+  assert (body1 != null);
   boolean needsCollision = true;
   if ((!body0.isActive()) && (!body1.isActive())) {
    needsCollision = false;

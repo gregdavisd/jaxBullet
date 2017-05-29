@@ -39,7 +39,8 @@ public class btTriangleIndexVertexArray extends btStridingMeshInterface {
  }
  //just to be backwards compatible
 
- public btTriangleIndexVertexArray(int numTriangles, int[] triangleIndexBase, int triangleIndexStride,
+ public btTriangleIndexVertexArray(int numTriangles, int[] triangleIndexBase,
+  int triangleIndexStride,
   int numVertices, float[] vertexBase, int vertexStride) {
   btIndexedMesh mesh = new btIndexedMesh();
   mesh.m_numTriangles = numTriangles;

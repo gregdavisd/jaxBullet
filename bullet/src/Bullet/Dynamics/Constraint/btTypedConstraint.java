@@ -11,10 +11,8 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Dynamics.Constraint;
-
 
 import Bullet.Dynamics.btJointFeedback;
 import Bullet.Dynamics.btRigidBody;
@@ -31,7 +29,7 @@ import java.util.ArrayList;
  *
  * @author Gregery Barton
  */
-public abstract class btTypedConstraint extends btTypedObject implements Serializable  {
+public abstract class btTypedConstraint extends btTypedObject implements Serializable {
 
  public static final int POINT2POINT_CONSTRAINT_TYPE = 3;
  public static final int HINGE_CONSTRAINT_TYPE = 4;
@@ -44,12 +42,10 @@ public abstract class btTypedConstraint extends btTypedObject implements Seriali
  public static final int FIXED_CONSTRAINT_TYPE = 11;
  public static final int D6_SPRING_2_CONSTRAINT_TYPE = 12;
  public static final int MAX_CONSTRAINT_TYPE = 13;
- 
-public static final int 	BT_CONSTRAINT_ERP=1;
-public static final int 	BT_CONSTRAINT_STOP_ERP=2;
-public static final int 	BT_CONSTRAINT_CFM=3;
-public static final int 	BT_CONSTRAINT_STOP_CFM=4;
-
+ public static final int BT_CONSTRAINT_ERP = 1;
+ public static final int BT_CONSTRAINT_STOP_ERP = 2;
+ public static final int BT_CONSTRAINT_CFM = 3;
+ public static final int BT_CONSTRAINT_STOP_CFM = 4;
  static final float DEFAULT_DEBUGDRAW_SIZE = 0.3f;
  static btRigidBody s_fixed = new btRigidBody(0, null, null);
 
@@ -57,6 +53,7 @@ public static final int 	BT_CONSTRAINT_STOP_CFM=4;
   s_fixed.setMassProps((0.f), new btVector3((0.f), (0.f), (0.f)));
   return s_fixed;
  }
+
  public static float btAdjustAngleToLimits(float angleInRadians, float angleLowerLimitInRadians,
   float angleUpperLimitInRadians) {
   if (angleLowerLimitInRadians >= angleUpperLimitInRadians) {
@@ -259,7 +256,7 @@ public static final int 	BT_CONSTRAINT_STOP_CFM=4;
  ///getAppliedImpulse is an estimated total applied impulse. 
  ///This feedback could be used to determine breaking constraints or playing sounds.
  public float getAppliedImpulse() {
-  assert(m_needsFeedback);
+  assert (m_needsFeedback);
   return m_appliedImpulse;
  }
 

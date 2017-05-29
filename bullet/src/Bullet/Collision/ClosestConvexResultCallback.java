@@ -11,9 +11,8 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Collision;
-
 
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
@@ -22,7 +21,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class ClosestConvexResultCallback extends ConvexResultCallback   implements Serializable  {
+public class ClosestConvexResultCallback extends ConvexResultCallback implements Serializable {
 
  public final btVector3 m_convexFromWorld = new btVector3();//used to calculate hitPointWorld from hitFraction
  public final btVector3 m_convexToWorld = new btVector3();
@@ -41,7 +40,7 @@ public class ClosestConvexResultCallback extends ConvexResultCallback   implemen
   boolean normalInWorldSpace
  ) {
 //caller already does the filter on the m_closestHitFraction
-  assert(convexResult.m_hitFraction <= m_closestHitFraction);
+  assert (convexResult.m_hitFraction <= m_closestHitFraction);
   m_closestHitFraction = convexResult.m_hitFraction;
   m_hitCollisionObject = convexResult.m_hitCollisionObject;
   if (normalInWorldSpace) {

@@ -32,28 +32,28 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btTranslationalLimitMotor  implements Serializable {
+public class btTranslationalLimitMotor implements Serializable {
 
  public final btVector3 m_lowerLimit = new btVector3();//!< the constraint lower limits
-public  final btVector3 m_upperLimit = new btVector3();//!< the constraint upper limits
-public  final btVector3 m_accumulatedImpulse = new btVector3();
+ public final btVector3 m_upperLimit = new btVector3();//!< the constraint upper limits
+ public final btVector3 m_accumulatedImpulse = new btVector3();
  //! Linear_Limit_parameters
  //!@{
-public  float m_limitSoftness;//!< Softness for linear limit
-public  float m_damping;//!< Damping for linear limit
-public  float m_restitution;//! Bounce parameter for linear limit
-public  final btVector3 m_normalCFM = new btVector3();//!< Constraint force mixing factor
-public  final btVector3 m_stopERP = new btVector3();//!< Error tolerance factor when joint is at limit
-public  final btVector3 m_stopCFM = new btVector3();//!< Constraint force mixing factor when joint is at limit
+ public float m_limitSoftness;//!< Softness for linear limit
+ public float m_damping;//!< Damping for linear limit
+ public float m_restitution;//! Bounce parameter for linear limit
+ public final btVector3 m_normalCFM = new btVector3();//!< Constraint force mixing factor
+ public final btVector3 m_stopERP = new btVector3();//!< Error tolerance factor when joint is at limit
+ public final btVector3 m_stopCFM = new btVector3();//!< Constraint force mixing factor when joint is at limit
  //!@}
-public  final boolean[] m_enableMotor = new boolean[3];
-public  final btVector3 m_targetVelocity = new btVector3();//!< target motor velocity
-public  final btVector3 m_maxMotorForce = new btVector3();//!< max force on motor
-public  final btVector3 m_currentLimitError = new btVector3();//!  How much is violated this limit
-public  final btVector3 m_currentLinearDiff = new btVector3();//!  Current relative offset of constraint frames
-public  final int[] m_currentLimit = new int[3];//!< 0=free, 1=at lower limit, 2=at upper limit
+ public final boolean[] m_enableMotor = new boolean[3];
+ public final btVector3 m_targetVelocity = new btVector3();//!< target motor velocity
+ public final btVector3 m_maxMotorForce = new btVector3();//!< max force on motor
+ public final btVector3 m_currentLimitError = new btVector3();//!  How much is violated this limit
+ public final btVector3 m_currentLinearDiff = new btVector3();//!  Current relative offset of constraint frames
+ public final int[] m_currentLimit = new int[3];//!< 0=free, 1=at lower limit, 2=at upper limit
 
-public  btTranslationalLimitMotor() {
+ public btTranslationalLimitMotor() {
   m_lowerLimit.set(0.f, 0.f, 0.f);
   m_upperLimit.set(0.f, 0.f, 0.f);
   m_accumulatedImpulse.set(0.f, 0.f, 0.f);
@@ -65,7 +65,7 @@ public  btTranslationalLimitMotor() {
   m_restitution = (0.5f);
  }
 
-public  btTranslationalLimitMotor(btTranslationalLimitMotor other) {
+ public btTranslationalLimitMotor(btTranslationalLimitMotor other) {
   m_lowerLimit.set(other.m_lowerLimit);
   m_upperLimit.set(other.m_upperLimit);
   m_accumulatedImpulse.set(other.m_accumulatedImpulse);
@@ -89,15 +89,15 @@ public  btTranslationalLimitMotor(btTranslationalLimitMotor other) {
     - limited means upper > lower
     - limitIndex: first 3 are linear, next 3 are angular
   */
-public  boolean isLimited(int limitIndex) {
+ public boolean isLimited(int limitIndex) {
   return (m_upperLimit.getElement(limitIndex) >= m_lowerLimit.getElement(limitIndex));
  }
 
-public  boolean needApplyForce(int limitIndex) {
+ public boolean needApplyForce(int limitIndex) {
   return !(m_currentLimit[limitIndex] == 0 && !m_enableMotor[limitIndex]);
  }
 
-public  int testLimitValue(final int limitIndex, final float test_value) {
+ public int testLimitValue(final int limitIndex, final float test_value) {
   float loLimit = m_lowerLimit.getElement(limitIndex);
   float hiLimit = m_upperLimit.getElement(limitIndex);
   if (loLimit > hiLimit) {
@@ -119,7 +119,7 @@ public  int testLimitValue(final int limitIndex, final float test_value) {
   return 0;
  }
 
-public  float solveLinearAxis(
+ public float solveLinearAxis(
   float timeStep,
   float jacDiagABInv,
   btRigidBody body1, final btVector3 pointInA,

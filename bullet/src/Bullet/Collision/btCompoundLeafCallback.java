@@ -12,7 +12,7 @@ subject to the following restrictions:
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
 
-*/
+ */
 package Bullet.Collision;
 
 import Bullet.Collision.Algorithm.btCollisionAlgorithm;
@@ -34,7 +34,7 @@ import java.util.List;
  *
  * @author Gregery Barton
  */
-public class btCompoundLeafCallback extends btDbvt.ICollide  implements Serializable {
+public class btCompoundLeafCallback extends btDbvt.ICollide implements Serializable {
 
  public static btShapePairCallback gCompoundChildShapePairCallback;
  final btCollisionObjectWrapper m_compoundColObjWrap;
@@ -59,9 +59,9 @@ public class btCompoundLeafCallback extends btDbvt.ICollide  implements Serializ
  }
 
  public void processChildShape(btCollisionShape childShape, int index) {
-  assert(index >= 0);
+  assert (index >= 0);
   btCompoundShape compoundShape = (btCompoundShape) (m_compoundColObjWrap.getCollisionShape());
-  assert(index < compoundShape.getNumChildShapes());
+  assert (index < compoundShape.getNumChildShapes());
   //backup
   final btTransform orgTrans = m_compoundColObjWrap.getWorldTransform();
   final btTransform childTrans = compoundShape.getChildTransform(index);

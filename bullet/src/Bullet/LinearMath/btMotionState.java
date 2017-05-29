@@ -20,7 +20,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public interface btMotionState  extends Serializable {
+public interface btMotionState extends Serializable {
 
  void getWorldTransform(final btTransform worldTrans);
 

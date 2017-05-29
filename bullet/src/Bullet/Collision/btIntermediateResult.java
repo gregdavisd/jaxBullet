@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision;
 
 import Bullet.Collision.Algorithm.Detector.btDiscreteCollisionDetectorInterface;
@@ -23,7 +22,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-class btIntermediateResult extends btDiscreteCollisionDetectorInterface.Result  implements Serializable {
+class btIntermediateResult extends btDiscreteCollisionDetectorInterface.Result implements
+ Serializable {
 
  btIntermediateResult() {
   m_hasResult = false;
@@ -34,7 +34,7 @@ class btIntermediateResult extends btDiscreteCollisionDetectorInterface.Result  
  boolean m_hasResult;
 
  @Override
-public  void setShapeIdentifiersA(int partId0, int index0) {
+ public void setShapeIdentifiersA(int partId0, int index0) {
  }
 
  @Override
@@ -42,7 +42,8 @@ public  void setShapeIdentifiersA(int partId0, int index0) {
  }
 
  @Override
-public  void addContactPoint(final btVector3 normalOnBInWorld, final btVector3 pointInWorld, float depth) {
+ public void addContactPoint(final btVector3 normalOnBInWorld, final btVector3 pointInWorld,
+  float depth) {
   m_normalOnBInWorld.set(normalOnBInWorld);
   m_pointInWorld.set(pointInWorld);
   m_depth = depth;

@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision.Shape;
 
 import static Bullet.Collision.Broadphase.BroadphaseNativeTypes.CONVEX_POINT_CLOUD_SHAPE_PROXYTYPE;
@@ -27,7 +26,8 @@ import java.util.Arrays;
  *
  * @author Gregery Barton
  */
-public class btConvexPointCloudShape extends btPolyhedralConvexAabbCachingShape implements Serializable  {
+public class btConvexPointCloudShape extends btPolyhedralConvexAabbCachingShape implements
+ Serializable {
 
  btVector3[] m_unscaledPoints;
  int m_numPoints;
@@ -158,12 +158,12 @@ public class btConvexPointCloudShape extends btPolyhedralConvexAabbCachingShape 
 
  @Override
  public void getEdge(int i, final btVector3 pa, final btVector3 pb) {
-  assert(false);
+  assert (false);
  }
 
  @Override
  public void getVertex(int i, final btVector3 vtx) {
-  vtx.set(m_unscaledPoints[i]).mul( m_localScaling);
+  vtx.set(m_unscaledPoints[i]).mul(m_localScaling);
  }
 
  @Override
@@ -173,12 +173,12 @@ public class btConvexPointCloudShape extends btPolyhedralConvexAabbCachingShape 
 
  @Override
  public void getPlane(final btVector3 planeNormal, final btVector3 planeSupport, int i) {
-  assert(false);
+  assert (false);
  }
 
  @Override
  public boolean isInside(final btVector3 pt, float tolerance) {
-  assert(false);
+  assert (false);
   return false;
  }
 

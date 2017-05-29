@@ -611,8 +611,7 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
     sortMaxDown(axis, emax, dispatcher, true);
    }
   }
-  if (DEBUG_BLOCKS)
-  {
+  if (DEBUG_BLOCKS) {
    verify_edges();
    verify_edges_sorted();
   }
@@ -768,7 +767,7 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
    for (short axis = 0; axis < 3; axis++) {
     if (pHandleB.m_maxEdges[axis] < pHandleA.m_minEdges[axis] ||
      pHandleA.m_maxEdges[axis] < pHandleB.m_minEdges[axis]) {
-     assert(false);
+     assert (false);
     }
    }
   }

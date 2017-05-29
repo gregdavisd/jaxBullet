@@ -11,7 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Dynamics.Constraint;
 
 import Bullet.LinearMath.btVector3;
@@ -22,7 +22,7 @@ import javax.vecmath.FloatSmartPointer;
  *
  * @author Gregery Barton
  */
-public class btConstraintInfo2 implements Serializable  {
+public class btConstraintInfo2 implements Serializable {
 
  // integrator parameters: frames per second (1/stepsize), default error
  // reduction parameter (0..1).
@@ -37,7 +37,7 @@ public class btConstraintInfo2 implements Serializable  {
  public btVector3[] m_J2linearAxis;
  public btVector3[] m_J2angularAxis;
  // elements to jump from one row to the next in J's
- public final int rowskip=1;
+ public final int rowskip = 1;
  // right hand sides of the equation J*v = c + cfm * lambda. cfm is the
  // "constraint force mixing" vector. c is set to zero on entry, cfm is
  // set to a constant value (typically very small or zero) value on entry.

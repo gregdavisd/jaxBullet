@@ -10,11 +10,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
-
-
-
+ */
 package Bullet.LinearMath;
 
 import static Bullet.Extras.btMinMax.btMax;
@@ -26,7 +22,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btAabbUtil2  implements Serializable {
+public class btAabbUtil2 implements Serializable {
 
  /**
   *
@@ -90,7 +86,7 @@ public class btAabbUtil2  implements Serializable {
   final btVector3 center = t.getOrigin();
 //  final btVector3 extent = halfExtentsWithMargin.dot3(abs_b.getRow(0), abs_b.getRow(1), abs_b
 //   .getRow(2));
-  final btVector3 extent =abs_b.transform(halfExtentsWithMargin);
+  final btVector3 extent = abs_b.transform(halfExtentsWithMargin);
   aabbMinOut.set(center).sub(extent);
   aabbMaxOut.set(center).add(extent);
  }
@@ -106,9 +102,9 @@ public class btAabbUtil2  implements Serializable {
   */
  public static void btTransformAabb(final btVector3 localAabbMin, final btVector3 localAabbMax,
   float margin, final btTransform trans, final btVector3 aabbMinOut, final btVector3 aabbMaxOut) {
-  assert(localAabbMin.getX() <= localAabbMax.getX());
-  assert(localAabbMin.getY() <= localAabbMax.getY());
-  assert(localAabbMin.getZ() <= localAabbMax.getZ());
+  assert (localAabbMin.getX() <= localAabbMax.getX());
+  assert (localAabbMin.getY() <= localAabbMax.getY());
+  assert (localAabbMin.getZ() <= localAabbMax.getZ());
   final btVector3 localHalfExtents = new btVector3(localAabbMax).sub(localAabbMin).scale(0.5f);
   localHalfExtents.add(new btVector3(margin, margin, margin));
   final btVector3 localCenter = new btVector3(localAabbMax).add(localAabbMin).scale(0.5f);

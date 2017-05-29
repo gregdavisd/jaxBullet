@@ -34,7 +34,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btConvexTriangleCallback implements btTriangleCallback  , Serializable {
+public class btConvexTriangleCallback implements btTriangleCallback, Serializable {
 
  public final btVector3 m_aabbMin = new btVector3();
  public final btVector3 m_aabbMax = new btVector3();
@@ -137,7 +137,7 @@ public class btConvexTriangleCallback implements btTriangleCallback  , Serializa
   m_dispatcher.clearManifold(m_manifoldPtr);
  }
 
-public  btVector3 getAabbMin() {
+ public btVector3 getAabbMin() {
   return new btVector3(m_aabbMin);
  }
 

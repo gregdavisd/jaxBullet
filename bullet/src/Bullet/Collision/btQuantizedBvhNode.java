@@ -13,14 +13,13 @@ subject to the following restrictions:
  */
 package Bullet.Collision;
 
-
 import java.io.Serializable;
 
 /**
  *
  * @author Gregery Barton
  */
-public class btQuantizedBvhNode implements Cloneable , Serializable  {
+public class btQuantizedBvhNode implements Cloneable, Serializable {
 
 //http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vclang/html/vclrf__m128.asp
 //Note: currently we have 16 bytes per quantized node
@@ -40,12 +39,12 @@ public class btQuantizedBvhNode implements Cloneable , Serializable  {
  }
 
  int getEscapeIndex() {
-  assert(!isLeafNode());
+  assert (!isLeafNode());
   return -m_escapeIndexOrTriangleIndex;
  }
 
  int getTriangleIndex() {
-  assert(isLeafNode());
+  assert (isLeafNode());
   int x = 0;
   int y = (~(x)) << (31 - MAX_NUM_PARTS_IN_BITS);
   // Get only the lower bits where the triangle index is stored
@@ -53,7 +52,7 @@ public class btQuantizedBvhNode implements Cloneable , Serializable  {
  }
 
  int getPartId() {
-  assert(isLeafNode());
+  assert (isLeafNode());
   // Get only the highest bits where the part index is stored
   return (m_escapeIndexOrTriangleIndex >>> (31 - MAX_NUM_PARTS_IN_BITS));
  }

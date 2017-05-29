@@ -21,7 +21,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btDbvtTreeCollider extends btDbvt.ICollide  implements Serializable {
+public class btDbvtTreeCollider extends btDbvt.ICollide implements Serializable {
 
  btDbvtBroadphase pbp;
  btDbvtProxy proxy;

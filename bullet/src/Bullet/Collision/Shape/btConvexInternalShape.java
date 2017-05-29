@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision.Shape;
 
 import static Bullet.LinearMath.btScalar.SIMD_EPSILON;
@@ -24,7 +23,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public abstract class btConvexInternalShape extends btConvexShape implements Serializable  {
+public abstract class btConvexInternalShape extends btConvexShape implements Serializable {
+
  public static final float CONVEX_DISTANCE_MARGIN = 0.04f;
  //local scaling. collisionMargin is not scaled !
  final btVector3 m_localScaling;
@@ -145,6 +145,6 @@ public abstract class btConvexInternalShape extends btConvexShape implements Ser
 
  @Override
  public void getPreferredPenetrationDirection(int index, final btVector3 penetrationVector) {
-  assert(false);
+  assert (false);
  }
 };

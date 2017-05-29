@@ -11,7 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Collision.Shape;
 /// The btCompoundShape allows to store multiple other btCollisionShapes
 /// This allows for moving concave collision objects. This is more general then the static concave btBvhTriangleMeshShape.
@@ -35,7 +35,7 @@ import static java.util.Collections.swap;
  *
  * @author Gregery Barton
  */
-public class btCompoundShape extends btCollisionShape  implements Serializable {
+public class btCompoundShape extends btCollisionShape implements Serializable {
 
  final ArrayList<btCompoundShapeChild> m_children;
  final btVector3 m_localAabbMin = new btVector3();
@@ -124,7 +124,7 @@ public class btCompoundShape extends btCollisionShape  implements Serializable {
 
  public void removeChildShapeByIndex(int childShapeIndex) {
   m_updateRevision++;
-  assert(childShapeIndex >= 0 && childShapeIndex < m_children.size());
+  assert (childShapeIndex >= 0 && childShapeIndex < m_children.size());
   if (m_dynamicAabbTree != null) {
    m_dynamicAabbTree.remove(m_children.get(childShapeIndex).m_node);
   }
@@ -132,7 +132,7 @@ public class btCompoundShape extends btCollisionShape  implements Serializable {
   if (m_dynamicAabbTree != null) {
    btDbvtNode node = m_children.get(childShapeIndex).m_node;
    if (node != null) {
-    node.dataAsInt( childShapeIndex);
+    node.dataAsInt(childShapeIndex);
    }
   }
   m_children.remove(m_children.size() - 1);
@@ -321,11 +321,11 @@ public class btCompoundShape extends btCollisionShape  implements Serializable {
   final btVector3 center = new btVector3();
   int k;
   for (k = 0; k < n; k++) {
-   assert(masses[k] > 0);
+   assert (masses[k] > 0);
    center.add(m_children.get(k).m_transform.getOrigin().scale(masses[k]));
    totalMass += masses[k];
   }
-  assert(totalMass > 0);
+  assert (totalMass > 0);
   center.scale(1.0f / totalMass);
   principal.setOrigin(center);
   final btMatrix3x3 tensor = new btMatrix3x3();

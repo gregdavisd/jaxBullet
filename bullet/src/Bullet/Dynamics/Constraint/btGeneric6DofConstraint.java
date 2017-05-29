@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 /// 2009 March: btGeneric6DofConstraint refactored by Roman Ponomarev
 /// Added support for generic constraint solver through getInfo1/getInfo2 methods
 
@@ -21,8 +20,7 @@ subject to the following restrictions:
 btGeneric6DofConstraint Refactored by Francisco Le?n
 email: projectileman@yahoo.com
 http://gimpact.sf.net
-*/
-
+ */
 package Bullet.Dynamics.Constraint;
 
 /**
@@ -61,7 +59,7 @@ import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
 
-public class btGeneric6DofConstraint extends btTypedConstraint  implements Serializable {
+public class btGeneric6DofConstraint extends btTypedConstraint implements Serializable {
 
  public static final int BT_6DOF_FLAGS_CFM_NORM = 1;
  public static final int BT_6DOF_FLAGS_CFM_STOP = 2;
@@ -204,7 +202,7 @@ public class btGeneric6DofConstraint extends btTypedConstraint  implements Seria
  protected void calculateLinearInfo() {
   m_calculatedLinearDiff.set(m_calculatedTransformB.getOrigin()).sub(m_calculatedTransformA
    .getOrigin());
-  m_calculatedTransformA.getBasis().invert().transform(m_calculatedLinearDiff );
+  m_calculatedTransformA.getBasis().invert().transform(m_calculatedLinearDiff);
   for (int i = 0; i < 3; i++) {
    m_linearLimits.m_currentLinearDiff.setElement(i, m_calculatedLinearDiff.getElement(i));
    m_linearLimits.testLimitValue(i, m_calculatedLinearDiff.getElement(i));
@@ -279,12 +277,12 @@ public class btGeneric6DofConstraint extends btTypedConstraint  implements Seria
  static final boolean D6_USE_FRAME_OFFSET = true;
 
  public btGeneric6DofConstraint(btRigidBody rbA, btRigidBody rbB, final btTransform frameInA,
-  final btTransform frameInB, boolean useLinearReferenceFrameA) 
- {
-  this(D6_CONSTRAINT_TYPE,rbA,rbB,frameInA,frameInB,useLinearReferenceFrameA);
+  final btTransform frameInB, boolean useLinearReferenceFrameA) {
+  this(D6_CONSTRAINT_TYPE, rbA, rbB, frameInA, frameInB, useLinearReferenceFrameA);
  }
-  
- public btGeneric6DofConstraint(int type,btRigidBody rbA, btRigidBody rbB, final btTransform frameInA,
+
+ public btGeneric6DofConstraint(int type, btRigidBody rbA, btRigidBody rbB,
+  final btTransform frameInA,
   final btTransform frameInB, boolean useLinearReferenceFrameA) {
   super(type, rbA, rbB);
   m_frameInA.set(frameInA);
@@ -295,10 +293,12 @@ public class btGeneric6DofConstraint extends btTypedConstraint  implements Seria
   m_useSolveConstraintObsolete = D6_USE_OBSOLETE_METHOD;
   calculateTransforms();
  }
+
  public btGeneric6DofConstraint(btRigidBody rbB, final btTransform frameInB,
   boolean useLinearReferenceFrameB) {
-  this(D6_CONSTRAINT_TYPE,rbB,frameInB,useLinearReferenceFrameB);
+  this(D6_CONSTRAINT_TYPE, rbB, frameInB, useLinearReferenceFrameB);
  }
+
  public btGeneric6DofConstraint(int type, btRigidBody rbB, final btTransform frameInB,
   boolean useLinearReferenceFrameB) {
   super(type, getFixedBody(), rbB);
@@ -457,7 +457,7 @@ public class btGeneric6DofConstraint extends btTypedConstraint  implements Seria
 
  @Override
  public void getInfo2(btConstraintInfo2 info) {
-  assert(!m_useSolveConstraintObsolete);
+  assert (!m_useSolveConstraintObsolete);
   final btTransform transA = m_rbA.getCenterOfMassTransformPtr();
   final btTransform transB = m_rbB.getCenterOfMassTransformPtr();
   final btVector3 linVelA = m_rbA.getLinearVelocityPtr();
@@ -476,7 +476,7 @@ public class btGeneric6DofConstraint extends btTypedConstraint  implements Seria
  public void getInfo2NonVirtual(btConstraintInfo2 info, final btTransform transA,
   final btTransform transB, final btVector3 linVelA, final btVector3 linVelB,
   final btVector3 angVelA, final btVector3 angVelB) {
-  assert(!m_useSolveConstraintObsolete);
+  assert (!m_useSolveConstraintObsolete);
   //prepare constraint
   calculateTransforms(transA, transB);
   int i;
@@ -579,7 +579,7 @@ public class btGeneric6DofConstraint extends btTypedConstraint  implements Seria
   }
  }
 
-final  public void getAngularUpperLimit(final btVector3 angularUpper) {
+ final public void getAngularUpperLimit(final btVector3 angularUpper) {
   for (int i = 0; i < 3; i++) {
    angularUpper.setElement(i, m_angularLimits[i].m_hiLimit);
   }
@@ -649,8 +649,8 @@ final  public void getAngularUpperLimit(final btVector3 angularUpper) {
   btConstraintInfo2 info, int row, final btVector3 ax1, int rotational, int rotAllowed) {
   int srow = row * info.rowskip;
   boolean powered = limot.m_enableMotor;
-  int limit = limot.m_currentLimit ;
-  if (powered || limit!=0) {   // if the joint is powered, or has joint limits, add in the extra row
+  int limit = limot.m_currentLimit;
+  if (powered || limit != 0) {   // if the joint is powered, or has joint limits, add in the extra row
    btVector3[] J1 = rotational != 0 ? info.m_J1angularAxis : info.m_J1linearAxis;
    btVector3[] J2 = rotational != 0 ? info.m_J2angularAxis : info.m_J2linearAxis;
    J1[srow].set(ax1);
@@ -684,7 +684,6 @@ final  public void getAngularUpperLimit(final btVector3 angularUpper) {
       tmpA.scale(m_factA);
       tmpB.scale(m_factB);
      }
- 
      info.m_J1angularAxis[srow].set(tmpA);
      info.m_J2angularAxis[srow].set(tmpB).negate();
     } else {
@@ -699,13 +698,13 @@ final  public void getAngularUpperLimit(final btVector3 angularUpper) {
    }
    // if we're limited low and high simultaneously, the joint motor is
    // ineffective
-   if (limit!=0 && (limot.m_loLimit == limot.m_hiLimit)) {
+   if (limit != 0 && (limot.m_loLimit == limot.m_hiLimit)) {
     powered = false;
    }
    info.m_constraintError[srow].set(0.f);
    if (powered) {
     info.cfm[srow].set(limot.m_normalCFM);
-    if (0==limit) {
+    if (0 == limit) {
      float tag_vel = rotational != 0 ? limot.m_targetVelocity : -limot.m_targetVelocity;
      float mot_fact = getMotorFactor(limot.m_currentPosition,
       limot.m_loLimit,
@@ -717,7 +716,7 @@ final  public void getAngularUpperLimit(final btVector3 angularUpper) {
      info.m_upperLimit[srow].set(limot.m_maxMotorForce);
     }
    }
-   if (limit!=0) {
+   if (limit != 0) {
     float k = info.fps * limot.m_stopERP;
     if (0 == rotational) {
      info.m_constraintError[srow].plusEquals(k * limot.m_currentLimitError);
@@ -729,7 +728,7 @@ final  public void getAngularUpperLimit(final btVector3 angularUpper) {
      info.m_lowerLimit[srow].set(-SIMD_INFINITY);
      info.m_upperLimit[srow].set(SIMD_INFINITY);
     } else {
-     if (limit==1) {
+     if (limit == 1) {
       info.m_lowerLimit[srow].set(0);
       info.m_upperLimit[srow].set(SIMD_INFINITY);
      } else {
@@ -753,7 +752,7 @@ final  public void getAngularUpperLimit(final btVector3 angularUpper) {
       }
       // only apply bounce if the velocity is incoming, and if the
       // resulting c[] exceeds what we already have.
-      if (limit==1) {
+      if (limit == 1) {
        if (vel < 0) {
         float newc = -limot.m_bounce * vel;
         if (newc > info.m_constraintError[srow].get()) {
@@ -811,7 +810,7 @@ final  public void getAngularUpperLimit(final btVector3 angularUpper) {
      m_flags |= BT_6DOF_FLAGS_CFM_NORM << (axis * BT_6DOF_FLAGS_AXIS_SHIFT);
      break;
     default:
-     assert(false);
+     assert (false);
    }
   } else if ((axis >= 3) && (axis < 6)) {
    switch (num) {
@@ -828,10 +827,10 @@ final  public void getAngularUpperLimit(final btVector3 angularUpper) {
      m_flags |= BT_6DOF_FLAGS_CFM_NORM << (axis * BT_6DOF_FLAGS_AXIS_SHIFT);
      break;
     default:
-     assert(false);
+     assert (false);
    }
   } else {
-   assert(false);
+   assert (false);
   }
  }
 
@@ -842,39 +841,39 @@ final  public void getAngularUpperLimit(final btVector3 angularUpper) {
   if ((axis >= 0) && (axis < 3)) {
    switch (num) {
     case BT_CONSTRAINT_STOP_ERP:
-     assert((m_flags & (BT_6DOF_FLAGS_ERP_STOP << (axis * BT_6DOF_FLAGS_AXIS_SHIFT))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_ERP_STOP << (axis * BT_6DOF_FLAGS_AXIS_SHIFT))) != 0);
      retVal = m_linearLimits.m_stopERP.getElement(axis);
      break;
     case BT_CONSTRAINT_STOP_CFM:
-     assert((m_flags & (BT_6DOF_FLAGS_CFM_STOP << (axis * BT_6DOF_FLAGS_AXIS_SHIFT))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_CFM_STOP << (axis * BT_6DOF_FLAGS_AXIS_SHIFT))) != 0);
      retVal = m_linearLimits.m_stopCFM.getElement(axis);
      break;
     case BT_CONSTRAINT_CFM:
-     assert((m_flags & (BT_6DOF_FLAGS_CFM_NORM << (axis * BT_6DOF_FLAGS_AXIS_SHIFT))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_CFM_NORM << (axis * BT_6DOF_FLAGS_AXIS_SHIFT))) != 0);
      retVal = m_linearLimits.m_normalCFM.getElement(axis);
      break;
     default:
-     assert(false);
+     assert (false);
    }
   } else if ((axis >= 3) && (axis < 6)) {
    switch (num) {
     case BT_CONSTRAINT_STOP_ERP:
-     assert((m_flags & (BT_6DOF_FLAGS_ERP_STOP << (axis * BT_6DOF_FLAGS_AXIS_SHIFT))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_ERP_STOP << (axis * BT_6DOF_FLAGS_AXIS_SHIFT))) != 0);
      retVal = m_angularLimits[axis - 3].m_stopERP;
      break;
     case BT_CONSTRAINT_STOP_CFM:
-     assert((m_flags & (BT_6DOF_FLAGS_CFM_STOP << (axis * BT_6DOF_FLAGS_AXIS_SHIFT))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_CFM_STOP << (axis * BT_6DOF_FLAGS_AXIS_SHIFT))) != 0);
      retVal = m_angularLimits[axis - 3].m_stopCFM;
      break;
     case BT_CONSTRAINT_CFM:
-     assert((m_flags & (BT_6DOF_FLAGS_CFM_NORM << (axis * BT_6DOF_FLAGS_AXIS_SHIFT))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_CFM_NORM << (axis * BT_6DOF_FLAGS_AXIS_SHIFT))) != 0);
      retVal = m_angularLimits[axis - 3].m_normalCFM;
      break;
     default:
-     assert(false);
+     assert (false);
    }
   } else {
-   assert(false);
+   assert (false);
   }
   return retVal;
  }

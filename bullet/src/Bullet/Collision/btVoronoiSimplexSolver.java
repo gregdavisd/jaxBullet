@@ -11,10 +11,8 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision;
-
 
 import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import static Bullet.LinearMath.btScalar.FLT_MAX;
@@ -27,7 +25,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btVoronoiSimplexSolver implements btSimplexSolverInterface , Serializable  {
+public class btVoronoiSimplexSolver implements btSimplexSolverInterface, Serializable {
 
  static final int VORONOI_SIMPLEX_MAX_VERTS = 5;
  static final float VORONOI_DEFAULT_EQUAL_VERTEX_THRESHOLD = 0.0001f;
@@ -57,7 +55,7 @@ public class btVoronoiSimplexSolver implements btSimplexSolverInterface , Serial
  }
 
  void removeVertex(int index) {
-  assert(m_numVertices > 0);
+  assert (m_numVertices > 0);
   m_numVertices--;
   m_simplexVectorW[index].set(m_simplexVectorW[m_numVertices]);
   m_simplexPointsP[index].set(m_simplexPointsP[m_numVertices]);

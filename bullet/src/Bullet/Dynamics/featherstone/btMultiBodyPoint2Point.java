@@ -18,5 +18,4 @@ package Bullet.Dynamics.featherstone;
  * @author Gregery Barton
  */
 public class btMultiBodyPoint2Point {
- 
 }

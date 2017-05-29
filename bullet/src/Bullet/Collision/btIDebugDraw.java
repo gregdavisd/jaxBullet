@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision;
 
 import static Bullet.LinearMath.btScalar.SIMD_2_PI;
@@ -261,8 +260,10 @@ public abstract class btIDebugDraw implements Serializable {
   float _maxTh = maxTh;
   float _minPs = minPs;
   float _maxPs = maxPs;
-  btVector3[] vA = new btVector3[74];init(vA);
-  btVector3[] vB = new btVector3[74];init(vB);
+  btVector3[] vA = new btVector3[74];
+  init(vA);
+  btVector3[] vB = new btVector3[74];
+  init(vB);
   btVector3[] pT;
   final btVector3 npole = new btVector3(center).add(new btVector3(up).scale(radius));
   final btVector3 spole = new btVector3(center).sub(new btVector3(up).scale(radius));
@@ -312,7 +313,7 @@ public abstract class btIDebugDraw implements Serializable {
     float psi = _minPs + (float) (j) * step_v;
     float sps = btSin(psi);
     float cps = btCos(psi);
-    vB[j] .set(center).add(new btVector3(iv).scale(cth * cps)).add(new btVector3(jv)
+    vB[j].set(center).add(new btVector3(iv).scale(cth * cps)).add(new btVector3(jv)
      .scale(cth * sps)).add(new btVector3(kv).scale(sth));
     if (i != 0) {
      drawLine(vA[j], vB[j], color);
@@ -385,7 +386,7 @@ public abstract class btIDebugDraw implements Serializable {
   drawLine(trans.transform(new btVector3(bbMin.x, bbMax.y, bbMax.z)), trans.transform(new btVector3(
    bbMin.x, bbMin.y, bbMax.z)), color);
  }
-                                   
+
  public void drawCapsule(float radius, float halfHeight, int upAxis, final btTransform transform,
   final btVector3 color) {
   int stepDegrees = 30;

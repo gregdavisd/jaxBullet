@@ -31,7 +31,6 @@ import java.io.Serializable;
 public class btTriangleMeshShape extends btConcaveShape implements Serializable {
 
  private static final long serialVersionUID = -7257815420118793857L;
-
  final btVector3 m_localAabbMin;
  final btVector3 m_localAabbMax;
  final btStridingMeshInterface m_meshInterface;

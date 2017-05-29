@@ -22,7 +22,7 @@ import java.util.ArrayList;
  *
  * @author Gregery Barton
  */
-public class btNullPairCache extends btOverlappingPairCache implements Serializable {
+public class btNullPairCache implements btOverlappingPairCache , Serializable {
 
  final ArrayList<btBroadphasePair> m_overlappingPairArray = new ArrayList<>(0);
 

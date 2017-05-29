@@ -21,7 +21,7 @@ import javax.vecmath.Tuple4i;
  *
  * @author Gregery Barton
  */
-public class Int4 extends Tuple4i<Int4>  implements Serializable {
+public class Int4 extends Tuple4i<Int4> implements Serializable {
 
  public Int4(int x, int y, int z, int w) {
   super(x, y, z, w);

@@ -34,9 +34,10 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btPersistentManifold extends btTypedObject  implements Serializable {
+public class btPersistentManifold extends btTypedObject implements Serializable {
 
  public static final int MANIFOLD_CACHE_SIZE = 4;
+ private static final long serialVersionUID = 1L;
  final btManifoldPoint[] m_pointCache = new btManifoldPoint[MANIFOLD_CACHE_SIZE];
  /// this two body pointers can point to the physics rigidbody class.
  public btCollisionObject m_body0;
@@ -130,8 +131,8 @@ public class btPersistentManifold extends btTypedObject  implements Serializable
  btPersistentManifold(btCollisionObject body0, btCollisionObject body1, int a,
   float contactBreakingThreshold, float contactProcessingThreshold) {
   this();
-  assert(body0 != null);
-  assert(body1 != null);
+  assert (body0 != null);
+  assert (body1 != null);
   m_body0 = body0;
   m_body1 = body1;
   m_cachedPoints = 0;
@@ -148,8 +149,8 @@ public class btPersistentManifold extends btTypedObject  implements Serializable
  }
 
  public void setBodies(btCollisionObject body0, btCollisionObject body1) {
-  assert(body0 != null);
-  assert(body1 != null);
+  assert (body0 != null);
+  assert (body1 != null);
   m_body0 = body0;
   m_body1 = body1;
  }
@@ -174,7 +175,7 @@ public class btPersistentManifold extends btTypedObject  implements Serializable
  }
 
  public btManifoldPoint getContactPoint(int index) {
-  assert(index < m_cachedPoints);
+  assert (index < m_cachedPoints);
   return m_pointCache[index];
  }
 
@@ -217,7 +218,7 @@ public class btPersistentManifold extends btTypedObject  implements Serializable
 
  public int addManifoldPoint(btManifoldPoint newPoint, boolean isPredictive) {
   if (!isPredictive) {
-   assert(validContactDistance(newPoint));
+   assert (validContactDistance(newPoint));
   }
   int insertIndex = getNumContacts();
   if (insertIndex == MANIFOLD_CACHE_SIZE) {
@@ -234,7 +235,7 @@ public class btPersistentManifold extends btTypedObject  implements Serializable
   if (insertIndex < 0) {
    insertIndex = 0;
   }
-  assert(m_pointCache[insertIndex].m_userPersistentData == null);
+  assert (m_pointCache[insertIndex].m_userPersistentData == null);
   m_pointCache[insertIndex] = newPoint;
   return insertIndex;
  }
@@ -253,17 +254,17 @@ public class btPersistentManifold extends btTypedObject  implements Serializable
    m_pointCache[lastUsedIndex].m_appliedImpulseLateral2 = 0.f;
    m_pointCache[lastUsedIndex].m_lifeTime = 0;
   }
-  assert(m_pointCache[lastUsedIndex].m_userPersistentData == null);
+  assert (m_pointCache[lastUsedIndex].m_userPersistentData == null);
   m_cachedPoints--;
  }
 
  public void replaceContactPoint(btManifoldPoint newPoint, int insertIndex) {
-  assert(validContactDistance(newPoint));
+  assert (validContactDistance(newPoint));
   int lifeTime = m_pointCache[insertIndex].getLifeTime();
   float appliedImpulse = m_pointCache[insertIndex].m_appliedImpulse;
   float appliedLateralImpulse1 = m_pointCache[insertIndex].m_appliedImpulseLateral1;
   float appliedLateralImpulse2 = m_pointCache[insertIndex].m_appliedImpulseLateral2;
-  assert(lifeTime >= 0);
+  assert (lifeTime >= 0);
   Object cache = m_pointCache[insertIndex].m_userPersistentData;
   m_pointCache[insertIndex] = newPoint;
   m_pointCache[insertIndex].m_userPersistentData = cache;

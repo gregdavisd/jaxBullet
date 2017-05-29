@@ -11,14 +11,13 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision;
 
 import Bullet.Collision.Algorithm.Detector.btGjkPairDetector;
 import Bullet.Collision.Shape.btConvexShape;
 import static Bullet.Collision.Shape.btConvexShape.MAX_PREFERRED_PENETRATION_DIRECTIONS;
-import static Bullet.Collision.btShapeHull.NUM_UNITSPHERE_POINTS;
+import static Bullet.Collision.Shape.btShapeHull.NUM_UNITSPHERE_POINTS;
 import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
@@ -30,7 +29,7 @@ import java.util.Arrays;
  *
  * @author Gregery Barton
  */
-class btMinkowskiPenetrationDepthSolver implements btConvexPenetrationDepthSolver  , Serializable {
+class btMinkowskiPenetrationDepthSolver implements btConvexPenetrationDepthSolver, Serializable {
 
  @Override
  public boolean calcPenDepth(btSimplexSolverInterface simplexSolver,
@@ -204,8 +203,10 @@ class btMinkowskiPenetrationDepthSolver implements btConvexPenetrationDepthSolve
   new btVector3((-0.425323f), (0.309011f), (0.850654f)),
   new btVector3((0.162456f), (0.499995f), (0.850654f))
  };
+
  static {
-  sPenetrationDirections=Arrays.copyOf(sPenetrationDirections, NUM_UNITSPHERE_POINTS+MAX_PREFERRED_PENETRATION_DIRECTIONS*2);
+  sPenetrationDirections = Arrays.copyOf(sPenetrationDirections, NUM_UNITSPHERE_POINTS +
+   MAX_PREFERRED_PENETRATION_DIRECTIONS * 2);
   init(sPenetrationDirections);
  }
 

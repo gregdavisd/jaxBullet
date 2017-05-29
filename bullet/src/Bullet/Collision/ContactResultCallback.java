@@ -11,25 +11,24 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Collision;
 ///ContactResultCallback is used to report contact points
 
 import Bullet.Collision.Broadphase.btBroadphaseProxy;
 import java.io.Serializable;
 
-
 /**
  *
  * @author Gregery Barton
  */
-abstract public class ContactResultCallback implements Serializable  {
+abstract public class ContactResultCallback implements Serializable {
 
  int m_collisionFilterGroup;
  int m_collisionFilterMask;
  float m_closestDistanceThreshold;
 
- ContactResultCallback() {
+ public ContactResultCallback() {
   m_collisionFilterGroup = btBroadphaseProxy.DefaultFilter;
   m_collisionFilterMask = btBroadphaseProxy.AllFilter;
   m_closestDistanceThreshold = 0;
@@ -42,7 +41,7 @@ abstract public class ContactResultCallback implements Serializable  {
   return collides;
  }
 
- abstract float addSingleResult(btManifoldPoint cp, btCollisionObjectWrapper colObj0Wrap,
+ public abstract float addSingleResult(btManifoldPoint cp, btCollisionObjectWrapper colObj0Wrap,
   int partId0,
   int index0, btCollisionObjectWrapper colObj1Wrap,
   int partId1,

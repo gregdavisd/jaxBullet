@@ -11,7 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Collision.Algorithm;
 
 import Bullet.Collision.Broadphase.btDispatcherInfo;
@@ -33,7 +33,8 @@ import java.util.ArrayList;
  *
  * @author Gregery Barton
  */
-public class btConvexConcaveCollisionAlgorithm extends btActivatingCollisionAlgorithm  implements Serializable {
+public class btConvexConcaveCollisionAlgorithm extends btActivatingCollisionAlgorithm implements
+ Serializable {
 
  final btConvexTriangleCallback m_btConvexTriangleCallback;
  boolean m_isSwapped;
@@ -134,16 +135,16 @@ public class btConvexConcaveCollisionAlgorithm extends btActivatingCollisionAlgo
  public static class CreateFunc extends btCollisionAlgorithmCreateFunc {
 
   @Override
- public  btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
+  public btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
    btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap) {
    return new btConvexConcaveCollisionAlgorithm(ci, body0Wrap, body1Wrap, false);
   }
  }
 
-public  static class SwappedCreateFunc extends btCollisionAlgorithmCreateFunc {
+ public static class SwappedCreateFunc extends btCollisionAlgorithmCreateFunc {
 
   @Override
-public   btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
+  public btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
    btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap) {
    return new btConvexConcaveCollisionAlgorithm(ci, body0Wrap, body1Wrap, true);
   }

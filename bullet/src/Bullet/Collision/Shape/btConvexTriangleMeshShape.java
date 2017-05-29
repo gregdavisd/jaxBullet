@@ -11,7 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Collision.Shape;
 
 import static Bullet.Collision.Broadphase.BroadphaseNativeTypes.CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE;
@@ -33,7 +33,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachingShape  implements Serializable {
+public class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachingShape implements
+ Serializable {
 
  final btStridingMeshInterface m_stridingMesh;
 
@@ -133,12 +134,12 @@ public class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachingShap
 
  @Override
  public void getEdge(int i, final btVector3 pa, final btVector3 pb) {
-  assert(false);
+  assert (false);
  }
 
  @Override
  public void getVertex(int i, final btVector3 vtx) {
-  assert(false);
+  assert (false);
  }
 
  @Override
@@ -148,12 +149,12 @@ public class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachingShap
 
  @Override
  public void getPlane(final btVector3 planeNormal, final btVector3 planeSupport, int i) {
-  assert(false);
+  assert (false);
  }
 
  @Override
  public boolean isInside(final btVector3 pt, float tolerance) {
-  assert(false);
+  assert (false);
   return false;
  }
 

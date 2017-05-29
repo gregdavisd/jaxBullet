@@ -11,7 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Collision;
 
 import Bullet.Collision.Broadphase.btBroadphaseProxy;
@@ -38,7 +38,7 @@ import static javax.vecmath.VecMath.is_good_matrix;
 /// btCollisionObject can be used to manage collision detection objects. 
 /// btCollisionObject maintains all information that is needed for a collision detection: Shape, Transform and AABB proxy.
 /// They can be added to the btCollisionWorld.
-public class btCollisionObject  implements Serializable  {
+public class btCollisionObject implements Serializable {
 
 //island management, m_activationState1
  public static final int ACTIVE_TAG = 1;
@@ -327,11 +327,12 @@ public class btCollisionObject  implements Serializable  {
   }
   return new btTransform(m_worldTransform);
  }
+
  public btTransform getWorldTransformPtr() {
   if (DEBUG_BLOCKS) {
    assert (is_good_matrix(m_worldTransform));
   }
-  return   m_worldTransform;
+  return m_worldTransform;
  }
 
  public void setWorldTransform(final btTransform worldTrans) {
@@ -470,7 +471,6 @@ public class btCollisionObject  implements Serializable  {
  public void setUserIndex2(int index) {
   m_userIndex2 = index;
  }
- 
 
  public void setCustomDebugColor(final btVector3 colorRGB) {
   m_customDebugColorRGB.set(colorRGB);
@@ -495,6 +495,4 @@ public class btCollisionObject  implements Serializable  {
   }
   return true;
  }
-
-  
 }

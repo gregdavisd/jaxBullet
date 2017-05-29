@@ -11,20 +11,18 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision;
 ///RayResultCallback is used to report new raycast results
 
 import Bullet.Collision.Broadphase.btBroadphaseProxy;
 import java.io.Serializable;
 
-
 /**
  *
  * @author Gregery Barton
  */
-abstract public class RayResultCallback implements Serializable  {
+abstract public class RayResultCallback implements Serializable {
 
  public float m_closestHitFraction;
  public btCollisionObject m_collisionObject;

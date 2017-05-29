@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision.Broadphase;
 /// Hash-space based Pair Cache, thanks to Erin Catto, Box2D, http://www.box2d.org, and Pierre Terdiman, Codercorner, http://codercorner.com
 
@@ -29,7 +28,7 @@ import javax.vecmath.Tuple2i;
  *
  * @author Gregery Barton
  */
-public class btHashedOverlappingPairCache extends btOverlappingPairCache implements Serializable {
+public class btHashedOverlappingPairCache implements btOverlappingPairCache , Serializable {
 
  final HashMap<BroadphasePairKey, btBroadphasePair> m_overlappingPairMap = new HashMap<>();
  btOverlapFilterCallback m_overlapFilterCallback;
@@ -147,8 +146,8 @@ public class btHashedOverlappingPairCache extends btOverlappingPairCache impleme
 
  @Override
  public ArrayList<btBroadphasePair> getOverlappingPairArrayPtr() {
-  assert(false);
-  return new ArrayList< >(0);
+  assert (false);
+  return new ArrayList<>(0);
  }
 
  @Override
@@ -257,7 +256,7 @@ public class btHashedOverlappingPairCache extends btOverlappingPairCache impleme
    while ((do_ni > 0) && cleaner != null && cleaner.hasNext()) {
     btBroadphasePair p = cleaner.next().getValue();
     btBroadphaseProxy pa = p.m_pProxy0;
-    btBroadphaseProxy pb =  p.m_pProxy1;
+    btBroadphaseProxy pb = p.m_pProxy1;
     if (!pa.intersect(pb)) {
      removeOverlappingPair(p, dispatcher, cleaner);
     }

@@ -11,9 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
-
+ */
 package Bullet.Collision.Algorithm.Detector;
 
 import Bullet.Collision.btIDebugDraw;
@@ -31,7 +29,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public abstract class btDiscreteCollisionDetectorInterface implements Serializable  {
+public abstract class btDiscreteCollisionDetectorInterface implements Serializable {
 
  //
  // give either closest points (distance > 0) or penetration (distance)
@@ -41,21 +39,23 @@ public abstract class btDiscreteCollisionDetectorInterface implements Serializab
   getClosestPoints(input, output, debugDraw, false);
  }
 
- public abstract void getClosestPoints(ClosestPointInput input, Result output, btIDebugDraw debugDraw,
+ public abstract void getClosestPoints(ClosestPointInput input, Result output,
+  btIDebugDraw debugDraw,
   boolean swapResults);
 
  public static abstract class Result {
 
   ///setShapeIdentifiersA/B provides experimental support for per-triangle material / custom material combiner
- public  abstract void setShapeIdentifiersA(int partId0, int index0);
+  public abstract void setShapeIdentifiersA(int partId0, int index0);
 
- public  abstract void setShapeIdentifiersB(int partId1, int index1);
+  public abstract void setShapeIdentifiersB(int partId1, int index1);
 
-public   abstract void addContactPoint(final btVector3 normalOnBInWorld, final btVector3 pointInWorld,
+  public abstract void addContactPoint(final btVector3 normalOnBInWorld,
+   final btVector3 pointInWorld,
    float depth);
  }
 
- public static class ClosestPointInput implements Serializable{
+ public static class ClosestPointInput implements Serializable {
 
   public final btTransform m_transformA = new btTransform();
   public final btTransform m_transformB = new btTransform();

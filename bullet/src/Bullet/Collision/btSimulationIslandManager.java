@@ -26,10 +26,7 @@ import static Bullet.LinearMath.btQuickprof.BT_PROFILE;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 
 /**
  * SimulationIslandManager creates and handles simulation islands, using btUnionFind

@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision.Broadphase;
 
 import java.io.Serializable;
@@ -21,10 +20,9 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class CleanPairCallback implements btOverlapCallback  , Serializable {
+public class CleanPairCallback implements btOverlapCallback, Serializable {
 
  private static final long serialVersionUID = 1L;
-
  final btBroadphaseProxy m_cleanProxy;
  final btOverlappingPairCache m_pairCache;
  final btDispatcher m_dispatcher;

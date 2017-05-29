@@ -14,7 +14,6 @@
  */
 package Bullet.Dynamics;
 
-
 import Bullet.LinearMath.btMatrix3x3;
 import static Bullet.LinearMath.btScalar.SIMD_EPSILON;
 import Bullet.LinearMath.btVector3;
@@ -31,7 +30,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btJacobianEntry implements Serializable  {
+public class btJacobianEntry implements Serializable {
 
  public final btVector3 m_linearJointAxis = new btVector3();
  public final btVector3 m_aJ = new btVector3();
@@ -57,7 +56,7 @@ public class btJacobianEntry implements Serializable  {
   m_0MinvJt.set(inertiaInvA).mul(m_aJ);
   m_1MinvJt.set(inertiaInvB).mul(m_bJ);
   m_Adiag = massInvA + m_0MinvJt.dot(m_aJ) + massInvB + m_1MinvJt.dot(m_bJ);
-  assert(m_Adiag > (0.0f));
+  assert (m_Adiag > (0.0f));
  }
 
  //angular constraint between two different rigidbodies
@@ -69,7 +68,7 @@ public class btJacobianEntry implements Serializable  {
   m_0MinvJt.set(inertiaInvA).mul(m_aJ);
   m_1MinvJt.set(inertiaInvB).mul(m_bJ);
   m_Adiag = m_0MinvJt.dot(m_aJ) + m_1MinvJt.dot(m_bJ);
-  assert(m_Adiag > (0.0f));
+  assert (m_Adiag > (0.0f));
  }
 
  //angular constraint between two different rigidbodies
@@ -81,7 +80,7 @@ public class btJacobianEntry implements Serializable  {
   m_0MinvJt.set(inertiaInvA).mul(m_aJ);
   m_1MinvJt.set(inertiaInvB).mul(m_bJ);
   m_Adiag = m_0MinvJt.dot(m_aJ) + m_1MinvJt.dot(m_bJ);
-  assert(m_Adiag > (0.0f));
+  assert (m_Adiag > (0.0f));
  }
 
  //constraint on one rigidbody
@@ -95,7 +94,7 @@ public class btJacobianEntry implements Serializable  {
   m_0MinvJt.set(inertiaInvA).mul(m_aJ);
   m_1MinvJt.setZero();
   m_Adiag = massInvA + m_0MinvJt.dot(m_aJ);
-  assert(m_Adiag > (0.0f));
+  assert (m_Adiag > (0.0f));
  }
 
  public float getDiagonal() {

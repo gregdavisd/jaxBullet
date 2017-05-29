@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision;
 
 import static Bullet.Collision.btQuantizedBvhNode.MAX_NUM_PARTS_IN_BITS;
@@ -27,7 +26,7 @@ import java.util.logging.Logger;
  *
  * @author Gregery Barton
  */
-class QuantizedNodeTriangleCallback implements btTriangleCallback ,   Serializable {
+class QuantizedNodeTriangleCallback implements btTriangleCallback, Serializable {
 
  final ArrayList<btQuantizedBvhNode> m_triangleNodes;
  final btQuantizedBvh m_optimizedTree; // for quantization
@@ -45,7 +44,7 @@ class QuantizedNodeTriangleCallback implements btTriangleCallback ,   Serializab
     m_triangleNodes.add((btQuantizedBvhNode) node.clone());
    } catch (CloneNotSupportedException ex) {
     Logger.getLogger(QuantizedNodeTriangleCallback.class.getName()).log(Level.SEVERE, null, ex);
-    assert(false);
+    assert (false);
    }
   }
   return this;
@@ -54,10 +53,10 @@ class QuantizedNodeTriangleCallback implements btTriangleCallback ,   Serializab
  @Override
  public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
   // The partId and triangle index must fit in the same (positive) integer
-  assert(partId < (1 << MAX_NUM_PARTS_IN_BITS));
-  assert(triangleIndex < (1 << (31 - MAX_NUM_PARTS_IN_BITS)));
+  assert (partId < (1 << MAX_NUM_PARTS_IN_BITS));
+  assert (triangleIndex < (1 << (31 - MAX_NUM_PARTS_IN_BITS)));
   //negative indices are reserved for escapeIndex
-  assert(triangleIndex >= 0);
+  assert (triangleIndex >= 0);
   btQuantizedBvhNode node = new btQuantizedBvhNode();
   final btVector3 aabbMin = new btVector3();
   final btVector3 aabbMax = new btVector3();

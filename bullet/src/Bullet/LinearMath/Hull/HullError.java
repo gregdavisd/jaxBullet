@@ -21,7 +21,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class HullError  implements Serializable {
+public class HullError implements Serializable {
 
  public static final int QE_OK = 0;            // success!
  public static final int QE_FAIL = 1;           // failed.

@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision.Shape;
 
 import static Bullet.LinearMath.btAabbUtil2.btTransformAabb;
@@ -24,7 +23,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public abstract class btConvexInternalAabbCachingShape extends btConvexInternalShape  implements Serializable {
+public abstract class btConvexInternalAabbCachingShape extends btConvexInternalShape implements
+ Serializable {
 
  final btVector3 m_localAabbMin = new btVector3();
  final btVector3 m_localAabbMax = new btVector3();
@@ -44,7 +44,7 @@ public abstract class btConvexInternalAabbCachingShape extends btConvexInternalS
  }
 
  void getCachedLocalAabb(final btVector3 aabbMin, final btVector3 aabbMax) {
-  assert(m_isLocalAabbValid);
+  assert (m_isLocalAabbValid);
   aabbMin.set(m_localAabbMin);
   aabbMax.set(m_localAabbMax);
  }
@@ -52,7 +52,7 @@ public abstract class btConvexInternalAabbCachingShape extends btConvexInternalS
  void getNonvirtualAabb(final btTransform trans, final btVector3 aabbMin, final btVector3 aabbMax,
   float margin) {
   //lazy evaluation of local aabb
-  assert(m_isLocalAabbValid);
+  assert (m_isLocalAabbValid);
   btTransformAabb(m_localAabbMin, m_localAabbMax, margin, trans, aabbMin, aabbMax);
  }
 

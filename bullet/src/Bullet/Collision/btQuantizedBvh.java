@@ -29,7 +29,7 @@ import java.util.ArrayList;
  *
  * @author Gregery Barton
  */
-class btQuantizedBvh  implements Serializable {
+class btQuantizedBvh implements Serializable {
 
  static final int MAX_SUBTREE_SIZE_IN_BYTES = 2048;
  public static final int TRAVERSAL_STACKLESS = 0;
@@ -136,7 +136,7 @@ class btQuantizedBvh  implements Serializable {
   int splitAxis, splitIndex, i;
   int numIndices = endIndex - startIndex;
   int curIndex = m_curNodeIndex;
-  assert(numIndices > 0);
+  assert (numIndices > 0);
   if (numIndices == 1) {
    assignInternalNodeFromLeafNode(m_curNodeIndex, startIndex);
    m_curNodeIndex++;
@@ -232,13 +232,13 @@ class btQuantizedBvh  implements Serializable {
    splitIndex = startIndex + (numIndices >> 1);
   }
   boolean unbal = (splitIndex == startIndex) || (splitIndex == (endIndex));
-  assert(!unbal);
+  assert (!unbal);
   return splitIndex;
  }
 
  void walkStacklessTree(btNodeOverlapCallback nodeCallback, final btVector3 aabbMin,
   final btVector3 aabbMax) {
-  assert(!m_useQuantization);
+  assert (!m_useQuantization);
   btOptimizedBvhNode rootNode = m_contiguousNodes.get(0);
   int escapeIndex, curIndex = 0;
   int walkIterations = 0;
@@ -247,7 +247,7 @@ class btQuantizedBvh  implements Serializable {
   boolean aabbOverlap;
   while (curIndex < m_curNodeIndex) {
    //catch bugs in tree data
-   assert(walkIterations < m_curNodeIndex);
+   assert (walkIterations < m_curNodeIndex);
    walkIterations++;
    aabbOverlap =
     TestAabbAgainstAabb2(aabbMin, aabbMax, rootNode.m_aabbMinOrg, rootNode.m_aabbMaxOrg);
@@ -275,7 +275,7 @@ class btQuantizedBvh  implements Serializable {
  void walkStacklessQuantizedTreeAgainstRay(btNodeOverlapCallback nodeCallback,
   final btVector3 raySource, final btVector3 rayTarget, final btVector3 aabbMin,
   final btVector3 aabbMax, int startNodeIndex, int endNodeIndex) {
-  assert(m_useQuantization);
+  assert (m_useQuantization);
   int curIndex = startNodeIndex;
   int walkIterations = 0;
   int subTreeSize = endNodeIndex - startNodeIndex;
@@ -310,7 +310,7 @@ class btQuantizedBvh  implements Serializable {
   quantizeWithClamp(quantizedQueryAabbMax, rayAabbMax, 1);
   while (curIndex < endNodeIndex) {
    //catch bugs in tree data
-   assert(walkIterations < subTreeSize);
+   assert (walkIterations < subTreeSize);
    walkIterations++;
    //PCK: unsigned instead of boolean
    // only interested if this is closer than any previous hit
@@ -319,9 +319,10 @@ class btQuantizedBvh  implements Serializable {
     quantizedQueryAabbMax, rootNode.m_quantizedAabbMin, rootNode.m_quantizedAabbMax);
    isLeafNode = rootNode.isLeafNode();
    if (boxBoxOverlap != 0) {
-    btVector3[] bounds = new btVector3[2];init(bounds);
-    bounds[0].set( unQuantize(rootNode.m_quantizedAabbMin));
-    bounds[1] .set(unQuantize(rootNode.m_quantizedAabbMax));
+    btVector3[] bounds = new btVector3[2];
+    init(bounds);
+    bounds[0].set(unQuantize(rootNode.m_quantizedAabbMin));
+    bounds[1].set(unQuantize(rootNode.m_quantizedAabbMax));
     /* Add box cast extents */
     bounds[0].sub(aabbMax);
     bounds[1].sub(aabbMin);
@@ -353,7 +354,7 @@ class btQuantizedBvh  implements Serializable {
 
  void walkStacklessQuantizedTree(btNodeOverlapCallback nodeCallback, int[] quantizedQueryAabbMin,
   int[] quantizedQueryAabbMax, int startNodeIndex, int endNodeIndex) {
-  assert(m_useQuantization);
+  assert (m_useQuantization);
   int curIndex = startNodeIndex;
   int walkIterations = 0;
   int subTreeSize = endNodeIndex - startNodeIndex;
@@ -364,7 +365,7 @@ class btQuantizedBvh  implements Serializable {
   int aabbOverlap;
   while (curIndex < endNodeIndex) {
    //catch bugs in tree data
-   assert(walkIterations < subTreeSize);
+   assert (walkIterations < subTreeSize);
    walkIterations++;
    //PCK: unsigned instead of boolean
    aabbOverlap = testQuantizedAabbAgainstQuantizedAabb(quantizedQueryAabbMin, quantizedQueryAabbMax,
@@ -391,7 +392,7 @@ class btQuantizedBvh  implements Serializable {
  void walkStacklessTreeAgainstRay(btNodeOverlapCallback nodeCallback, final btVector3 raySource,
   final btVector3 rayTarget, final btVector3 aabbMin, final btVector3 aabbMax, int startNodeIndex,
   int endNodeIndex) {
-  assert(!m_useQuantization);
+  assert (!m_useQuantization);
   btOptimizedBvhNode rootNode = m_contiguousNodes.get(0);
   int escapeIndex, curIndex = 0;
   int walkIterations = 0;
@@ -420,14 +421,15 @@ class btQuantizedBvh  implements Serializable {
   rayDirectionInverse.z = rayDir.z == (0.0f) ? (BT_LARGE_FLOAT) : (1.0f) / rayDir.z;
   int[] sign = new int[]{rayDirectionInverse.x < 0.0f ? 1 : 0, rayDirectionInverse.y < 0.0f ? 1 : 0,
    rayDirectionInverse.z < 0.0f ? 1 : 0};
-  btVector3[] bounds = new btVector3[2];init(bounds);
+  btVector3[] bounds = new btVector3[2];
+  init(bounds);
   while (curIndex < m_curNodeIndex) {
    float[] param = new float[]{1.0f};
    //catch bugs in tree data
-   assert(walkIterations < m_curNodeIndex);
+   assert (walkIterations < m_curNodeIndex);
    walkIterations++;
-   bounds[0] .set( rootNode.m_aabbMinOrg);
-   bounds[1].set( rootNode.m_aabbMaxOrg);
+   bounds[0].set(rootNode.m_aabbMinOrg);
+   bounds[1].set(rootNode.m_aabbMaxOrg);
    /* Add box cast extents */
    bounds[0].sub(aabbMax);
    bounds[1].sub(aabbMin);
@@ -462,7 +464,7 @@ class btQuantizedBvh  implements Serializable {
  ///tree traversal designed for small-memory processors like PS3 SPU
  void walkStacklessQuantizedTreeCacheFriendly(btNodeOverlapCallback nodeCallback,
   int[] quantizedQueryAabbMin, int[] quantizedQueryAabbMax) {
-  assert(m_useQuantization);
+  assert (m_useQuantization);
   int i;
   for (i = 0; i < m_SubtreeHeaders.size(); i++) {
    btBvhSubtreeInfo subtree = m_SubtreeHeaders.get(i);
@@ -480,7 +482,7 @@ class btQuantizedBvh  implements Serializable {
  ///use the 16-byte stackless 'skipindex' node tree to do a recursive traversal
  void walkRecursiveQuantizedTreeAgainstQueryAabb(int curIndex, btNodeOverlapCallback nodeCallback,
   int[] quantizedQueryAabbMin, int[] quantizedQueryAabbMax) {
-  assert(m_useQuantization);
+  assert (m_useQuantization);
   btQuantizedBvhNode currentNode = m_quantizedContiguousNodes.get(curIndex);
   boolean isLeafNode;
   //PCK: unsigned instead of boolean
@@ -516,7 +518,7 @@ class btQuantizedBvh  implements Serializable {
  }
 
  void updateSubtreeHeaders(int leftChildNodexIndex, int rightChildNodexIndex) {
-  assert(m_useQuantization);
+  assert (m_useQuantization);
   btQuantizedBvhNode leftChildNode = m_quantizedContiguousNodes.get(leftChildNodexIndex);
   int leftSubTreeSize = leftChildNode.isLeafNode() ? 1 : leftChildNode.getEscapeIndex();
   int leftSubTreeSizeInBytes = leftSubTreeSize * 16;//static_cast<int>(sizeof(btQuantizedBvhNode));
@@ -622,7 +624,7 @@ class btQuantizedBvh  implements Serializable {
  }
 
  ///***************************************** expert/internal use only *************************
-  public void reportAabbOverlappingNodex(btNodeOverlapCallback nodeCallback, final btVector3 aabbMin,
+ public void reportAabbOverlappingNodex(btNodeOverlapCallback nodeCallback, final btVector3 aabbMin,
   final btVector3 aabbMax) {
   //either choose recursive traversal (walkTree) or stackless (walkStacklessTree)
   if (m_useQuantization) {
@@ -647,19 +649,20 @@ class btQuantizedBvh  implements Serializable {
     break;
     default:
      //unsupported
-     assert(false);
+     assert (false);
    }
   } else {
    walkStacklessTree(nodeCallback, aabbMin, aabbMax);
   }
  }
 
-  public void reportRayOverlappingNodex(btNodeOverlapCallback nodeCallback, final btVector3 raySource,
+ public void reportRayOverlappingNodex(btNodeOverlapCallback nodeCallback, final btVector3 raySource,
   final btVector3 rayTarget) {
   reportBoxCastOverlappingNodex(nodeCallback, raySource, rayTarget, new btVector3(), new btVector3());
  }
 
- public  void reportBoxCastOverlappingNodex(btNodeOverlapCallback nodeCallback, final btVector3 raySource,
+ public void reportBoxCastOverlappingNodex(btNodeOverlapCallback nodeCallback,
+  final btVector3 raySource,
   final btVector3 rayTarget, final btVector3 aabbMin, final btVector3 aabbMax) {
   //always use stackless
   if (m_useQuantization) {
@@ -671,14 +674,14 @@ class btQuantizedBvh  implements Serializable {
   }
  }
 
-  public void quantize(int[] out, final btVector3 point, int isMax) {
-  assert(m_useQuantization);
-  assert(point.getX() <= m_bvhAabbMax.getX());
-  assert(point.getY() <= m_bvhAabbMax.getY());
-  assert(point.getZ() <= m_bvhAabbMax.getZ());
-  assert(point.getX() >= m_bvhAabbMin.getX());
-  assert(point.getY() >= m_bvhAabbMin.getY());
-  assert(point.getZ() >= m_bvhAabbMin.getZ());
+ public void quantize(int[] out, final btVector3 point, int isMax) {
+  assert (m_useQuantization);
+  assert (point.getX() <= m_bvhAabbMax.getX());
+  assert (point.getY() <= m_bvhAabbMax.getY());
+  assert (point.getZ() <= m_bvhAabbMax.getZ());
+  assert (point.getX() >= m_bvhAabbMin.getX());
+  assert (point.getY() >= m_bvhAabbMin.getY());
+  assert (point.getZ() >= m_bvhAabbMin.getZ());
   final btVector3 v = new btVector3(point).sub(m_bvhAabbMin).mul(m_bvhQuantization);
   ///Make sure rounding is done in a way that unQuantize(quantizeWithClamp(...)) is conservative
   ///end-points always set the first bit, so that they are sorted properly (so that neighbouring AABBs overlap properly)
@@ -694,15 +697,15 @@ class btQuantizedBvh  implements Serializable {
   }
  }
 
-  public void quantizeWithClamp(int[] out, final btVector3 point2, int isMax) {
-  assert(m_useQuantization);
+ public void quantizeWithClamp(int[] out, final btVector3 point2, int isMax) {
+  assert (m_useQuantization);
   final btVector3 clampedPoint = new btVector3(point2);
   clampedPoint.setMax(m_bvhAabbMin);
   clampedPoint.setMin(m_bvhAabbMax);
   quantize(out, clampedPoint, isMax);
  }
 
- public  btVector3 unQuantize(int[] vecIn) {
+ public btVector3 unQuantize(int[] vecIn) {
   final btVector3 vecOut = new btVector3();
   vecOut.set(
    (vecIn[0]) / (m_bvhQuantization.getX()),
@@ -713,7 +716,7 @@ class btQuantizedBvh  implements Serializable {
  }
 
  ///setTraversalMode let's you choose between stackless, recursive or stackless cache friendly tree traversal. Note this is only implemented for quantized trees.
- public  void setTraversalMode(int traversalMode) {
+ public void setTraversalMode(int traversalMode) {
   m_traversalMode = traversalMode;
  }
 

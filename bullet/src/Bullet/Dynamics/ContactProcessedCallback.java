@@ -21,7 +21,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public interface ContactProcessedCallback  extends Serializable {
+public interface ContactProcessedCallback extends Serializable {
 
  boolean call(btManifoldPoint cp, Object body0, Object body1);
 }

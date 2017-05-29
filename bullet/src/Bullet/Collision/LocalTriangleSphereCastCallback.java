@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision;
 
 import Bullet.Collision.Shape.btSphereShape;
@@ -26,7 +25,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class LocalTriangleSphereCastCallback implements btTriangleCallback  , Serializable  {
+public class LocalTriangleSphereCastCallback implements btTriangleCallback, Serializable {
 
  public final btTransform m_ccdSphereFromTrans = new btTransform();
  public final btTransform m_ccdSphereToTrans = new btTransform();
@@ -34,7 +33,8 @@ public class LocalTriangleSphereCastCallback implements btTriangleCallback  , Se
  public float m_ccdSphereRadius;
  public float m_hitFraction;
 
- public LocalTriangleSphereCastCallback(final btTransform from, final btTransform to, float ccdSphereRadius,
+ public LocalTriangleSphereCastCallback(final btTransform from, final btTransform to,
+  float ccdSphereRadius,
   float hitFraction) {
   m_ccdSphereFromTrans.set(from);
   m_ccdSphereToTrans.set(to);

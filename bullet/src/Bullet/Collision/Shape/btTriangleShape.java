@@ -11,7 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Collision.Shape;
 
 import static Bullet.Collision.Broadphase.BroadphaseNativeTypes.TRIANGLE_SHAPE_PROXYTYPE;
@@ -24,7 +24,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btTriangleShape extends btPolyhedralConvexShape  implements Serializable {
+public class btTriangleShape extends btPolyhedralConvexShape implements Serializable {
 
  public final btVector3[] m_vertices1;
 
@@ -42,7 +42,7 @@ public class btTriangleShape extends btPolyhedralConvexShape  implements Seriali
  }
 
  @Override
-   public void getVertex(int index, final btVector3 vert) {
+ public void getVertex(int index, final btVector3 vert) {
   vert.set(m_vertices1[index]);
  }
 
@@ -75,11 +75,10 @@ public class btTriangleShape extends btPolyhedralConvexShape  implements Seriali
   for (int i = 0; i < numVectors; i++) {
    final btVector3 dir = vectors[i];
    final btVector3 dots = dir.dot3(m_vertices1[0], m_vertices1[1], m_vertices1[2]);
-   if (supportVerticesOut[i]==null)
-   {
-    supportVerticesOut[i]=new btVector3();
+   if (supportVerticesOut[i] == null) {
+    supportVerticesOut[i] = new btVector3();
    }
-   supportVerticesOut[i] .set(m_vertices1[dots.maxAxis()]);
+   supportVerticesOut[i].set(m_vertices1[dots.maxAxis()]);
   }
  }
 
@@ -122,7 +121,7 @@ public class btTriangleShape extends btPolyhedralConvexShape  implements Seriali
 
  @Override
  public void calculateLocalInertia(float mass, final btVector3 inertia) {
-  assert(false);
+  assert (false);
   inertia.set(0, 0, 0);
  }
 

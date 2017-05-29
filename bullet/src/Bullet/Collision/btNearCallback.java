@@ -22,7 +22,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public interface btNearCallback  extends Serializable {
+public interface btNearCallback extends Serializable {
 
  void callback(btBroadphasePair collisionPair, btCollisionDispatcher dispatcher,
   btDispatcherInfo dispatchInfo);

@@ -20,7 +20,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btElement implements Comparable  , Serializable {
+public class btElement implements Comparable, Serializable {
 
  public int m_id;
  public int m_sz;

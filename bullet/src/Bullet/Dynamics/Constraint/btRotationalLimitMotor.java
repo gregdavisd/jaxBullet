@@ -36,29 +36,29 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btRotationalLimitMotor  implements Serializable {
+public class btRotationalLimitMotor implements Serializable {
 
  //! limit_parameters
  //!@{
-public float m_loLimit;//!< joint limit
-public float m_hiLimit;//!< joint limit
-public float m_targetVelocity;//!< target motor velocity
-public float m_maxMotorForce;//!< max force on motor
-public float m_maxLimitForce;//!< max force on limit
-public float m_damping;//!< Damping.
-public float m_limitSoftness;//! Relaxation factor
-public float m_normalCFM;//!< Constraint force mixing factor
-public float m_stopERP;//!< Error tolerance factor when joint is at limit
-public float m_stopCFM;//!< Constraint force mixing factor when joint is at limit
-public float m_bounce;//!< restitution factor
-public boolean m_enableMotor;
+ public float m_loLimit;//!< joint limit
+ public float m_hiLimit;//!< joint limit
+ public float m_targetVelocity;//!< target motor velocity
+ public float m_maxMotorForce;//!< max force on motor
+ public float m_maxLimitForce;//!< max force on limit
+ public float m_damping;//!< Damping.
+ public float m_limitSoftness;//! Relaxation factor
+ public float m_normalCFM;//!< Constraint force mixing factor
+ public float m_stopERP;//!< Error tolerance factor when joint is at limit
+ public float m_stopCFM;//!< Constraint force mixing factor when joint is at limit
+ public float m_bounce;//!< restitution factor
+ public boolean m_enableMotor;
  //!@}
  //! temp_variables
  //!@{
-public float m_currentLimitError;//!  How much is violated this limit
-public float m_currentPosition;     //!  current value of angle 
-public int m_currentLimit;//!< 0=free, 1=at lo limit, 2=at hi limit
-public float m_accumulatedImpulse;
+ public float m_currentLimitError;//!  How much is violated this limit
+ public float m_currentPosition;     //!  current value of angle 
+ public int m_currentLimit;//!< 0=free, 1=at lo limit, 2=at hi limit
+ public float m_accumulatedImpulse;
  //!@}
 
  btRotationalLimitMotor() {

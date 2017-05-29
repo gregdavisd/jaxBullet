@@ -11,8 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 package Bullet.Collision;
 
 import Bullet.Collision.Shape.btStridingMeshLock;
@@ -26,7 +25,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class MyNodeOverlapCallbackConvexcast implements btNodeOverlapCallback ,   Serializable {
+public class MyNodeOverlapCallbackConvexcast implements btNodeOverlapCallback, Serializable {
 
  final btStridingMeshInterface m_meshInterface;
  final btTriangleCallback m_callback;
@@ -35,11 +34,13 @@ public class MyNodeOverlapCallbackConvexcast implements btNodeOverlapCallback , 
  int part = -1;
  btStridingMeshLock mesh_lock;
 
- public MyNodeOverlapCallbackConvexcast(btTriangleCallback callback, btStridingMeshInterface meshInterface) {
+ public MyNodeOverlapCallbackConvexcast(btTriangleCallback callback,
+  btStridingMeshInterface meshInterface) {
   m_meshInterface = meshInterface;
   m_callback = callback;
   vert_scaling_callback = new btTriangleCallback() {
    private static final long serialVersionUID = 1L;
+
    @Override
    public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
     for (int i = 0; i < 3; i++) {

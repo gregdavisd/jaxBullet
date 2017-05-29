@@ -11,14 +11,9 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
-
+ */
 ///This file was written by Erwin Coumans
-
-
 package Bullet.Collision;
-
 
 import Bullet.Collision.Algorithm.Detector.btDiscreteCollisionDetectorInterface;
 import static Bullet.LinearMath.btScalar.FLT_MAX;
@@ -35,7 +30,7 @@ import java.util.ArrayList;
  *
  * @author Gregery Barton
  */
-public class btPolyhedralContactClipping  implements Serializable {
+public class btPolyhedralContactClipping implements Serializable {
 
  static int gActualSATPairTests;
  static int gExpectedNbTests;
@@ -376,9 +371,9 @@ public class btPolyhedralContactClipping  implements Serializable {
    return false;
   }
   float d0 = Max0[0] - Min1[0];
-  assert(d0 >= 0.0f);
+  assert (d0 >= 0.0f);
   float d1 = Max1[0] - Min0[0];
-  assert(d1 >= 0.0f);
+  assert (d1 >= 0.0f);
   if (d0 < d1) {
    depth[0] = d0;
    witnessPointA.set(witnesPtMaxA);

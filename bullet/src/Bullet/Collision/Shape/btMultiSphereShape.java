@@ -11,7 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Collision.Shape;
 
 import static Bullet.Collision.Broadphase.BroadphaseNativeTypes.MULTI_SPHERE_SHAPE_PROXYTYPE;
@@ -29,7 +29,7 @@ import org.apache.commons.collections.primitives.ArrayFloatList;
  *
  * @author Gregery Barton
  */
-public class btMultiSphereShape extends btConvexInternalAabbCachingShape  implements Serializable {
+public class btMultiSphereShape extends btConvexInternalAabbCachingShape implements Serializable {
 
  final ArrayList<btVector3> m_localPositionArray = new ArrayList<>(0);
  final ArrayFloatList m_radiArray = new ArrayFloatList();
@@ -134,11 +134,10 @@ public class btMultiSphereShape extends btConvexInternalAabbCachingShape  implem
     int i = vec.maxDot(temp, inner_count, newDot);
     if (newDot[0] > maxDot) {
      maxDot = newDot[0];
-     if (supportVerticesOut[j]==null)
-     {
-      supportVerticesOut[j]=new btVector3();
+     if (supportVerticesOut[j] == null) {
+      supportVerticesOut[j] = new btVector3();
      }
-     supportVerticesOut[j] .set(temp[i]);
+     supportVerticesOut[j].set(temp[i]);
     }
    }
   }

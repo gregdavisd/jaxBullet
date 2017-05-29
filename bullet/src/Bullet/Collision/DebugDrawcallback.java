@@ -21,7 +21,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class DebugDrawcallback implements btTriangleCallback, Serializable  {
+public class DebugDrawcallback implements btTriangleCallback, Serializable {
 
  final btIDebugDraw m_debugDrawer;
  final btVector3 m_color = new btVector3();
@@ -32,7 +32,6 @@ public class DebugDrawcallback implements btTriangleCallback, Serializable  {
   m_color.set(color);
   m_worldTrans.set(worldTrans);
  }
- 
 
  /**
   *
@@ -58,6 +57,6 @@ public class DebugDrawcallback implements btTriangleCallback, Serializable  {
   m_debugDrawer.drawLine(wv0, wv1, m_color);
   m_debugDrawer.drawLine(wv1, wv2, m_color);
   m_debugDrawer.drawLine(wv2, wv0, m_color);
- return true;
+  return true;
  }
 };

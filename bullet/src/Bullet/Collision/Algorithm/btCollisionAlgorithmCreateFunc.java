@@ -11,7 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
+ */
 package Bullet.Collision.Algorithm;
 
 import Bullet.Collision.btCollisionObjectWrapper;
@@ -21,15 +21,16 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btCollisionAlgorithmCreateFunc  implements Serializable {
+public class btCollisionAlgorithmCreateFunc implements Serializable {
 
- public  boolean m_swapped;
+ public boolean m_swapped;
 
  public btCollisionAlgorithmCreateFunc() {
   m_swapped = false;
  }
 
- public btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo constructionInfo,
+ public btCollisionAlgorithm CreateCollisionAlgorithm(
+  btCollisionAlgorithmConstructionInfo constructionInfo,
   btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap) {
   return null;
  }

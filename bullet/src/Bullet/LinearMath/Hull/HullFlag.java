@@ -21,7 +21,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class HullFlag  implements Serializable {
+public class HullFlag implements Serializable {
 
  public static final int QF_TRIANGLES = (1);            // report results as triangles, not polygons.
  public static final int QF_REVERSE_ORDER = (1 << 1);             // reverse order of the triangle indices.

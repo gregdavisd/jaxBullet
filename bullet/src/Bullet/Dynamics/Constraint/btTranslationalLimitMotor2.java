@@ -44,33 +44,33 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btTranslationalLimitMotor2 implements Serializable  {
+public class btTranslationalLimitMotor2 implements Serializable {
 
 // upper < lower means free
 // upper == lower means locked
 // upper > lower means limited
-public  final btVector3 m_lowerLimit = new btVector3();
-public  final btVector3 m_upperLimit = new btVector3();
-public  final btVector3 m_bounce = new btVector3();
-public  final btVector3 m_stopERP = new btVector3();
-public  final btVector3 m_stopCFM = new btVector3();
-public  final btVector3 m_motorERP = new btVector3();
-public  final btVector3 m_motorCFM = new btVector3();
-public  final boolean[] m_enableMotor = new boolean[3];
-public  final boolean[] m_servoMotor = new boolean[3];
-public  final boolean[] m_enableSpring = new boolean[3];
-public  final btVector3 m_servoTarget = new btVector3();
-public  final btVector3 m_springStiffness = new btVector3();
-public  boolean[] m_springStiffnessLimited = new boolean[3];
-public  final btVector3 m_springDamping = new btVector3();
-public  final boolean[] m_springDampingLimited = new boolean[3];
-public  final btVector3 m_equilibriumPoint = new btVector3();
-public  final btVector3 m_targetVelocity = new btVector3();
-public  final btVector3 m_maxMotorForce = new btVector3();
-public  final btVector3 m_currentLimitError = new btVector3();
-public  final btVector3 m_currentLimitErrorHi = new btVector3();
-public  final btVector3 m_currentLinearDiff = new btVector3();
-public  final int[] m_currentLimit = new int[3];
+ public final btVector3 m_lowerLimit = new btVector3();
+ public final btVector3 m_upperLimit = new btVector3();
+ public final btVector3 m_bounce = new btVector3();
+ public final btVector3 m_stopERP = new btVector3();
+ public final btVector3 m_stopCFM = new btVector3();
+ public final btVector3 m_motorERP = new btVector3();
+ public final btVector3 m_motorCFM = new btVector3();
+ public final boolean[] m_enableMotor = new boolean[3];
+ public final boolean[] m_servoMotor = new boolean[3];
+ public final boolean[] m_enableSpring = new boolean[3];
+ public final btVector3 m_servoTarget = new btVector3();
+ public final btVector3 m_springStiffness = new btVector3();
+ public boolean[] m_springStiffnessLimited = new boolean[3];
+ public final btVector3 m_springDamping = new btVector3();
+ public final boolean[] m_springDampingLimited = new boolean[3];
+ public final btVector3 m_equilibriumPoint = new btVector3();
+ public final btVector3 m_targetVelocity = new btVector3();
+ public final btVector3 m_maxMotorForce = new btVector3();
+ public final btVector3 m_currentLimitError = new btVector3();
+ public final btVector3 m_currentLimitErrorHi = new btVector3();
+ public final btVector3 m_currentLinearDiff = new btVector3();
+ public final int[] m_currentLimit = new int[3];
 
  btTranslationalLimitMotor2() {
   m_stopERP.set(0.2f, 0.2f, 0.2f);

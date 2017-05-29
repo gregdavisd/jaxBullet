@@ -22,7 +22,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btPlane  implements Serializable {
+public class btPlane implements Serializable {
 
  public final btVector3 normal = new btVector3();
  public float dist;   // distance below origin - the D from plane equasion Ax+By+Cz+D=0

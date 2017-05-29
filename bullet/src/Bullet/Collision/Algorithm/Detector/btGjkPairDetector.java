@@ -11,9 +11,7 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
-
+ */
 package Bullet.Collision.Algorithm.Detector;
 
 import Bullet.Collision.Shape.btConvexShape;
@@ -293,8 +291,7 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
       reports a valid positive distance. Use the results of the second GJK instead of failing.
       thanks to Jacob.Langford for the reproduction case
       http://code.google.com/p/bullet/issues/detail?id=250
-      */ {
-      if (m_cachedSeparatingAxis.lengthSquared() > 0f) {
+      */ if (m_cachedSeparatingAxis.lengthSquared() > 0f) {
        float distance2 = (new btVector3(tmpPointOnA).sub(tmpPointOnB)).length() - margin;
        //only replace valid distances when the distance is less
        if (!isValid || (distance2 < distance)) {
@@ -311,7 +308,6 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
         m_lastUsedMethod = 5;
        }
       }
-     }
     }
    }
   }
