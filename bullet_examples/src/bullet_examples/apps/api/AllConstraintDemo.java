@@ -323,7 +323,7 @@ public class AllConstraintDemo extends DiscreteDemoContainer {
     pBodyA.setActivationState(DISABLE_DEACTIVATION);
     tr.setIdentity();
     tr.setOrigin(new btVector3((0.f), (6.f), (0.f)));
-    tr.getBasis().setEulerZYX(0, 0, 0);
+    tr.setBasis(new btMatrix3x3().setEulerZYX(0, 0, 0));
     btRigidBody pBodyB = createRigidBody(mass, tr, shape);
 //		btRigidBody* pBodyB = createRigidBody(0.f, tr, shape);
     pBodyB.setActivationState(DISABLE_DEACTIVATION);

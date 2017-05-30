@@ -24,6 +24,7 @@ import java.io.Serializable;
  */
 abstract public class RayResultCallback implements Serializable {
 
+ private static final long serialVersionUID = 1L;
  public float m_closestHitFraction;
  public btCollisionObject m_collisionObject;
  public int m_collisionFilterGroup;
@@ -51,7 +52,5 @@ abstract public class RayResultCallback implements Serializable {
   return collides;
  }
 
- abstract float addSingleResult(LocalRayResult rayResult,
-  boolean normalInWorldSpace
- );
+ public abstract float addSingleResult(LocalRayResult rayResult, boolean normalInWorldSpace);
 }

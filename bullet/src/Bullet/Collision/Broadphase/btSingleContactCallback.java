@@ -27,7 +27,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btSingleContactCallback implements btBroadphaseAabbCallback , Serializable {
+public class btSingleContactCallback implements btBroadphaseAabbCallback, Serializable {
 
  private static final long serialVersionUID = 1L;
  final btCollisionObject m_collisionObject;

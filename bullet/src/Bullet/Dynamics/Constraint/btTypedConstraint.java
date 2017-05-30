@@ -48,6 +48,7 @@ public abstract class btTypedConstraint extends btTypedObject implements Seriali
  public static final int BT_CONSTRAINT_STOP_CFM = 4;
  static final float DEFAULT_DEBUGDRAW_SIZE = 0.3f;
  static btRigidBody s_fixed = new btRigidBody(0, null, null);
+ private static final long serialVersionUID = 1L;
 
  public static btRigidBody getFixedBody() {
   s_fixed.setMassProps((0.f), new btVector3((0.f), (0.f), (0.f)));

@@ -292,22 +292,22 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
       thanks to Jacob.Langford for the reproduction case
       http://code.google.com/p/bullet/issues/detail?id=250
       */ if (m_cachedSeparatingAxis.lengthSquared() > 0f) {
-       float distance2 = (new btVector3(tmpPointOnA).sub(tmpPointOnB)).length() - margin;
-       //only replace valid distances when the distance is less
-       if (!isValid || (distance2 < distance)) {
-        distance = distance2;
-        pointOnA.set(tmpPointOnA);
-        pointOnB.set(tmpPointOnB);
-        pointOnA.sub(new btVector3(m_cachedSeparatingAxis).scale(marginA));
-        pointOnB.add(new btVector3(m_cachedSeparatingAxis).scale(marginB));
-        normalInB.set(m_cachedSeparatingAxis);
-        normalInB.normalize();
-        isValid = true;
-        m_lastUsedMethod = 6;
-       } else {
-        m_lastUsedMethod = 5;
-       }
+      float distance2 = (new btVector3(tmpPointOnA).sub(tmpPointOnB)).length() - margin;
+      //only replace valid distances when the distance is less
+      if (!isValid || (distance2 < distance)) {
+       distance = distance2;
+       pointOnA.set(tmpPointOnA);
+       pointOnB.set(tmpPointOnB);
+       pointOnA.sub(new btVector3(m_cachedSeparatingAxis).scale(marginA));
+       pointOnB.add(new btVector3(m_cachedSeparatingAxis).scale(marginB));
+       normalInB.set(m_cachedSeparatingAxis);
+       normalInB.normalize();
+       isValid = true;
+       m_lastUsedMethod = 6;
+      } else {
+       m_lastUsedMethod = 5;
       }
+     }
     }
    }
   }

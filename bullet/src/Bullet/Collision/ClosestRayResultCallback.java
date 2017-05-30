@@ -34,7 +34,7 @@ public class ClosestRayResultCallback extends RayResultCallback implements Seria
  }
 
  @Override
- float addSingleResult(LocalRayResult rayResult,
+ public float addSingleResult(LocalRayResult rayResult,
   boolean normalInWorldSpace
  ) {
   //caller already does the filter on the m_closestHitFraction

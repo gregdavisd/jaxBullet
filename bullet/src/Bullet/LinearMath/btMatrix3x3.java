@@ -265,7 +265,7 @@ public final class btMatrix3x3 extends Matrix3f<btMatrix3x3> implements Serializ
   *
   * These angles are used to produce a rotation matrix. The euler angles are applied in ZYX order.
   * I.e a vector is first rotated about X then Y and then Z
-	*
+  *
   */
  public btMatrix3x3 setEulerZYX(float eulerX, float eulerY, float eulerZ) {
   ///@todo proposed to reverse this since it's labeled zyx but takes arguments xyz and it will match all other parts of the code

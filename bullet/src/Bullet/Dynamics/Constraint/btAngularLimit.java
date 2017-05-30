@@ -25,7 +25,6 @@ import java.io.Serializable;
 public class btAngularLimit implements Serializable {
 
  private static final long serialVersionUID = 1L;
-
  float m_center,
   m_halfRange,
   m_softness,

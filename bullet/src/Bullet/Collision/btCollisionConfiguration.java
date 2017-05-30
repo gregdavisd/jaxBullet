@@ -24,9 +24,9 @@ import java.io.Serializable;
  */
 public interface btCollisionConfiguration extends Serializable {
 
-   btCollisionAlgorithmCreateFunc getCollisionAlgorithmCreateFunc(int proxyType0,
+ btCollisionAlgorithmCreateFunc getCollisionAlgorithmCreateFunc(int proxyType0,
   int proxyType1);
 
-   btCollisionAlgorithmCreateFunc getClosestPointsAlgorithmCreateFunc(int proxyType0,
+ btCollisionAlgorithmCreateFunc getClosestPointsAlgorithmCreateFunc(int proxyType0,
   int proxyType1);
 }

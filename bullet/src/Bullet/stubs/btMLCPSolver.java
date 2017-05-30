@@ -34,7 +34,6 @@ public class btMLCPSolver extends btConstraintSolver implements Serializable {
  public btMLCPSolver(btDantzigSolver mlcp) {
   throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
  }
- 
 
  @Override
  public float solveGroup(List<btCollisionObject> bodies, int numBodies,

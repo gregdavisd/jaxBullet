@@ -25,21 +25,22 @@ import org.apache.commons.collections.primitives.ArrayFloatList;
  */
 public class AllHitsRayResultCallback extends RayResultCallback implements Serializable {
 
- final ArrayList<  btCollisionObject> m_collisionObjects = new ArrayList<>(0);
- final btVector3 m_rayFromWorld = new btVector3();//used to calculate hitPointWorld from hitFraction
- final btVector3 m_rayToWorld = new btVector3();
- final ArrayList<btVector3> m_hitNormalWorld = new ArrayList<>(0);
- final ArrayList<btVector3> m_hitPointWorld = new ArrayList<>(0);
- final ArrayFloatList m_hitFractions = new ArrayFloatList();
+ private static final long serialVersionUID = 1L;
+ public final ArrayList<  btCollisionObject> m_collisionObjects = new ArrayList<>(0);
+ public final btVector3 m_rayFromWorld = new btVector3();//used to calculate hitPointWorld from hitFraction
+ public final btVector3 m_rayToWorld = new btVector3();
+ public final ArrayList<btVector3> m_hitNormalWorld = new ArrayList<>(0);
+ public final ArrayList<btVector3> m_hitPointWorld = new ArrayList<>(0);
+ public final ArrayFloatList m_hitFractions = new ArrayFloatList();
 
- AllHitsRayResultCallback(final btVector3 rayFromWorld, final btVector3 rayToWorld) {
+ public AllHitsRayResultCallback(final btVector3 rayFromWorld, final btVector3 rayToWorld) {
   super();
   m_rayFromWorld.set(rayFromWorld);
   m_rayToWorld.set(rayToWorld);
  }
 
  @Override
- float addSingleResult(LocalRayResult rayResult, boolean normalInWorldSpace) {
+ public float addSingleResult(LocalRayResult rayResult, boolean normalInWorldSpace) {
   m_collisionObject = rayResult.m_collisionObject;
   m_collisionObjects.add(rayResult.m_collisionObject);
   final btVector3 hitNormalWorld = new btVector3();

@@ -39,7 +39,7 @@ public class LocalInfoAdder2 extends RayResultCallback implements Serializable {
  }
 
  @Override
- float addSingleResult(LocalRayResult r, boolean b) {
+ public float addSingleResult(LocalRayResult r, boolean b) {
   LocalShapeInfo shapeInfo = new LocalShapeInfo();
   shapeInfo.m_shapePart = -1;
   shapeInfo.m_triangleIndex = m_i;

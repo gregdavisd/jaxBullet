@@ -24,8 +24,8 @@ import java.io.Serializable;
 ///Currently, only btTriangleMeshShape is available, so it just contains triangleIndex and subpart
 public class LocalShapeInfo implements Serializable {
 
-public int m_shapePart;
-public int m_triangleIndex;
+ public int m_shapePart;
+ public int m_triangleIndex;
  //  btCollisionShape*	m_shapeTemp;
  //  btTransform*	m_shapeLocalTransform;
 }

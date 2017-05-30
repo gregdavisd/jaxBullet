@@ -17,6 +17,8 @@ package Bullet.Collision.Shape;
 import static Bullet.Collision.Shape.btStridingMeshLock.TRIANGLES;
 import Bullet.LinearMath.btVector3;
 import java.util.ArrayList;
+import org.apache.commons.collections.primitives.ArrayFloatList;
+import org.apache.commons.collections.primitives.ArrayIntList;
 
 /**
  * The btTriangleIndexVertexArray allows to access multiple triangle meshes, by indexing into
@@ -30,7 +32,6 @@ public class btTriangleIndexVertexArray extends btStridingMeshInterface {
 
  private static final long serialVersionUID = 1L;
  protected final ArrayList<btIndexedMesh> m_indexedMeshes = new ArrayList<>(0);
- protected final int[] m_pad = new int[2];
  protected int m_hasAabb; // using int instead of bool to maintain alignment
  protected final btVector3 m_aabbMin = new btVector3();
  protected final btVector3 m_aabbMax = new btVector3();
@@ -39,9 +40,9 @@ public class btTriangleIndexVertexArray extends btStridingMeshInterface {
  }
  //just to be backwards compatible
 
- public btTriangleIndexVertexArray(int numTriangles, int[] triangleIndexBase,
+ public btTriangleIndexVertexArray(int numTriangles, ArrayIntList triangleIndexBase,
   int triangleIndexStride,
-  int numVertices, float[] vertexBase, int vertexStride) {
+  int numVertices, ArrayFloatList vertexBase, int vertexStride) {
   btIndexedMesh mesh = new btIndexedMesh();
   mesh.m_numTriangles = numTriangles;
   mesh.m_triangleIndexBase = triangleIndexBase;
@@ -60,9 +61,9 @@ public class btTriangleIndexVertexArray extends btStridingMeshInterface {
  public btStridingMeshLock getLockedReadOnlyVertexIndexBase(int subpart) {
   btIndexedMesh mesh = m_indexedMeshes.get(subpart);
   btStridingMeshLock lock = new btStridingMeshLock(
-   mesh.m_vertexBase,
+   mesh.m_vertexBase.toBackedArray(),
    mesh.m_vertexStride,
-   mesh.m_triangleIndexBase,
+   mesh.m_triangleIndexBase.toBackedArray(),
    TRIANGLES,
    0,
    1,

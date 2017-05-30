@@ -312,7 +312,6 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
      }
      return;
     } else //we can also deal with convex versus triangle (without connectivity data)
-    {
      if (polyhedronA.getConvexPolyhedron() != null && polyhedronB.getShapeType() ==
       TRIANGLE_SHAPE_PROXYTYPE) {
       ArrayList<btVector3> vertices = new ArrayList<>(0);
@@ -350,7 +349,6 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
       }
       return;
      }
-    }
    }
    gjkPairDetector.getClosestPoints(input, resultOut, dispatchInfo.m_debugDraw);
    //now perform 'm_numPerturbationIterations' collision queries with the perturbated collision objects

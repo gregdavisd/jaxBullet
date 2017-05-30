@@ -34,6 +34,7 @@ import java.io.Serializable;
  */
 public class btTranslationalLimitMotor implements Serializable {
 
+ private static final long serialVersionUID = 1L;
  public final btVector3 m_lowerLimit = new btVector3();//!< the constraint lower limits
  public final btVector3 m_upperLimit = new btVector3();//!< the constraint upper limits
  public final btVector3 m_accumulatedImpulse = new btVector3();
@@ -77,9 +78,7 @@ public class btTranslationalLimitMotor implements Serializable {
   m_stopCFM.set(other.m_stopCFM);
   m_targetVelocity.set(other.m_targetVelocity);
   m_maxMotorForce.set(other.m_maxMotorForce);
-  for (int i = 0; i < 3; i++) {
-   m_enableMotor[i] = other.m_enableMotor[i];
-  }
+  System.arraycopy(other.m_enableMotor, 0, m_enableMotor, 0, 3);
  }
 
  //! Test limit

@@ -422,7 +422,7 @@ public class btRaycastVehicle extends btActionInterface implements Serializable 
      m_sideImpulse.set(i, sideImpulse[0] * sideFrictionStiffness2);
     } else {
      m_axle.add(new btVector3());
-      m_forwardWS.add(new btVector3());
+     m_forwardWS.add(new btVector3());
     }
    }
   }

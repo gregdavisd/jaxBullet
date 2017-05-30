@@ -31,7 +31,6 @@ import javax.vecmath.Tuple2i;
 public class btHashedOverlappingPairCache implements btOverlappingPairCache, Serializable {
 
  private static final long serialVersionUID = 1L;
-
  final HashMap<BroadphasePairKey, btBroadphasePair> m_overlappingPairMap = new HashMap<>();
  btOverlapFilterCallback m_overlapFilterCallback;
  btOverlappingPairCallback m_ghostPairCallback;

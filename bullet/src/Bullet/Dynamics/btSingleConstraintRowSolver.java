@@ -24,5 +24,5 @@ import java.io.Serializable;
  */
 public interface btSingleConstraintRowSolver extends Serializable {
 
-  float solve(btSolverBody body0, btSolverBody body1, btSolverConstraint constraint);
+ float solve(btSolverBody body0, btSolverBody body1, btSolverConstraint constraint);
 }

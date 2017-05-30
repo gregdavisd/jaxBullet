@@ -23,7 +23,7 @@ import static java.util.Collections.swap;
  *
  * @author Gregery Barton
  */
-public class btSortedOverlappingPairCache implements btOverlappingPairCache,  Serializable {
+public class btSortedOverlappingPairCache implements btOverlappingPairCache, Serializable {
 
  //avoid brute-force finding all the time
  final ArrayList<btBroadphasePair> m_overlappingPairArray = new ArrayList<>(0);

@@ -20,7 +20,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-  public interface btBroadphaseAabbCallback extends Serializable {
+public interface btBroadphaseAabbCallback extends Serializable {
 
-  boolean process(btBroadphaseProxy proxy);
+ boolean process(btBroadphaseProxy proxy);
 }

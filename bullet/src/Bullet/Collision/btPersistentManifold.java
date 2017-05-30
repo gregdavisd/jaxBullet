@@ -308,9 +308,11 @@ public class btPersistentManifold extends btTypedObject implements Serializable 
     if (distance2d > getContactBreakingThreshold() * getContactBreakingThreshold()) {
      removeContactPoint(i);
     } else //contact point processed callback
+    {
      if (gContactProcessedCallback != null) {
       (gContactProcessedCallback).callback(manifoldPoint, (Object) m_body0, (Object) m_body1);
      }
+    }
    }
   }
  }

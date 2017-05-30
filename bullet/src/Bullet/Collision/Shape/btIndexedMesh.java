@@ -14,6 +14,9 @@ subject to the following restrictions:
  */
 package Bullet.Collision.Shape;
 
+import org.apache.commons.collections.primitives.ArrayFloatList;
+import org.apache.commons.collections.primitives.ArrayIntList;
+
 /**
  *
  * @author Gregery Barton
@@ -21,11 +24,11 @@ package Bullet.Collision.Shape;
 public class btIndexedMesh {
 
  public int m_numTriangles;
- public int[] m_triangleIndexBase;
+ public ArrayIntList m_triangleIndexBase;
  // Size in byte of the indices for one triangle (3*sizeof(index_type) if the indices are tightly packed)
  public int m_triangleIndexStride;
  public int m_numVertices;
- public float[] m_vertexBase;
+ public ArrayFloatList m_vertexBase;
  // Size of a vertex, in bytes
  public int m_vertexStride;
  // The index type is set when adding an indexed mesh to the

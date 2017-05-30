@@ -13,14 +13,12 @@
  */
 package bullet_examples;
 
-import java.awt.AWTException;
 import java.awt.Canvas;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Insets;
 import java.awt.Point;
-import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import static java.awt.event.MouseEvent.BUTTON1;

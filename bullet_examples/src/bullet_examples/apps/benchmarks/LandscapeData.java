@@ -29,46 +29,44 @@ import org.apache.commons.collections.primitives.ArrayIntList;
  */
 public class LandscapeData {
 
- public static float[] Landscape01Vtx;
- public static float[] Landscape02Vtx;
- public static float[] Landscape03Vtx;
- public static float[] Landscape04Vtx;
- public static float[] Landscape05Vtx;
- public static float[] Landscape06Vtx;
- public static float[] Landscape07Vtx;
- public static float[] Landscape08Vtx;
- public static int[] Landscape01Idx;
- public static int[] Landscape02Idx;
- public static int[] Landscape03Idx;
- public static int[] Landscape04Idx;
- public static int[] Landscape05Idx;
- public static int[] Landscape06Idx;
- public static int[] Landscape07Idx;
- public static int[] Landscape08Idx;
+ public static  ArrayFloatList Landscape01Vtx ;
+ public static  ArrayFloatList Landscape02Vtx ;
+ public static  ArrayFloatList Landscape03Vtx ;
+ public static  ArrayFloatList Landscape04Vtx ;
+ public static  ArrayFloatList Landscape05Vtx ;
+ public static  ArrayFloatList Landscape06Vtx ;
+ public static  ArrayFloatList Landscape07Vtx ;
+ public static  ArrayFloatList Landscape08Vtx ;
+ public static  ArrayIntList Landscape01Idx ;
+ public static  ArrayIntList Landscape02Idx ;
+ public static  ArrayIntList Landscape03Idx ;
+ public static  ArrayIntList Landscape04Idx ;
+ public static  ArrayIntList Landscape05Idx ;
+ public static  ArrayIntList Landscape06Idx ;
+ public static  ArrayIntList Landscape07Idx ;
+ public static  ArrayIntList Landscape08Idx ;
 
- private static float[] string_to_floats(String s) {
+ private static ArrayFloatList string_to_floats(String s) {
   String[] split = s.replace('\n', ' ').split(",");
   return Arrays.stream(split)
    .map(o -> o.trim())
    .mapToDouble(o -> Double.parseDouble(o))
-   .collect(ArrayFloatList::new, ArrayFloatList::add, ArrayFloatList::addAll)
-   .toBackedArray();
+   .collect(ArrayFloatList::new, ArrayFloatList::add, ArrayFloatList::addAll);
  }
 
- private static int[] string_to_ints(String s) {
+ private static ArrayIntList string_to_ints(String s) {
   String[] split = s.replace('\n', ' ').split(",");
   return Arrays.stream(split)
    .map(o -> o.trim())
    .mapToInt(o -> Integer.parseInt(o))
-   .collect(ArrayIntList::new, ArrayIntList::add, ArrayIntList::addAll)
-   .toBackedArray();
+   .collect(ArrayIntList::new, ArrayIntList::add, ArrayIntList::addAll);
  }
 
  static {
   try (InputStream in = LandscapeData.class.getResource("LandscapeData.xml").openStream()) {
    Properties p = new Properties();
    p.loadFromXML(in);
-   Landscape01Vtx = string_to_floats(p.getProperty("Landscape01Vtx"));
+   Landscape01Vtx =string_to_floats(p.getProperty("Landscape01Vtx"));
    Landscape02Vtx = string_to_floats(p.getProperty("Landscape02Vtx"));
    Landscape03Vtx = string_to_floats(p.getProperty("Landscape03Vtx"));
    Landscape04Vtx = string_to_floats(p.getProperty("Landscape04Vtx"));

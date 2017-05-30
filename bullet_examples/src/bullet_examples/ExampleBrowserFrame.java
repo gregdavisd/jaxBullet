@@ -50,6 +50,7 @@ import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.PixelFormat;
 import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_RANDOMIZE_ORDER;
+import bullet_examples.apps.raycast.RaytestDemo;
 import bullet_examples.apps.vehicle.ForkLiftDemo;
 
 /**
@@ -83,7 +84,8 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
  static final String NODE_PRIM_VS_MESH = "Prim vs. Mesh";
  static final String NODE_CONVEX_VS_MESH = "Convex vs. Mesh";
  static final String NODE_FORK_LIFT="Fork Lift";
- static final String DEFAULT_DEMO = NODE_FORK_LIFT;
+ static final String NODE_RAY_TEST="Raytest";
+ static final String DEFAULT_DEMO = NODE_BASIC_EXAMPLE;
  private static boolean cycle;
  private static boolean activate_window = false;
  private static boolean backgrounded = false;
@@ -178,6 +180,9 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
     break;
    case NODE_FORK_LIFT:
     new_demo = new ForkLiftDemo();
+    break;
+   case NODE_RAY_TEST:
+    new_demo= new RaytestDemo();
     break;
    default:
     new_demo = null;
@@ -964,11 +969,14 @@ public class ExampleBrowserFrame extends javax.swing.JFrame {
     node_benchmarks.add(new DefaultMutableTreeNode(NODE_CONVEX_VS_MESH));
     DefaultMutableTreeNode node_vehicles = new DefaultMutableTreeNode("Vehicle");
     node_vehicles.add(new DefaultMutableTreeNode(NODE_FORK_LIFT));
+    DefaultMutableTreeNode node_raycast = new DefaultMutableTreeNode("Ray Cast");
+    node_raycast.add(new DefaultMutableTreeNode(NODE_RAY_TEST));
     
     DefaultMutableTreeNode node_Examples = new DefaultMutableTreeNode("Examples");
     node_Examples.add(node_API);
     node_Examples.add(node_benchmarks);
     node_Examples.add(node_vehicles);
+    node_Examples.add(node_raycast);
     DefaultTreeModel model = new DefaultTreeModel(node_Examples);
     tree.setModel(model);
     tree.setRootVisible(false);

@@ -229,9 +229,9 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
    final btTransform localB = new btTransform();
    localA.setIdentity();
    localB.setIdentity();
-   localA.getBasis().setEulerZYX(0, M_PI_2, 0);
+   localA.setBasis(new btMatrix3x3().setEulerZYX(0, M_PI_2, 0));
    localA.setOrigin(new btVector3(0.0f, 1.0f, 3.05f));
-   localB.getBasis().setEulerZYX(0f, M_PI_2, 0f);
+   localB.setBasis(new btMatrix3x3().setEulerZYX(0f, M_PI_2, 0f));
    localB.setOrigin(new btVector3(0.0f, -1.5f, -0.05f));
    m_liftHinge = new btHingeConstraint(m_carChassis, m_liftBody, localA, localB);
 //		m_liftHinge.setLimit(-LIFT_EPS, LIFT_EPS);

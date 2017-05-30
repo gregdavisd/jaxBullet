@@ -35,7 +35,7 @@ public class btWheelInfo implements Serializable {
   public boolean m_isInContact;
   public Object m_groundObject; //could be general void* ptr
  }
- public RaycastInfo m_raycastInfo=new RaycastInfo();
+ public RaycastInfo m_raycastInfo = new RaycastInfo();
  public final btTransform m_worldTransform = new btTransform();
  public final btVector3 m_chassisConnectionPointCS = new btVector3(); //const
  public final btVector3 m_wheelDirectionCS = new btVector3();//const

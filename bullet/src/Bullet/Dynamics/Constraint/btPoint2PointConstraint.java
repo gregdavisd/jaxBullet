@@ -14,8 +14,6 @@ subject to the following restrictions:
  */
 package Bullet.Dynamics.Constraint;
 
-import static Bullet.Dynamics.Constraint.btPoint2PointFlags.BT_P2P_FLAGS_CFM;
-import static Bullet.Dynamics.Constraint.btPoint2PointFlags.BT_P2P_FLAGS_ERP;
 import Bullet.Dynamics.btJacobianEntry;
 import Bullet.Dynamics.btRigidBody;
 import static Bullet.LinearMath.btScalar.SIMD_INFINITY;
@@ -29,6 +27,9 @@ import java.io.Serializable;
  */
 public class btPoint2PointConstraint extends btTypedConstraint implements Serializable {
 
+ public static final int BT_P2P_FLAGS_ERP = 1;
+ public static final int BT_P2P_FLAGS_CFM = 2;
+ private static final long serialVersionUID = 1L;
  final btJacobianEntry[] m_jac = new btJacobianEntry[3]; //3 orthogonal linear constraints
  final btVector3 m_pivotInA = new btVector3();
  final btVector3 m_pivotInB = new btVector3();

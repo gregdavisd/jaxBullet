@@ -35,6 +35,8 @@ import bullet_examples.DebugDraw;
 import bullet_examples.DemoContainer;
 import bullet_examples.apps.benchmarks.LandscapeData.*;
 import static bullet_examples.apps.benchmarks.LandscapeData.*;
+import org.apache.commons.collections.primitives.ArrayFloatList;
+import org.apache.commons.collections.primitives.ArrayIntList;
 
 /**
  *
@@ -113,7 +115,7 @@ public abstract class BenchmarkDemoContainer extends DemoContainer {
    ((((tmpW * quat.getZ()) + (tmpZ * quat.getW())) - (tmpX * quat.getY())) + (tmpY * quat.getX()))
   );
  }
- float[][] LandscapeVtx = {
+ ArrayFloatList[] LandscapeVtx = {
   Landscape01Vtx,
   Landscape02Vtx,
   Landscape03Vtx,
@@ -123,15 +125,15 @@ public abstract class BenchmarkDemoContainer extends DemoContainer {
   Landscape07Vtx,
   Landscape08Vtx,};
  int[] LandscapeVtxCount = {
-  Landscape01Vtx.length / 3,
-  Landscape02Vtx.length / 3,
-  Landscape03Vtx.length / 3,
-  Landscape04Vtx.length / 3,
-  Landscape05Vtx.length / 3,
-  Landscape06Vtx.length / 3,
-  Landscape07Vtx.length / 3,
-  Landscape08Vtx.length / 3,};
- int[][] LandscapeIdx = {
+  Landscape01Vtx.size() / 3,
+  Landscape02Vtx.size() / 3,
+  Landscape03Vtx.size() / 3,
+  Landscape04Vtx.size() / 3,
+  Landscape05Vtx.size() / 3,
+  Landscape06Vtx.size() / 3,
+  Landscape07Vtx.size() / 3,
+  Landscape08Vtx.size() / 3,};
+ ArrayIntList[] LandscapeIdx = {
   Landscape01Idx,
   Landscape02Idx,
   Landscape03Idx,
@@ -141,14 +143,14 @@ public abstract class BenchmarkDemoContainer extends DemoContainer {
   Landscape07Idx,
   Landscape08Idx,};
  int[] LandscapeIdxCount = {
-  Landscape01Idx.length,
-  Landscape02Idx.length,
-  Landscape03Idx.length,
-  Landscape04Idx.length,
-  Landscape05Idx.length,
-  Landscape06Idx.length,
-  Landscape07Idx.length,
-  Landscape08Idx.length,};
+  Landscape01Idx.size(),
+  Landscape02Idx.size(),
+  Landscape03Idx.size(),
+  Landscape04Idx.size(),
+  Landscape05Idx.size(),
+  Landscape06Idx.size(),
+  Landscape07Idx.size(),
+  Landscape08Idx.size(),};
 
  protected void createLargeMeshBody() {
   final btTransform trans = new btTransform();

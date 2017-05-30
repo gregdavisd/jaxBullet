@@ -77,8 +77,9 @@ public class btScalar implements Serializable {
  public static final int BT_BULLET_VERSION = 286;
  public static final float BT_ONE = 1.0f;
  public static final float BT_ZERO = 0.0f;
-public static final float M_PI=(float)Math.PI;
-public static final float M_PI_2=M_PI/2.0f;
+ public static final float M_PI = (float) Math.PI;
+ public static final float M_PI_2 = M_PI / 2.0f;
+
  /**
   *
   * @param r
@@ -94,7 +95,7 @@ public static final float M_PI_2=M_PI/2.0f;
   * @return
   */
  public static float btAcos(float x) {
-  float rx=x;
+  float rx = x;
   if (rx < (-1f)) {
    rx = (-1f);
   }
@@ -105,7 +106,7 @@ public static final float M_PI_2=M_PI/2.0f;
  }
 
  public static float btAsin(float x) {
-  float rx=x;
+  float rx = x;
   if (rx < (-1f)) {
    rx = (-1f);
   }

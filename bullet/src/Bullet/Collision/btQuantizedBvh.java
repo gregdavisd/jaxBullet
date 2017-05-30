@@ -296,8 +296,8 @@ class btQuantizedBvh implements Serializable {
   int[] sign = new int[]{rayDirection.x < 0.0f ? 1 : 0, rayDirection.y < 0.0f ? 1 : 0,
    rayDirection.z < 0.0f ? 1 : 0};
   /* Quick pruning by quantized box */
-  final btVector3 rayAabbMin = raySource;
-  final btVector3 rayAabbMax = raySource;
+  final btVector3 rayAabbMin = new btVector3(raySource);
+  final btVector3 rayAabbMax = new btVector3(raySource);
   rayAabbMin.setMin(rayTarget);
   rayAabbMax.setMax(rayTarget);
 
@@ -403,8 +403,8 @@ class btQuantizedBvh implements Serializable {
   float lambda_max;
 
   /* Quick pruning by quantized box */
-  final btVector3 rayAabbMin = raySource;
-  final btVector3 rayAabbMax = raySource;
+  final btVector3 rayAabbMin = new btVector3(raySource);
+  final btVector3 rayAabbMax = new btVector3(raySource);
   rayAabbMin.setMin(rayTarget);
   rayAabbMax.setMax(rayTarget);
 
