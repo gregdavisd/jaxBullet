@@ -38,12 +38,9 @@ class BuildOptimizedBvhNodeCallback implements btTriangleCallback, Serializable 
   m_triangleNodes.ensureCapacity(other.m_triangleNodes.size());
   m_triangleNodes.clear();
   for (btOptimizedBvhNode node : other.m_triangleNodes) {
-   try {
-    m_triangleNodes.add((btOptimizedBvhNode) node.clone());
-   } catch (CloneNotSupportedException ex) {
-    Logger.getLogger(BuildOptimizedBvhNodeCallback.class.getName()).log(Level.SEVERE, null, ex);
-    assert (false);
-   }
+ 
+    m_triangleNodes.add( new btOptimizedBvhNode(node));
+ 
   }
   return this;
  }

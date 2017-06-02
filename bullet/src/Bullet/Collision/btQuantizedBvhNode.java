@@ -19,7 +19,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btQuantizedBvhNode implements Cloneable, Serializable {
+public class btQuantizedBvhNode implements  Serializable {
 
 //http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vclang/html/vclrf__m128.asp
 //Note: currently we have 16 bytes per quantized node
@@ -28,10 +28,19 @@ public class btQuantizedBvhNode implements Cloneable, Serializable {
 // actually) triangles each (since the sign bit is reserved
  static final int MAX_NUM_PARTS_IN_BITS = 10;
  //12 bytes
- final int[] m_quantizedAabbMin = new int[3]; //lots more bytes
+ final int[] m_quantizedAabbMin = new int[3]; 
  final int[] m_quantizedAabbMax = new int[3];
  //4 bytes
  int m_escapeIndexOrTriangleIndex;
+
+ btQuantizedBvhNode(btQuantizedBvhNode node) {
+ m_escapeIndexOrTriangleIndex=node.m_escapeIndexOrTriangleIndex;
+ System.arraycopy(node.m_quantizedAabbMin, 0, m_quantizedAabbMin, 0, 3);
+ System.arraycopy(node.m_quantizedAabbMax, 0, m_quantizedAabbMax, 0, 3);
+ }
+
+ public btQuantizedBvhNode() {
+ }
 
  boolean isLeafNode() {
   //skipindex is negative (internal node), triangleindex >=0 (leafnode)
@@ -56,14 +65,5 @@ public class btQuantizedBvhNode implements Cloneable, Serializable {
   // Get only the highest bits where the part index is stored
   return (m_escapeIndexOrTriangleIndex >>> (31 - MAX_NUM_PARTS_IN_BITS));
  }
-
- @Override
- public Object clone() throws CloneNotSupportedException {
-  try {
-   return super.clone();
-  } catch (CloneNotSupportedException ex) {
-   //Logger.getLogger(btOptimizedBvhNode.class.getName()).log(Level.SEVERE, null, ex);
-   throw ex;
-  }
- }
+ 
 }

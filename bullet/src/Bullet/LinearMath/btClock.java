@@ -25,15 +25,7 @@ public final class btClock implements Serializable {
   m_data = new btClockData();
   reset();
  }
-
- public btClock(btClock other) {
-  m_data = (btClockData) other.m_data.clone();
- }
-
- public void set(btClock other) {
-  m_data = (btClockData) other.m_data.clone();
- }
-
+ 
  /// Resets the initial reference time.
  public void reset() {
   m_data.mStartTick = m_data.mStartTime = System.nanoTime();

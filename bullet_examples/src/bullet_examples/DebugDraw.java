@@ -27,6 +27,8 @@ import static org.lwjgl.opengl.GL11.glVertex3f;
  */
 public class DebugDraw extends btIDebugDraw {
 
+ private static final long serialVersionUID = 1L;
+
  int debug_mode = 0;
 
  @Override

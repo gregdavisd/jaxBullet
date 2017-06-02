@@ -21,7 +21,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-class btOptimizedBvhNode implements Cloneable, Serializable {
+class btOptimizedBvhNode implements   Serializable {
 
  //32 bytes
  final btVector3 m_aabbMinOrg = new btVector3();
@@ -33,13 +33,15 @@ class btOptimizedBvhNode implements Cloneable, Serializable {
  int m_subPart;
  int m_triangleIndex;
 
- @Override
- public Object clone() throws CloneNotSupportedException {
-  try {
-   return super.clone();
-  } catch (CloneNotSupportedException ex) {
-   //Logger.getLogger(btOptimizedBvhNode.class.getName()).log(Level.SEVERE, null, ex);
-   throw ex;
-  }
+ btOptimizedBvhNode(btOptimizedBvhNode node) {
+  m_aabbMinOrg.set(node.m_aabbMinOrg);
+  m_aabbMaxOrg.set(node.m_aabbMaxOrg);
+  m_escapeIndex=node.m_escapeIndex;
+  m_subPart=node.m_subPart;
+  m_triangleIndex=node.m_triangleIndex;
  }
-};
+
+ public btOptimizedBvhNode() {
+ }
+ 
+} 

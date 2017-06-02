@@ -26,6 +26,8 @@ import java.io.Serializable;
  */
 public class btSolverBody implements Serializable {
 
+ private static final long serialVersionUID = 1L;
+
  public final btTransform m_worldTransform = new btTransform();
  public final btVector3 m_deltaLinearVelocity = new btVector3();
  public final btVector3 m_deltaAngularVelocity = new btVector3();

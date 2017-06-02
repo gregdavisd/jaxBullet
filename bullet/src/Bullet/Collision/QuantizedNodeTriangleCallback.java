@@ -40,12 +40,7 @@ class QuantizedNodeTriangleCallback implements btTriangleCallback, Serializable 
   m_triangleNodes.ensureCapacity(other.m_triangleNodes.size());
   m_triangleNodes.clear();
   for (btQuantizedBvhNode node : other.m_triangleNodes) {
-   try {
-    m_triangleNodes.add((btQuantizedBvhNode) node.clone());
-   } catch (CloneNotSupportedException ex) {
-    Logger.getLogger(QuantizedNodeTriangleCallback.class.getName()).log(Level.SEVERE, null, ex);
-    assert (false);
-   }
+    m_triangleNodes.add(new btQuantizedBvhNode(node));
   }
   return this;
  }

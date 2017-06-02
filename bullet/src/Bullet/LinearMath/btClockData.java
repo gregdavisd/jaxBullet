@@ -19,7 +19,7 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-class btClockData implements Cloneable, Serializable {
+class btClockData implements  Serializable {
 
  final long mClockFrequency;
  long mStartTick;
@@ -28,13 +28,5 @@ class btClockData implements Cloneable, Serializable {
  public btClockData() {
   mClockFrequency = 1_000_000_000;
  }
-
- @Override
- public Object clone() {
-  try {
-   return super.clone();
-  } catch (CloneNotSupportedException ex) {
-  }
-  return new btClockData();
- }
+ 
 }

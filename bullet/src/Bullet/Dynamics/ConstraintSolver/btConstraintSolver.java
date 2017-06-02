@@ -29,6 +29,8 @@ import java.util.List;
  */
 public abstract class btConstraintSolver implements Serializable {
 
+ private static final long serialVersionUID = 1L;
+
  public void prepareSolve(int numBodies, int numManifolds) {;
  }
 

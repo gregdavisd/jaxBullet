@@ -55,7 +55,6 @@ import Bullet.LinearMath.btVector3;
 import static Bullet.LinearMath.btVector3.btPlaneSpace1;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.vecmath.FloatSmartPointer;
@@ -69,19 +68,18 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class btSequentialImpulseConstraintSolver extends btConstraintSolver implements Serializable {
 
- static int gNumSplitImpulseRecoveries = 0;
  private static final long serialVersionUID = 1L;
- long m_btSeed2 = ThreadLocalRandom.current().nextLong();
+ private long m_btSeed2 = ThreadLocalRandom.current().nextLong();
 
- static float gResolveSingleConstraintRowGeneric_scalar_reference(btSolverBody body1,
+  private static float gResolveSingleConstraintRowGeneric_scalar_reference(btSolverBody body1,
   btSolverBody body2,
   btSolverConstraint c) {
   float deltaImpulse = c.m_rhs - (c.m_appliedImpulse) * c.m_cfm;
   float deltaVel1Dotn = c.m_contactNormal1.dot(body1.internalGetDeltaLinearVelocity()) +
-    c.m_relpos1CrossNormal.dot(body1.
+   c.m_relpos1CrossNormal.dot(body1.
     internalGetDeltaAngularVelocity());
   float deltaVel2Dotn = c.m_contactNormal2.dot(body2.internalGetDeltaLinearVelocity()) +
-    c.m_relpos2CrossNormal.dot(body2.
+   c.m_relpos2CrossNormal.dot(body2.
     internalGetDeltaAngularVelocity());
   //	const float delta_rel_vel	=	deltaVel1Dotn-deltaVel2Dotn;
   deltaImpulse -= deltaVel1Dotn * c.m_jacDiagABInv;
@@ -105,15 +103,15 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   return deltaImpulse;
  }
 
- static float gResolveSingleConstraintRowLowerLimit_scalar_reference(btSolverBody body1,
+  private static float gResolveSingleConstraintRowLowerLimit_scalar_reference(btSolverBody body1,
   btSolverBody body2,
   btSolverConstraint c) {
   float deltaImpulse = c.m_rhs - (c.m_appliedImpulse) * c.m_cfm;
   float deltaVel1Dotn = c.m_contactNormal1.dot(body1.internalGetDeltaLinearVelocity()) +
-    c.m_relpos1CrossNormal.dot(body1.
+   c.m_relpos1CrossNormal.dot(body1.
     internalGetDeltaAngularVelocity());
   float deltaVel2Dotn = c.m_contactNormal2.dot(body2.internalGetDeltaLinearVelocity()) +
-    c.m_relpos2CrossNormal.dot(body2.
+   c.m_relpos2CrossNormal.dot(body2.
     internalGetDeltaAngularVelocity());
   deltaImpulse -= deltaVel1Dotn * c.m_jacDiagABInv;
   deltaImpulse -= deltaVel2Dotn * c.m_jacDiagABInv;
@@ -133,7 +131,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   return deltaImpulse;
  }
 
- static void applyAnisotropicFriction(btCollisionObject colObj, final btVector3 frictionDirection,
+  protected static void applyAnisotropicFriction(btCollisionObject colObj, final btVector3 frictionDirection,
   int frictionMode) {
   if (colObj != null && colObj.hasAnisotropicFriction(frictionMode)) {
    // transform to local coordinates
@@ -146,14 +144,13 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    colObj.getWorldTransformPtr().transform3x3(frictionDirection.set(loc_lateral));
   }
  }
- final ArrayList<btSolverBody> solver = new ArrayList<>(0);
- final ArrayList<btSolverConstraint> contact = new ArrayList<>(0);
- final ArrayList<btSolverConstraint> non_contact = new ArrayList<>(0);
- final ArrayList<btSolverConstraint> contact_friction = new ArrayList<>(0);
- final ArrayList<btSolverConstraint> rolling_friction = new ArrayList<>(0);
- btTypedConstraint.btConstraintInfo1[] constraint_info1 = new btTypedConstraint.btConstraintInfo1[0];
- int m_maxOverrideNumSolverIterations;
- btSolverBody m_fixedBody;
+ private final ArrayList<btSolverBody> solver = new ArrayList<>(0);
+ private final ArrayList<btSolverConstraint> contact = new ArrayList<>(0);
+ private final ArrayList<btSolverConstraint> non_contact = new ArrayList<>(0);
+ private final ArrayList<btSolverConstraint> contact_friction = new ArrayList<>(0);
+ private final ArrayList<btSolverConstraint> rolling_friction = new ArrayList<>(0);
+ private int m_maxOverrideNumSolverIterations;
+ private btSolverBody m_fixedBody;
  // When running solvers on multiple threads, a race condition exists for Kinematic objects that
  // participate in more than one solver.
  // The getOrInitSolverBody() function writes the companionId of each body (storing the index of the solver body
@@ -162,16 +159,16 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
  // To avoid this race condition, this solver does not write the companionId, instead it stores the solver body
  // index in this solver-local table, indexed by the uniqueId of the body.
  //btAlignedObjectArray<int>	m_kinematicBodyUniqueIdToSolverBodyTable;  // only used for multithreading
- btSingleConstraintRowSolver m_resolveSingleConstraintRowGeneric;
- btSingleConstraintRowSolver m_resolveSingleConstraintRowLowerLimit;
- float m_leastSquaresResidual;
+private  btSingleConstraintRowSolver m_resolveSingleConstraintRowGeneric;
+private  btSingleConstraintRowSolver m_resolveSingleConstraintRowLowerLimit;
+private  float m_leastSquaresResidual;
 
  public btSequentialImpulseConstraintSolver() {
   m_resolveSingleConstraintRowGeneric = getScalarConstraintRowSolverGeneric();
   m_resolveSingleConstraintRowLowerLimit = getScalarConstraintRowSolverLowerLimit();
  }
 
- void setupFrictionConstraint(btSolverConstraint solverConstraint, final btVector3 normalAxis,
+  protected void setupFrictionConstraint(btSolverConstraint solverConstraint, final btVector3 normalAxis,
   btSolverBody solverBodyA,
   btSolverBody solverBodyB,
   btManifoldPoint cp, final btVector3 rel_pos1, final btVector3 rel_pos2,
@@ -181,7 +178,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    relaxation, 0, 0);
  }
 
- void setupFrictionConstraint(btSolverConstraint solverConstraint, final btVector3 normalAxis,
+  protected void setupFrictionConstraint(btSolverConstraint solverConstraint, final btVector3 normalAxis,
   btSolverBody solverBodyA,
   btSolverBody solverBodyB,
   btManifoldPoint cp, final btVector3 rel_pos1, final btVector3 rel_pos2,
@@ -192,7 +189,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    relaxation, desiredVelocity, 0);
  }
 
- void setupFrictionConstraint(btSolverConstraint solverConstraint, final btVector3 normalAxis,
+  protected void setupFrictionConstraint(btSolverConstraint solverConstraint, final btVector3 normalAxis,
   btSolverBody solverBodyA,
   btSolverBody solverBodyB,
   btManifoldPoint cp, final btVector3 rel_pos1, final btVector3 rel_pos2,
@@ -254,12 +251,12 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
     solverConstraint.m_contactNormal1
     .dot(body0 != null ? new btVector3(solverBodyA.m_linearVelocity)
      .add(solverBodyA.m_externalForceImpulse) : new btVector3()) +
-     solverConstraint.m_relpos1CrossNormal
+    solverConstraint.m_relpos1CrossNormal
     .dot(body0 != null ? solverBodyA.m_angularVelocity : new btVector3());
    float vel2Dotn = solverConstraint.m_contactNormal2
     .dot(body1 != null ? new btVector3(solverBodyB.m_linearVelocity)
      .add(solverBodyB.m_externalForceImpulse) : new btVector3()) +
-     solverConstraint.m_relpos2CrossNormal
+    solverConstraint.m_relpos2CrossNormal
     .dot(body1 != null ? solverBodyB.m_angularVelocity : new btVector3());
    rel_vel = vel1Dotn + vel2Dotn;
 //		float positionalError = 0.f;
@@ -273,7 +270,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   }
  }
 
- void setupTorsionalFrictionConstraint(btSolverConstraint solverConstraint,
+  protected void setupTorsionalFrictionConstraint(btSolverConstraint solverConstraint,
   final btVector3 normalAxis,
   btSolverBody solverBodyA,
   btSolverBody solverBodyB,
@@ -285,7 +282,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    rel_pos1, rel_pos2, colObj0, colObj1, relaxation, 0f, 0f);
  }
 
- void setupTorsionalFrictionConstraint(btSolverConstraint solverConstraint,
+  protected void setupTorsionalFrictionConstraint(btSolverConstraint solverConstraint,
   final btVector3 normalAxis,
   btSolverBody solverBodyA,
   btSolverBody solverBodyB,
@@ -297,7 +294,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    rel_pos1, rel_pos2, colObj0, colObj1, relaxation, desiredVelocity, 0f);
  }
 
- void setupTorsionalFrictionConstraint(btSolverConstraint solverConstraint,
+  protected void setupTorsionalFrictionConstraint(btSolverConstraint solverConstraint,
   final btVector3 normalAxis1,
   btSolverBody solverBodyA,
   btSolverBody solverBodyB,
@@ -329,7 +326,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    solverConstraint.m_angularComponentB.set(
     body1 != null ? body1.getInvInertiaTensorWorldPtr().transform(ftorqueAxis1).mul(body1
      .getAngularFactor()) :
-      new btVector3());
+     new btVector3());
   }
   {
    final btVector3 iMJaA =
@@ -338,7 +335,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    final btVector3 iMJaB =
     body1 != null ? body1.getInvInertiaTensorWorldPtr().transform(new btVector3(
       solverConstraint.m_relpos2CrossNormal)) :
-      new btVector3();
+     new btVector3();
    float sum = 0;
    sum += iMJaA.dot(solverConstraint.m_relpos1CrossNormal);
    sum += iMJaB.dot(solverConstraint.m_relpos2CrossNormal);
@@ -350,13 +347,13 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
     solverConstraint.m_contactNormal1
     .dot(body0 != null ? new btVector3(solverBodyA.m_linearVelocity)
      .add(solverBodyA.m_externalForceImpulse) : new btVector3()) +
-     solverConstraint.m_relpos1CrossNormal
+    solverConstraint.m_relpos1CrossNormal
     .dot(body0 != null ? solverBodyA.m_angularVelocity : new btVector3());
    float vel2Dotn =
     solverConstraint.m_contactNormal2
     .dot(body1 != null ? new btVector3(solverBodyB.m_linearVelocity)
      .add(solverBodyB.m_externalForceImpulse) : new btVector3()) +
-     solverConstraint.m_relpos2CrossNormal
+    solverConstraint.m_relpos2CrossNormal
     .dot(body1 != null ? solverBodyB.m_angularVelocity : new btVector3());
    rel_vel = vel1Dotn + vel2Dotn;
 //		float positionalError = 0.f;
@@ -369,7 +366,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   }
  }
 
- btSolverConstraint addFrictionConstraint(final btVector3 normalAxis, btSolverBody solverBodyA,
+  protected btSolverConstraint addFrictionConstraint(final btVector3 normalAxis, btSolverBody solverBodyA,
   btSolverBody solverBodyB,
   btSolverConstraint solverFriction, btManifoldPoint cp, final btVector3 rel_pos1,
   final btVector3 rel_pos2,
@@ -381,7 +378,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    relaxation, 0f, 0f);
  }
 
- btSolverConstraint addFrictionConstraint(final btVector3 normalAxis, btSolverBody solverBodyA,
+  protected btSolverConstraint addFrictionConstraint(final btVector3 normalAxis, btSolverBody solverBodyA,
   btSolverBody solverBodyB,
   btSolverConstraint solverFriction, btManifoldPoint cp, final btVector3 rel_pos1,
   final btVector3 rel_pos2,
@@ -393,7 +390,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    relaxation, desiredVelocity, 0);
  }
 
- btSolverConstraint addFrictionConstraint(final btVector3 normalAxis, btSolverBody solverBodyA,
+  protected btSolverConstraint addFrictionConstraint(final btVector3 normalAxis, btSolverBody solverBodyA,
   btSolverBody solverBodyB,
   btSolverConstraint solverFriction, btManifoldPoint cp, final btVector3 rel_pos1,
   final btVector3 rel_pos2,
@@ -408,7 +405,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   return solverConstraint;
  }
 
- btSolverConstraint addTorsionalFrictionConstraint(final btVector3 normalAxis,
+  protected btSolverConstraint addTorsionalFrictionConstraint(final btVector3 normalAxis,
   btSolverBody solverBodyA,
   btSolverBody solverBodyB,
   btSolverConstraint solverFriction, btManifoldPoint cp, float torsionalFriction,
@@ -420,7 +417,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    rel_pos2, colObj0, colObj1, relaxation, 0f, 0f);
  }
 
- btSolverConstraint addTorsionalFrictionConstraint(final btVector3 normalAxis,
+  protected btSolverConstraint addTorsionalFrictionConstraint(final btVector3 normalAxis,
   btSolverBody solverBodyA,
   btSolverBody solverBodyB,
   btSolverConstraint solverFriction, btManifoldPoint cp, float torsionalFriction,
@@ -432,7 +429,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    rel_pos2, colObj0, colObj1, relaxation, desiredVelocity, 0f);
  }
 
- btSolverConstraint addTorsionalFrictionConstraint(final btVector3 normalAxis,
+  protected btSolverConstraint addTorsionalFrictionConstraint(final btVector3 normalAxis,
   btSolverBody solverBodyA,
   btSolverBody solverBodyB,
   btSolverConstraint solverFriction, btManifoldPoint cp, float torsionalFriction,
@@ -449,7 +446,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   return solverConstraint;
  }
 
- void attach_friction_to_contact_constraint(btSolverConstraint contact, btSolverConstraint friction) {
+  protected void attach_friction_to_contact_constraint(btSolverConstraint contact, btSolverConstraint friction) {
   if (contact.m_solverFriction == null) {
    contact.m_solverFriction = friction;
   } else if (contact.m_solverFriction2 == null) {
@@ -459,7 +456,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   }
  }
 
- void setupContactConstraint(btSolverConstraint solverConstraint, btSolverBody solverBodyA,
+  protected void setupContactConstraint(btSolverConstraint solverConstraint, btSolverBody solverBodyA,
   btSolverBody solverBodyB,
   btManifoldPoint cp,
   btContactSolverInfo infoGlobal, float[] relaxation, final btVector3 rel_pos1,
@@ -475,7 +472,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   float cfm = infoGlobal.m_globalCfm;
   float erp = infoGlobal.m_erp2;
   if ((cp.m_contactPointFlags & BT_CONTACT_FLAG_HAS_CONTACT_CFM) != 0 || (cp.m_contactPointFlags &
-    BT_CONTACT_FLAG_HAS_CONTACT_ERP) != 0) {
+   BT_CONTACT_FLAG_HAS_CONTACT_ERP) != 0) {
    if ((cp.m_contactPointFlags & BT_CONTACT_FLAG_HAS_CONTACT_CFM) != 0) {
     cfm = cp.m_contactCFM;
    }
@@ -484,7 +481,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    }
   } else if ((cp.m_contactPointFlags & BT_CONTACT_FLAG_CONTACT_STIFFNESS_DAMPING) != 0) {
    float denom = (infoGlobal.m_timeStep * cp.m_combinedContactStiffness1 +
-     cp.m_combinedContactDamping1);
+    cp.m_combinedContactDamping1);
    if (denom < SIMD_EPSILON) {
     denom = SIMD_EPSILON;
    }
@@ -498,14 +495,14 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    .set(rb0 != null ? rb0.getInvInertiaTensorWorld()
     .transform(new btVector3(torqueAxis0))
     .mul(rb0.getAngularFactor()) :
-     new btVector3());
+    new btVector3());
   final btVector3 torqueAxis1 = new btVector3(rel_pos2)
    .cross(cp.m_normalWorldOnB);
   solverConstraint.m_angularComponentB
    .set(rb1 != null ? rb1.getInvInertiaTensorWorld()
     .transform(new btVector3(torqueAxis1).negate())
     .mul(rb1.getAngularFactor()) :
-     new btVector3());
+    new btVector3());
   {
    final btVector3 vec = new btVector3();
    float denom0 = 0.f;
@@ -576,17 +573,17 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   solverConstraint.m_appliedPushImpulse = 0.f;
   {
    final btVector3 externalForceImpulseA = bodyA.m_originalBody != null ?
-     bodyA.m_externalForceImpulse :
-     new btVector3();
+    bodyA.m_externalForceImpulse :
+    new btVector3();
    final btVector3 externalTorqueImpulseA = bodyA.m_originalBody != null ?
-     bodyA.m_externalTorqueImpulse :
-     new btVector3();
+    bodyA.m_externalTorqueImpulse :
+    new btVector3();
    final btVector3 externalForceImpulseB = bodyB.m_originalBody != null ?
-     bodyB.m_externalForceImpulse :
-     new btVector3();
+    bodyB.m_externalForceImpulse :
+    new btVector3();
    final btVector3 externalTorqueImpulseB = bodyB.m_originalBody != null ?
-     bodyB.m_externalTorqueImpulse :
-     new btVector3();
+    bodyB.m_externalTorqueImpulse :
+    new btVector3();
    float vel1Dotn =
     solverConstraint.m_contactNormal1
     .dot(new btVector3(bodyA.m_linearVelocity)
@@ -626,7 +623,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   }
  }
 
- void setFrictionConstraintImpulse(btSolverConstraint solverConstraint, btSolverBody solverBodyA,
+  protected void setFrictionConstraintImpulse(btSolverConstraint solverConstraint, btSolverBody solverBodyA,
   btSolverBody solverBodyB,
   btManifoldPoint cp, btContactSolverInfo infoGlobal) {
   btSolverBody bodyA = solverBodyA;
@@ -637,7 +634,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    btSolverConstraint frictionConstraint1 = solverConstraint.m_solverFriction;
    if ((infoGlobal.m_solverMode & SOLVER_USE_WARMSTARTING) != 0) {
     frictionConstraint1.m_appliedImpulse = cp.m_appliedImpulseLateral1 *
-      infoGlobal.m_warmstartingFactor;
+     infoGlobal.m_warmstartingFactor;
     if (rb0 != null) {
      bodyA.internalApplyImpulse(
       new btVector3(frictionConstraint1.m_contactNormal1)
@@ -663,7 +660,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    btSolverConstraint frictionConstraint2 = solverConstraint.m_solverFriction2;
    if ((infoGlobal.m_solverMode & SOLVER_USE_WARMSTARTING) != 0) {
     frictionConstraint2.m_appliedImpulse =
-      cp.m_appliedImpulseLateral2 * infoGlobal.m_warmstartingFactor;
+     cp.m_appliedImpulseLateral2 * infoGlobal.m_warmstartingFactor;
     if (rb0 != null) {
      bodyA.internalApplyImpulse(
       new btVector3(frictionConstraint2.m_contactNormal1)
@@ -684,12 +681,12 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   }
  }
 
- float restitutionCurve(float rel_vel, float restitution) {
+  protected float restitutionCurve(float rel_vel, float restitution) {
   float rest = restitution * -rel_vel;
   return rest;
  }
 
- void convertContacts(List<btPersistentManifold> manifoldPtr, int numManifolds,
+  private void convertContacts(List<btPersistentManifold> manifoldPtr, int numManifolds,
   btContactSolverInfo infoGlobal) {
   int i;
   for (btPersistentManifold manifold : manifoldPtr) {
@@ -697,7 +694,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   }
  }
 
- void convertContact(btPersistentManifold manifold, btContactSolverInfo infoGlobal) {
+  private void convertContact(btPersistentManifold manifold, btContactSolverInfo infoGlobal) {
   btCollisionObject colObj0, colObj1;
   colObj0 = (btCollisionObject) manifold.getBody0();
   colObj1 = (btCollisionObject) manifold.getBody1();
@@ -705,7 +702,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   btSolverBody solverBodyB = getOrInitSolverBody(colObj1, infoGlobal.m_timeStep);
   ///avoid collision response between two static objects
   if (solverBodyA == null || (solverBodyA.m_invMass.fuzzyZero() && (solverBodyB == null ||
-    solverBodyB.m_invMass
+   solverBodyB.m_invMass
    .fuzzyZero()))) {
    return;
   }
@@ -781,11 +778,11 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
     ///this will give a conveyor belt effect
     ///
     if ((infoGlobal.m_solverMode & SOLVER_ENABLE_FRICTION_DIRECTION_CACHING) == 0 ||
-      (cp.m_contactPointFlags & BT_CONTACT_FLAG_LATERAL_FRICTION_INITIALIZED) == 0) {
+     (cp.m_contactPointFlags & BT_CONTACT_FLAG_LATERAL_FRICTION_INITIALIZED) == 0) {
      cp.m_lateralFrictionDir1.scaleAdd(-rel_vel, cp.m_normalWorldOnB, vel);
      float lat_rel_vel = cp.m_lateralFrictionDir1.lengthSquared();
      if ((infoGlobal.m_solverMode & SOLVER_DISABLE_VELOCITY_DEPENDENT_FRICTION_DIRECTION) == 0 &&
-       lat_rel_vel > SIMD_EPSILON) {
+      lat_rel_vel > SIMD_EPSILON) {
       cp.m_lateralFrictionDir1.scale(1.f / btSqrt(lat_rel_vel));
       applyAnisotropicFriction(colObj0, cp.m_lateralFrictionDir1,
        btCollisionObject.CF_ANISOTROPIC_FRICTION);
@@ -829,7 +826,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
         rel_pos1, rel_pos2, colObj0, colObj1, relaxation[0]));
       }
       if ((infoGlobal.m_solverMode & SOLVER_USE_2_FRICTION_DIRECTIONS) != 0 &&
-        (infoGlobal.m_solverMode & SOLVER_DISABLE_VELOCITY_DEPENDENT_FRICTION_DIRECTION) != 0) {
+       (infoGlobal.m_solverMode & SOLVER_DISABLE_VELOCITY_DEPENDENT_FRICTION_DIRECTION) != 0) {
        cp.m_contactPointFlags |= BT_CONTACT_FLAG_LATERAL_FRICTION_INITIALIZED;
       }
      }
@@ -851,24 +848,23 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   }
  }
 
- float resolveSplitPenetrationSIMD(
+  protected float resolveSplitPenetrationSIMD(
   btSolverBody bodyA, btSolverBody bodyB,
   btSolverConstraint contactConstraint) {
   return resolveSplitPenetrationImpulseCacheFriendly(bodyA, bodyB, contactConstraint);
  }
 
- float resolveSplitPenetrationImpulseCacheFriendly(
+  protected float resolveSplitPenetrationImpulseCacheFriendly(
   btSolverBody bodyA, btSolverBody bodyB,
   btSolverConstraint contactConstraint) {
   float deltaImpulse = 0.f;
   if (contactConstraint.m_rhsPenetration != 0.0f) {
-   gNumSplitImpulseRecoveries++;
    deltaImpulse = contactConstraint.m_rhsPenetration - (contactConstraint.m_appliedPushImpulse) *
-     contactConstraint.m_cfm;
+    contactConstraint.m_cfm;
    float deltaVel1Dotn = contactConstraint.m_contactNormal1.dot(bodyA.internalGetPushVelocity()) +
-     contactConstraint.m_relpos1CrossNormal.dot(bodyA.internalGetTurnVelocity());
+    contactConstraint.m_relpos1CrossNormal.dot(bodyA.internalGetTurnVelocity());
    float deltaVel2Dotn = contactConstraint.m_contactNormal2.dot(bodyB.internalGetPushVelocity()) +
-     contactConstraint.m_relpos2CrossNormal.dot(bodyB.internalGetTurnVelocity());
+    contactConstraint.m_relpos2CrossNormal.dot(bodyB.internalGetTurnVelocity());
    deltaImpulse -= deltaVel1Dotn * contactConstraint.m_jacDiagABInv;
    deltaImpulse -= deltaVel2Dotn * contactConstraint.m_jacDiagABInv;
    float sum = (contactConstraint.m_appliedPushImpulse) + deltaImpulse;
@@ -889,7 +885,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
  }
 
  //internal method
- btSolverBody getOrInitSolverBody(btCollisionObject body, float timeStep) {
+ private btSolverBody getOrInitSolverBody(btCollisionObject body, float timeStep) {
   btSolverBody solverBodyA;
   if (body.getCompanion() != null) {
    //body has already been converted
@@ -913,7 +909,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   return solverBodyA;
  }
 
- void initSolverBody(btSolverBody solverBody, btCollisionObject collisionObject, float timeStep) {
+ private void initSolverBody(btSolverBody solverBody, btCollisionObject collisionObject, float timeStep) {
   btRigidBody rb = collisionObject != null ? btRigidBody.upcast(collisionObject) : null;
   solverBody.internalGetDeltaLinearVelocity().setZero();
   solverBody.internalGetDeltaAngularVelocity().setZero();
@@ -945,7 +941,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   solver.add(solverBody);
  }
 
- float resolveSingleConstraintRowGeneric(btSolverBody bodyA, btSolverBody bodyB,
+  protected float resolveSingleConstraintRowGeneric(btSolverBody bodyA, btSolverBody bodyB,
   btSolverConstraint contactConstraint) {
   return gResolveSingleConstraintRowGeneric_scalar_reference(bodyA, bodyB, contactConstraint);
  }
@@ -953,22 +949,22 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
 ///This is the scalar reference implementation of solving a single constraint row, the innerloop of the Projected Gauss Seidel/Sequential Impulse constraint solver
 ///Below are optional SSE2 and SSE4/FMA3 versions. We assume most hardware has SSE2. For SSE4/FMA3 we perform a CPU feature check.
 
- float resolveSingleConstraintRowGenericSIMD(btSolverBody bodyA, btSolverBody bodyB,
+  protected float resolveSingleConstraintRowGenericSIMD(btSolverBody bodyA, btSolverBody bodyB,
   btSolverConstraint contactConstraint) {
   return resolveSingleConstraintRowGeneric(bodyA, bodyB, contactConstraint);
  }
 
- float resolveSingleConstraintRowLowerLimit(btSolverBody bodyA, btSolverBody bodyB,
+  protected float resolveSingleConstraintRowLowerLimit(btSolverBody bodyA, btSolverBody bodyB,
   btSolverConstraint contactConstraint) {
   return gResolveSingleConstraintRowLowerLimit_scalar_reference(bodyA, bodyB, contactConstraint);
  }
 
- float resolveSingleConstraintRowLowerLimitSIMD(btSolverBody bodyA, btSolverBody bodyB,
+  protected float resolveSingleConstraintRowLowerLimitSIMD(btSolverBody bodyA, btSolverBody bodyB,
   btSolverConstraint contactConstraint) {
   return resolveSingleConstraintRowLowerLimit(bodyA, bodyB, contactConstraint);
  }
 
- void solveGroupCacheFriendlySplitImpulseIterations(List<btCollisionObject> bodies,
+ protected void solveGroupCacheFriendlySplitImpulseIterations(List<btCollisionObject> bodies,
   int numBodies,
   List<btPersistentManifold> manifoldPtr, int numManifolds,
   List<btTypedConstraint> constraints, int numConstraints,
@@ -987,7 +983,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
       }
      }
      if (leastSquaresResidual <= infoGlobal.m_leastSquaresResidualThreshold || iteration >=
-       (infoGlobal.m_numIterations - 1)) {
+      (infoGlobal.m_numIterations - 1)) {
       break;
      }
     }
@@ -1002,7 +998,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
        leastSquaresResidual += residual * residual;
       }
       if (leastSquaresResidual <= infoGlobal.m_leastSquaresResidualThreshold || iteration >=
-        (infoGlobal.m_numIterations - 1)) {
+       (infoGlobal.m_numIterations - 1)) {
        break;
       }
      }
@@ -1011,7 +1007,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   }
  }
 
- float solveGroupCacheFriendlyFinish(List<btCollisionObject> bodies, int numBodies,
+  protected float solveGroupCacheFriendlyFinish(List<btCollisionObject> bodies, int numBodies,
   btContactSolverInfo infoGlobal) {
   int i, j;
   if ((infoGlobal.m_solverMode & SOLVER_USE_WARMSTARTING) != 0) {
@@ -1088,7 +1084,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   return 0.f;
  }
 
- float solveSingleIteration(int iteration, List<btCollisionObject> bodies, int numBodies,
+protected float solveSingleIteration(int iteration, List<btCollisionObject> bodies, int numBodies,
   List<btPersistentManifold> manifoldPtr, int numManifolds,
   List<btTypedConstraint> constraints, int numConstraints,
   btContactSolverInfo infoGlobal, btIDebugDraw debugDrawer) {
@@ -1255,7 +1251,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
  }
 
 /// btSequentialImpulseConstraintSolver Sequentially applies impulses
- float solveGroupCacheFriendlySetup(List<btCollisionObject> bodies, int numBodies,
+  protected float solveGroupCacheFriendlySetup(List<btCollisionObject> bodies, int numBodies,
   List<btPersistentManifold> manifoldPtr, int numManifolds,
   List<btTypedConstraint> constraints, int numConstraints,
   btContactSolverInfo infoGlobal, btIDebugDraw debugDrawer) {
@@ -1313,10 +1309,14 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
     }
    }
   }
+  if (DEBUG_BLOCKS){
   for (btCollisionObject body : bodies.subList(0, numBodies)) {
-   body.setCompanion(null);
+   assert(body.getCompanion()==null);
+   //body.setCompanion(null);
   }
-  solver.clear();
+  }
+  assert(solver.isEmpty());
+  //solver.clear();
   //convert all bodies
   for (btCollisionObject object : bodies.subList(0, numBodies)) {
    btSolverBody solverBody = getOrInitSolverBody(object, infoGlobal.m_timeStep);
@@ -1346,12 +1346,11 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    }
   }
   {
-   int constraint_num = 0;
    //calculate the total number of contraint rows
-   resize_info1(numConstraints);
+   final ArrayList<btConstraintInfo1> constraint_info1 = new ArrayList<>(numConstraints);
    for (btTypedConstraint constraint : constraints.subList(0, numConstraints)) {
-    btTypedConstraint.btConstraintInfo1 info1 = constraint_info1[constraint_num];
-    ++constraint_num;
+    btConstraintInfo1 info1 = new btConstraintInfo1();
+    constraint_info1.add(info1);
     btJointFeedback fb = constraint.getJointFeedback();
     if (fb != null) {
      fb.m_appliedForceBodyA.setZero();
@@ -1377,9 +1376,9 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
    ///setup the btSolverConstraints
    assert (non_contact.isEmpty());
    ArrayList<btSolverConstraint> constraint_rows = new ArrayList<>(0);
-   assert (constraint_info1.length == numConstraints);
-   for (int i = 0; i < constraint_info1.length; i++) {
-    btTypedConstraint.btConstraintInfo1 info1 = constraint_info1[i];
+   assert (constraint_info1.size() == numConstraints);
+   int i = 0;
+   for (btConstraintInfo1 info1 : constraint_info1) {
     if (info1.m_numConstraintRows != 0) {
      constraint_rows.clear();
      for (int row = 0; row < info1.m_numConstraintRows; ++row) {
@@ -1476,11 +1475,11 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
        final btVector3 externalForceImpulseA =
         bodyAPtr.m_originalBody != null ? bodyAPtr.m_externalForceImpulse : new btVector3();
        final btVector3 externalTorqueImpulseA = bodyAPtr.m_originalBody != null ?
-         bodyAPtr.m_externalTorqueImpulse : new btVector3();
+        bodyAPtr.m_externalTorqueImpulse : new btVector3();
        final btVector3 externalForceImpulseB =
         bodyBPtr.m_originalBody != null ? bodyBPtr.m_externalForceImpulse : new btVector3();
        final btVector3 externalTorqueImpulseB = bodyBPtr.m_originalBody != null ?
-         bodyBPtr.m_externalTorqueImpulse : new btVector3();
+        bodyBPtr.m_externalTorqueImpulse : new btVector3();
        float vel1Dotn = solverConstraint.m_contactNormal1.dot(rbA.getLinearVelocity().add(
         externalForceImpulseA)) + solverConstraint.m_relpos1CrossNormal.dot(rbA.getAngularVelocity()
          .add(
@@ -1500,13 +1499,14 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
       }
      }
     }
+    ++i;
    }
    convertContacts(manifoldPtr, numManifolds, infoGlobal);
   }
   return 0.f;
  }
 
- float solveGroupCacheFriendlyIterations(List<btCollisionObject> bodies, int numBodies,
+ private float solveGroupCacheFriendlyIterations(List<btCollisionObject> bodies, int numBodies,
   List<btPersistentManifold> manifoldPtr, int numManifolds,
   List<btTypedConstraint> constraints, int numConstraints,
   btContactSolverInfo infoGlobal, btIDebugDraw debugDrawer) {
@@ -1518,16 +1518,15 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
     numConstraints,
     infoGlobal, debugDrawer);
    int maxIterations =
-    
     m_maxOverrideNumSolverIterations > infoGlobal.m_numIterations ? m_maxOverrideNumSolverIterations :
-      infoGlobal.m_numIterations;
+     infoGlobal.m_numIterations;
    for (int iteration = 0; iteration < maxIterations; iteration++) {
     m_leastSquaresResidual = solveSingleIteration(iteration, bodies, numBodies, manifoldPtr,
      numManifolds,
      constraints,
      numConstraints, infoGlobal, debugDrawer);
     if (m_leastSquaresResidual <= infoGlobal.m_leastSquaresResidualThreshold || (iteration >=
-      (maxIterations - 1))) {
+     (maxIterations - 1))) {
      break;
     }
    }
@@ -1544,8 +1543,6 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   int numManifolds, List<btTypedConstraint> constraints, int numConstraints,
   btContactSolverInfo info,
   btIDebugDraw debugDrawer, btDispatcher dispatcher) {
-//  LockStep x =  new LockStep();
-//  LockStep.solveGroup(bodies,numBodies,manifold,numManifolds,constraints,numConstraints,info,debugDrawer,dispatcher);
   BT_PROFILE("solveGroup");
   //you need to provide at least some bodies
   solveGroupCacheFriendlySetup(bodies, numBodies, manifold, numManifolds, constraints,
@@ -1635,7 +1632,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
  }
 
  ///Various implementations of solving a single constraint row using an inequality (lower limit) constraint, using scalar reference, SSE2 or SSE4
- final btSingleConstraintRowSolver getScalarConstraintRowSolverLowerLimit() {
+  protected final btSingleConstraintRowSolver getScalarConstraintRowSolverLowerLimit() {
   return new btSingleConstraintRowSolverImpl();
  }
 
@@ -1645,17 +1642,6 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
 
  public final btSingleConstraintRowSolver getSSE4_1ConstraintRowSolverLowerLimit() {
   return new btSingleConstraintRowSolverImpl5();
- }
-
- private void resize_info1(int numConstraints) {
-  if (constraint_info1.length != numConstraints) {
-   constraint_info1 = Arrays.copyOf(constraint_info1, numConstraints);
-   for (int i = 0; i < constraint_info1.length; ++i) {
-    if (constraint_info1[i] == null) {
-     constraint_info1[i] = new btConstraintInfo1();
-    }
-   }
-  }
  }
 
  private btVector3[] contactNormal1_array(ArrayList<btSolverConstraint> constraint_rows) {
@@ -1694,7 +1680,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   return result;
  }
 
- private FloatSmartPointer[] rhs_array(ArrayList<btSolverConstraint> constraint_rows) {
+    private FloatSmartPointer[] rhs_array(ArrayList<btSolverConstraint> constraint_rows) {
   FloatSmartPointer[] result = new FloatSmartPointer[constraint_rows.size()];
   for (int i = 0; i < constraint_rows.size(); ++i) {
    btSolverConstraint constraint_row = constraint_rows.get(i);
@@ -1747,6 +1733,8 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
  private static class btSingleConstraintRowSolverImpl1 implements btSingleConstraintRowSolver,
   Serializable {
 
+  private static final long serialVersionUID = 1L;
+
   public btSingleConstraintRowSolverImpl1() {
   }
 
@@ -1758,6 +1746,8 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
 
  private static class btSingleConstraintRowSolverImpl2 implements btSingleConstraintRowSolver,
   Serializable {
+
+  private static final long serialVersionUID = 1L;
 
   public btSingleConstraintRowSolverImpl2() {
   }
@@ -1810,7 +1800,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver impl
   }
  }
 
- void shuffle_list(List list) {
+ private void shuffle_list(List list) {
   for (int j = 0; j < list.size(); ++j) {
    int swapi = btRandInt2(j + 1);
    Collections.swap(list, j, swapi);
