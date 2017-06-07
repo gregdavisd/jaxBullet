@@ -51,3 +51,4 @@ Temporary Items
 /bullet_examples/build/
 /bullet/dist/
 /bullet_examples/dist/
+*.log
