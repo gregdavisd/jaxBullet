@@ -33,9 +33,15 @@ public class btCompoundShapeChild implements Serializable {
 
  @Override
  public int hashCode() {
-  int hash = 7;
+  int hash = 3;
+  hash = 73 * hash + Objects.hashCode(this.m_transform);
+  hash = 73 * hash + Objects.hashCode(this.m_childShape);
+  hash = 73 * hash + this.m_childShapeType;
+  hash = 73 * hash + Float.floatToIntBits(this.m_childMargin);
   return hash;
  }
+
+ 
 
  @Override
  public boolean equals(Object obj) {

@@ -56,4 +56,4 @@ public class CenterCallback implements btTriangleCallback, Serializable {
  public float getVolume() {
   return volume * (1.f / 6f);
  }
-};
+}

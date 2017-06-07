@@ -1,6 +1,6 @@
 /*
 Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2011 Advanced Micro Devices, Inc.  http://bulletphysics.org
+Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
 
 This software is provided 'as-is', without any express or implied warranty.
 In no event will the authors be held liable for any damages arising from the use of this software.
@@ -12,35 +12,24 @@ subject to the following restrictions:
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
  */
-package Bullet.LinearMath;
+package Bullet.Dynamics.ConstraintSolver;
 
-import java.util.Comparator;
-import javax.vecmath.Tuple3f;
+import java.io.Serializable;
 
 /**
  *
  * @author Gregery Barton
  */
-public class btAngleCompareFunc implements Comparator<GrahamVector3> {
+public class btSolverMode implements Serializable {
 
- public final btVector3 m_anchor = new btVector3();
-
- public btAngleCompareFunc(final Tuple3f anchor) {
-  m_anchor.set(anchor);
- }
-
- @Override
- public int compare(GrahamVector3 a, GrahamVector3 b) {
-  if (a.m_angle != b.m_angle) {
-   return a.m_angle < b.m_angle ? -1 : 1;
-  } else {
-   float al = (new btVector3(a).sub(m_anchor)).lengthSquared();
-   float bl = (new btVector3(b).sub(m_anchor)).lengthSquared();
-   if (al != bl) {
-    return al < bl ? -1 : 1;
-   } else {
-    return a.m_orgIndex - b.m_orgIndex;
-   }
-  }
- }
+ public static final int SOLVER_RANDOMIZE_ORDER = 1;
+ public static final int SOLVER_FRICTION_SEPARATE = 2;
+ public static final int SOLVER_USE_WARMSTARTING = 4;
+ public static final int SOLVER_USE_2_FRICTION_DIRECTIONS = 16;
+ public static final int SOLVER_ENABLE_FRICTION_DIRECTION_CACHING = 32;
+ public static final int SOLVER_DISABLE_VELOCITY_DEPENDENT_FRICTION_DIRECTION = 64;
+ public static final int SOLVER_CACHE_FRIENDLY = 128;
+ public static final int SOLVER_SIMD = 256;
+ public static final int SOLVER_INTERLEAVE_CONTACT_AND_FRICTION_CONSTRAINTS = 512;
+ public static final int SOLVER_ALLOW_ZERO_LENGTH_FRICTION_DIRECTIONS = 1024;
 }

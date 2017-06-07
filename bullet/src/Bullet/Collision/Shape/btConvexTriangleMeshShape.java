@@ -24,6 +24,7 @@ import static Bullet.LinearMath.btScalar.btSqrt;
 import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * The btConvexTriangleMeshShape is a convex hull of a triangle mesh, but the performance is not as
@@ -33,16 +34,16 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachingShape implements
+public final class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachingShape implements
  Serializable {
 
  final btStridingMeshInterface m_stridingMesh;
 
- btConvexTriangleMeshShape(btStridingMeshInterface meshInterface) {
+ public btConvexTriangleMeshShape(btStridingMeshInterface meshInterface) {
   this(meshInterface, true);
  }
 
- btConvexTriangleMeshShape(btStridingMeshInterface meshInterface, boolean calcAabb) {
+ public btConvexTriangleMeshShape(btStridingMeshInterface meshInterface, boolean calcAabb) {
   super();
   m_stridingMesh = meshInterface;
   m_shapeType = CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE;
@@ -191,4 +192,30 @@ public class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachingShap
   inertia.set(i.m00, i.m11, i.m22);
   inertia.scale(1.0f / volume[0]);
  }
-};
+
+ @Override
+ public int hashCode() {
+  int hash = 3;
+  hash += super.hashCode();
+  hash = 83 * hash + Objects.hashCode(this.m_stridingMesh);
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btConvexTriangleMeshShape other = (btConvexTriangleMeshShape) obj;
+  if (!Objects.equals(this.m_stridingMesh, other.m_stridingMesh)) {
+   return false;
+  }
+  return super.equals(obj);
+ }
+}

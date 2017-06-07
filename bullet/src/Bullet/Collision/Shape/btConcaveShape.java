@@ -24,7 +24,7 @@ import java.io.Serializable;
  */
 public abstract class btConcaveShape extends btCollisionShape implements Serializable {
 
- float m_collisionMargin;
+ protected float m_collisionMargin;
 
  btConcaveShape() {
   m_collisionMargin = 0;
@@ -42,4 +42,29 @@ public abstract class btConcaveShape extends btCollisionShape implements Seriali
  public final void setMargin(float collisionMargin) {
   m_collisionMargin = collisionMargin;
  }
-};
+
+ @Override
+ public int hashCode() {
+  int hash = 7;
+  hash = super.hashCode() + (83 * hash + Float.floatToIntBits(this.m_collisionMargin));
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btConcaveShape other = (btConcaveShape) obj;
+  if (Float.floatToIntBits(this.m_collisionMargin) != Float.floatToIntBits(other.m_collisionMargin)) {
+   return false;
+  }
+  return super.equals(obj);
+ }
+}

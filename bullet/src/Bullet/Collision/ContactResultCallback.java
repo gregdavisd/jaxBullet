@@ -24,9 +24,9 @@ import java.io.Serializable;
  */
 abstract public class ContactResultCallback implements Serializable {
 
- int m_collisionFilterGroup;
- int m_collisionFilterMask;
- float m_closestDistanceThreshold;
+ public  int m_collisionFilterGroup;
+  public int m_collisionFilterMask;
+ public  float m_closestDistanceThreshold;
 
  public ContactResultCallback() {
   m_collisionFilterGroup = btBroadphaseProxy.DefaultFilter;

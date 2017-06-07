@@ -18,6 +18,7 @@ import static Bullet.LinearMath.btAabbUtil2.btTransformAabb;
 import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
@@ -90,5 +91,35 @@ public abstract class btPolyhedralConvexAabbCachingShape extends btPolyhedralCon
    m_localAabbMax.setElement(i, _supporting[i].getElement(i) + m_collisionMargin);
    m_localAabbMin.setElement(i, _supporting[i + 3].getElement(i) - m_collisionMargin);
   }
+ }
+
+ @Override
+ public int hashCode() {
+  int hash = 7;
+  hash += super.hashCode();
+  hash = 31 * hash + Objects.hashCode(this.m_localAabbMin);
+  hash = 31 * hash + Objects.hashCode(this.m_localAabbMax);
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btPolyhedralConvexAabbCachingShape other = (btPolyhedralConvexAabbCachingShape) obj;
+  if (!Objects.equals(this.m_localAabbMin, other.m_localAabbMin)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_localAabbMax, other.m_localAabbMax)) {
+   return false;
+  }
+  return super.equals(obj);
  }
 }

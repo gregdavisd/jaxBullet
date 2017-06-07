@@ -374,6 +374,9 @@ public class btGeneric6DofConstraint extends btTypedConstraint implements Serial
  @Override
  public void buildJacobian() {
   if (m_useSolveConstraintObsolete) {
+   /* dead code */
+   assert(false);
+   /*
    // Clear accumulated impulses for the next simulation step
    m_linearLimits.m_accumulatedImpulse.setZero();
    int i;
@@ -413,14 +416,19 @@ public class btGeneric6DofConstraint extends btTypedConstraint implements Serial
      m_jacAng[i] = buildAngularJacobian(normalWorld);
     }
    }
+   */
   }
  }
 
  @Override
  public void getInfo1(btConstraintInfo1 info) {
   if (m_useSolveConstraintObsolete) {
+   /* dead code */
+   assert(false);
+    /*
    info.m_numConstraintRows = 0;
    info.nub = 0;
+    */
   } else {
    //prepare constraint
    calculateTransforms(m_rbA.getCenterOfMassTransformPtr(), m_rbB.getCenterOfMassTransformPtr());
@@ -446,8 +454,12 @@ public class btGeneric6DofConstraint extends btTypedConstraint implements Serial
 
  public void getInfo1NonVirtual(btConstraintInfo1 info) {
   if (m_useSolveConstraintObsolete) {
+   /* dead code */
+   assert(false);
+    /*
    info.m_numConstraintRows = 0;
    info.nub = 0;
+   */
   } else {
    //pre-allocate all 6
    info.m_numConstraintRows = 6;

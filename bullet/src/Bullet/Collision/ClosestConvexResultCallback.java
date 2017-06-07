@@ -36,9 +36,7 @@ public class ClosestConvexResultCallback extends ConvexResultCallback implements
  }
 
  @Override
- public float addSingleResult(LocalConvexResult convexResult,
-  boolean normalInWorldSpace
- ) {
+ public float addSingleResult(LocalConvexResult convexResult, boolean normalInWorldSpace) {
 //caller already does the filter on the m_closestHitFraction
   assert (convexResult.m_hitFraction <= m_closestHitFraction);
   m_closestHitFraction = convexResult.m_hitFraction;

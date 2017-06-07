@@ -24,6 +24,7 @@ import Bullet.stubs.btTriangleInfoMap;
 import static Bullet.LinearMath.btScalar.SIMD_EPSILON;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * The btBvhTriangleMeshShape is a static-triangle mesh shape, it can only be used for
@@ -182,5 +183,35 @@ public class btBvhTriangleMeshShape extends btTriangleMeshShape implements Seria
 
  btTriangleInfoMap getTriangleInfoMap() {
   return m_triangleInfoMap;
+ }
+
+ @Override
+ public int hashCode() {
+  int hash = 7;
+  hash += super.hashCode();
+  hash = 41 * hash + Objects.hashCode(this.m_triangleInfoMap);
+  hash = 41 * hash + (this.m_useQuantizedAabbCompression ? 1 : 0);
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btBvhTriangleMeshShape other = (btBvhTriangleMeshShape) obj;
+  if (this.m_useQuantizedAabbCompression != other.m_useQuantizedAabbCompression) {
+   return false;
+  }
+  if (!Objects.equals(this.m_triangleInfoMap, other.m_triangleInfoMap)) {
+   return false;
+  }
+  return super.equals(obj);
  }
 };

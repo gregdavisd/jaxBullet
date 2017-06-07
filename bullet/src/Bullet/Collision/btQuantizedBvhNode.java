@@ -27,9 +27,12 @@ public class btQuantizedBvhNode implements  Serializable {
 // 10 gives the potential for 1024 parts, with at most 2^21 (2097152) (minus one
 // actually) triangles each (since the sign bit is reserved
  static final int MAX_NUM_PARTS_IN_BITS = 10;
+ /* TODO: short or int here doesn't matter its the array overhead that takes up memory
+ 
+ */
  //12 bytes
- final int[] m_quantizedAabbMin = new int[3]; 
- final int[] m_quantizedAabbMax = new int[3];
+ final short[] m_quantizedAabbMin = new short[3]; 
+ final short[] m_quantizedAabbMax = new short[3];
  //4 bytes
  int m_escapeIndexOrTriangleIndex;
 

@@ -27,6 +27,7 @@ import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
 import java.util.ArrayList;
 import static java.util.Collections.swap;
+import java.util.Objects;
 
 /// It has an (optional) dynamic aabb tree to accelerate early rejection tests. 
 /// @todo: This aabb tree can also be use to speed up ray tests on btCompoundShape, see http://code.google.com/p/bullet/issues/detail?id=25
@@ -37,14 +38,14 @@ import static java.util.Collections.swap;
  */
 public class btCompoundShape extends btCollisionShape implements Serializable {
 
- final ArrayList<btCompoundShapeChild> m_children;
- final btVector3 m_localAabbMin = new btVector3();
- final btVector3 m_localAabbMax = new btVector3();
- btDbvt m_dynamicAabbTree;
+ private final ArrayList<btCompoundShapeChild> m_children;
+ private final btVector3 m_localAabbMin = new btVector3();
+ private final btVector3 m_localAabbMax = new btVector3();
+ private btDbvt m_dynamicAabbTree;
  ///increment m_updateRevision when adding/removing/replacing child shapes, so that some caches can be updated
- int m_updateRevision;
- float m_collisionMargin;
- final btVector3 m_localScaling = new btVector3();
+ private int m_updateRevision;
+ protected float m_collisionMargin;
+ protected final btVector3 m_localScaling = new btVector3();
 
  public btCompoundShape(boolean enableDynamicAabbTree, int initialChildCapacity) {
   m_localAabbMin.set((BT_LARGE_FLOAT), (BT_LARGE_FLOAT), (BT_LARGE_FLOAT));
@@ -364,4 +365,46 @@ public class btCompoundShape extends btCollisionShape implements Serializable {
  public int getUpdateRevision() {
   return m_updateRevision;
  }
-};
+
+ @Override
+ public int hashCode() {
+  int hash = 7;
+  hash += super.hashCode();
+  hash = 47 * hash + Objects.hashCode(this.m_children);
+  hash = 47 * hash + Objects.hashCode(this.m_localAabbMin);
+  hash = 47 * hash + Objects.hashCode(this.m_localAabbMax);
+  hash = 47 * hash + Float.floatToIntBits(this.m_collisionMargin);
+  hash = 47 * hash + Objects.hashCode(this.m_localScaling);
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btCompoundShape other = (btCompoundShape) obj;
+  if (Float.floatToIntBits(this.m_collisionMargin) != Float.floatToIntBits(other.m_collisionMargin)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_children, other.m_children)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_localAabbMin, other.m_localAabbMin)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_localAabbMax, other.m_localAabbMax)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_localScaling, other.m_localScaling)) {
+   return false;
+  }
+  return super.equals(obj);
+ }
+}

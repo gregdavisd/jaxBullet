@@ -17,7 +17,7 @@ import Bullet.Collision.Shape.btBoxShape;
 import Bullet.Collision.Shape.btCollisionShape;
 import Bullet.Collision.Shape.btCompoundShape;
 import Bullet.Collision.Shape.btSphereShape;
-import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_SIMD;
+import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_SIMD;
 import Bullet.Dynamics.btRigidBody;
 import Bullet.LinearMath.btQuaternion;
 import static Bullet.LinearMath.btScalar.SIMD_PI;

@@ -22,6 +22,7 @@ import Bullet.LinearMath.btVector3;
 import static Bullet.LinearMath.btVector3.btPlaneSpace1;
 import static Bullet.LinearMath.btVector3.init;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
@@ -109,5 +110,47 @@ public class btStaticPlaneShape extends btConcaveShape implements Serializable {
  @Override
  public String getName() {
   return "STATICPLANE";
+ }
+
+ @Override
+ public int hashCode() {
+  int hash = 7;
+  hash += super.hashCode();
+  hash = 37 * hash + Objects.hashCode(this.m_localAabbMin);
+  hash = 37 * hash + Objects.hashCode(this.m_localAabbMax);
+  hash = 37 * hash + Objects.hashCode(this.m_planeNormal);
+  hash = 37 * hash + Float.floatToIntBits(this.m_planeConstant);
+  hash = 37 * hash + Objects.hashCode(this.m_localScaling);
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btStaticPlaneShape other = (btStaticPlaneShape) obj;
+  if (Float.floatToIntBits(this.m_planeConstant) != Float.floatToIntBits(other.m_planeConstant)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_localAabbMin, other.m_localAabbMin)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_localAabbMax, other.m_localAabbMax)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_planeNormal, other.m_planeNormal)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_localScaling, other.m_localScaling)) {
+   return false;
+  }
+  return super.equals(obj);
  }
 }

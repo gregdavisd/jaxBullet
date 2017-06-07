@@ -15,6 +15,7 @@ package Bullet.Collision.Shape;
 
 import Bullet.Collision.btTriangleCallback;
 import Bullet.LinearMath.btVector3;
+import java.nio.FloatBuffer;
 
 /**
  * Striding mesh interface adapted for java.Assumes that X,Y,Z are packed together in that order,
@@ -31,11 +32,11 @@ public class btStridingMeshLock {
  /**
   *
   */
- public static final int TRIANGLES = 0;
+ public static final int TRIANGLES = 1;
  /**
   *
   */
- public static final int TRIANGLE_STRIP = 1;
+ public static final int TRIANGLE_STRIP = 0;
  /**
   * Store the Java array containing vertex points
   */
@@ -92,6 +93,8 @@ public class btStridingMeshLock {
   this.numIndices = numIndices;
   if (vertexBuffer instanceof float[]) {
    gen_buffer = new FloatVertexDataBuffer((float[]) vertexBuffer);
+  } else if (vertexBuffer instanceof FloatBuffer) {
+   gen_buffer = new FloatBufferVertexDataBuffer((FloatBuffer) vertexBuffer);
   } else if (vertexBuffer instanceof double[]) {
    gen_buffer = new DoubleVertexDataBuffer((double[]) vertexBuffer);
   } else if (vertexBuffer instanceof short[]) {
@@ -290,6 +293,20 @@ public class btStridingMeshLock {
   @Override
   public float get(int i) {
    return (float) buffer[i];
+  }
+ }
+
+ static class FloatBufferVertexDataBuffer implements GenericVertexDataBuffer {
+
+  final FloatBuffer buffer;
+
+  FloatBufferVertexDataBuffer(FloatBuffer buffer) {
+   this.buffer = buffer;
+  }
+
+  @Override
+  public float get(int i) {
+   return buffer.get(i);
   }
  }
 

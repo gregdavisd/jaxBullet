@@ -14,6 +14,8 @@ subject to the following restrictions:
  */
 package Bullet.Dynamics.Constraint;
 
+import Bullet.Dynamics.ConstraintSolver.btSolverConstraint;
+import Bullet.Dynamics.ConstraintSolver.btSolverBody;
 import Bullet.Dynamics.btJointFeedback;
 import Bullet.Dynamics.btRigidBody;
 import static Bullet.LinearMath.btScalar.SIMD_2_PI;

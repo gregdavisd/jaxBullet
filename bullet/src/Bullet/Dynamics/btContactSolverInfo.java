@@ -14,8 +14,8 @@ subject to the following restrictions:
  */
 package Bullet.Dynamics;
 
-import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_SIMD;
-import static Bullet.Dynamics.Constraint.btSolverMode.SOLVER_USE_WARMSTARTING;
+import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_SIMD;
+import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_USE_WARMSTARTING;
 import java.io.Serializable;
 
 /**

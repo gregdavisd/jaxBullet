@@ -108,7 +108,7 @@ public class btTriangleMesh extends btTriangleIndexVertexArray implements Serial
    for (int i = 0; i < m_3componentVertices.size(); i += 3) {
     vtx.set(m_3componentVertices.get(i), m_3componentVertices.get(i + 1), m_3componentVertices.get(
      i +
-      2));
+     2));
     if (vtx.sub(vertex).lengthSquared() <= m_weldingThreshold) {
      return i / 3;
     }

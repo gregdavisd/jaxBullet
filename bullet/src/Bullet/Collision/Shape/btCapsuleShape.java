@@ -192,4 +192,30 @@ public class btCapsuleShape extends btConvexInternalShape implements Serializabl
   aniDir.setElement(getUpAxis(), 1f);
   return aniDir;
  }
-};
+
+ @Override
+ public int hashCode() {
+  int hash = 5;
+  hash += super.hashCode();
+  hash = 59 * hash + this.m_upAxis;
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btCapsuleShape other = (btCapsuleShape) obj;
+  if (this.m_upAxis != other.m_upAxis) {
+   return false;
+  }
+  return super.equals(obj);
+ }
+}

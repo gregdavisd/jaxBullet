@@ -208,8 +208,12 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
  @Override
  public void getInfo1(btConstraintInfo1 info) {
   if (m_useSolveConstraintObsolete) {
+      /* dead code */
+   assert(false);
+   /*
    info.m_numConstraintRows = 0;
    info.nub = 0;
+*/
   } else {
    info.m_numConstraintRows = 4; // Fixed 2 linear + 2 angular
    info.nub = 2;

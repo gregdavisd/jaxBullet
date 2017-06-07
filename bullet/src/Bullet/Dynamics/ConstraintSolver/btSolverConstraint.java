@@ -12,8 +12,9 @@ subject to the following restrictions:
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
  */
-package Bullet.Dynamics.Constraint;
+package Bullet.Dynamics.ConstraintSolver;
 
+import Bullet.Dynamics.ConstraintSolver.btSolverBody;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
 import javax.vecmath.FloatSmartPointer;

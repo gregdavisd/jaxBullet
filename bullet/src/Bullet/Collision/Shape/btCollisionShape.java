@@ -26,9 +26,9 @@ import java.io.Serializable;
  */
 abstract public class btCollisionShape implements Serializable {
 
- int m_shapeType;
- Object m_userPointer;
- int m_userIndex;
+ protected int m_shapeType;
+ protected Object m_userPointer;
+ protected int m_userIndex;
 
  public btCollisionShape() {
   m_shapeType = INVALID_SHAPE_PROXYTYPE;
@@ -181,4 +181,26 @@ abstract public class btCollisionShape implements Serializable {
  public int getUserIndex() {
   return m_userIndex;
  }
-};
+
+ @Override
+ public int hashCode() {
+  int hash = 7;
+  hash = 79 * hash + this.m_shapeType;
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btCollisionShape other = (btCollisionShape) obj;
+  return this.m_shapeType == other.m_shapeType;
+ }
+}

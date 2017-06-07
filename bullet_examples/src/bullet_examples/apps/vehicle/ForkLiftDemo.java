@@ -293,7 +293,7 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
    m_vehicle = new btRaycastVehicle(m_tuning, m_carChassis, m_vehicleRayCaster);
    ///never deactivate the vehicle
    m_carChassis.setActivationState(DISABLE_DEACTIVATION);
-   world().addVehicle(m_vehicle);
+   world().addAction(m_vehicle);
    float connectionHeight = 1.2f;
    boolean isFrontWheel = true;
    //choose coordinate system

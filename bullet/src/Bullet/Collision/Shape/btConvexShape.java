@@ -352,4 +352,4 @@ public abstract class btConvexShape extends btCollisionShape implements Serializ
  public abstract int getNumPreferredPenetrationDirections();
 
  public abstract void getPreferredPenetrationDirection(int index, final btVector3 penetrationVector);
-};
+}

@@ -19,6 +19,7 @@ import Bullet.LinearMath.btMotionState;
 import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * The btRigidBodyConstructionInfo structure provides information to create a rigid body. Setting
@@ -36,7 +37,7 @@ public class btRigidBodyConstructionInfo implements Serializable {
  public float m_mass;
  ///When a motionState is provided, the rigid body will initialize its world transform from the motion state
  ///In this case, m_startWorldTransform is ignored.
- final public btMotionState m_motionState;
+ public btMotionState m_motionState;
  final public btTransform m_startWorldTransform = new btTransform();
  final public btCollisionShape m_collisionShape;
  final public btVector3 m_localInertia = new btVector3();
@@ -59,6 +60,8 @@ public class btRigidBodyConstructionInfo implements Serializable {
  public float m_additionalLinearDampingThresholdSqr;
  public float m_additionalAngularDampingThresholdSqr;
  public float m_additionalAngularDampingFactor;
+ public final btVector3 m_linearFactor = new btVector3(1, 1, 1);
+ public final btVector3 m_angularFactor = new btVector3(1, 1, 1);
 
  public btRigidBodyConstructionInfo(float mass, btMotionState motionState,
   btCollisionShape collisionShape) {
@@ -85,5 +88,105 @@ public class btRigidBodyConstructionInfo implements Serializable {
   m_additionalAngularDampingThresholdSqr = 0.01f;
   m_additionalAngularDampingFactor = 0.01f;
   m_startWorldTransform.setIdentity();
+ }
+
+ @Override
+ public int hashCode() {
+  int hash = 3;
+  hash = 71 * hash + Float.floatToIntBits(this.m_mass);
+  hash = 71 * hash + Objects.hashCode(this.m_motionState);
+  hash = 71 * hash + Objects.hashCode(this.m_startWorldTransform);
+  hash = 71 * hash + Objects.hashCode(this.m_collisionShape);
+  hash = 71 * hash + Objects.hashCode(this.m_localInertia);
+  hash = 71 * hash + Float.floatToIntBits(this.m_linearDamping);
+  hash = 71 * hash + Float.floatToIntBits(this.m_angularDamping);
+  hash = 71 * hash + Float.floatToIntBits(this.m_friction);
+  hash = 71 * hash + Float.floatToIntBits(this.m_rollingFriction);
+  hash = 71 * hash + Float.floatToIntBits(this.m_spinningFriction);
+  hash = 71 * hash + Float.floatToIntBits(this.m_restitution);
+  hash = 71 * hash + Float.floatToIntBits(this.m_linearSleepingThreshold);
+  hash = 71 * hash + Float.floatToIntBits(this.m_angularSleepingThreshold);
+  hash = 71 * hash + (this.m_additionalDamping ? 1 : 0);
+  hash = 71 * hash + Float.floatToIntBits(this.m_additionalDampingFactor);
+  hash = 71 * hash + Float.floatToIntBits(this.m_additionalLinearDampingThresholdSqr);
+  hash = 71 * hash + Float.floatToIntBits(this.m_additionalAngularDampingThresholdSqr);
+  hash = 71 * hash + Float.floatToIntBits(this.m_additionalAngularDampingFactor);
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btRigidBodyConstructionInfo other = (btRigidBodyConstructionInfo) obj;
+  if (Float.floatToIntBits(this.m_mass) != Float.floatToIntBits(other.m_mass)) {
+   return false;
+  }
+  if (Float.floatToIntBits(this.m_linearDamping) != Float.floatToIntBits(other.m_linearDamping)) {
+   return false;
+  }
+  if (Float.floatToIntBits(this.m_angularDamping) != Float.floatToIntBits(other.m_angularDamping)) {
+   return false;
+  }
+  if (Float.floatToIntBits(this.m_friction) != Float.floatToIntBits(other.m_friction)) {
+   return false;
+  }
+  if (Float.floatToIntBits(this.m_rollingFriction) != Float.floatToIntBits(other.m_rollingFriction)) {
+   return false;
+  }
+  if (Float.floatToIntBits(this.m_spinningFriction) !=
+   Float.floatToIntBits(other.m_spinningFriction)) {
+   return false;
+  }
+  if (Float.floatToIntBits(this.m_restitution) != Float.floatToIntBits(other.m_restitution)) {
+   return false;
+  }
+  if (Float.floatToIntBits(this.m_linearSleepingThreshold) !=
+   Float.floatToIntBits(other.m_linearSleepingThreshold)) {
+   return false;
+  }
+  if (Float.floatToIntBits(this.m_angularSleepingThreshold) !=
+   Float.floatToIntBits(other.m_angularSleepingThreshold)) {
+   return false;
+  }
+  if (this.m_additionalDamping != other.m_additionalDamping) {
+   return false;
+  }
+  if (Float.floatToIntBits(this.m_additionalDampingFactor) !=
+   Float.floatToIntBits(other.m_additionalDampingFactor)) {
+   return false;
+  }
+  if (Float.floatToIntBits(this.m_additionalLinearDampingThresholdSqr) !=
+   Float.floatToIntBits(other.m_additionalLinearDampingThresholdSqr)) {
+   return false;
+  }
+  if (Float.floatToIntBits(this.m_additionalAngularDampingThresholdSqr) !=
+   Float.floatToIntBits(other.m_additionalAngularDampingThresholdSqr)) {
+   return false;
+  }
+  if (Float.floatToIntBits(this.m_additionalAngularDampingFactor) !=
+   Float.floatToIntBits(other.m_additionalAngularDampingFactor)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_motionState, other.m_motionState)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_startWorldTransform, other.m_startWorldTransform)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_collisionShape, other.m_collisionShape)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_localInertia, other.m_localInertia)) {
+   return false;
+  }
+  return true;
  }
 }

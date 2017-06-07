@@ -50,4 +50,14 @@ public class btCylinderShapeX extends btCylinderShape implements Serializable {
  public float getRadius() {
   return getHalfExtentsWithMargin().getY();
  }
+
+ @Override
+ public boolean equals(Object obj) {
+  return super.equals(obj);
+ }
+
+ @Override
+ public int hashCode() {
+  return super.hashCode();
+ }
 }

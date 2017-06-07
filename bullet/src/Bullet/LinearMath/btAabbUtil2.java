@@ -176,8 +176,8 @@ public class btAabbUtil2 implements Serializable {
   * @param aabbMax2
   * @return
   */
- public static int testQuantizedAabbAgainstQuantizedAabb(int[] aabbMin1, int[] aabbMax1,
-  int[] aabbMin2, int[] aabbMax2) {
+ public static int testQuantizedAabbAgainstQuantizedAabb(short[] aabbMin1, short[] aabbMax1,
+  short[] aabbMin2, short[] aabbMax2) {
   return (btSelect(((aabbMin1[0] <= aabbMax2[0]) & (aabbMax1[0] >= aabbMin2[0]) &
    (aabbMin1[2] <= aabbMax2[2]) & (aabbMax1[2] >= aabbMin2[2]) &
    (aabbMin1[1] <= aabbMax2[1]) & (aabbMax1[1] >= aabbMin2[1])) ? 1 : 0,

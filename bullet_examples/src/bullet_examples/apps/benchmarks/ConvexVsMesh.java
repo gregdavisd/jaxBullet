@@ -14,15 +14,11 @@ subject to the following restrictions:
  */
 package bullet_examples.apps.benchmarks;
 
-import Bullet.Collision.Shape.btBoxShape;
-import Bullet.Collision.Shape.btCapsuleShape;
 import Bullet.Collision.Shape.btConvexHullShape;
-import Bullet.Collision.Shape.btSphereShape;
 import Bullet.LinearMath.btQuaternion;
 import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
 import static bullet_examples.apps.benchmarks.ConvexStack.TaruVtx;
-import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.JPanel;
 
 /**

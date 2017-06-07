@@ -15,12 +15,7 @@ subject to the following restrictions:
 package Bullet.Collision.Shape;
 
 import Bullet.Collision.btConvexPolyhedron;
-import Bullet.Collision.btFace;
 import static Bullet.Extras.btMinMax.btMin;
-import Bullet.LinearMath.GrahamVector3;
-import static Bullet.LinearMath.GrahamVector3.GrahamScanConvexHull2D;
-import Bullet.LinearMath.btConvexHullComputer;
-import Bullet.LinearMath.btGeometryUtil;
 import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import static Bullet.LinearMath.btScalar.btSqrt;
 import Bullet.LinearMath.btTransform;
@@ -28,9 +23,6 @@ import Bullet.LinearMath.btVector3;
 import static Bullet.LinearMath.btVector3.init;
 import Bullet.LinearMath.btVector4;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import org.apache.commons.collections.primitives.ArrayIntList;
 
 /**
  *
@@ -38,7 +30,7 @@ import org.apache.commons.collections.primitives.ArrayIntList;
  */
 public abstract class btPolyhedralConvexShape extends btConvexInternalShape implements Serializable {
 
- btConvexPolyhedron m_polyhedron;
+ private final btConvexPolyhedron m_polyhedron = null;
 
  public btPolyhedralConvexShape() {
   super();
@@ -47,10 +39,11 @@ public abstract class btPolyhedralConvexShape extends btConvexInternalShape impl
  ///optional method mainly used to generate multiple contact points by clipping polyhedral features (faces/edges)
  ///experimental/work-in-progress
  public boolean initializePolyhedralFeatures(int shiftVerticesByMargin) {
-  if (false) {
+  /* dead code */
+ /*
    if (m_polyhedron != null) {
     m_polyhedron = null;
-   }
+ }
    m_polyhedron = new btConvexPolyhedron();
    ArrayList<btVector3> orgVertices = new ArrayList<>(getNumVertices());
    for (int i = 0; i < getNumVertices(); i++) {
@@ -244,13 +237,15 @@ public abstract class btPolyhedralConvexShape extends btConvexInternalShape impl
    m_polyhedron.initialize();
   }
   return true;
+   */
+  return false;
  }
 
  public boolean initializePolyhedralFeatures() {
   return initializePolyhedralFeatures(0);
  }
 
- public btConvexPolyhedron getConvexPolyhedron() {
+ public final btConvexPolyhedron getConvexPolyhedron() {
   return m_polyhedron;
  }
 
@@ -347,4 +342,14 @@ public abstract class btPolyhedralConvexShape extends btConvexInternalShape impl
  public abstract void getPlane(final btVector3 planeNormal, final btVector3 planeSupport, int i);
 
  public abstract boolean isInside(final btVector3 pt, float tolerance);
-};
+
+ @Override
+ public boolean equals(Object obj) {
+  return super.equals(obj);
+ }
+
+ @Override
+ public int hashCode() {
+  return super.hashCode();
+ }
+}

@@ -16,7 +16,9 @@ package Bullet.Collision.Shape;
 
 import static Bullet.Collision.Shape.btStridingMeshLock.TRIANGLES;
 import Bullet.LinearMath.btVector3;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 import org.apache.commons.collections.primitives.ArrayFloatList;
 import org.apache.commons.collections.primitives.ArrayIntList;
 
@@ -28,10 +30,10 @@ import org.apache.commons.collections.primitives.ArrayIntList;
  *
  * @author Gregery Barton
  */
-public class btTriangleIndexVertexArray extends btStridingMeshInterface {
+public class btTriangleIndexVertexArray extends btStridingMeshInterface implements Serializable{
 
  private static final long serialVersionUID = 1L;
- protected final ArrayList<btIndexedMesh> m_indexedMeshes = new ArrayList<>(0);
+ protected final ArrayList<btIndexedMesh> m_indexedMeshes = new ArrayList<>(1);
  protected int m_hasAabb; // using int instead of bool to maintain alignment
  protected final btVector3 m_aabbMin = new btVector3();
  protected final btVector3 m_aabbMax = new btVector3();
@@ -71,9 +73,9 @@ public class btTriangleIndexVertexArray extends btStridingMeshInterface {
   return lock;
  }
 
- @Override
- public void unLockVertexBase(int subpart) {
- }
+// @Override
+// public void unLockVertexBase(int subpart) {
+// }
 
  @Override
  public int getNumSubParts() {
@@ -105,4 +107,43 @@ public class btTriangleIndexVertexArray extends btStridingMeshInterface {
   m_aabbMax.set(aabbMax);
   m_hasAabb = 1; // this is intentionally an int see notes in header }
  }
+
+ @Override
+ public int hashCode() {
+  int hash = 3;
+  hash+=super.hashCode();
+  hash = 47 * hash + Objects.hashCode(this.m_indexedMeshes);
+  hash = 47 * hash + this.m_hasAabb;
+  hash = 47 * hash + Objects.hashCode(this.m_aabbMin);
+  hash = 47 * hash + Objects.hashCode(this.m_aabbMax);
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btTriangleIndexVertexArray other = (btTriangleIndexVertexArray) obj;
+  if (this.m_hasAabb != other.m_hasAabb) {
+   return false;
+  }
+  if (!Objects.equals(this.m_indexedMeshes, other.m_indexedMeshes)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_aabbMin, other.m_aabbMin)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_aabbMax, other.m_aabbMax)) {
+   return false;
+  }
+  return super.equals(obj);
+ }
+ 
 }

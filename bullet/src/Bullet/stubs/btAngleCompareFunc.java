@@ -1,6 +1,6 @@
 /*
 Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+Copyright (c) 2011 Advanced Micro Devices, Inc.  http://bulletphysics.org
 
 This software is provided 'as-is', without any express or implied warranty.
 In no event will the authors be held liable for any damages arising from the use of this software.
@@ -12,37 +12,36 @@ subject to the following restrictions:
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
  */
-package Bullet.Collision.Shape;
+package Bullet.stubs;
 
-import java.io.Serializable;
+import Bullet.LinearMath.btVector3;
+import java.util.Comparator;
+import javax.vecmath.Tuple3f;
 
 /**
- * btCapsuleShapeZ represents a capsule around the Z axis the total height is height+2*radius, so
- * the height is just the height between the center of each 'sphere' of the capsule caps.
  *
  * @author Gregery Barton
  */
-public class btCapsuleShapeZ extends btCapsuleShape implements Serializable {
+public class btAngleCompareFunc implements Comparator<GrahamVector3> {
 
- public btCapsuleShapeZ(float radius, float height) {
-  m_collisionMargin = radius;
-  m_upAxis = 2;
-  m_implicitShapeDimensions.set(radius, radius, 0.5f * height);
- }
+ public final btVector3 m_anchor = new btVector3();
 
- //debugging
- @Override
- public String getName() {
-  return "CapsuleZ";
+ public btAngleCompareFunc(final Tuple3f anchor) {
+  m_anchor.set(anchor);
  }
 
  @Override
- public boolean equals(Object obj) {
-  return super.equals(obj);
- }
-
- @Override
- public int hashCode() {
-  return super.hashCode();
+ public int compare(GrahamVector3 a, GrahamVector3 b) {
+  if (a.m_angle != b.m_angle) {
+   return a.m_angle < b.m_angle ? -1 : 1;
+  } else {
+   float al = (new btVector3(a).sub(m_anchor)).lengthSquared();
+   float bl = (new btVector3(b).sub(m_anchor)).lengthSquared();
+   if (al != bl) {
+    return al < bl ? -1 : 1;
+   } else {
+    return a.m_orgIndex - b.m_orgIndex;
+   }
+  }
  }
 }

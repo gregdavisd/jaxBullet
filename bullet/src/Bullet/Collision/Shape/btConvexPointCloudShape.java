@@ -188,4 +188,34 @@ public class btConvexPointCloudShape extends btPolyhedralConvexAabbCachingShape 
   m_localScaling.set(scaling);
   recalcLocalAabb();
  }
-};
+
+ @Override
+ public int hashCode() {
+  int hash = 3;
+  hash += super.hashCode();
+  hash = 47 * hash + Arrays.deepHashCode(this.m_unscaledPoints);
+  hash = 47 * hash + this.m_numPoints;
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btConvexPointCloudShape other = (btConvexPointCloudShape) obj;
+  if (this.m_numPoints != other.m_numPoints) {
+   return false;
+  }
+  if (!Arrays.deepEquals(this.m_unscaledPoints, other.m_unscaledPoints)) {
+   return false;
+  }
+  return super.equals(obj);
+ }
+}

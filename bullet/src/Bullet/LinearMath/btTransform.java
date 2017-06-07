@@ -84,6 +84,9 @@ public class btTransform extends Matrix4f<btTransform> implements Serializable {
  public btTransform(final btTransform m1) {
   super(m1);
  }
+ public btTransform(final Matrix4f m1) {
+  super(m1);
+ }
 
  /**
   *

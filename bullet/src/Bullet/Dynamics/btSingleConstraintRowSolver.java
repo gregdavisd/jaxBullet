@@ -14,8 +14,8 @@ subject to the following restrictions:
  */
 package Bullet.Dynamics;
 
-import Bullet.Dynamics.Constraint.btSolverBody;
-import Bullet.Dynamics.Constraint.btSolverConstraint;
+import Bullet.Dynamics.ConstraintSolver.btSolverBody;
+import Bullet.Dynamics.ConstraintSolver.btSolverConstraint;
 import java.io.Serializable;
 
 /**

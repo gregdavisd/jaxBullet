@@ -108,8 +108,8 @@ public class btOptimizedBvh extends btQuantizedBvh implements Serializable {
   assert (aabbMax.getZ() < m_bvhAabbMax.getZ());
   ///we should update all quantization values, using updateBvhNodes(meshInterface);
   ///but we only update chunks that overlap the given aabb
-  int[] quantizedQueryAabbMin = new int[3];
-  int[] quantizedQueryAabbMax = new int[3];
+  short[] quantizedQueryAabbMin = new short[3];
+  short[] quantizedQueryAabbMax = new short[3];
   quantize(quantizedQueryAabbMin, aabbMin, 0);
   quantize(quantizedQueryAabbMax, aabbMax, 1);
   int i;

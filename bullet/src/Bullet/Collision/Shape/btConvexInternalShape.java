@@ -18,6 +18,7 @@ import static Bullet.LinearMath.btScalar.SIMD_EPSILON;
 import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
@@ -30,7 +31,6 @@ public abstract class btConvexInternalShape extends btConvexShape implements Ser
  final btVector3 m_localScaling;
  final btVector3 m_implicitShapeDimensions;
  float m_collisionMargin;
- float m_padding;
 
  btConvexInternalShape() {
   m_localScaling = new btVector3((1.f), (1.f), (1.f));
@@ -147,4 +147,38 @@ public abstract class btConvexInternalShape extends btConvexShape implements Ser
  public void getPreferredPenetrationDirection(int index, final btVector3 penetrationVector) {
   assert (false);
  }
-};
+
+ @Override
+ public int hashCode() {
+  int hash = 7;
+  hash += super.hashCode();
+  hash = 41 * hash + Objects.hashCode(this.m_localScaling);
+  hash = 41 * hash + Objects.hashCode(this.m_implicitShapeDimensions);
+  hash = 41 * hash + Float.floatToIntBits(this.m_collisionMargin);
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btConvexInternalShape other = (btConvexInternalShape) obj;
+  if (Float.floatToIntBits(this.m_collisionMargin) != Float.floatToIntBits(other.m_collisionMargin)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_localScaling, other.m_localScaling)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_implicitShapeDimensions, other.m_implicitShapeDimensions)) {
+   return false;
+  }
+  return super.equals(obj);
+ }
+}

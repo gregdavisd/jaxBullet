@@ -23,6 +23,8 @@ import Bullet.LinearMath.Hull.HullResult;
 import Bullet.LinearMath.btVector3;
 import static Bullet.LinearMath.btVector3.init;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  *
@@ -146,4 +148,43 @@ public class btShapeHull implements Serializable {
   new btVector3((-0.425323f), (0.309011f), (0.850654f)),
   new btVector3((0.162456f), (0.499995f), (0.850654f))
  };
+
+ @Override
+ public int hashCode() {
+  int hash = 5;
+  hash+=super.hashCode();
+  hash = 11 * hash + Arrays.deepHashCode(this.m_vertices);
+  hash = 11 * hash + Arrays.hashCode(this.m_indices);
+  hash = 11 * hash + this.m_numIndices;
+  hash = 11 * hash + Objects.hashCode(this.m_shape);
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btShapeHull other = (btShapeHull) obj;
+  if (this.m_numIndices != other.m_numIndices) {
+   return false;
+  }
+  if (!Arrays.deepEquals(this.m_vertices, other.m_vertices)) {
+   return false;
+  }
+  if (!Arrays.equals(this.m_indices, other.m_indices)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_shape, other.m_shape)) {
+   return false;
+  }
+  return super.equals(obj);
+ }
+
 }

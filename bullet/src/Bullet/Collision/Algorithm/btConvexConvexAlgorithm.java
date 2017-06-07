@@ -198,7 +198,7 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
   final btVector3 pointOnBWorld = new btVector3();
   if ((min0.getShapeType() == CAPSULE_SHAPE_PROXYTYPE) && (min1.getShapeType() ==
    CAPSULE_SHAPE_PROXYTYPE)) {
-   //m_manifoldPtr.clearManifold();
+ 
    btCapsuleShape capsuleA = (btCapsuleShape) min0;
    btCapsuleShape capsuleB = (btCapsuleShape) min1;
    float threshold = m_manifoldPtr.getContactBreakingThreshold();
@@ -215,7 +215,7 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
   }
   if ((min0.getShapeType() == CAPSULE_SHAPE_PROXYTYPE) && (min1.getShapeType() ==
    SPHERE_SHAPE_PROXYTYPE)) {
-   //m_manifoldPtr.clearManifold();
+ 
    btCapsuleShape capsuleA = (btCapsuleShape) min0;
    btSphereShape capsuleB = (btSphereShape) min1;
    float threshold = m_manifoldPtr.getContactBreakingThreshold();
@@ -232,7 +232,7 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
   }
   if ((min0.getShapeType() == SPHERE_SHAPE_PROXYTYPE) && (min1.getShapeType() ==
    CAPSULE_SHAPE_PROXYTYPE)) {
-   //m_manifoldPtr.clearManifold();
+ 
    btSphereShape capsuleA = (btSphereShape) min0;
    btCapsuleShape capsuleB = (btCapsuleShape) min1;
    float threshold = m_manifoldPtr.getContactBreakingThreshold();
@@ -254,14 +254,10 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
    gjkPairDetector.setMinkowskiA(min0);
    gjkPairDetector.setMinkowskiB(min1);
    {
-    //if (dispatchInfo.m_convexMaxDistanceUseCPT)
-    //{
-    //	input.m_maximumDistanceSquared = min0.getMargin() + min1.getMargin() + m_manifoldPtr.getContactProcessingThreshold();
-    //} else
-    //{
+ 
     input.m_maximumDistanceSquared = min0.getMargin() + min1.getMargin() + m_manifoldPtr
      .getContactBreakingThreshold() + resultOut.m_closestPointDistanceThreshold;
-//		}
+ 
     input.m_maximumDistanceSquared *= input.m_maximumDistanceSquared;
    }
    input.m_transformA.set(body0Wrap.getWorldTransform());
@@ -276,6 +272,9 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
     btPolyhedralConvexShape polyhedronA = (btPolyhedralConvexShape) min0;
     btPolyhedralConvexShape polyhedronB = (btPolyhedralConvexShape) min1;
     if (polyhedronA.getConvexPolyhedron() != null && polyhedronB.getConvexPolyhedron() != null) {
+     /* dead code */
+     assert (false);
+     /*
      float threshold = m_manifoldPtr.getContactBreakingThreshold();
      float minDist = -1e30f;
      final btVector3 sepNormalWorldSpace = new btVector3();
@@ -311,9 +310,14 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
       resultOut.refreshContactPoints();
      }
      return;
+*/
     } else //we can also deal with convex versus triangle (without connectivity data)
+    {
      if (polyhedronA.getConvexPolyhedron() != null && polyhedronB.getShapeType() ==
       TRIANGLE_SHAPE_PROXYTYPE) {
+      /* dead code */
+      assert(false);
+      /*
       ArrayList<btVector3> vertices = new ArrayList<>(0);
       btTriangleShape tri = (btTriangleShape) polyhedronB;
       vertices.add(body1Wrap.getWorldTransform().transform(new btVector3(tri.m_vertices1[0])));
@@ -348,7 +352,9 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
        resultOut.refreshContactPoints();
       }
       return;
+      */
      }
+    }
    }
    gjkPairDetector.getClosestPoints(input, resultOut, dispatchInfo.m_debugDraw);
    //now perform 'm_numPerturbationIterations' collision queries with the perturbated collision objects

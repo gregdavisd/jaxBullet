@@ -16,6 +16,7 @@ Written by: Marcus Hennix
  */
 package Bullet.Dynamics.Constraint;
 
+import Bullet.Dynamics.ConstraintSolver.btSolverBody;
 import Bullet.Dynamics.btJacobianEntry;
 import Bullet.Dynamics.btRigidBody;
 import static Bullet.Extras.btMinMax.btMax;
@@ -226,6 +227,9 @@ public class btConeTwistConstraint extends btTypedConstraint implements Serializ
 
  @Override
  public void buildJacobian() {
+  /* dead code */
+  assert(false);
+  /*
   if (m_useSolveConstraintObsolete) {
    m_appliedImpulse = 0.0f;
    m_accTwistLimitImpulse = (0.f);
@@ -260,13 +264,18 @@ public class btConeTwistConstraint extends btTypedConstraint implements Serializ
    calcAngleInfo2(m_rbA.getCenterOfMassTransform(), m_rbB.getCenterOfMassTransform(), m_rbA
     .getInvInertiaTensorWorld(), m_rbB.getInvInertiaTensorWorld());
   }
+  */
  }
 
  @Override
  public void getInfo1(btConstraintInfo1 info) {
   if (m_useSolveConstraintObsolete) {
+   /* dead code */
+   assert(false);
+   /*
    info.m_numConstraintRows = 0;
    info.nub = 0;
+   */
   } else {
    info.m_numConstraintRows = 3;
    info.nub = 3;
@@ -409,6 +418,9 @@ public class btConeTwistConstraint extends btTypedConstraint implements Serializ
 
  @Override
  public void solveConstraintObsolete(btSolverBody bodyA, btSolverBody bodyB, float timeStep) {
+  /* dead code*/
+  assert(false);
+  /*
   if (m_useSolveConstraintObsolete) {
    final btVector3 pivotAInW = m_rbA.getCenterOfMassTransform().transform(m_rbAFrame.getOrigin());
    final btVector3 pivotBInW = m_rbB.getCenterOfMassTransform().transform(m_rbBFrame.getOrigin());
@@ -589,6 +601,7 @@ public class btConeTwistConstraint extends btTypedConstraint implements Serializ
     }
    }
   }
+*/
  }
 
  void updateRHS(float timeStep) {

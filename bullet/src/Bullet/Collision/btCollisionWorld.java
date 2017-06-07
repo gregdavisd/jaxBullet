@@ -64,7 +64,6 @@ import static Bullet.common.btAlignedObjectArray.findLinearSearch;
 import java.io.Serializable;
 import java.util.ArrayList;
 import static java.util.Collections.swap;
-import static java.util.Collections.swap;
 
 /**
  * CollisionWorld is interface and container for the collision detection
@@ -131,7 +130,7 @@ public class btCollisionWorld implements Serializable {
    final btTransform worldTocollisionObject = new btTransform(colObjWorldTransform).invert();
    final btVector3 rayFromLocal = worldTocollisionObject.transform(rayFromTrans.getOrigin());
    final btVector3 rayToLocal = worldTocollisionObject.transform(rayToTrans.getOrigin());
-   //			BT_PROFILE("rayTestConcave");
+   BT_PROFILE("rayTestConcave");
    if (collisionShape.getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE) {
     ///optimized version for btBvhTriangleMeshShape
     btBvhTriangleMeshShape triangleMesh = (btBvhTriangleMeshShape) collisionShape;
@@ -188,7 +187,7 @@ public class btCollisionWorld implements Serializable {
   btCollisionShape collisionShape = colObjWrap.getCollisionShape();
   final btTransform colObjWorldTransform = colObjWrap.getWorldTransform();
   if (collisionShape.isConvex()) {
-   //BT_PROFILE("convexSweepConvex");
+   BT_PROFILE("convexSweepConvex");
    btConvexCast.CastResult castResult = new btConvexCast.CastResult();
    castResult.m_allowedPenetration = allowedPenetration;
    castResult.m_fraction = resultCallback.m_closestHitFraction;//float(1.);//??
@@ -219,7 +218,7 @@ public class btCollisionWorld implements Serializable {
   } else if (collisionShape.isConcave()) {
    switch (collisionShape.getShapeType()) {
     case TRIANGLE_MESH_SHAPE_PROXYTYPE: {
-     //BT_PROFILE("convexSweepbtBvhTriangleMesh");
+     BT_PROFILE("convexSweepbtBvhTriangleMesh");
      btBvhTriangleMeshShape triangleMesh = (btBvhTriangleMeshShape) collisionShape;
      final btTransform worldTocollisionObject = new btTransform(colObjWorldTransform).invert();
      final btVector3 convexFromLocal = worldTocollisionObject.transform(convexFromTrans.getOrigin());
@@ -267,7 +266,7 @@ public class btCollisionWorld implements Serializable {
      }
      break;
     default: {
-     //BT_PROFILE("convexSweepConcave");
+     BT_PROFILE("convexSweepConcave");
      btConcaveShape concaveShape = (btConcaveShape) collisionShape;
      final btTransform worldTocollisionObject = new btTransform(colObjWorldTransform).invert();
      final btVector3 convexFromLocal = worldTocollisionObject.transform(convexFromTrans.getOrigin());
@@ -615,6 +614,9 @@ public class btCollisionWorld implements Serializable {
       btPolyhedralConvexShape polyshape = (btPolyhedralConvexShape) shape;
       int i;
       if (polyshape.getConvexPolyhedron() != null) {
+       /* dead code */
+       assert (false);
+       /*
        btConvexPolyhedron poly = polyshape.getConvexPolyhedron();
        for (i = 0; i < poly.m_faces.size(); i++) {
         btFace face = poly.m_faces.get(i);
@@ -643,6 +645,7 @@ public class btCollisionWorld implements Serializable {
           normalColor);
         }
        }
+        */
       } else {
        final btVector3 a = new btVector3();
        final btVector3 b = new btVector3();
@@ -670,7 +673,6 @@ public class btCollisionWorld implements Serializable {
       final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT), (BT_LARGE_FLOAT));
       final btVector3 aabbMin = new btVector3((-BT_LARGE_FLOAT), (-BT_LARGE_FLOAT),
        (-BT_LARGE_FLOAT));
-      //DebugDrawcallback drawCallback;
       DebugDrawcallback drawCallback =
        new DebugDrawcallback(getDebugDrawer(), worldTransform, color);
       convexMesh.getMeshInterface().InternalProcessAllTriangles(drawCallback, aabbMin, aabbMax);

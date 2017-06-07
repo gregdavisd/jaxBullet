@@ -23,6 +23,7 @@ import Bullet.LinearMath.btVector3;
 import static Bullet.LinearMath.btVector3.init;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 import org.apache.commons.collections.primitives.ArrayFloatList;
 
 /**
@@ -159,4 +160,34 @@ public class btMultiSphereShape extends btConvexInternalAabbCachingShape impleme
  public String getName() {
   return "MultiSphere";
  }
-};
+
+ @Override
+ public int hashCode() {
+  int hash = 3;
+  hash += super.hashCode();
+  hash = 67 * hash + Objects.hashCode(this.m_localPositionArray);
+  hash = 67 * hash + Objects.hashCode(this.m_radiArray);
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btMultiSphereShape other = (btMultiSphereShape) obj;
+  if (!Objects.equals(this.m_localPositionArray, other.m_localPositionArray)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_radiArray, other.m_radiArray)) {
+   return false;
+  }
+  return super.equals(obj);
+ }
+}

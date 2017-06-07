@@ -89,8 +89,12 @@ public class btPoint2PointConstraint extends btTypedConstraint implements Serial
 
  public final void getInfo1NonVirtual(btConstraintInfo1 info) {
   if (m_useSolveConstraintObsolete) {
+      /* dead code */
+   assert(false);
+   /*
    info.m_numConstraintRows = 0;
    info.nub = 0;
+*/
   } else {
    info.m_numConstraintRows = 3;
    info.nub = 3;

@@ -23,6 +23,7 @@ import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
@@ -152,4 +153,40 @@ Whereas Java calls the derived methods from the constructor of the base class. H
  public String getName() {
   return "TRIANGLEMESH";
  }
-};
+
+ @Override
+ public int hashCode() {
+  int hash = 5;
+  hash += super.hashCode();
+  hash = 97 * hash + Objects.hashCode(this.m_localAabbMin);
+  hash = 97 * hash + Objects.hashCode(this.m_localAabbMax);
+  hash = 97 * hash + Objects.hashCode(this.m_meshInterface);
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btTriangleMeshShape other = (btTriangleMeshShape) obj;
+  if (!Objects.equals(this.m_localAabbMin, other.m_localAabbMin)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_localAabbMax, other.m_localAabbMax)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_meshInterface, other.m_meshInterface)) {
+   return false;
+  }
+  return true;
+ }
+
+
+}

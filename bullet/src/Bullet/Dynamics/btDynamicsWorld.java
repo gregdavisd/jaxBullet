@@ -136,7 +136,7 @@ abstract public class btDynamicsWorld extends btCollisionWorld implements Serial
  public btContactSolverInfo getSolverInfo() {
   return m_solverInfo;
  }
-
+/*
  ///obsolete, use addAction instead.
  public void addVehicle(btActionInterface vehicle) {
   //(void)vehicle;
@@ -156,4 +156,5 @@ abstract public class btDynamicsWorld extends btCollisionWorld implements Serial
  public void removeCharacter(btActionInterface character) {
   //(void)character;
  }
+*/
 }

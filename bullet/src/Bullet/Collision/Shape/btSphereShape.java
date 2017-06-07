@@ -105,4 +105,14 @@ public class btSphereShape extends btConvexInternalShape implements Serializable
   //this means, non-uniform scaling is not supported anymore
   return getRadius();
  }
-};
+
+ @Override
+ public boolean equals(Object obj) {
+  return super.equals(obj);
+ }
+
+ @Override
+ public int hashCode() {
+  return super.hashCode();
+ }
+}

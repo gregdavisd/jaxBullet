@@ -19,6 +19,7 @@ import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
 import static Bullet.LinearMath.btVector3.init;
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  *
@@ -173,4 +174,30 @@ public class btTriangleShape extends btPolyhedralConvexShape implements Serializ
    penetrationVector.negate();
   }
  }
-};
+
+ @Override
+ public int hashCode() {
+  int hash = 7;
+  hash += super.hashCode();
+  hash = 13 * hash + Arrays.deepHashCode(this.m_vertices1);
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btTriangleShape other = (btTriangleShape) obj;
+  if (!Arrays.deepEquals(this.m_vertices1, other.m_vertices1)) {
+   return false;
+  }
+  return super.equals(obj);
+ }
+}

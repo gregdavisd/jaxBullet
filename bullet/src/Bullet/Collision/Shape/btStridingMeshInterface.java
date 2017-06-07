@@ -18,6 +18,7 @@ import Bullet.Collision.btTriangleCallback;
 import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
@@ -30,7 +31,7 @@ abstract public class btStridingMeshInterface implements Serializable {
  final btTriangleCallback vertex_scaling;
  btTriangleCallback callback;
 
- btStridingMeshInterface() {
+public btStridingMeshInterface() {
   m_scaling.set(1, 1, 1);
   vertex_scaling = new btTriangleCallback() {
    private static final long serialVersionUID = 1L;
@@ -90,7 +91,7 @@ abstract public class btStridingMeshInterface implements Serializable {
 
  /// unLockVertexBase finishes the access to a subpart of the triangle mesh
  /// make a call to unLockVertexBase when the read and write access (using getLockedVertexIndexBase) is finished
- public abstract void unLockVertexBase(int subpart);
+ public  final void unLockVertexBase(int subpart){}
 
  public final void unLockReadOnlyVertexBase(int subpart) {
  }
@@ -139,4 +140,32 @@ abstract public class btStridingMeshInterface implements Serializable {
    return true;
   }
  }
+
+ @Override
+ public int hashCode() {
+  int hash = 7;
+  hash = 59 * hash + Objects.hashCode(this.m_scaling);
+  System.out.println("btStridingMeshInterface" + hash);
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btStridingMeshInterface other = (btStridingMeshInterface) obj;
+  if (!Objects.equals(this.m_scaling, other.m_scaling)) {
+   return false;
+  }
+  return true;
+ }
+ 
+ 
 };

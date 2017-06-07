@@ -971,7 +971,7 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
 
  void setNumTasks(int numTasks) {
  }
-
+/*
  ///obsolete, use updateActions instead
  void updateVehicles(float timeStep) {
   updateActions(timeStep);
@@ -1000,7 +1000,7 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
  public void removeCharacter(btActionInterface character) {
   removeAction(character);
  }
-
+*/
  void setSynchronizeAllMotionStates(boolean synchronizeAll) {
   m_synchronizeAllMotionStates = synchronizeAll;
  }

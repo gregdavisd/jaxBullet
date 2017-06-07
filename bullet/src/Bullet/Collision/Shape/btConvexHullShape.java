@@ -20,7 +20,6 @@ import static Bullet.LinearMath.btScalar.FLT_MAX;
 import static Bullet.LinearMath.btScalar.SIMD_EPSILON;
 import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
-import static Bullet.LinearMath.btVector3.btMul;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -238,4 +237,34 @@ public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape implem
   m_localScaling.set(scaling);
   recalcLocalAabb();
  }
-};
+
+ @Override
+ public int hashCode() {
+  int hash = 3;
+  hash += super.hashCode();
+  hash = 37 * hash + Arrays.deepHashCode(this.m_unscaledPoints);
+  hash = 37 * hash + this.point_count;
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btConvexHullShape other = (btConvexHullShape) obj;
+  if (this.point_count != other.point_count) {
+   return false;
+  }
+  if (!Arrays.deepEquals(this.m_unscaledPoints, other.m_unscaledPoints)) {
+   return false;
+  }
+  return super.equals(obj);
+ }
+}

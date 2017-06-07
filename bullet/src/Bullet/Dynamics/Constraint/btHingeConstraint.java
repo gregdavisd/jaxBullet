@@ -215,6 +215,9 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
  @Override
  public void buildJacobian() {
   if (m_useSolveConstraintObsolete) {
+   /* dead code */
+   assert(false);
+   /*
    m_appliedImpulse = (0.f);
    m_accMotorImpulse = (0.f);
    if (!m_angularOnly) {
@@ -278,14 +281,19 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
     .getBasisColumn(2));
    m_kHinge = 1.0f / (getRigidBodyA().computeAngularImpulseDenominator(axisA) +
     getRigidBodyB().computeAngularImpulseDenominator(axisA));
+*/
   }
  }
 
  @Override
  public void getInfo1(btConstraintInfo1 info) {
   if (m_useSolveConstraintObsolete) {
+      /* dead code */
+   assert(false);
+   /*
    info.m_numConstraintRows = 0;
    info.nub = 0;
+*/
   } else {
    info.m_numConstraintRows = 5; // Fixed 3 linear + 2 angular
    info.nub = 1;
@@ -301,8 +309,12 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
 
  public void getInfo1NonVirtual(btConstraintInfo1 info) {
   if (m_useSolveConstraintObsolete) {
+      /* dead code */
+   assert(false);
+   /*
    info.m_numConstraintRows = 0;
    info.nub = 0;
+*/
   } else {
    //always add the 'limit' row, to avoid computation (data is not available yet)
    info.m_numConstraintRows = 6; // Fixed 3 linear + 2 angular

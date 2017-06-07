@@ -23,8 +23,8 @@ import java.io.Serializable;
 class btBvhSubtreeInfo implements Serializable {
 
  //12 bytes
- final int[] m_quantizedAabbMin = new int[3];
- final int[] m_quantizedAabbMax = new int[3];
+ final short[] m_quantizedAabbMin = new short[3];
+ final short[] m_quantizedAabbMax = new short[3];
  //4 bytes, points to the root of the subtree
  int m_rootNodeIndex;
  //4 bytes

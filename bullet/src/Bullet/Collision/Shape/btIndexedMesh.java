@@ -14,6 +14,7 @@ subject to the following restrictions:
  */
 package Bullet.Collision.Shape;
 
+import java.util.Objects;
 import org.apache.commons.collections.primitives.ArrayFloatList;
 import org.apache.commons.collections.primitives.ArrayIntList;
 
@@ -38,4 +39,51 @@ public class btIndexedMesh {
  // but can be set manually if you for example run Bullet with double precision but have
  // mesh data in single precision..
 //   PHY_ScalarType m_vertexType;
+
+ @Override
+ public int hashCode() {
+  int hash = 5;
+  hash+=super.hashCode();
+  hash = 53 * hash + this.m_numTriangles;
+  hash = 53 * hash + Objects.hashCode(this.m_triangleIndexBase);
+  hash = 53 * hash + this.m_triangleIndexStride;
+  hash = 53 * hash + this.m_numVertices;
+  hash = 53 * hash + Objects.hashCode(this.m_vertexBase);
+  hash = 53 * hash + this.m_vertexStride;
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btIndexedMesh other = (btIndexedMesh) obj;
+  if (this.m_numTriangles != other.m_numTriangles) {
+   return false;
+  }
+  if (this.m_triangleIndexStride != other.m_triangleIndexStride) {
+   return false;
+  }
+  if (this.m_numVertices != other.m_numVertices) {
+   return false;
+  }
+  if (this.m_vertexStride != other.m_vertexStride) {
+   return false;
+  }
+  if (!Objects.equals(this.m_triangleIndexBase, other.m_triangleIndexBase)) {
+   return false;
+  }
+  if (!Objects.equals(this.m_vertexBase, other.m_vertexBase)) {
+   return false;
+  }
+  return true;
+ }
+
 }

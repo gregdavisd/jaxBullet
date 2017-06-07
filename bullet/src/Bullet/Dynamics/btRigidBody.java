@@ -83,7 +83,7 @@ public class btRigidBody extends btCollisionObject implements Serializable {
  //keep track of typed constraints referencing this rigid body, to disable collision between linked bodies
  protected final ArrayList<btTypedConstraint> m_constraintRefs = new ArrayList<>(0);
  protected int m_rigidbodyFlags;
- protected int m_debugBodyId;
+ //protected int m_debugBodyId;
  protected final btVector3 m_deltaLinearVelocity = new btVector3();
  protected final btVector3 m_deltaAngularVelocity = new btVector3();
  protected final btVector3 m_angularFactor = new btVector3();
@@ -117,8 +117,8 @@ public class btRigidBody extends btCollisionObject implements Serializable {
   m_internalType = CO_RIGID_BODY;
   m_linearVelocity.set((0.0f), (0.0f), (0.0f));
   m_angularVelocity.set((0.f), (0.f), (0.f));
-  m_angularFactor.set(1f, 1f, 1f);
-  m_linearFactor.set(1f, 1f, 1f);
+  m_angularFactor.set(constructionInfo.m_angularFactor);
+  m_linearFactor.set(constructionInfo.m_linearFactor);
   m_gravity.set((0.0f), (0.0f), (0.0f));
   m_gravity_acceleration.set((0.0f), (0.0f), (0.0f));
   m_totalForce.set((0.0f), (0.0f), (0.0f));
@@ -148,7 +148,7 @@ public class btRigidBody extends btCollisionObject implements Serializable {
   m_spinningFriction = constructionInfo.m_spinningFriction;
   m_restitution = constructionInfo.m_restitution;
   setCollisionShape(constructionInfo.m_collisionShape);
-  m_debugBodyId = uniqueId++;
+  //m_debugBodyId = uniqueId++;
   setMassProps(constructionInfo.m_mass, constructionInfo.m_localInertia);
   updateInertiaTensor();
   m_rigidbodyFlags = BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_BODY;

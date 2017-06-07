@@ -272,4 +272,30 @@ public class btCylinderShape extends btConvexInternalShape implements Serializab
    return tmp;
   }
  }
-};
+
+ @Override
+ public int hashCode() {
+  int hash = 7;
+  hash += super.hashCode();
+  hash = 29 * hash + this.m_upAxis;
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btCylinderShape other = (btCylinderShape) obj;
+  if (this.m_upAxis != other.m_upAxis) {
+   return false;
+  }
+  return super.equals(obj);
+ }
+}

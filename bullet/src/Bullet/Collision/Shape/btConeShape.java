@@ -20,6 +20,7 @@ import static Bullet.LinearMath.btScalar.btSqrt;
 import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  *
@@ -186,5 +187,43 @@ public class btConeShape extends btConvexInternalShape implements Serializable {
    m_localScaling.getElement(r2)) / 2;
   m_sinAngle = (m_radius / btSqrt(m_radius * m_radius + m_height * m_height));
   super.setLocalScaling(scaling);
+ }
+
+ @Override
+ public int hashCode() {
+  int hash = 3;
+  hash += super.hashCode();
+  hash = 29 * hash + Float.floatToIntBits(this.m_sinAngle);
+  hash = 29 * hash + Float.floatToIntBits(this.m_radius);
+  hash = 29 * hash + Float.floatToIntBits(this.m_height);
+  hash = 29 * hash + Arrays.hashCode(this.m_coneIndices);
+  return hash;
+ }
+
+ @Override
+ public boolean equals(Object obj) {
+  if (this == obj) {
+   return true;
+  }
+  if (obj == null) {
+   return false;
+  }
+  if (getClass() != obj.getClass()) {
+   return false;
+  }
+  final btConeShape other = (btConeShape) obj;
+  if (Float.floatToIntBits(this.m_sinAngle) != Float.floatToIntBits(other.m_sinAngle)) {
+   return false;
+  }
+  if (Float.floatToIntBits(this.m_radius) != Float.floatToIntBits(other.m_radius)) {
+   return false;
+  }
+  if (Float.floatToIntBits(this.m_height) != Float.floatToIntBits(other.m_height)) {
+   return false;
+  }
+  if (!Arrays.equals(this.m_coneIndices, other.m_coneIndices)) {
+   return false;
+  }
+  return super.equals(obj);
  }
 }
