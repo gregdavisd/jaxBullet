@@ -16,6 +16,7 @@ package Bullet.Dynamics;
 
 import Bullet.Collision.btCollisionWorld;
 import Bullet.Collision.btIDebugDraw;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
 
@@ -25,13 +26,13 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-abstract public class btActionInterface implements Serializable {
+public interface btActionInterface extends Serializable {
 
- private static btRigidBody s_fixed = new btRigidBody(0, null, null);
+ static btRigidBody S_FIXED = new btRigidBody(0, null, null);
 
  public static btRigidBody getFixedBody() {
-  s_fixed.setMassProps(0f, new btVector3());
-  return s_fixed;
+  S_FIXED.setMassProps(0f, new btVector3());
+  return S_FIXED;
  }
 
  public abstract void updateAction(btCollisionWorld collisionWorld, float deltaTimeStep);

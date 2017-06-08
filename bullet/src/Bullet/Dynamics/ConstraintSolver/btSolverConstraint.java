@@ -14,7 +14,6 @@ subject to the following restrictions:
  */
 package Bullet.Dynamics.ConstraintSolver;
 
-import Bullet.Dynamics.ConstraintSolver.btSolverBody;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
 import javax.vecmath.FloatSmartPointer;

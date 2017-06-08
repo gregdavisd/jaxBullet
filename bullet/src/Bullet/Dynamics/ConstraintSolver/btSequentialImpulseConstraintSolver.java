@@ -14,8 +14,8 @@
  */
 package Bullet.Dynamics.ConstraintSolver;
 
-import Bullet.Collision.btCollisionObject;
 import Bullet.Collision.Broadphase.btDispatcher;
+import Bullet.Collision.btCollisionObject;
 import Bullet.Collision.btIDebugDraw;
 import Bullet.Collision.btManifoldPoint;
 import static Bullet.Collision.btManifoldPoint.BT_CONTACT_FLAG_CONTACT_STIFFNESS_DAMPING;
@@ -23,26 +23,27 @@ import static Bullet.Collision.btManifoldPoint.BT_CONTACT_FLAG_HAS_CONTACT_CFM;
 import static Bullet.Collision.btManifoldPoint.BT_CONTACT_FLAG_HAS_CONTACT_ERP;
 import static Bullet.Collision.btManifoldPoint.BT_CONTACT_FLAG_LATERAL_FRICTION_INITIALIZED;
 import Bullet.Collision.btPersistentManifold;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.Dynamics.Constraint.btConstraintInfo2;
 import static Bullet.Dynamics.Constraint.btConstraintSolverType.BT_SEQUENTIAL_IMPULSE_SOLVER;
-import static Bullet.Dynamics.btRigidBodyFlags.BT_ENABLE_GYROSCOPIC_FORCE_EXPLICIT;
-import static Bullet.Dynamics.btRigidBodyFlags.BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_BODY;
-import static Bullet.Dynamics.btRigidBodyFlags.BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_WORLD;
+import Bullet.Dynamics.Constraint.btTypedConstraint;
+import Bullet.Dynamics.Constraint.btTypedConstraint.btConstraintInfo1;
 import Bullet.Dynamics.ConstraintSolver.btSolverConstraint.CFMPointer;
 import Bullet.Dynamics.ConstraintSolver.btSolverConstraint.LowerLimitPointer;
 import Bullet.Dynamics.ConstraintSolver.btSolverConstraint.RHSPointer;
 import Bullet.Dynamics.ConstraintSolver.btSolverConstraint.UpperLimitPointer;
-import Bullet.Dynamics.Constraint.btTypedConstraint;
 import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_DISABLE_VELOCITY_DEPENDENT_FRICTION_DIRECTION;
 import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_ENABLE_FRICTION_DIRECTION_CACHING;
 import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_INTERLEAVE_CONTACT_AND_FRICTION_CONSTRAINTS;
+import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_RANDOMIZE_ORDER;
 import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_SIMD;
 import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_USE_2_FRICTION_DIRECTIONS;
 import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_USE_WARMSTARTING;
-import Bullet.Dynamics.Constraint.btTypedConstraint.btConstraintInfo1;
 import Bullet.Dynamics.btContactSolverInfo;
 import Bullet.Dynamics.btJointFeedback;
-import Bullet.Dynamics.btRigidBody;
+import static Bullet.Dynamics.btRigidBodyFlags.BT_ENABLE_GYROSCOPIC_FORCE_EXPLICIT;
+import static Bullet.Dynamics.btRigidBodyFlags.BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_BODY;
+import static Bullet.Dynamics.btRigidBodyFlags.BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_WORLD;
 import Bullet.Dynamics.btSingleConstraintRowSolver;
 import static Bullet.LinearMath.btQuickprof.BT_PROFILE;
 import static Bullet.LinearMath.btScalar.SIMD_EPSILON;
@@ -55,10 +56,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.vecmath.FloatSmartPointer;
 import static javax.vecmath.VecMath.DEBUG_BLOCKS;
-import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_RANDOMIZE_ORDER;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *

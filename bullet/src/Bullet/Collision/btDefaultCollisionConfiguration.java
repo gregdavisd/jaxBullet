@@ -14,7 +14,6 @@ subject to the following restrictions:
  */
 package Bullet.Collision;
 
-import Bullet.Collision.Algorithm.btEmptyAlgorithm;
 import Bullet.Collision.Algorithm.btBoxBoxCollisionAlgorithm;
 import Bullet.Collision.Algorithm.btCollisionAlgorithmCreateFunc;
 import Bullet.Collision.Algorithm.btCompoundCollisionAlgorithm;
@@ -22,6 +21,7 @@ import Bullet.Collision.Algorithm.btCompoundCompoundCollisionAlgorithm;
 import Bullet.Collision.Algorithm.btConvexConcaveCollisionAlgorithm;
 import Bullet.Collision.Algorithm.btConvexConvexAlgorithm;
 import Bullet.Collision.Algorithm.btConvexPlaneCollisionAlgorithm;
+import Bullet.Collision.Algorithm.btEmptyAlgorithm;
 import Bullet.Collision.Algorithm.btSphereSphereCollisionAlgorithm;
 import Bullet.Collision.Algorithm.btSphereTriangleCollisionAlgorithm;
 import static Bullet.Collision.Broadphase.BroadphaseNativeTypes.BOX_SHAPE_PROXYTYPE;

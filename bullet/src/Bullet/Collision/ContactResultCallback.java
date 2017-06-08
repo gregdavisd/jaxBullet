@@ -29,8 +29,8 @@ abstract public class ContactResultCallback implements Serializable {
  public  float m_closestDistanceThreshold;
 
  public ContactResultCallback() {
-  m_collisionFilterGroup = btBroadphaseProxy.DefaultFilter;
-  m_collisionFilterMask = btBroadphaseProxy.AllFilter;
+  m_collisionFilterGroup = btBroadphaseProxy.DEFAULT_FILTER;
+  m_collisionFilterMask = btBroadphaseProxy.ALL_FILTER;
   m_closestDistanceThreshold = 0;
  }
 

@@ -96,7 +96,7 @@ public class btManifoldResult extends btDiscreteCollisionDetectorInterface.Resul
  public int m_index1;
  public float m_closestPointDistanceThreshold;
 
- btManifoldResult(btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap) {
+ public btManifoldResult(btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap) {
   m_manifoldPtr = null;
   m_body0Wrap = body0Wrap;
   m_body1Wrap = body1Wrap;

@@ -21,7 +21,7 @@ import static Bullet.Collision.btCollisionObject.DISABLE_DEACTIVATION;
 import Bullet.Dynamics.Constraint.btGeneric6DofSpring2Constraint;
 import static Bullet.Dynamics.Constraint.btTypedConstraint.BT_CONSTRAINT_STOP_CFM;
 import static Bullet.Dynamics.Constraint.btTypedConstraint.BT_CONSTRAINT_STOP_ERP;
-import Bullet.Dynamics.btRigidBody;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.LinearMath.btDefaultMotionState;
 import Bullet.LinearMath.btMatrix3x3;
 import Bullet.LinearMath.btQuaternion;

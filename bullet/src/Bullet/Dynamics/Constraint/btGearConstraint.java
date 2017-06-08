@@ -14,7 +14,7 @@ subject to the following restrictions:
  */
 package Bullet.Dynamics.Constraint;
 
-import Bullet.Dynamics.btRigidBody;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
 

@@ -19,7 +19,6 @@ import static Bullet.LinearMath.btScalar.btCos;
 import static Bullet.LinearMath.btScalar.btSin;
 import static Bullet.LinearMath.btScalar.btSqrt;
 import java.io.Serializable;
-import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 import static javax.vecmath.VecMath.is_good_matrix;
 
 /**
@@ -43,8 +42,6 @@ public class btTransformUtil implements Serializable {
   linVel.set(transform1.getOrigin()).sub(transform0.getOrigin()).scale(1.0f / timeStep);
   float angle = calculateDiffAxisAngle(transform0, transform1, angVel);
   angVel.scale(angle / timeStep);
-  if (DEBUG_BLOCKS) {
-  }
  }
 
  /**

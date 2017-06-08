@@ -15,7 +15,7 @@ package bullet_examples;
 
 import Bullet.Collision.Broadphase.btAxisSweep3;
 import Bullet.Collision.Broadphase.btDbvtBroadphase;
-import Bullet.Collision.btCollisionDispatcher;
+import Bullet.Collision.Algorithm.btCollisionDispatcher;
 import Bullet.Collision.btDefaultCollisionConfiguration;
 import Bullet.Dynamics.ConstraintSolver.btSequentialImpulseConstraintSolver;
 import Bullet.Dynamics.btDiscreteDynamicsWorld;

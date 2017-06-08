@@ -14,6 +14,7 @@ subject to the following restrictions:
  */
 package Bullet.Collision;
 
+import Bullet.Collision.Algorithm.btCollisionDispatcher;
 import Bullet.Collision.Broadphase.btBroadphasePair;
 import Bullet.Collision.Broadphase.btDispatcherInfo;
 import java.io.Serializable;

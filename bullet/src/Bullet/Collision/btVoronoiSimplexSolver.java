@@ -16,9 +16,9 @@ package Bullet.Collision;
 
 import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import static Bullet.LinearMath.btScalar.FLT_MAX;
-import static Bullet.common.IFDEF.CATCH_DEGENERATE_TETRAHEDRON;
 import Bullet.LinearMath.btVector3;
 import static Bullet.LinearMath.btVector3.init;
+import static Bullet.common.IFDEF.CATCH_DEGENERATE_TETRAHEDRON;
 import java.io.Serializable;
 
 /**

@@ -29,16 +29,19 @@ import Bullet.Collision.Shape.btSphereShape;
 import Bullet.Collision.Shape.btStaticPlaneShape;
 import Bullet.Collision.Shape.btTriangleMeshShape;
 import Bullet.Collision.btCollisionConfiguration;
-import Bullet.Collision.btCollisionDispatcher;
+import Bullet.Collision.Algorithm.btCollisionDispatcher;
+import Bullet.Collision.Shape.btBvhTriangleMeshShape;
+import Bullet.Collision.Shape.btIndexedMesh;
 import Bullet.Collision.btCollisionObject;
 import static Bullet.Collision.btCollisionObject.ISLAND_SLEEPING;
 import Bullet.Collision.btIDebugDraw;
 import Bullet.Collision.Shape.btShapeHull;
+import Bullet.Collision.Shape.btTriangleIndexVertexArray;
 import Bullet.Dynamics.Constraint.btPoint2PointConstraint;
 import Bullet.Dynamics.ConstraintSolver.btConstraintSolver;
 import Bullet.Dynamics.btDynamicsWorld;
-import Bullet.Dynamics.btRigidBody;
-import Bullet.Dynamics.btRigidBodyConstructionInfo;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
+import Bullet.Dynamics.CollisionObjects.btRigidBodyConstructionInfo;
 import static Bullet.Extras.btMinMax.btClamped;
 import Bullet.LinearMath.btClock;
 import Bullet.LinearMath.btDefaultMotionState;
@@ -48,9 +51,24 @@ import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
 import static Bullet.LinearMath.btVector3.btPlaneSpace1;
 import Bullet.LinearMath.btVector4;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape01Idx;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape01Vtx;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape02Idx;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape02Vtx;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape03Idx;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape03Vtx;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape04Idx;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape04Vtx;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape05Idx;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape05Vtx;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape06Idx;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape06Vtx;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape07Idx;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape07Vtx;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape08Idx;
+import static bullet_examples.apps.benchmarks.LandscapeData.Landscape08Vtx;
 import java.awt.Canvas;
 import java.awt.Container;
-import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import static java.awt.event.MouseEvent.BUTTON1;
 import static java.awt.event.MouseEvent.BUTTON3;
@@ -58,6 +76,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.io.Serializable;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.AbstractMap.SimpleEntry;
@@ -354,10 +373,10 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
  private int up_axis = 0;
  private static int mouse_x;
  private static int mouse_y;
- private static final Map<btCollisionShape, GLDrawElements> shapes = new HashMap<>();
+ private static final Map<Object, GLDrawElements> shapes = new HashMap<>();
 
  public DemoContainer() {
-  for (Map.Entry<btCollisionShape, GLDrawElements> shape : shapes.entrySet()) {
+  for (Map.Entry<Object, GLDrawElements> shape : shapes.entrySet()) {
    shape.getValue().destroy();
   }
   shapes.clear();
@@ -451,7 +470,7 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
  public abstract void initPhysics();
 
  public boolean step_physics(float cap_frametime, float rate) {
-  return step_physics(cap_frametime, rate, 16);
+  return step_physics(cap_frametime, rate, 4);
  }
 
  public boolean step_physics(float cap_frametime, float rate, int max_substeps) {
@@ -477,7 +496,7 @@ public abstract class DemoContainer implements PhysicsExample, MouseListener, Mo
   return false;
  }
 
- private void draw_color() {
+ protected void draw_color() {
   glDisable(GL_LIGHT0 + enabled_light);
   enabled_light = (enabled_light + 1) % 4;
   glEnable(GL_LIGHT0 + enabled_light);
@@ -598,13 +617,12 @@ disable_vertex_arrays();
   boolean all_sleeping = true;
 
  for (btCollisionObject collisionObject : world.getCollisionObjectArray()) {
-   btRigidBody body = btRigidBody.upcast(collisionObject);
-   if (body == null) {
-    continue;
-   }
-   if (body.getActivationState() != ISLAND_SLEEPING) {
+     if (collisionObject.getActivationState() != ISLAND_SLEEPING) {
     all_sleeping = false;
    }
+   btRigidBody body = btRigidBody.upcast(collisionObject);
+   if (body != null) {
+
    final btTransform object_trans = new btTransform();
    if (body.getMotionState() != null) {
     btDefaultMotionState myMotionState = (btDefaultMotionState) body.getMotionState();
@@ -615,6 +633,13 @@ disable_vertex_arrays();
    draw_color();
    draw_shape(object_trans, collisionObject.getCollisionShape());
   }
+   else
+   {
+    draw_color();
+     draw_shape(collisionObject.getWorldTransform(),collisionObject.getCollisionShape());
+   }
+ }
+ 
   return !all_sleeping;
  }
 
@@ -663,7 +688,7 @@ disable_vertex_arrays();
   }
  }
 
- private FloatBuffer put_matrix(float[] matrix) {
+ protected FloatBuffer put_matrix(float[] matrix) {
   matrix_buffer.put(matrix);
   matrix_buffer.rewind();
   return matrix_buffer;
@@ -896,12 +921,19 @@ disable_vertex_arrays();
   glPopMatrix();
  }
 
+ private static class ShapeKey implements Serializable
+ {
+  
+ }
  private void draw_novel_shape(btCollisionShape collisionShape) {
-  GLDrawElements shape = shapes.get(collisionShape);
+ if (collisionShape.getUserPointer()==null){
+  collisionShape.setUserPointer(new ShapeKey());
+ }
+  GLDrawElements shape = shapes.get(collisionShape.getUserPointer());
   if (shape == null) {
    shape = shape_to_mesh(collisionShape);
    if (shape != null) {
-    shapes.put(collisionShape, shape);
+    shapes.put(collisionShape.getUserPointer(), shape);
    }
   }
   if (shape != null) {
@@ -910,7 +942,7 @@ disable_vertex_arrays();
   }
  }
 
- private void bind(GLDrawElements triangles) {
+ protected void bind(GLDrawElements triangles) {
   if (bound != triangles) {
    triangles.bind();
    bound = triangles;
@@ -976,6 +1008,7 @@ disable_vertex_arrays();
  @Override
  public void mouseMoved(MouseEvent e) {
   if (mouse_constraint != null) {
+   camera_matrices();
    final btVector3 ray_from = camera.eye();
    rotate_to_up_axis(up_axis, ray_from);
    final btVector3 ray_to = unproject(e.getX(), canvas().getHeight() - e.getY(), 1);
@@ -1005,6 +1038,7 @@ disable_vertex_arrays();
     frame.set_grabbed(!frame.is_grabbed());
    }
   } else if (e.getButton() == BUTTON3) {
+   camera_matrices();
    final btVector3 ray_from = camera.eye();
    rotate_to_up_axis(up_axis, ray_from);
    final btVector3 ray_to = unproject(e.getX(), canvas().getHeight() - e.getY(), 1);
@@ -1189,5 +1223,95 @@ disable_vertex_arrays();
    return shape;
   }
   return null;
+ }
+
+ public void create_ground() {
+  ///create a few basic rigid bodies
+  btCollisionShape groundShape = new btBoxShape(new btVector3(250.0F, 50.0F, 250.0F));
+  //	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
+  final btTransform groundTransform = new btTransform();
+  groundTransform.setIdentity();
+  groundTransform.setOrigin(new btVector3(0.0F, -50.0F, 0.0F));
+  //We can also use DemoApplication::createRigidBody, but for clarity it is provided here:
+  {
+   float mass = 0.0F;
+   //rigidbody is dynamic if and only if mass is non zero, otherwise static
+   boolean isDynamic = mass != 0.0F;
+   final btVector3 localInertia = new btVector3();
+   if (isDynamic) {
+    groundShape.calculateLocalInertia(mass, localInertia);
+   }
+   //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+   btDefaultMotionState myMotionState = new btDefaultMotionState(groundTransform);
+   btRigidBodyConstructionInfo rbInfo =
+    new btRigidBodyConstructionInfo(mass, myMotionState, groundShape, localInertia);
+   btRigidBody body = new btRigidBody(rbInfo);
+   //add the body to the dynamics world
+   world().addRigidBody(body);
+  }
+ }
+ArrayFloatList[] LandscapeVtx = {
+  Landscape01Vtx,
+  Landscape02Vtx,
+  Landscape03Vtx,
+  Landscape04Vtx,
+  Landscape05Vtx,
+  Landscape06Vtx,
+  Landscape07Vtx,
+  Landscape08Vtx,};
+ int[] LandscapeVtxCount = {
+  Landscape01Vtx.size() / 3,
+  Landscape02Vtx.size() / 3,
+  Landscape03Vtx.size() / 3,
+  Landscape04Vtx.size() / 3,
+  Landscape05Vtx.size() / 3,
+  Landscape06Vtx.size() / 3,
+  Landscape07Vtx.size() / 3,
+  Landscape08Vtx.size() / 3,};
+ ArrayIntList[] LandscapeIdx = {
+  Landscape01Idx,
+  Landscape02Idx,
+  Landscape03Idx,
+  Landscape04Idx,
+  Landscape05Idx,
+  Landscape06Idx,
+  Landscape07Idx,
+  Landscape08Idx,};
+ int[] LandscapeIdxCount = {
+  Landscape01Idx.size(),
+  Landscape02Idx.size(),
+  Landscape03Idx.size(),
+  Landscape04Idx.size(),
+  Landscape05Idx.size(),
+  Landscape06Idx.size(),
+  Landscape07Idx.size(),
+  Landscape08Idx.size(),};
+ protected void createLargeMeshBody() {
+  createLargeMeshBody(new btVector3(1,1,1));
+ }
+
+ protected void createLargeMeshBody(final btVector3 scaling) {
+  final btTransform trans = new btTransform();
+  trans.setIdentity();
+  for (int i = 0; i < 8;
+   i++) {
+   btTriangleIndexVertexArray meshInterface = new btTriangleIndexVertexArray();
+   btIndexedMesh part = new btIndexedMesh();
+   part.m_vertexBase = LandscapeVtx[i];
+   part.m_vertexStride = 3;
+   part.m_numVertices = LandscapeVtxCount[i];
+   part.m_triangleIndexBase = LandscapeIdx[i];
+   part.m_triangleIndexStride = 1;
+   part.m_numTriangles = LandscapeIdxCount[i] / 3;
+   meshInterface.addIndexedMesh(part);
+   boolean useQuantizedAabbCompression = true;
+   btBvhTriangleMeshShape trimeshShape =
+    new btBvhTriangleMeshShape(meshInterface, useQuantizedAabbCompression);
+   trimeshShape.setLocalScaling(scaling);
+   final btVector3 localInertia = new btVector3();
+   trans.setOrigin(new btVector3(0, -25, 0));
+   btRigidBody body = createRigidBody(0, trans, trimeshShape);
+   body.setFriction(0.9F);
+  }
  }
 }

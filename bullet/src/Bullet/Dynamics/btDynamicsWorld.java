@@ -18,6 +18,7 @@ import Bullet.Collision.Broadphase.btBroadphaseInterface;
 import Bullet.Collision.Broadphase.btDispatcher;
 import Bullet.Collision.btCollisionConfiguration;
 import Bullet.Collision.btCollisionWorld;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.Dynamics.Constraint.btTypedConstraint;
 import Bullet.Dynamics.ConstraintSolver.btConstraintSolver;
 import Bullet.LinearMath.btVector3;

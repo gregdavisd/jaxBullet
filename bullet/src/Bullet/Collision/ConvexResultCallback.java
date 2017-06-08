@@ -30,8 +30,8 @@ abstract public class ConvexResultCallback implements Serializable {
 
  public ConvexResultCallback() {
   m_closestHitFraction = (1f);
-  m_collisionFilterGroup = btBroadphaseProxy.DefaultFilter;
-  m_collisionFilterMask = btBroadphaseProxy.AllFilter;
+  m_collisionFilterGroup = btBroadphaseProxy.DEFAULT_FILTER;
+  m_collisionFilterMask = btBroadphaseProxy.ALL_FILTER;
  }
 
  public boolean hasHit() {

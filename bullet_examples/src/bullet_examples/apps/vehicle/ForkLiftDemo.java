@@ -11,14 +11,12 @@ subject to the following restrictions:
 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 3. This notice may not be removed or altered from any source distribution.
-*/
-
+ */
 ///September 2006: VehicleDemo is work in progress, this file is mostly just a placeholder
 ///This VehicleDemo file is very early in development, please check it later
 ///@todo is a basic engine model:
 ///A function that maps user input (throttle) into torque/force applied on the wheels
 ///with gears etc.
-
 package bullet_examples.apps.vehicle;
 
 import static Bullet.Collision.Broadphase.BroadphaseNativeTypes.INVALID_SHAPE_PROXYTYPE;
@@ -33,8 +31,8 @@ import Bullet.Dynamics.Constraint.btHingeConstraint;
 import Bullet.Dynamics.Constraint.btSliderConstraint;
 import Bullet.Dynamics.ConstraintSolver.btSequentialImpulseConstraintSolver;
 import Bullet.Dynamics.btDiscreteDynamicsWorld;
-import Bullet.Dynamics.btRigidBody;
-import Bullet.Dynamics.btRigidBodyConstructionInfo;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
+import Bullet.Dynamics.CollisionObjects.btRigidBodyConstructionInfo;
 import Bullet.Dynamics.vehicle.btDefaultVehicleRaycaster;
 import Bullet.Dynamics.vehicle.btRaycastVehicle;
 import Bullet.Dynamics.vehicle.btVehicleRaycaster;
@@ -146,13 +144,10 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
   float hiLim = m_liftHinge.getUpperLimit();
   m_liftHinge.enableAngularMotor(false, 0, 0);
   if (hingeAngle < lowLim) {
-//		m_liftHinge.setLimit(lowLim, lowLim + LIFT_EPS);
    m_liftHinge.setLimit(lowLim, lowLim);
   } else if (hingeAngle > hiLim) {
-//		m_liftHinge.setLimit(hiLim - LIFT_EPS, hiLim);
    m_liftHinge.setLimit(hiLim, hiLim);
   } else {
-//		m_liftHinge.setLimit(hingeAngle - LIFT_EPS, hingeAngle + LIFT_EPS);
    m_liftHinge.setLimit(hingeAngle, hingeAngle);
   }
  } // ForkLiftDemo.lockLiftHinge()
@@ -210,14 +205,8 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
    compound.addChildShape(suppLocalTrans, suppShape);
   }
   tr.setOrigin(new btVector3(0, 0.f, 0));
-  m_carChassis = localCreateRigidBody(800, tr, compound);//chassisShape);
-//m_carChassis.setDamping(0.2,0.2);
+  m_carChassis = localCreateRigidBody(800, tr, compound);
   m_wheelShape = new btCylinderShapeX(new btVector3(wheelWidth, wheelRadius, wheelRadius));
-//int wheelGraphicsIndex = m_wheelShape.getUserIndex();
-//float[] position = {0, 10, 10, 0};
-//float[] quaternion = {0, 0, 0, 1};
-//float[] color = {0, 1, 0, 1};
-//float[] scaling = {1, 1, 1, 1};
   {
    btCollisionShape liftShape = new btBoxShape(new btVector3(0.5f, 2.0f, 0.05f));
    final btTransform liftTrans = new btTransform();
@@ -234,7 +223,6 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
    localB.setBasis(new btMatrix3x3().setEulerZYX(0f, M_PI_2, 0f));
    localB.setOrigin(new btVector3(0.0f, -1.5f, -0.05f));
    m_liftHinge = new btHingeConstraint(m_carChassis, m_liftBody, localA, localB);
-//		m_liftHinge.setLimit(-LIFT_EPS, LIFT_EPS);
    m_liftHinge.setLimit(0.0f, 0.0f);
    world().addConstraint(m_liftHinge, true);
    btCollisionShape forkShapeA = new btBoxShape(new btVector3(1.0f, 0.1f, 0.1f));
@@ -264,8 +252,6 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
    m_forkSlider = new btSliderConstraint(m_liftBody, m_forkBody, localA, localB, true);
    m_forkSlider.setLowerLinLimit(0.1f);
    m_forkSlider.setUpperLinLimit(0.1f);
-//		m_forkSlider.setLowerAngLimit(-LIFT_EPS);
-//		m_forkSlider.setUpperAngLimit(LIFT_EPS);
    m_forkSlider.setLowerAngLimit(0.0f);
    m_forkSlider.setUpperAngLimit(0.0f);
    world().addConstraint(m_forkSlider, true);
@@ -345,7 +331,7 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
 
  @Override
  public String get_description() {
-  return "Simulate a fork lift vehicle with a working fork lift that can be moved using the cursor keys. The wheels collision is simplified using ray tests."+
+  return "Simulate a fork lift vehicle with a working fork lift that can be moved using the cursor keys. The wheels collision is simplified using ray tests." +
    "Use arrow keys to drive the forklift, hold shift and arrows to drive the fork. ";
  }
 
@@ -379,7 +365,6 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
   m_forkBody.setCenterOfMassTransform(forkTrans);
   m_forkBody.setLinearVelocity(new btVector3());
   m_forkBody.setAngularVelocity(new btVector3());
-//	m_liftHinge.setLimit(-LIFT_EPS, LIFT_EPS);
   m_liftHinge.setLimit(0.0f, 0.0f);
   m_liftHinge.enableAngularMotor(false, 0, 0);
   m_forkSlider.setLowerLinLimit(0.1f);

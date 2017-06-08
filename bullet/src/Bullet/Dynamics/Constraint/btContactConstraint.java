@@ -16,9 +16,9 @@ package Bullet.Dynamics.Constraint;
 
 import Bullet.Collision.btCollisionObject;
 import Bullet.Collision.btPersistentManifold;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.Dynamics.btContactSolverInfo;
 import Bullet.Dynamics.btJacobianEntry;
-import Bullet.Dynamics.btRigidBody;
 import static Bullet.LinearMath.btScalar.btFabs;
 import Bullet.LinearMath.btVector3;
 

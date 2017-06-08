@@ -23,7 +23,7 @@ http://gimpact.sf.net
  */
 package Bullet.Dynamics.Constraint;
 
-import Bullet.Dynamics.btRigidBody;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;

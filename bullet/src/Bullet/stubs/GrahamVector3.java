@@ -14,9 +14,9 @@ subject to the following restrictions:
  */
 package Bullet.stubs;
 
-import Bullet.LinearMath.btVector3;
 import static Bullet.LinearMath.btScalar.FLT_EPSILON;
 import static Bullet.LinearMath.btScalar.btAtan2Fast;
+import Bullet.LinearMath.btVector3;
 import static Bullet.LinearMath.btVector3.btPlaneSpace1;
 import java.util.ArrayList;
 import java.util.Collections;

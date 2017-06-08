@@ -16,7 +16,7 @@ subject to the following restrictions:
  /* Hinge Constraint by Dirk Gregorius. Limits added by Marcus Hennix at Starbreeze Studios */
 package Bullet.Dynamics.Constraint;
 
-import Bullet.Dynamics.btRigidBody;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import static Bullet.LinearMath.btScalar.SIMD_PI;
 import static Bullet.LinearMath.btScalar.btFabs;
 import static Bullet.LinearMath.btScalar.btFmod;

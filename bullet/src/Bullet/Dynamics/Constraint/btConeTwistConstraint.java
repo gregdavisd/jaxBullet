@@ -18,8 +18,7 @@ package Bullet.Dynamics.Constraint;
 
 import Bullet.Dynamics.ConstraintSolver.btSolverBody;
 import Bullet.Dynamics.btJacobianEntry;
-import Bullet.Dynamics.btRigidBody;
-import static Bullet.Extras.btMinMax.btMax;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.LinearMath.btMatrix3x3;
 import Bullet.LinearMath.btQuaternion;
 import static Bullet.LinearMath.btQuaternion.quatRotate;
@@ -36,9 +35,7 @@ import static Bullet.LinearMath.btScalar.btFuzzyZero;
 import static Bullet.LinearMath.btScalar.btSin;
 import static Bullet.LinearMath.btScalar.btSqrt;
 import Bullet.LinearMath.btTransform;
-import Bullet.LinearMath.btTransformUtil;
 import Bullet.LinearMath.btVector3;
-import static Bullet.LinearMath.btVector3.btPlaneSpace1;
 import java.io.Serializable;
 import javax.vecmath.AxisAngle4f;
 

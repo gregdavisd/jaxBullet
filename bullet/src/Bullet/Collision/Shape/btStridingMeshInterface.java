@@ -145,7 +145,6 @@ public btStridingMeshInterface() {
  public int hashCode() {
   int hash = 7;
   hash = 59 * hash + Objects.hashCode(this.m_scaling);
-  System.out.println("btStridingMeshInterface" + hash);
   return hash;
  }
 

@@ -67,6 +67,61 @@ public class btAabbUtil2 implements Serializable {
    tmax = tzmax;
   }
   return ((tmin[0] < lambda_max) && (tmax > lambda_min));
+ 
+ }
+
+ public static boolean btRayAabb(final btVector3 rayFrom, final btVector3 rayTo,
+  final btVector3 aabbMin, final btVector3 aabbMax,
+  float[] param, final btVector3 normal) {
+  final btVector3 aabbHalfExtent = (new btVector3(aabbMax).sub(aabbMin)).scale(0.5f);
+  final btVector3 aabbCenter = (new btVector3(aabbMax).add(aabbMin)).scale(0.5f);
+  final btVector3 source = new btVector3(rayFrom).sub(aabbCenter);
+  final btVector3 target = new btVector3(rayTo).sub(aabbCenter);
+  int sourceOutcode = btOutcode(source, aabbHalfExtent);
+  int targetOutcode = btOutcode(target, aabbHalfExtent);
+  if ((sourceOutcode & targetOutcode) == 0x0) {
+   float lambda_enter = (0.0f);
+   float lambda_exit = param[0];
+   final btVector3 r = new btVector3(target).sub(source);
+   int i;
+   float normSign = 1;
+   final btVector3 hitNormal = new btVector3();
+   int bit = 1;
+   for (int j = 0; j < 2; j++) {
+    for (i = 0; i != 3; ++i) {
+     if ((sourceOutcode & bit) != 0) {
+      float lambda = (-source.getElement(i) - aabbHalfExtent.getElement(i) * normSign) / r
+       .getElement(i);
+      if (lambda_enter <= lambda) {
+       lambda_enter = lambda;
+       hitNormal.setZero();
+       hitNormal.setElement(i, normSign);
+      }
+     } else if ((targetOutcode & bit) != 0) {
+      float lambda = (-source.getElement(i) - aabbHalfExtent.getElement(i) * normSign) / r
+       .getElement(i);
+      lambda_exit = Math.min(lambda_exit, lambda);
+     }
+     bit <<= 1;
+    }
+    normSign = (-1.f);
+   }
+   if (lambda_enter <= lambda_exit) {
+    param[0] = lambda_enter;
+    normal.set(hitNormal);
+    return true;
+   }
+  }
+  return false;
+ }
+
+ public static int btOutcode(final btVector3 p, final btVector3 halfExtent) {
+  return (p.getX() < -halfExtent.getX() ? 0x01 : 0x0) |
+   (p.getX() > halfExtent.getX() ? 0x08 : 0x0) |
+   (p.getY() < -halfExtent.getY() ? 0x02 : 0x0) |
+   (p.getY() > halfExtent.getY() ? 0x10 : 0x0) |
+   (p.getZ() < -halfExtent.getZ() ? 0x4 : 0x0) |
+   (p.getZ() > halfExtent.getZ() ? 0x20 : 0x0);
  }
 
  /**
@@ -182,5 +237,11 @@ public class btAabbUtil2 implements Serializable {
    (aabbMin1[2] <= aabbMax2[2]) & (aabbMax1[2] >= aabbMin2[2]) &
    (aabbMin1[1] <= aabbMax2[1]) & (aabbMax1[1] >= aabbMin2[1])) ? 1 : 0,
    1, 0));
+ }
+
+ public static void AabbExpand(final btVector3 aabbMin, final btVector3 aabbMax,
+  final btVector3 expansionMin, final btVector3 expansionMax) {
+  aabbMin.add(expansionMin);
+  aabbMax.add(expansionMax);
  }
 }

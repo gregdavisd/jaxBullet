@@ -24,7 +24,6 @@ import Bullet.LinearMath.btVector3;
 import static Bullet.LinearMath.btVector3.init;
 import java.io.Serializable;
 import java.util.ArrayList;
-import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 
 /**
  *
@@ -51,6 +50,7 @@ class btQuantizedBvh implements Serializable {
  int m_traversalMode;
  final ArrayList<btBvhSubtreeInfo> m_SubtreeHeaders = new ArrayList<>(0);
  int maxIterations = 0;
+
  btQuantizedBvh() {
   m_bulletVersion = BT_BULLET_VERSION;
   m_useQuantization = false;
@@ -62,7 +62,7 @@ class btQuantizedBvh implements Serializable {
  }
 
  ///two versions, one for quantized and normal nodes. This allows code-reuse while maintaining readability (no template/macro!)
- ///this might be refactored into a  , it is usually not calculated at run-time
+ ///this might be refactored into a  const, it is usually not calculated at run-time
  void setInternalNodeAabbMin(int nodeIndex, final btVector3 aabbMin) {
   if (m_useQuantization) {
    quantize(m_quantizedContiguousNodes.get(nodeIndex).m_quantizedAabbMin, aabbMin, 0);
@@ -319,21 +319,22 @@ class btQuantizedBvh implements Serializable {
   short[] quantizedQueryAabbMax = new short[3];
   quantizeWithClamp(quantizedQueryAabbMin, rayAabbMin, 0);
   quantizeWithClamp(quantizedQueryAabbMax, rayAabbMax, 1);
+  float[] param = new float[1];
   while (curIndex < endNodeIndex) {
    //catch bugs in tree data
    assert (walkIterations < subTreeSize);
    walkIterations++;
    //PCK: unsigned instead of boolean
    // only interested if this is closer than any previous hit
-   float[] param = new float[]{1.0f};
+   param[0] = 1.0f;
+   rayBoxOverlap=0;
    boxBoxOverlap = testQuantizedAabbAgainstQuantizedAabb(quantizedQueryAabbMin,
     quantizedQueryAabbMax, rootNode.m_quantizedAabbMin, rootNode.m_quantizedAabbMax);
    isLeafNode = rootNode.isLeafNode();
    if (boxBoxOverlap != 0) {
     btVector3[] bounds = new btVector3[2];
-    init(bounds);
-    bounds[0].set(unQuantize(rootNode.m_quantizedAabbMin));
-    bounds[1].set(unQuantize(rootNode.m_quantizedAabbMax));
+    bounds[0] = (unQuantize(rootNode.m_quantizedAabbMin));
+    bounds[1] = (unQuantize(rootNode.m_quantizedAabbMax));
     /* Add box cast extents */
     bounds[0].sub(aabbMax);
     bounds[1].sub(aabbMin);
@@ -434,8 +435,9 @@ class btQuantizedBvh implements Serializable {
    rayDirectionInverse.z < 0.0f ? 1 : 0};
   btVector3[] bounds = new btVector3[2];
   init(bounds);
+  float[] param = new float[1];
   while (curIndex < m_curNodeIndex) {
-   float[] param = new float[]{1.0f};
+   param[0] = 1.0f;
    //catch bugs in tree data
    assert (walkIterations < m_curNodeIndex);
    walkIterations++;
@@ -552,7 +554,6 @@ class btQuantizedBvh implements Serializable {
   }
  }
 
-
  ///***************************************** expert/internal use only ************************* 
  void setQuantizationValues(final btVector3 bvhAabbMin, final btVector3 bvhAabbMax) {
   setQuantizationValues(bvhAabbMin, bvhAabbMax, 1.0f);
@@ -566,7 +567,8 @@ class btQuantizedBvh implements Serializable {
   m_bvhAabbMin.set(new btVector3(bvhAabbMin).sub(clampValue));
   m_bvhAabbMax.set(new btVector3(bvhAabbMax).add(clampValue));
   final btVector3 aabbSize = new btVector3(m_bvhAabbMax).sub(m_bvhAabbMin);
-  m_bvhQuantization.set(new btVector3((QUANT_FLOAT_RANGE), (QUANT_FLOAT_RANGE), (QUANT_FLOAT_RANGE)).div(aabbSize));
+  m_bvhQuantization.set(new btVector3((QUANT_FLOAT_RANGE), (QUANT_FLOAT_RANGE), (QUANT_FLOAT_RANGE))
+   .div(aabbSize));
   m_useQuantization = true;
   {
    short[] vecIn = new short[3];
@@ -577,14 +579,16 @@ class btQuantizedBvh implements Serializable {
     m_bvhAabbMin.setMin(new btVector3(v).sub(clampValue));
    }
    aabbSize.set(m_bvhAabbMax).sub(m_bvhAabbMin);
-   m_bvhQuantization.set(new btVector3((QUANT_FLOAT_RANGE), (QUANT_FLOAT_RANGE), (QUANT_FLOAT_RANGE)).div(aabbSize));
+   m_bvhQuantization.set(
+    new btVector3((QUANT_FLOAT_RANGE), (QUANT_FLOAT_RANGE), (QUANT_FLOAT_RANGE)).div(aabbSize));
    {
     quantize(vecIn, m_bvhAabbMax, 1);
     v.set(unQuantize(vecIn));
     m_bvhAabbMax.setMax(new btVector3(v).add(clampValue));
    }
    aabbSize.set(m_bvhAabbMax).sub(m_bvhAabbMin);
-   m_bvhQuantization.set(new btVector3((QUANT_FLOAT_RANGE), (QUANT_FLOAT_RANGE), (QUANT_FLOAT_RANGE))).div(aabbSize);
+   m_bvhQuantization.set(
+    new btVector3((QUANT_FLOAT_RANGE), (QUANT_FLOAT_RANGE), (QUANT_FLOAT_RANGE))).div(aabbSize);
   }
  }
 
@@ -689,18 +693,17 @@ class btQuantizedBvh implements Serializable {
   ///end-points always set the first bit, so that they are sorted properly (so that neighbouring AABBs overlap properly)
   ///@todo: double-check this
   if (isMax != 0) {
-   out[0] =(short)(((short) (v.getX() + (1.f)) | 1));
-   out[1] =(short)(((short) (v.getY() + (1.f)) | 1));
-   out[2] =(short)(((short) (v.getZ() + (1.f)) | 1));
+   out[0] = (short) (((short) (v.getX() + (1.f)) | 1));
+   out[1] = (short) (((short) (v.getY() + (1.f)) | 1));
+   out[2] = (short) (((short) (v.getZ() + (1.f)) | 1));
   } else {
-   out[0] =(short)(((short) (v.getX()) & 0xfffe));
-   out[1] =(short)(((short) (v.getY()) & 0xfffe));
-   out[2] =(short)(((short) (v.getZ()) & 0xfffe));
+   out[0] = (short) (((short) (v.getX()) & 0xfffe));
+   out[1] = (short) (((short) (v.getY()) & 0xfffe));
+   out[2] = (short) (((short) (v.getZ()) & 0xfffe));
   }
- 
-  assert(out[0]>=0);
-  assert(out[1]>=0);
-  assert(out[2]>=0);
+  assert (out[0] >= 0);
+  assert (out[1] >= 0);
+  assert (out[2] >= 0);
  }
 
  public void quantizeWithClamp(short[] out, final btVector3 point2, int isMax) {

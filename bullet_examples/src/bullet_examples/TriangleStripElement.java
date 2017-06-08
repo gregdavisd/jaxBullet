@@ -23,7 +23,7 @@ import org.lwjgl.opengl.GL15;
  *
  * @author Gregery Barton
  */
-class TriangleStripElement extends GLDrawElements {
+public class TriangleStripElement extends GLDrawElements {
 
  public TriangleStripElement(int[] buffer, int[] indices) {
   super(buffer, indices);

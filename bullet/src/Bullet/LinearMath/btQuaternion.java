@@ -122,4 +122,13 @@ public final class btQuaternion extends Quat4f<btQuaternion> implements Serializ
   float rs = 1.0f / s;
   return new btQuaternion(c.getX() * rs, c.getY() * rs, c.getZ() * rs, s * 0.5f);
  }
+ 
+  public static btQuaternion 
+shortestArcQuatNormalize2(final btVector3 v0, final btVector3 v1)
+{
+	v0.normalize();
+	v1.normalize();
+	return shortestArcQuat(v0,v1);
+}
+
 }

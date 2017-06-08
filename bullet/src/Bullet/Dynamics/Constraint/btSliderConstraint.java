@@ -23,8 +23,8 @@ TODO:
  */
 package Bullet.Dynamics.Constraint;
 
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.Dynamics.btJacobianEntry;
-import Bullet.Dynamics.btRigidBody;
 import static Bullet.LinearMath.btScalar.SIMD_EPSILON;
 import static Bullet.LinearMath.btScalar.SIMD_INFINITY;
 import static Bullet.LinearMath.btScalar.btAtan2;

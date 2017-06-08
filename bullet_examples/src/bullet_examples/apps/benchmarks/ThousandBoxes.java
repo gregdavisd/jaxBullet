@@ -15,7 +15,7 @@ subject to the following restrictions:
 package bullet_examples.apps.benchmarks;
 
 import Bullet.Collision.Shape.btBoxShape;
-import Bullet.Dynamics.btRigidBody;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.LinearMath.btQuaternion;
 import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;

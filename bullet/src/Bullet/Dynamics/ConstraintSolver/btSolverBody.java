@@ -14,7 +14,7 @@ subject to the following restrictions:
  */
 package Bullet.Dynamics.ConstraintSolver;
 
-import Bullet.Dynamics.btRigidBody;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btTransformUtil;
 import Bullet.LinearMath.btVector3;

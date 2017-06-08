@@ -49,7 +49,8 @@ public class DebugDraw extends btIDebugDraw {
 
  @Override
  public void reportErrorWarning(String warningString) {
-  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  System.err.println(warningString);
+  throw  new AssertionError();
  }
 
  @Override

@@ -766,7 +766,7 @@ public class btCollisionWorld implements Serializable {
  }
 
 /// objectQuerySingle performs a collision detection query and calls the resultCallback. It is used internally by rayTest.
- public void objectQuerySingle(btConvexShape castShape, final btTransform convexFromTrans,
+ public static void objectQuerySingle(btConvexShape castShape, final btTransform convexFromTrans,
   final btTransform convexToTrans,
   btCollisionObject collisionObject,
   btCollisionShape collisionShape, final btTransform colObjWorldTransform,
@@ -779,11 +779,11 @@ public class btCollisionWorld implements Serializable {
  }
 
  public void addCollisionObject(btCollisionObject collisionObject) {
-  addCollisionObject(collisionObject, btBroadphaseProxy.DefaultFilter, btBroadphaseProxy.AllFilter);
+  addCollisionObject(collisionObject, btBroadphaseProxy.DEFAULT_FILTER, btBroadphaseProxy.ALL_FILTER);
  }
 
  public void addCollisionObject(btCollisionObject collisionObject, int collisionFilterGroup) {
-  addCollisionObject(collisionObject, collisionFilterGroup, btBroadphaseProxy.AllFilter);
+  addCollisionObject(collisionObject, collisionFilterGroup, btBroadphaseProxy.ALL_FILTER);
  }
 
  public void addCollisionObject(btCollisionObject collisionObject, int collisionFilterGroup,

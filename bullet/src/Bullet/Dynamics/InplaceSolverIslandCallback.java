@@ -14,7 +14,6 @@ subject to the following restrictions:
  */
 package Bullet.Dynamics;
 
-import Bullet.stubs.btStackAlloc;
 import Bullet.Collision.Broadphase.btDispatcher;
 import Bullet.Collision.btCollisionObject;
 import Bullet.Collision.btIDebugDraw;
@@ -23,6 +22,7 @@ import Bullet.Collision.btSimulationIslandManager;
 import Bullet.Dynamics.Constraint.btTypedConstraint;
 import Bullet.Dynamics.ConstraintSolver.btConstraintSolver;
 import static Bullet.Dynamics.btDiscreteDynamicsWorld.btGetConstraintIslandId;
+import Bullet.stubs.btStackAlloc;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

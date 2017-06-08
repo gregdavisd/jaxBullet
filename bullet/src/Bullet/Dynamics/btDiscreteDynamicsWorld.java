@@ -31,6 +31,7 @@ import Bullet.Collision.btManifoldPoint;
 import Bullet.Collision.btManifoldResult;
 import Bullet.Collision.btPersistentManifold;
 import Bullet.Collision.btSimulationIslandManager;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.Dynamics.Constraint.btConeTwistConstraint;
 import Bullet.Dynamics.Constraint.btGeneric6DofConstraint;
 import Bullet.Dynamics.Constraint.btGeneric6DofSpring2Constraint;
@@ -585,13 +586,13 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
 
  @Override
  public void addCollisionObject(btCollisionObject collisionObject) {
-  addCollisionObject(collisionObject, btBroadphaseProxy.StaticFilter);
+  addCollisionObject(collisionObject, btBroadphaseProxy.STATIC_FILTER);
  }
 
  @Override
  public void addCollisionObject(btCollisionObject collisionObject, int collisionFilterGroup) {
-  addCollisionObject(collisionObject, collisionFilterGroup, btBroadphaseProxy.AllFilter ^
-   btBroadphaseProxy.StaticFilter);
+  addCollisionObject(collisionObject, collisionFilterGroup, btBroadphaseProxy.ALL_FILTER ^
+   btBroadphaseProxy.STATIC_FILTER);
  }
 
  @Override
@@ -612,10 +613,10 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
     body.setActivationState(ISLAND_SLEEPING);
    }
    boolean isDynamic = !(body.isStaticObject() || body.isKinematicObject());
-   int collisionFilterGroup = isDynamic ? (btBroadphaseProxy.DefaultFilter) :
-    (btBroadphaseProxy.StaticFilter);
-   int collisionFilterMask = isDynamic ? (btBroadphaseProxy.AllFilter) :
-    (btBroadphaseProxy.AllFilter ^ btBroadphaseProxy.StaticFilter);
+   int collisionFilterGroup = isDynamic ? (btBroadphaseProxy.DEFAULT_FILTER) :
+    (btBroadphaseProxy.STATIC_FILTER);
+   int collisionFilterMask = isDynamic ? (btBroadphaseProxy.ALL_FILTER) :
+    (btBroadphaseProxy.ALL_FILTER ^ btBroadphaseProxy.STATIC_FILTER);
    addCollisionObject(body, collisionFilterGroup, collisionFilterMask);
   }
  }

@@ -18,7 +18,7 @@ import Bullet.Collision.Shape.btCollisionShape;
 import Bullet.Collision.Shape.btCompoundShape;
 import Bullet.Collision.Shape.btCylinderShapeZ;
 import Bullet.Collision.Shape.btStaticPlaneShape;
-import Bullet.Dynamics.btRigidBody;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import static Bullet.Dynamics.btRigidBodyFlags.BT_ENABLE_GYROSCOPIC_FORCE_EXPLICIT;
 import static Bullet.Dynamics.btRigidBodyFlags.BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_BODY;
 import static Bullet.Dynamics.btRigidBodyFlags.BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_WORLD;

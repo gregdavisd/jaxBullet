@@ -25,7 +25,7 @@ import Bullet.Dynamics.Constraint.btGeneric6DofSpring2Constraint;
 import Bullet.Dynamics.Constraint.btHingeConstraint;
 import Bullet.Dynamics.Constraint.btTypedConstraint;
 import Bullet.Dynamics.btJointFeedback;
-import Bullet.Dynamics.btRigidBody;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.LinearMath.btQuaternion;
 import static Bullet.LinearMath.btScalar.SIMD_PI;
 import Bullet.LinearMath.btTransform;
@@ -42,8 +42,8 @@ public class TestHingeTorque extends DiscreteDemoContainer {
 
  boolean m_once = true;
  final ArrayList<btJointFeedback> m_jointFeedback = new ArrayList<>(0);
- int collisionFilterGroup = (btBroadphaseProxy.CharacterFilter);
- int collisionFilterMask = (btBroadphaseProxy.AllFilter ^ (btBroadphaseProxy.CharacterFilter));
+ int collisionFilterGroup = (btBroadphaseProxy.CHARACTER_FILTER);
+ int collisionFilterMask = (btBroadphaseProxy.ALL_FILTER ^ (btBroadphaseProxy.CHARACTER_FILTER));
  static float radius = 0.2f;
 
  @Override

@@ -32,13 +32,13 @@ import java.io.Serializable;
  */
 public abstract class btBroadphaseProxy implements Serializable {
 
- public static final int DefaultFilter = 1;
- public static final int StaticFilter = 2;
- public static final int KinematicFilter = 4;
- public static final int DebrisFilter = 8;
- public static final int SensorTrigger = 16;
- public static final int CharacterFilter = 32;
- public static final int AllFilter = -1; //all bits sets: DefaultFilter | StaticFilter | KinematicFilter | DebrisFilter | SensorTrigger
+ public static final int DEFAULT_FILTER = 1;
+ public static final int STATIC_FILTER = 2;
+ public static final int KINEMATIC_FILTER = 4;
+ public static final int DEBRIS_FILTER = 8;
+ public static final int SENSOR_TRIGGER = 16;
+ public static final int CHARACTER_FILTER = 32;
+ public static final int ALL_FILTER = -1; //all bits sets: DefaultFilter | StaticFilter | KinematicFilter | DebrisFilter | SensorTrigger
 
  public static boolean isPolyhedral(int proxyType) {
   return (proxyType < IMPLICIT_CONVEX_SHAPES_START_HERE);

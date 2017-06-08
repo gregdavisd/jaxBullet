@@ -15,7 +15,6 @@ subject to the following restrictions:
 package Bullet.LinearMath.Hull;
 
 import java.io.Serializable;
-import javax.vecmath.Tuple3i;
 
 /**
  *

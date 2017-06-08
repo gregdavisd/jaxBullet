@@ -20,9 +20,9 @@ import Bullet.Collision.MyNodeOverlapCallbackConvexcast;
 import Bullet.Collision.MyNodeOverlapCallbackRaycast;
 import Bullet.Collision.btOptimizedBvh;
 import Bullet.Collision.btTriangleCallback;
-import Bullet.stubs.btTriangleInfoMap;
 import static Bullet.LinearMath.btScalar.SIMD_EPSILON;
 import Bullet.LinearMath.btVector3;
+import Bullet.stubs.btTriangleInfoMap;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -56,6 +56,7 @@ public class btBvhTriangleMeshShape extends btTriangleMeshShape implements Seria
   m_bvh = null;
   m_triangleInfoMap = null;
   m_useQuantizedAabbCompression = useQuantizedAabbCompression;
+  //m_useQuantizedAabbCompression = false;
   m_ownsBvh = false;
   m_shapeType = TRIANGLE_MESH_SHAPE_PROXYTYPE;
   //construct bvh from meshInterface

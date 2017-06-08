@@ -22,7 +22,7 @@ import static Bullet.Collision.btIDebugDraw.DBG_DrawConstraints;
 import static Bullet.Collision.btIDebugDraw.DBG_DrawWireframe;
 import Bullet.Dynamics.Constraint.btHingeAccumulatedAngleConstraint;
 import Bullet.Dynamics.Constraint.btHingeConstraint;
-import Bullet.Dynamics.btRigidBody;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.LinearMath.btQuaternion;
 import static Bullet.LinearMath.btScalar.SIMD_DEGS_PER_RAD;
 import Bullet.LinearMath.btTransform;

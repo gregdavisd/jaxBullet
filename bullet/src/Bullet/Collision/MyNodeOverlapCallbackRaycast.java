@@ -14,9 +14,9 @@ subject to the following restrictions:
  */
 package Bullet.Collision;
 
-import Bullet.Collision.Shape.btStridingMeshLock;
-import Bullet.Collision.Shape.btStridingMeshInterface;
 import Bullet.Collision.Broadphase.btNodeOverlapCallback;
+import Bullet.Collision.Shape.btStridingMeshInterface;
+import Bullet.Collision.Shape.btStridingMeshLock;
 import Bullet.LinearMath.btVector3;
 import static Bullet.LinearMath.btVector3.init;
 import java.io.Serializable;

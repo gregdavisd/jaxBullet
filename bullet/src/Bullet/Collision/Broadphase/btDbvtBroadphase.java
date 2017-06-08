@@ -15,13 +15,13 @@ subject to the following restrictions:
 ///btDbvtBroadphase implementation by Nathanael Presson
 package Bullet.Collision.Broadphase;
 
-import static Bullet.Collision.Broadphase.btDbvt.Intersect;
 import static Bullet.Collision.Broadphase.btDbvt.Merge;
-import static Bullet.Extras.btMinMax.btMax;
-import static Bullet.Extras.btMinMax.btMin;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
 import java.util.ArrayList;
+import static Bullet.Collision.Broadphase.btDbvt.Intersect;
+import static Bullet.Extras.btMinMax.btMax;
+import static Bullet.Extras.btMinMax.btMin;
 
 /**
  *

@@ -14,10 +14,10 @@ subject to the following restrictions:
  */
 package Bullet.Dynamics.Constraint;
 
-import Bullet.Dynamics.ConstraintSolver.btSolverConstraint;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.Dynamics.ConstraintSolver.btSolverBody;
+import Bullet.Dynamics.ConstraintSolver.btSolverConstraint;
 import Bullet.Dynamics.btJointFeedback;
-import Bullet.Dynamics.btRigidBody;
 import static Bullet.LinearMath.btScalar.SIMD_2_PI;
 import static Bullet.LinearMath.btScalar.SIMD_INFINITY;
 import static Bullet.LinearMath.btScalar.btFabs;

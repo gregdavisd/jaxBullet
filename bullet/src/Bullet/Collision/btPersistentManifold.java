@@ -117,9 +117,9 @@ public class btPersistentManifold extends btTypedObject implements Serializable 
   return biggestarea;
  }
  //int		findContactPoint(  btManifoldPoint  unUsed, int numUnused,  btManifoldPoint  pt) 
- int m_companionIdA;
- int m_companionIdB;
- int m_index1a;
+ public int m_companionIdA;
+ public int m_companionIdB;
+ public int m_index1a;
 
  btPersistentManifold() {
   super(BT_PERSISTENT_MANIFOLD_TYPE);
@@ -128,7 +128,7 @@ public class btPersistentManifold extends btTypedObject implements Serializable 
   }
  }
 
- btPersistentManifold(btCollisionObject body0, btCollisionObject body1, int a,
+ public btPersistentManifold(btCollisionObject body0, btCollisionObject body1, int a,
   float contactBreakingThreshold, float contactProcessingThreshold) {
   this();
   assert (body0 != null);

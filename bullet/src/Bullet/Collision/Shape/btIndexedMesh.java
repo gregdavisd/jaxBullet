@@ -14,6 +14,7 @@ subject to the following restrictions:
  */
 package Bullet.Collision.Shape;
 
+import java.io.Serializable;
 import java.util.Objects;
 import org.apache.commons.collections.primitives.ArrayFloatList;
 import org.apache.commons.collections.primitives.ArrayIntList;
@@ -22,7 +23,7 @@ import org.apache.commons.collections.primitives.ArrayIntList;
  *
  * @author Gregery Barton
  */
-public class btIndexedMesh {
+public class btIndexedMesh implements Serializable {
 
  public int m_numTriangles;
  public ArrayIntList m_triangleIndexBase;

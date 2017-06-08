@@ -16,8 +16,8 @@ subject to the following restrictions:
  /* Hinge Constraint by Dirk Gregorius. Limits added by Marcus Hennix at Starbreeze Studios */
 package Bullet.Dynamics.Constraint;
 
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.Dynamics.btJacobianEntry;
-import Bullet.Dynamics.btRigidBody;
 import Bullet.LinearMath.btMatrix3x3;
 import Bullet.LinearMath.btQuaternion;
 import static Bullet.LinearMath.btQuaternion.quatRotate;

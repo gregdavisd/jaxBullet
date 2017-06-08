@@ -11,8 +11,8 @@
 package Bullet.Dynamics.vehicle;
 
 import Bullet.Collision.ClosestRayResultCallback;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.Dynamics.btDynamicsWorld;
-import Bullet.Dynamics.btRigidBody;
 import Bullet.Dynamics.vehicle.btVehicleRaycaster.btVehicleRaycasterResult;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;

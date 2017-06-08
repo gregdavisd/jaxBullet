@@ -23,7 +23,7 @@
  */
 package Bullet.Dynamics.Constraint;
 
-import Bullet.Dynamics.btRigidBody;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import static Bullet.LinearMath.btScalar.SIMD_2_PI;
 import static Bullet.LinearMath.btScalar.SIMD_EPSILON;

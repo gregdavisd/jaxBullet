@@ -13,8 +13,8 @@ subject to the following restrictions:
  */
 package Bullet.Collision;
 
-import Bullet.Collision.Shape.btStridingMeshLock;
 import Bullet.Collision.Shape.btStridingMeshInterface;
+import Bullet.Collision.Shape.btStridingMeshLock;
 import static Bullet.LinearMath.btAabbUtil2.testQuantizedAabbAgainstQuantizedAabb;
 import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import Bullet.LinearMath.btVector3;

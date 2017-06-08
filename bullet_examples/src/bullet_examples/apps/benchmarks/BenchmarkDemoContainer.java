@@ -13,30 +13,17 @@
  */
 package bullet_examples.apps.benchmarks;
 
-import Bullet.Collision.Shape.btBoxShape;
-import Bullet.Collision.Shape.btBvhTriangleMeshShape;
-import Bullet.Collision.Shape.btCollisionShape;
-import Bullet.Collision.Shape.btIndexedMesh;
-import Bullet.Collision.Shape.btTriangleIndexVertexArray;
-import Bullet.Collision.btCollisionDispatcher;
+import Bullet.Collision.Algorithm.btCollisionDispatcher;
 import Bullet.Collision.btDefaultCollisionConfiguration;
 import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_ENABLE_FRICTION_DIRECTION_CACHING;
 import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_SIMD;
 import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_USE_WARMSTARTING;
 import Bullet.Dynamics.ConstraintSolver.btSequentialImpulseConstraintSolver;
 import Bullet.Dynamics.btDiscreteDynamicsWorld;
-import Bullet.Dynamics.btRigidBody;
-import Bullet.Dynamics.btRigidBodyConstructionInfo;
-import Bullet.LinearMath.btDefaultMotionState;
 import Bullet.LinearMath.btQuaternion;
-import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
 import bullet_examples.DebugDraw;
 import bullet_examples.DemoContainer;
-import bullet_examples.apps.benchmarks.LandscapeData.*;
-import static bullet_examples.apps.benchmarks.LandscapeData.*;
-import org.apache.commons.collections.primitives.ArrayFloatList;
-import org.apache.commons.collections.primitives.ArrayIntList;
 
 /**
  *
@@ -72,31 +59,6 @@ public abstract class BenchmarkDemoContainer extends DemoContainer {
   //m_defaultContactProcessingThreshold = 0.f;//used when creating bodies: body->setContactProcessingThreshold(...);
  }
 
- protected void create_ground() {
-  ///create a few basic rigid bodies
-  btCollisionShape groundShape = new btBoxShape(new btVector3((250.f), (50.f), (250.f)));
-  //	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
-  final btTransform groundTransform = new btTransform();
-  groundTransform.setIdentity();
-  groundTransform.setOrigin(new btVector3(0f, -50f, 0f));
-  //We can also use DemoApplication::createRigidBody, but for clarity it is provided here:
-  {
-   float mass = (0.f);
-   //rigidbody is dynamic if and only if mass is non zero, otherwise static
-   boolean isDynamic = (mass != 0.f);
-   final btVector3 localInertia = new btVector3();
-   if (isDynamic) {
-    groundShape.calculateLocalInertia(mass, localInertia);
-   }
-   //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-   btDefaultMotionState myMotionState = new btDefaultMotionState(groundTransform);
-   btRigidBodyConstructionInfo rbInfo = new btRigidBodyConstructionInfo(mass, myMotionState,
-    groundShape, localInertia);
-   btRigidBody body = new btRigidBody(rbInfo);
-   //add the body to the dynamics world
-   world().addRigidBody(body);
-  }
- }
 
  @Override
  public boolean step_physics(float cap_frametime, float rate) {
@@ -115,63 +77,5 @@ public abstract class BenchmarkDemoContainer extends DemoContainer {
    ((((tmpW * quat.getZ()) + (tmpZ * quat.getW())) - (tmpX * quat.getY())) + (tmpY * quat.getX()))
   );
  }
- ArrayFloatList[] LandscapeVtx = {
-  Landscape01Vtx,
-  Landscape02Vtx,
-  Landscape03Vtx,
-  Landscape04Vtx,
-  Landscape05Vtx,
-  Landscape06Vtx,
-  Landscape07Vtx,
-  Landscape08Vtx,};
- int[] LandscapeVtxCount = {
-  Landscape01Vtx.size() / 3,
-  Landscape02Vtx.size() / 3,
-  Landscape03Vtx.size() / 3,
-  Landscape04Vtx.size() / 3,
-  Landscape05Vtx.size() / 3,
-  Landscape06Vtx.size() / 3,
-  Landscape07Vtx.size() / 3,
-  Landscape08Vtx.size() / 3,};
- ArrayIntList[] LandscapeIdx = {
-  Landscape01Idx,
-  Landscape02Idx,
-  Landscape03Idx,
-  Landscape04Idx,
-  Landscape05Idx,
-  Landscape06Idx,
-  Landscape07Idx,
-  Landscape08Idx,};
- int[] LandscapeIdxCount = {
-  Landscape01Idx.size(),
-  Landscape02Idx.size(),
-  Landscape03Idx.size(),
-  Landscape04Idx.size(),
-  Landscape05Idx.size(),
-  Landscape06Idx.size(),
-  Landscape07Idx.size(),
-  Landscape08Idx.size(),};
-
- protected void createLargeMeshBody() {
-  final btTransform trans = new btTransform();
-  trans.setIdentity();
-  for (int i = 0; i < 8; i++) {
-   btTriangleIndexVertexArray meshInterface = new btTriangleIndexVertexArray();
-   btIndexedMesh part = new btIndexedMesh();
-   part.m_vertexBase = LandscapeVtx[i];
-   part.m_vertexStride = 3;
-   part.m_numVertices = LandscapeVtxCount[i];
-   part.m_triangleIndexBase = LandscapeIdx[i];
-   part.m_triangleIndexStride = 1;
-   part.m_numTriangles = LandscapeIdxCount[i] / 3;
-   meshInterface.addIndexedMesh(part);
-   boolean useQuantizedAabbCompression = true;
-   btBvhTriangleMeshShape trimeshShape = new btBvhTriangleMeshShape(meshInterface,
-    useQuantizedAabbCompression);
-   final btVector3 localInertia = new btVector3();
-   trans.setOrigin(new btVector3(0, -25, 0));
-   btRigidBody body = createRigidBody(0, trans, trimeshShape);
-   body.setFriction((0.9f));
-  }
- }
+ 
 }

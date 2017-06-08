@@ -37,8 +37,8 @@ http://gimpact.sf.net
  */
 package Bullet.Dynamics.Constraint;
 
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.Dynamics.btJacobianEntry;
-import Bullet.Dynamics.btRigidBody;
 import Bullet.LinearMath.btMatrix3x3;
 import static Bullet.LinearMath.btScalar.BT_ONE;
 import static Bullet.LinearMath.btScalar.BT_ZERO;

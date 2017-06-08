@@ -18,8 +18,6 @@ import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

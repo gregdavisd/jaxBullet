@@ -14,7 +14,7 @@ subject to the following restrictions:
  */
 package Bullet.Dynamics.Constraint;
 
-import Bullet.Dynamics.btRigidBody;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import Bullet.LinearMath.btMatrix3x3;
 import static Bullet.LinearMath.btScalar.SIMD_HALF_PI;
 import static Bullet.LinearMath.btScalar.SIMD_PI;

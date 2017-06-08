@@ -39,8 +39,8 @@ abstract public class RayResultCallback implements Serializable {
  RayResultCallback() {
   m_closestHitFraction = (1f);
   m_collisionObject = null;
-  m_collisionFilterGroup = btBroadphaseProxy.DefaultFilter;
-  m_collisionFilterMask = btBroadphaseProxy.AllFilter;
+  m_collisionFilterGroup = btBroadphaseProxy.DEFAULT_FILTER;
+  m_collisionFilterMask = btBroadphaseProxy.ALL_FILTER;
   //@BP Mod
   m_flags = 0;
  }

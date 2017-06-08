@@ -12,9 +12,10 @@ package Bullet.Dynamics.vehicle;
 
 import Bullet.Collision.btCollisionWorld;
 import Bullet.Collision.btIDebugDraw;
+import Bullet.Dynamics.CollisionObjects.btRigidBody;
 import static Bullet.Dynamics.Constraint.btContactConstraint.resolveSingleBilateral;
 import Bullet.Dynamics.btActionInterface;
-import Bullet.Dynamics.btRigidBody;
+import static Bullet.Dynamics.btActionInterface.getFixedBody;
 import Bullet.LinearMath.btMatrix3x3;
 import Bullet.LinearMath.btQuaternion;
 import static Bullet.LinearMath.btScalar.btSqrt;
@@ -28,7 +29,7 @@ import org.apache.commons.collections.primitives.ArrayFloatList;
  *
  * @author Gregery Barton
  */
-public class btRaycastVehicle extends btActionInterface implements Serializable {
+public class btRaycastVehicle implements btActionInterface, Serializable {
 
  private static final long serialVersionUID = 1L;
  protected final ArrayList<btVector3> m_forwardWS = new ArrayList<>(0);
@@ -38,11 +39,11 @@ public class btRaycastVehicle extends btActionInterface implements Serializable 
  ///backwards compatibility
  protected int m_userConstraintType;
  protected int m_userConstraintId;
- private btVehicleRaycaster m_vehicleRaycaster;
+ private final btVehicleRaycaster m_vehicleRaycaster;
  //private float m_pitchControl;
 // private float m_steeringValue;
  private float m_currentVehicleSpeedKmHour;
- private btRigidBody m_chassisBody;
+ private final btRigidBody m_chassisBody;
  private int m_indexRightAxis;
  private int m_indexUpAxis;
  private int m_indexForwardAxis;
@@ -548,8 +549,7 @@ public class btRaycastVehicle extends btActionInterface implements Serializable 
  public void setUserConstraintType(int userConstraintType) {
   m_userConstraintType = userConstraintType;
  }
-
- ;
+ 
 
 public void setUserConstraintId(int uid) {
   m_userConstraintId = uid;
@@ -576,4 +576,4 @@ public void setUserConstraintId(int uid) {
   j1 = Math.max(j1, -maxImpulse);
   return j1;
  }
-};
+}
