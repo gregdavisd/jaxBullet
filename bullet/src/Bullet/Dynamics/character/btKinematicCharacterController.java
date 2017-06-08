@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2008 Erwin Coumans  http://bulletphysics.com
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2008 Erwin Coumans  http://bulletphysics.com
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Dynamics.character;
 
@@ -38,15 +38,16 @@ import Bullet.LinearMath.btVector3;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 
 /**
  *
  * @author Gregery Barton
  */
-public class btKinematicCharacterController implements btCharacterControllerInterface {
+public class btKinematicCharacterController implements
+ btCharacterControllerInterface {
 
- private static final btVector3[] S_UP_AXIS_DIRECTIONS = {new btVector3(1.0f, 0.0f, 0.0f),
+ private static final btVector3[] S_UP_AXIS_DIRECTIONS = {new btVector3(1.0f,
+  0.0f, 0.0f),
   new btVector3(0.0f, 1.0f, 0.0f), new btVector3(0.0f, 0.0f, 1.0f)};
 
  protected static btVector3[] getUpAxisDirections() {
@@ -61,6 +62,7 @@ public class btKinematicCharacterController implements btCharacterControllerInte
   }
   return n;
  }
+
  protected float m_halfHeight;
  protected btPairCachingGhostObject m_ghostObject;
  protected btConvexShape m_convexShape;//is also in m_ghostObject, but it needs to be convex, so we store it here to avoid upcast
@@ -89,7 +91,8 @@ public class btKinematicCharacterController implements btCharacterControllerInte
  protected final btQuaternion m_currentOrientation = new btQuaternion();
  protected final btQuaternion m_targetOrientation = new btQuaternion();
  ///keep track of the contact manifolds
- protected final ArrayList<btPersistentManifold> m_manifoldArray = new ArrayList<>(1);
+ protected final ArrayList<btPersistentManifold> m_manifoldArray = new ArrayList<>(
+  1);
  protected boolean m_touchingContact;
  protected final btVector3 m_touchingNormal = new btVector3();
  protected float m_linearDamping;
@@ -146,26 +149,31 @@ public class btKinematicCharacterController implements btCharacterControllerInte
  }
 
  /*
- * Returns the reflection direction of a ray going 'direction' hitting a surface with normal 'normal'
- *
- * from: http://www-cs-students.stanford.edu/~adityagp/final/node3.html
+  * Returns the reflection direction of a ray going 'direction' hitting a
+  * surface with normal 'normal'
+  *
+  * from: http://www-cs-students.stanford.edu/~adityagp/final/node3.html
   */
- protected btVector3 computeReflectionDirection(final btVector3 direction, final btVector3 normal) {
-  return new btVector3(direction).sub(new btVector3(normal).scale((2.0f) * direction.dot(normal)));
+ protected btVector3 computeReflectionDirection(final btVector3 direction,
+  final btVector3 normal) {
+  return new btVector3(direction).sub(new btVector3(normal).scale((2.0f)
+   * direction.dot(normal)));
  }
 
  /*
- * Returns the portion of 'direction' that is parallel to 'normal'
+  * Returns the portion of 'direction' that is parallel to 'normal'
   */
- protected btVector3 parallelComponent(final btVector3 direction, final btVector3 normal) {
+ protected btVector3 parallelComponent(final btVector3 direction,
+  final btVector3 normal) {
   float magnitude = direction.dot(normal);
   return new btVector3(normal).scale(magnitude);
  }
 
  /*
- * Returns the portion of 'direction' that is perpindicular to 'normal'
+  * Returns the portion of 'direction' that is perpindicular to 'normal'
   */
- protected btVector3 perpindicularComponent(final btVector3 direction, final btVector3 normal) {
+ protected btVector3 perpindicularComponent(final btVector3 direction,
+  final btVector3 normal) {
   return new btVector3(direction).sub(parallelComponent(direction, normal));
  }
 
@@ -185,7 +193,8 @@ public class btKinematicCharacterController implements btCharacterControllerInte
    maxAabb,
    collisionWorld.getDispatcher());
   boolean penetration = false;
-  collisionWorld.getDispatcher().dispatchAllCollisionPairs(m_ghostObject.getOverlappingPairCache(),
+  collisionWorld.getDispatcher().dispatchAllCollisionPairs(m_ghostObject
+   .getOverlappingPairCache(),
    collisionWorld.getDispatchInfo(), collisionWorld.getDispatcher());
   m_currentPosition.set(m_ghostObject.getWorldTransform().getOrigin());
 //	float maxPen = float(0.0);
@@ -194,7 +203,8 @@ public class btKinematicCharacterController implements btCharacterControllerInte
    m_manifoldArray.clear();
    btCollisionObject obj0 = (btCollisionObject) (collisionPair.m_pProxy0.m_clientObject);
    btCollisionObject obj1 = (btCollisionObject) (collisionPair.m_pProxy1.m_clientObject);
-   if ((obj0 != null && !obj0.hasContactResponse()) || (obj1 != null && !obj1.hasContactResponse())) {
+   if ((obj0 != null && !obj0.hasContactResponse()) || (obj1 != null && !obj1
+    .hasContactResponse())) {
     continue;
    }
    if (!needsCollision(obj0, obj1)) {
@@ -216,7 +226,8 @@ public class btKinematicCharacterController implements btCharacterControllerInte
       //	maxPen = dist;
       //	m_touchingNormal = pt.m_normalWorldOnB * directionSign;//??
       //}
-      m_currentPosition.add(new btVector3(pt.m_normalWorldOnB).scale(directionSign * dist * (0.2f)));
+      m_currentPosition.add(new btVector3(pt.m_normalWorldOnB).scale(
+       directionSign * dist * (0.2f)));
       penetration = true;
      } else {
       //printf("touching %f\n", dist);
@@ -233,82 +244,79 @@ public class btKinematicCharacterController implements btCharacterControllerInte
  }
 
  protected void stepUp(btCollisionWorld world) {
-  if (true) {
-   float stepHeight = 0.0f;
-   if (m_verticalVelocity < 0.0) {
-    stepHeight = m_stepHeight;
-   }
-   // phase 1: up
-   final btTransform start = new btTransform();
-   final btTransform end = new btTransform();
-   start.setIdentity();
-   end.setIdentity();
+  float stepHeight = 0.0f;
+  if (m_verticalVelocity < 0.0) {
+   stepHeight = m_stepHeight;
+  }
+  // phase 1: up
+  final btTransform start = new btTransform();
+  final btTransform end = new btTransform();
+  start.setIdentity();
+  end.setIdentity();
 
-   /* FIXME: Handle penetration properly */
-   start.setOrigin(m_currentPosition);
-   m_targetPosition.set(m_currentPosition)
-    .add(new btVector3(m_up).scale(stepHeight))
-    .add(new btVector3(m_jumpAxis).scale(m_verticalOffset > 0.f ? m_verticalOffset : 0.f));
+  /*
+   * FIXME: Handle penetration properly
+   */
+  start.setOrigin(m_currentPosition);
+  m_targetPosition.set(m_currentPosition)
+   .add(new btVector3(m_up).scale(stepHeight))
+   .add(new btVector3(m_jumpAxis).scale(
+    m_verticalOffset > 0.f ? m_verticalOffset : 0.f));
+  m_currentPosition.set(m_targetPosition);
+  end.setOrigin(m_targetPosition);
+  start.set3x3(m_currentOrientation);
+  end.set3x3(m_targetOrientation);
+  btKinematicClosestNotMeConvexResultCallback callback
+   = new btKinematicClosestNotMeConvexResultCallback(m_ghostObject,
+    new btVector3(m_up).negate(),
+    m_maxSlopeCosine);
+  callback.m_collisionFilterGroup = getGhostObject().getBroadphaseHandle().m_collisionFilterGroup;
+  callback.m_collisionFilterMask = getGhostObject().getBroadphaseHandle().m_collisionFilterMask;
+  if (m_useGhostObjectSweepTest) {
+   m_ghostObject.convexSweepTest(m_convexShape, start, end, callback,
+    world.getDispatchInfo().m_allowedCcdPenetration);
+  } else {
+   world.convexSweepTest(m_convexShape, start, end, callback,
+    world.getDispatchInfo().m_allowedCcdPenetration);
+  }
+  if (callback.hasHit() && m_ghostObject.hasContactResponse() && needsCollision(
+   m_ghostObject,
+   callback.m_hitCollisionObject)) {
+   // Only modify the position if the hit was a slope and not a wall or ceiling.
+   if (callback.m_hitNormalWorld.dot(m_up) > 0.0) {
+    // we moved up only a fraction of the step height
+    m_currentStepOffset = stepHeight * callback.m_closestHitFraction;
+    if (m_interpolateUp) {
+     m_currentPosition.setInterpolate3(m_currentPosition, m_targetPosition,
+      callback.m_closestHitFraction);
+    } else {
+     m_currentPosition.set(m_targetPosition);
+    }
+   }
+   final btTransform xform = m_ghostObject.getWorldTransform();
+   xform.setOrigin(m_currentPosition);
+   m_ghostObject.setWorldTransform(xform);
+   // fix penetration if we hit a ceiling for example
+   int numPenetrationLoops = 0;
+   m_touchingContact = false;
+   while (recoverFromPenetration(world)) {
+    numPenetrationLoops++;
+    m_touchingContact = true;
+    if (numPenetrationLoops > 4) {
+     //printf("character could not recover from penetration = %d\n", numPenetrationLoops);
+     break;
+    }
+   }
+   m_targetPosition.set(m_ghostObject.getWorldTransform().getOrigin());
    m_currentPosition.set(m_targetPosition);
-   end.setOrigin(m_targetPosition);
-   start.set3x3(m_currentOrientation);
-   end.set3x3(m_targetOrientation);
-   btKinematicClosestNotMeConvexResultCallback callback =
-    new btKinematicClosestNotMeConvexResultCallback(m_ghostObject, new btVector3(m_up).negate(),
-     m_maxSlopeCosine);
-   callback.m_collisionFilterGroup = getGhostObject().getBroadphaseHandle().m_collisionFilterGroup;
-   callback.m_collisionFilterMask = getGhostObject().getBroadphaseHandle().m_collisionFilterMask;
-   if (m_useGhostObjectSweepTest) {
-    m_ghostObject.convexSweepTest(m_convexShape, start, end, callback,
-     world.getDispatchInfo().m_allowedCcdPenetration);
-   } else {
-    world.convexSweepTest(m_convexShape, start, end, callback,
-     world.getDispatchInfo().m_allowedCcdPenetration);
+   if (m_verticalOffset > 0) {
+    m_verticalOffset = 0.0f;
+    m_verticalVelocity = 0.0f;
+    m_currentStepOffset = m_stepHeight;
    }
-   if (callback.hasHit() && m_ghostObject.hasContactResponse() && needsCollision(m_ghostObject,
-    callback.m_hitCollisionObject)) {
-    // Only modify the position if the hit was a slope and not a wall or ceiling.
-    if (callback.m_hitNormalWorld.dot(m_up) > 0.0) {
-     // we moved up only a fraction of the step height
-     m_currentStepOffset = stepHeight * callback.m_closestHitFraction;
-     if (m_interpolateUp) {
-      m_currentPosition.setInterpolate3(m_currentPosition, m_targetPosition,
-       callback.m_closestHitFraction);
-     } else {
-      m_currentPosition.set(m_targetPosition);
-     }
-    }
-    final btTransform xform = m_ghostObject.getWorldTransform();
-    xform.setOrigin(m_currentPosition);
-    m_ghostObject.setWorldTransform(xform);
-    // fix penetration if we hit a ceiling for example
-    int numPenetrationLoops = 0;
-    m_touchingContact = false;
-    while (recoverFromPenetration(world)) {
-     numPenetrationLoops++;
-     m_touchingContact = true;
-     if (numPenetrationLoops > 4) {
-      //printf("character could not recover from penetration = %d\n", numPenetrationLoops);
-      break;
-     }
-    }
-    m_targetPosition.set(m_ghostObject.getWorldTransform().getOrigin());
-    m_currentPosition.set(m_targetPosition);
-    if (m_verticalOffset > 0) {
-     m_verticalOffset = 0.0f;
-     m_verticalVelocity = 0.0f;
-     m_currentStepOffset = m_stepHeight;
-    }
-   } else {
-    m_currentStepOffset = stepHeight;
-    if (DEBUG_BLOCKS) {
-     final btVector3 delta = new btVector3(m_targetPosition).sub(m_currentPosition);
-     if (delta.length() > 2f) {
-      System.out.println("stepUp" + delta.toString());
-     }
-    }
-    m_currentPosition.set(m_targetPosition);
-   }
+  } else {
+   m_currentStepOffset = stepHeight;
+   m_currentPosition.set(m_targetPosition);
   }
  }
 
@@ -316,17 +324,21 @@ public class btKinematicCharacterController implements btCharacterControllerInte
   updateTargetPositionBasedOnCollision(hit_normal, 0);
  }
 
- protected void updateTargetPositionBasedOnCollision(final btVector3 hit_normal, float tangentMag) {
+ protected void updateTargetPositionBasedOnCollision(final btVector3 hit_normal,
+  float tangentMag) {
   updateTargetPositionBasedOnCollision(hit_normal, tangentMag, 1.0f);
  }
 
- protected void updateTargetPositionBasedOnCollision(final btVector3 hitNormal, float tangentMag,
+ protected void updateTargetPositionBasedOnCollision(final btVector3 hitNormal,
+  float tangentMag,
   float normalMag) {
-  final btVector3 movementDirection = new btVector3(m_targetPosition).sub(m_currentPosition);
+  final btVector3 movementDirection = new btVector3(m_targetPosition).sub(
+   m_currentPosition);
   float movementLength = movementDirection.length();
   if (movementLength > SIMD_EPSILON) {
    movementDirection.normalize();
-   final btVector3 reflectDir = computeReflectionDirection(movementDirection, hitNormal);
+   final btVector3 reflectDir = computeReflectionDirection(movementDirection,
+    hitNormal);
    reflectDir.normalize();
    final btVector3 parallelDir = new btVector3();
    final btVector3 perpindicularDir = new btVector3();
@@ -344,210 +356,220 @@ public class btKinematicCharacterController implements btCharacterControllerInte
   }
  }
 
- protected void stepForwardAndStrafe(btCollisionWorld collisionWorld, final btVector3 walkMove) {
-  if (true) {
-   // printf("m_normalizedDirection=%f,%f,%f\n",
-   // 	m_normalizedDirection[0],m_normalizedDirection[1],m_normalizedDirection[2]);
-   // phase 2: forward and strafe
-   final btTransform start = new btTransform();
-   final btTransform end = new btTransform();
-   m_targetPosition.set(m_currentPosition).add(walkMove);
-   start.setIdentity();
-   end.setIdentity();
-   float fraction = 1.0f;
-   float distance2;// = m_currentPosition.distanceSquared(m_targetPosition);
+ protected void stepForwardAndStrafe(btCollisionWorld collisionWorld,
+  final btVector3 walkMove) {
+  // printf("m_normalizedDirection=%f,%f,%f\n",
+  // 	m_normalizedDirection[0],m_normalizedDirection[1],m_normalizedDirection[2]);
+  // phase 2: forward and strafe
+  final btTransform start = new btTransform();
+  final btTransform end = new btTransform();
+  m_targetPosition.set(m_currentPosition).add(walkMove);
+  start.setIdentity();
+  end.setIdentity();
+  float fraction = 1.0f;
+  float distance2;// = m_currentPosition.distanceSquared(m_targetPosition);
 //	printf("distance2=%f\n",distance2);
-   int maxIter = 10;
-   while (fraction > (0.01f) && maxIter-- > 0) {
-    start.setOrigin(m_currentPosition);
-    end.setOrigin(m_targetPosition);
-    final btVector3 sweepDirNegative = new btVector3(m_currentPosition).sub(m_targetPosition);
-    start.set3x3(m_currentOrientation);
-    end.set3x3(m_targetOrientation);
-    btKinematicClosestNotMeConvexResultCallback callback =
-     new btKinematicClosestNotMeConvexResultCallback(m_ghostObject, sweepDirNegative, (0.0f));
-    callback.m_collisionFilterGroup = getGhostObject().getBroadphaseHandle().m_collisionFilterGroup;
-    callback.m_collisionFilterMask = getGhostObject().getBroadphaseHandle().m_collisionFilterMask;
-    float margin = m_convexShape.getMargin();
-    m_convexShape.setMargin(margin + m_addedMargin);
-    if (!(start.equals(end))) {
-     if (m_useGhostObjectSweepTest) {
-      m_ghostObject.convexSweepTest(m_convexShape, start, end, callback, collisionWorld
-       .getDispatchInfo().m_allowedCcdPenetration);
-     } else {
-      collisionWorld.convexSweepTest(m_convexShape, start, end, callback, collisionWorld
-       .getDispatchInfo().m_allowedCcdPenetration);
-     }
+  int maxIter = 10;
+  while (fraction > (0.01f) && maxIter-- > 0) {
+   start.setOrigin(m_currentPosition);
+   end.setOrigin(m_targetPosition);
+   final btVector3 sweepDirNegative = new btVector3(m_currentPosition).sub(
+    m_targetPosition);
+   start.set3x3(m_currentOrientation);
+   end.set3x3(m_targetOrientation);
+   btKinematicClosestNotMeConvexResultCallback callback
+    = new btKinematicClosestNotMeConvexResultCallback(m_ghostObject,
+     sweepDirNegative, (0.0f));
+   callback.m_collisionFilterGroup = getGhostObject().getBroadphaseHandle().m_collisionFilterGroup;
+   callback.m_collisionFilterMask = getGhostObject().getBroadphaseHandle().m_collisionFilterMask;
+   float margin = m_convexShape.getMargin();
+   m_convexShape.setMargin(margin + m_addedMargin);
+   if (!(start.equals(end))) {
+    if (m_useGhostObjectSweepTest) {
+     m_ghostObject.convexSweepTest(m_convexShape, start, end, callback,
+      collisionWorld
+      .getDispatchInfo().m_allowedCcdPenetration);
+    } else {
+     collisionWorld.convexSweepTest(m_convexShape, start, end, callback,
+      collisionWorld
+      .getDispatchInfo().m_allowedCcdPenetration);
     }
-    m_convexShape.setMargin(margin);
-    fraction -= callback.m_closestHitFraction;
-    if (callback.hasHit() && m_ghostObject.hasContactResponse() && needsCollision(m_ghostObject,
+   }
+   m_convexShape.setMargin(margin);
+   fraction -= callback.m_closestHitFraction;
+   if (callback.hasHit() && m_ghostObject.hasContactResponse()
+    && needsCollision(m_ghostObject,
      callback.m_hitCollisionObject)) {
-     // we moved only a fraction
-     //float hitDistance;
-     //hitDistance = (callback.m_hitPointWorld - m_currentPosition).length();
+    // we moved only a fraction
+    //float hitDistance;
+    //hitDistance = (callback.m_hitPointWorld - m_currentPosition).length();
 //			m_currentPosition.setInterpolate3 (m_currentPosition, m_targetPosition, callback.m_closestHitFraction);
-     updateTargetPositionBasedOnCollision(callback.m_hitNormalWorld);
-     final btVector3 currentDir = new btVector3(m_targetPosition).sub(m_currentPosition);
-     distance2 = currentDir.lengthSquared();
-     if (distance2 > SIMD_EPSILON) {
-      currentDir.normalize();
-      /* See Quake2: "If velocity is against original velocity, stop ead to avoid tiny oscilations in sloping corners." */
-      if (currentDir.dot(m_normalizedDirection) <= (0.0f)) {
-       break;
-      }
-     } else {
-//				printf("currentDir: don't normalize a zero vector\n");
+    updateTargetPositionBasedOnCollision(callback.m_hitNormalWorld);
+    final btVector3 currentDir = new btVector3(m_targetPosition).sub(
+     m_currentPosition);
+    distance2 = currentDir.lengthSquared();
+    if (distance2 > SIMD_EPSILON) {
+     currentDir.normalize();
+     /*
+      * See Quake2: "If velocity is against original velocity, stop ead to avoid
+      * tiny oscilations in sloping corners."
+      */
+     if (currentDir.dot(m_normalizedDirection) <= (0.0f)) {
       break;
      }
     } else {
-     if (DEBUG_BLOCKS) {
-      final btVector3 delta = new btVector3(m_targetPosition).sub(m_currentPosition);
-      if (delta.length() > 2f) {
-       System.out.println("stepForwardAndStrafe" + delta.toString());
-      }
-     }
-     m_currentPosition.set(m_targetPosition);
+//				printf("currentDir: don't normalize a zero vector\n");
+     break;
     }
-   }
-  }
-
- }
-
- protected void stepDown(btCollisionWorld collisionWorld, float dt) {
-  if (true) {
- 
-   final btTransform start = new btTransform();
-   final btTransform end = new btTransform();
-   final btTransform end_double = new btTransform();
-   boolean runonce = false;
-   // phase 3: down
-   /*float additionalDownStep = (m_wasOnGround && !onGround()) ? m_stepHeight : 0.0;
-	btVector3 step_drop = m_up * (m_currentStepOffset + additionalDownStep);
-	float downVelocity = (additionalDownStep == 0.0 && m_verticalVelocity<0.0?-m_verticalVelocity:0.0) * dt;
-	btVector3 gravity_drop = m_up * downVelocity; 
-	m_targetPosition -= (step_drop + gravity_drop);*/
-   final btVector3 orig_position = new btVector3(m_targetPosition);
-   float downVelocity = (m_verticalVelocity < 0.f ? -m_verticalVelocity : 0.f) * dt;
-   if (m_verticalVelocity > 0.0) {
-    return;
-   }
-   if (downVelocity > 0.0 && downVelocity > m_fallSpeed &&
-    (m_wasOnGround || !m_wasJumping)) {
-    downVelocity = m_fallSpeed;
-   }
-   final btVector3 step_drop = new btVector3(m_up).scale(m_currentStepOffset + downVelocity);
-   m_targetPosition.sub(step_drop);
-   btKinematicClosestNotMeConvexResultCallback callback =
-    new btKinematicClosestNotMeConvexResultCallback(m_ghostObject, m_up, m_maxSlopeCosine);
-   callback.m_collisionFilterGroup = getGhostObject().getBroadphaseHandle().m_collisionFilterGroup;
-   callback.m_collisionFilterMask = getGhostObject().getBroadphaseHandle().m_collisionFilterMask;
-   btKinematicClosestNotMeConvexResultCallback callback2 =
-    new btKinematicClosestNotMeConvexResultCallback(m_ghostObject, m_up, m_maxSlopeCosine);
-   callback2.m_collisionFilterGroup = getGhostObject().getBroadphaseHandle().m_collisionFilterGroup;
-   callback2.m_collisionFilterMask = getGhostObject().getBroadphaseHandle().m_collisionFilterMask;
-   while (true) {
-    start.setIdentity();
-    end.setIdentity();
-    end_double.setIdentity();
-    start.setOrigin(m_currentPosition);
-    end.setOrigin(m_targetPosition);
-    start.set3x3(m_currentOrientation);
-    end.set3x3(m_targetOrientation);
-    //set double test for 2x the step drop, to check for a large drop vs small drop
-    end_double.setOrigin(new btVector3(m_targetPosition).sub(step_drop));
-    if (m_useGhostObjectSweepTest) {
-     m_ghostObject.convexSweepTest(m_convexShape, start, end, callback, collisionWorld
-      .getDispatchInfo().m_allowedCcdPenetration);
-     if (!callback.hasHit() && m_ghostObject.hasContactResponse()) {
-      //test a double fall height, to see if the character should interpolate it's fall (full) or not (partial)
-      m_ghostObject.convexSweepTest(m_convexShape, start, end_double, callback2, collisionWorld
-       .getDispatchInfo().m_allowedCcdPenetration);
-     }
-    } else {
-     collisionWorld.convexSweepTest(m_convexShape, start, end, callback, collisionWorld
-      .getDispatchInfo().m_allowedCcdPenetration);
-     if (!callback.hasHit() && m_ghostObject.hasContactResponse()) {
-      //test a double fall height, to see if the character should interpolate it's fall (large) or not (small)
-      collisionWorld.convexSweepTest(m_convexShape, start, end_double, callback2, collisionWorld
-       .getDispatchInfo().m_allowedCcdPenetration);
-     }
-    }
-    float downVelocity2 = (m_verticalVelocity < 0.f ? -m_verticalVelocity : 0.f) * dt;
-    boolean has_hit;
-    if (bounce_fix == true) {
-     has_hit = (callback.hasHit() || callback2.hasHit()) && m_ghostObject.hasContactResponse() &&
-      needsCollision(m_ghostObject, callback.m_hitCollisionObject);
-    } else {
-     has_hit = callback2.hasHit() && m_ghostObject.hasContactResponse() && needsCollision(
-      m_ghostObject, callback2.m_hitCollisionObject);
-    }
-    float stepHeight = 0.0f;
-    if (m_verticalVelocity < 0.0) {
-     stepHeight = m_stepHeight;
-    }
-    if (downVelocity2 > 0.0 && downVelocity2 < stepHeight && has_hit && !runonce &&
-     (m_wasOnGround || !m_wasJumping)) {
-     //redo the velocity calculation when falling a small amount, for fast stairs motion
-     //for larger falls, use the smoother/slower interpolated movement by not touching the target position
-     m_targetPosition.set(orig_position);
-     downVelocity = stepHeight;
-     step_drop.set(m_up).scale(m_currentStepOffset + downVelocity);
-     m_targetPosition.sub(step_drop);
-     runonce = true;
-     continue; //re-run previous tests
-    }
-    break;
-   }
-   if ((m_ghostObject.hasContactResponse() && (callback.hasHit() && needsCollision(m_ghostObject,
-    callback.m_hitCollisionObject))) || runonce) {
-    // we dropped a fraction of the height . hit floor
-    float fraction = (m_currentPosition.getY() - callback.m_hitPointWorld.getY()) / 2;
-    //printf("hitpoint: %g - pos %g\n", callback.m_hitPointWorld.getY(), m_currentPosition.getY());
-    if (bounce_fix) {
-     if (full_drop) {
-      m_currentPosition.setInterpolate3(m_currentPosition, m_targetPosition,
-       callback.m_closestHitFraction);
-     } else //due to errors in the closestHitFraction variable when used with large polygons, calculate the hit fraction manually
-     {
-      m_currentPosition.setInterpolate3(m_currentPosition, m_targetPosition, fraction);
-     }
-    } else {
-     m_currentPosition.setInterpolate3(m_currentPosition, m_targetPosition,
-      callback.m_closestHitFraction);
-    }
-    full_drop = false;
-    m_verticalVelocity = 0.0f;
-    m_verticalOffset = 0.0f;
-    m_wasJumping = false;
    } else {
-    // we dropped the full height
-    full_drop = true;
-    if (bounce_fix) {
-     downVelocity = (m_verticalVelocity < 0.f ? -m_verticalVelocity : 0.f) * dt;
-     if (downVelocity > m_fallSpeed && (m_wasOnGround || !m_wasJumping)) {
-      m_targetPosition.add(step_drop); //undo previous target change
-      downVelocity = m_fallSpeed;
-      step_drop.set(m_up).scale(m_currentStepOffset + downVelocity);
-      m_targetPosition.sub(step_drop);
-     }
-    }
-    //printf("full drop - %g, %g\n", m_currentPosition.getY(), m_targetPosition.getY());
-    if (DEBUG_BLOCKS) {
-     final btVector3 delta = new btVector3(m_targetPosition).sub(m_currentPosition);
-     if (delta.length() > 2f) {
-      System.out.println("stepDown" + delta.toString());
-     }
-    }
     m_currentPosition.set(m_targetPosition);
    }
   }
  }
 
- protected boolean needsCollision(btCollisionObject body0, btCollisionObject body1) {
+ protected void stepDown(btCollisionWorld collisionWorld, float dt) {
+  final btTransform start = new btTransform();
+  final btTransform end = new btTransform();
+  final btTransform end_double = new btTransform();
+  boolean runonce = false;
+  // phase 3: down
+  /*
+   * float additionalDownStep = (m_wasOnGround && !onGround()) ? m_stepHeight :
+   * 0.0; btVector3 step_drop = m_up * (m_currentStepOffset +
+   * additionalDownStep); float downVelocity = (additionalDownStep == 0.0 &&
+   * m_verticalVelocity<0.0?-m_verticalVelocity:0.0) * dt; btVector3
+   * gravity_drop = m_up * downVelocity; m_targetPosition -= (step_drop + gravity_drop);
+   */
+  final btVector3 orig_position = new btVector3(m_targetPosition);
+  float downVelocity = (m_verticalVelocity < 0.f ? -m_verticalVelocity : 0.f)
+   * dt;
+  if (m_verticalVelocity > 0.0) {
+   return;
+  }
+  if (downVelocity > 0.0 && downVelocity > m_fallSpeed && (m_wasOnGround
+   || !m_wasJumping)) {
+   downVelocity = m_fallSpeed;
+  }
+  final btVector3 step_drop = new btVector3(m_up).scale(m_currentStepOffset
+   + downVelocity);
+  m_targetPosition.sub(step_drop);
+  btKinematicClosestNotMeConvexResultCallback callback
+   = new btKinematicClosestNotMeConvexResultCallback(m_ghostObject, m_up,
+    m_maxSlopeCosine);
+  callback.m_collisionFilterGroup = getGhostObject().getBroadphaseHandle().m_collisionFilterGroup;
+  callback.m_collisionFilterMask = getGhostObject().getBroadphaseHandle().m_collisionFilterMask;
+  btKinematicClosestNotMeConvexResultCallback callback2
+   = new btKinematicClosestNotMeConvexResultCallback(m_ghostObject, m_up,
+    m_maxSlopeCosine);
+  callback2.m_collisionFilterGroup = getGhostObject().getBroadphaseHandle().m_collisionFilterGroup;
+  callback2.m_collisionFilterMask = getGhostObject().getBroadphaseHandle().m_collisionFilterMask;
+  while (true) {
+   start.setIdentity();
+   end.setIdentity();
+   end_double.setIdentity();
+   start.setOrigin(m_currentPosition);
+   end.setOrigin(m_targetPosition);
+   start.set3x3(m_currentOrientation);
+   end.set3x3(m_targetOrientation);
+   //set double test for 2x the step drop, to check for a large drop vs small drop
+   end_double.setOrigin(new btVector3(m_targetPosition).sub(step_drop));
+   if (m_useGhostObjectSweepTest) {
+    m_ghostObject.convexSweepTest(m_convexShape, start, end, callback,
+     collisionWorld
+     .getDispatchInfo().m_allowedCcdPenetration);
+    if (!callback.hasHit() && m_ghostObject.hasContactResponse()) {
+     //test a double fall height, to see if the character should interpolate it's fall (full) or not (partial)
+     m_ghostObject.convexSweepTest(m_convexShape, start, end_double, callback2,
+      collisionWorld
+      .getDispatchInfo().m_allowedCcdPenetration);
+    }
+   } else {
+    collisionWorld.convexSweepTest(m_convexShape, start, end, callback,
+     collisionWorld
+     .getDispatchInfo().m_allowedCcdPenetration);
+    if (!callback.hasHit() && m_ghostObject.hasContactResponse()) {
+     //test a double fall height, to see if the character should interpolate it's fall (large) or not (small)
+     collisionWorld.convexSweepTest(m_convexShape, start, end_double, callback2,
+      collisionWorld
+      .getDispatchInfo().m_allowedCcdPenetration);
+    }
+   }
+   float downVelocity2 = (m_verticalVelocity < 0.f ? -m_verticalVelocity : 0.f)
+    * dt;
+   boolean has_hit;
+   if (bounce_fix == true) {
+    has_hit = (callback.hasHit() || callback2.hasHit()) && m_ghostObject
+     .hasContactResponse() && needsCollision(m_ghostObject,
+      callback.m_hitCollisionObject);
+   } else {
+    has_hit = callback2.hasHit() && m_ghostObject.hasContactResponse()
+     && needsCollision(
+      m_ghostObject, callback2.m_hitCollisionObject);
+   }
+   float stepHeight = 0.0f;
+   if (m_verticalVelocity < 0.0) {
+    stepHeight = m_stepHeight;
+   }
+   if (downVelocity2 > 0.0 && downVelocity2 < stepHeight && has_hit && !runonce
+    && (m_wasOnGround || !m_wasJumping)) {
+    //redo the velocity calculation when falling a small amount, for fast stairs motion
+    //for larger falls, use the smoother/slower interpolated movement by not touching the target position
+    m_targetPosition.set(orig_position);
+    downVelocity = stepHeight;
+    step_drop.set(m_up).scale(m_currentStepOffset + downVelocity);
+    m_targetPosition.sub(step_drop);
+    runonce = true;
+    continue; //re-run previous tests
+   }
+   break;
+  }
+  if ((m_ghostObject.hasContactResponse() && (callback.hasHit()
+   && needsCollision(m_ghostObject,
+    callback.m_hitCollisionObject))) || runonce) {
+   // we dropped a fraction of the height . hit floor
+   float fraction = (m_currentPosition.getY() - callback.m_hitPointWorld.getY())
+    / 2;
+   //printf("hitpoint: %g - pos %g\n", callback.m_hitPointWorld.getY(), m_currentPosition.getY());
+   if (bounce_fix) {
+    if (full_drop) {
+     m_currentPosition.setInterpolate3(m_currentPosition, m_targetPosition,
+      callback.m_closestHitFraction);
+    } else //due to errors in the closestHitFraction variable when used with large polygons, calculate the hit fraction manually
+    {
+     m_currentPosition.setInterpolate3(m_currentPosition, m_targetPosition,
+      fraction);
+    }
+   } else {
+    m_currentPosition.setInterpolate3(m_currentPosition, m_targetPosition,
+     callback.m_closestHitFraction);
+   }
+   full_drop = false;
+   m_verticalVelocity = 0.0f;
+   m_verticalOffset = 0.0f;
+   m_wasJumping = false;
+  } else {
+   // we dropped the full height
+   full_drop = true;
+   if (bounce_fix) {
+    downVelocity = (m_verticalVelocity < 0.f ? -m_verticalVelocity : 0.f) * dt;
+    if (downVelocity > m_fallSpeed && (m_wasOnGround || !m_wasJumping)) {
+     m_targetPosition.add(step_drop); //undo previous target change
+     downVelocity = m_fallSpeed;
+     step_drop.set(m_up).scale(m_currentStepOffset + downVelocity);
+     m_targetPosition.sub(step_drop);
+    }
+   }
+   //printf("full drop - %g, %g\n", m_currentPosition.getY(), m_targetPosition.getY());
+   m_currentPosition.set(m_targetPosition);
+  }
+ }
+
+ protected boolean needsCollision(btCollisionObject body0,
+  btCollisionObject body1) {
   boolean collides = (body0.getBroadphaseHandle().m_collisionFilterGroup & body1
    .getBroadphaseHandle().m_collisionFilterMask) != 0;
-  collides = collides && ((body1.getBroadphaseHandle().m_collisionFilterGroup & body0
+  collides = collides && ((body1.getBroadphaseHandle().m_collisionFilterGroup
+   & body0
    .getBroadphaseHandle().m_collisionFilterMask) != 0);
   return collides;
  }
@@ -568,7 +590,8 @@ public class btKinematicCharacterController implements btCharacterControllerInte
   final btQuaternion rot = getRotation(m_up, u);
   //set orientation with new up
   final btTransform xform = m_ghostObject.getWorldTransform();
-  final btQuaternion orn = new btQuaternion(rot).conjugate().mul(xform.getRotation());
+  final btQuaternion orn = new btQuaternion(rot).conjugate().mul(xform
+   .getRotation());
   xform.set3x3(orn);
   m_ghostObject.setWorldTransform(xform);
  }
@@ -624,7 +647,8 @@ public class btKinematicCharacterController implements btCharacterControllerInte
  /// This call will reset any walk direction set by setWalkDirection().
  /// Negative time intervals will result in no motion.
  @Override
- public void setVelocityForTimeInterval(final btVector3 velocity, float timeInterval) {
+ public void setVelocityForTimeInterval(final btVector3 velocity,
+  float timeInterval) {
 //	printf("setVelocity!\n");
 //	printf("  interval: %f\n", timeInterval);
 //	printf("  velocity: (%f, %f, %f)\n",
@@ -651,8 +675,8 @@ public class btKinematicCharacterController implements btCharacterControllerInte
    float c = w.dot(m_up);
    if (c != 0) {
     //there is a component in walkdirection for vertical velocity
-    final btVector3 upComponent = new btVector3(m_up).scale(btSin(SIMD_HALF_PI - btAcos(c)) *
-     m_walkDirection.length());
+    final btVector3 upComponent = new btVector3(m_up).scale(btSin(SIMD_HALF_PI
+     - btAcos(c)) * m_walkDirection.length());
     m_walkDirection.sub(upComponent);
     m_verticalVelocity = (c < 0.0f ? -1 : 1) * upComponent.length();
     if (c > 0.0f) {
@@ -695,11 +719,13 @@ public class btKinematicCharacterController implements btCharacterControllerInte
   m_velocityTimeInterval = 0.0f;
   //clear pair cache
   btHashedOverlappingPairCache cache = m_ghostObject.getOverlappingPairCache();
-  Collection<btBroadphasePair> overlapping_pair_array = cache.getOverlappingPairArrayPtr();
+  Collection<btBroadphasePair> overlapping_pair_array = cache
+   .getOverlappingPairArrayPtr();
   while (overlapping_pair_array.size() > 0) {
    Iterator<btBroadphasePair> i = overlapping_pair_array.iterator();
    btBroadphasePair pair = i.next();
-   cache.removeOverlappingPair(pair.m_pProxy0, pair.m_pProxy1, collisionWorld.getDispatcher());
+   cache.removeOverlappingPair(pair.m_pProxy0, pair.m_pProxy1, collisionWorld
+    .getDispatcher());
   }
  }
 
@@ -737,7 +763,7 @@ public class btKinematicCharacterController implements btCharacterControllerInte
    m_ghostObject.setWorldTransform(xform);
    m_currentPosition.set(m_ghostObject.getWorldTransform().getOrigin());
    m_targetPosition.set(m_currentPosition);
-m_currentOrientation.set(m_ghostObject.getWorldTransform().getRotation());
+   m_currentOrientation.set(m_ghostObject.getWorldTransform().getRotation());
    m_targetOrientation.set(m_currentOrientation);
   }
   // quick check...
@@ -758,7 +784,8 @@ m_currentOrientation.set(m_ghostObject.getWorldTransform().getRotation());
   if (m_verticalVelocity > 0.0 && m_verticalVelocity > m_jumpSpeed) {
    m_verticalVelocity = m_jumpSpeed;
   }
-  if (m_verticalVelocity < 0.0 && btFabs(m_verticalVelocity) > btFabs(m_fallSpeed)) {
+  if (m_verticalVelocity < 0.0 && btFabs(m_verticalVelocity) > btFabs(
+   m_fallSpeed)) {
    m_verticalVelocity = -btFabs(m_fallSpeed);
   }
   m_verticalOffset = m_verticalVelocity * dt;
@@ -787,8 +814,8 @@ m_currentOrientation.set(m_ghostObject.getWorldTransform().getRotation());
   } else {
    //printf("  time: %f", m_velocityTimeInterval);
    // still have some time left for moving!
-   float dtMoving =
-    (dt < m_velocityTimeInterval) ? dt : m_velocityTimeInterval;
+   float dtMoving
+    = (dt < m_velocityTimeInterval) ? dt : m_velocityTimeInterval;
    m_velocityTimeInterval -= dt;
    // how far will we move while we are moving?
    final btVector3 move = new btVector3(m_walkDirection).scale(dtMoving);
@@ -917,11 +944,13 @@ m_currentOrientation.set(m_ghostObject.getWorldTransform().getRotation());
 
  @Override
  public boolean onGround() {
-  return (btFabs(m_verticalVelocity) < SIMD_EPSILON) && (btFabs(m_verticalOffset) < SIMD_EPSILON);
+  return (btFabs(m_verticalVelocity) < SIMD_EPSILON)
+   && (btFabs(m_verticalOffset) < SIMD_EPSILON);
  }
 
  @Override
  public void setUpInterpolate(boolean value) {
   m_interpolateUp = value;
  }
+
 }
