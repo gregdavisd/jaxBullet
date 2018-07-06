@@ -388,11 +388,11 @@ public class btKinematicCharacterController implements
     if (m_useGhostObjectSweepTest) {
      m_ghostObject.convexSweepTest(m_convexShape, start, end, callback,
       collisionWorld
-      .getDispatchInfo().m_allowedCcdPenetration);
+       .getDispatchInfo().m_allowedCcdPenetration);
     } else {
      collisionWorld.convexSweepTest(m_convexShape, start, end, callback,
       collisionWorld
-      .getDispatchInfo().m_allowedCcdPenetration);
+       .getDispatchInfo().m_allowedCcdPenetration);
     }
    }
    m_convexShape.setMargin(margin);
@@ -438,7 +438,8 @@ public class btKinematicCharacterController implements
    * 0.0; btVector3 step_drop = m_up * (m_currentStepOffset +
    * additionalDownStep); float downVelocity = (additionalDownStep == 0.0 &&
    * m_verticalVelocity<0.0?-m_verticalVelocity:0.0) * dt; btVector3
-   * gravity_drop = m_up * downVelocity; m_targetPosition -= (step_drop + gravity_drop);
+   * gravity_drop = m_up * downVelocity; m_targetPosition -= (step_drop +
+   * gravity_drop);
    */
   final btVector3 orig_position = new btVector3(m_targetPosition);
   float downVelocity = (m_verticalVelocity < 0.f ? -m_verticalVelocity : 0.f)
@@ -476,22 +477,22 @@ public class btKinematicCharacterController implements
    if (m_useGhostObjectSweepTest) {
     m_ghostObject.convexSweepTest(m_convexShape, start, end, callback,
      collisionWorld
-     .getDispatchInfo().m_allowedCcdPenetration);
+      .getDispatchInfo().m_allowedCcdPenetration);
     if (!callback.hasHit() && m_ghostObject.hasContactResponse()) {
      //test a double fall height, to see if the character should interpolate it's fall (full) or not (partial)
      m_ghostObject.convexSweepTest(m_convexShape, start, end_double, callback2,
       collisionWorld
-      .getDispatchInfo().m_allowedCcdPenetration);
+       .getDispatchInfo().m_allowedCcdPenetration);
     }
    } else {
     collisionWorld.convexSweepTest(m_convexShape, start, end, callback,
      collisionWorld
-     .getDispatchInfo().m_allowedCcdPenetration);
+      .getDispatchInfo().m_allowedCcdPenetration);
     if (!callback.hasHit() && m_ghostObject.hasContactResponse()) {
      //test a double fall height, to see if the character should interpolate it's fall (large) or not (small)
      collisionWorld.convexSweepTest(m_convexShape, start, end_double, callback2,
       collisionWorld
-      .getDispatchInfo().m_allowedCcdPenetration);
+       .getDispatchInfo().m_allowedCcdPenetration);
     }
    }
    float downVelocity2 = (m_verticalVelocity < 0.f ? -m_verticalVelocity : 0.f)
@@ -570,7 +571,7 @@ public class btKinematicCharacterController implements
    .getBroadphaseHandle().m_collisionFilterMask) != 0;
   collides = collides && ((body1.getBroadphaseHandle().m_collisionFilterGroup
    & body0
-   .getBroadphaseHandle().m_collisionFilterMask) != 0);
+    .getBroadphaseHandle().m_collisionFilterMask) != 0);
   return collides;
  }
 

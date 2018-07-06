@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -31,19 +31,21 @@ abstract public class btStridingMeshInterface implements Serializable {
  final btTriangleCallback vertex_scaling;
  btTriangleCallback callback;
 
-public btStridingMeshInterface() {
+ public btStridingMeshInterface() {
   m_scaling.set(1, 1, 1);
   vertex_scaling = new btTriangleCallback() {
    private static final long serialVersionUID = 1L;
 
    @Override
-   public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
+   public boolean processTriangle(btVector3[] triangle, int partId,
+    int triangleIndex) {
     for (int i = 0; i < 3; i++) {
      triangle[i].mul(m_scaling);
     }
     callback.processTriangle(triangle, partId, triangleIndex);
     return true;
    }
+
   };
  }
 
@@ -62,14 +64,16 @@ public btStridingMeshInterface() {
 
  public void InternalProcessSubPart(btTriangleCallback callback,
   btStridingMeshLock mesh,
-  final btVector3 aabbMin, final btVector3 aabbMax, int part, int baseTriangleIndex) {
+  final btVector3 aabbMin, final btVector3 aabbMax, int part,
+  int baseTriangleIndex) {
   this.callback = callback;
   mesh.process_all_triangles(vertex_scaling, part);
   //unLockReadOnlyVertexBase(part);
  }
 
  ///brute force method to calculate aabb
- public void calculateAabbBruteForce(final btVector3 aabbMin, final btVector3 aabbMax) {
+ public void calculateAabbBruteForce(final btVector3 aabbMin,
+  final btVector3 aabbMax) {
   //first calculate the total aabb for all triangles
   aabbMin.set((-BT_LARGE_FLOAT), (-BT_LARGE_FLOAT), (-BT_LARGE_FLOAT));
   aabbMax.set((BT_LARGE_FLOAT), (BT_LARGE_FLOAT), (BT_LARGE_FLOAT));
@@ -91,7 +95,8 @@ public btStridingMeshInterface() {
 
  /// unLockVertexBase finishes the access to a subpart of the triangle mesh
  /// make a call to unLockVertexBase when the read and write access (using getLockedVertexIndexBase) is finished
- public  final void unLockVertexBase(int subpart){}
+ public final void unLockVertexBase(int subpart) {
+ }
 
  public final void unLockReadOnlyVertexBase(int subpart) {
  }
@@ -106,9 +111,11 @@ public btStridingMeshInterface() {
 
  public abstract boolean hasPremadeAabb();
 
- public abstract void setPremadeAabb(final btVector3 aabbMin, final btVector3 aabbMax);
+ public abstract void setPremadeAabb(final btVector3 aabbMin,
+  final btVector3 aabbMax);
 
- public abstract void getPremadeAabb(final btVector3 aabbMin, final btVector3 aabbMax);
+ public abstract void getPremadeAabb(final btVector3 aabbMin,
+  final btVector3 aabbMax);
 
  public btVector3 getScaling() {
   return new btVector3(m_scaling);
@@ -130,7 +137,8 @@ public btStridingMeshInterface() {
   }
 
   @Override
-  public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
+  public boolean processTriangle(btVector3[] triangle, int partId,
+   int triangleIndex) {
    aabbMin.setMin(triangle[0]);
    aabbMax.setMax(triangle[0]);
    aabbMin.setMin(triangle[1]);
@@ -139,6 +147,7 @@ public btStridingMeshInterface() {
    aabbMax.setMax(triangle[2]);
    return true;
   }
+
  }
 
  @Override
@@ -165,6 +174,5 @@ public btStridingMeshInterface() {
   }
   return true;
  }
- 
- 
+
 };

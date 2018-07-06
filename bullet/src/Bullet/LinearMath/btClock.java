@@ -1,14 +1,14 @@
 /*
-
-***************************************************************************************************
-**
-** profile.cpp
-**
-** Real-Time Hierarchical Profiling for Game Programming Gems 3
-**
-** by Greg Hjelstrom & Byon Garrabrant
-**
-***************************************************************************************************/
+ *
+ ***************************************************************************************************
+ **
+ ** profile.cpp
+ **
+ ** Real-Time Hierarchical Profiling for Game Programming Gems 3
+ **
+ ** by Greg Hjelstrom & Byon Garrabrant
+ **
+ ************************************************************************************************** */
 // Credits: The Clock class was inspired by the Timer classes in
 // Ogre (www.ogre3d.org).
 package Bullet.LinearMath;
@@ -25,7 +25,7 @@ public final class btClock implements Serializable {
   m_data = new btClockData();
   reset();
  }
- 
+
  /// Resets the initial reference time.
  public void reset() {
   m_data.mStartTick = m_data.mStartTime = System.nanoTime();
@@ -37,8 +37,7 @@ public final class btClock implements Serializable {
   long currentTime = System.nanoTime();
   long elapsedTime = currentTime - m_data.mStartTime;
   // Compute the number of millisecond ticks elapsed.
-  long msecTicks = (long) (1_000l * elapsedTime /
-   m_data.mClockFrequency);
+  long msecTicks = (long) (1_000l * elapsedTime / m_data.mClockFrequency);
   assert (msecTicks > 0);
   return msecTicks;
  }
@@ -49,8 +48,7 @@ public final class btClock implements Serializable {
   long currentTime = System.nanoTime();
   long elapsedTime = currentTime - m_data.mStartTime;
   // Compute the number of millisecond ticks elapsed.
-  long msecTicks = (long) (1_000_000l * elapsedTime /
-   m_data.mClockFrequency);
+  long msecTicks = (long) (1_000_000l * elapsedTime / m_data.mClockFrequency);
   assert (msecTicks >= 0);
   return msecTicks;
  }
@@ -59,8 +57,7 @@ public final class btClock implements Serializable {
   long currentTime = System.nanoTime();
   long elapsedTime = currentTime - m_data.mStartTime;
   // Compute the number of millisecond ticks elapsed.
-  long msecTicks = (1_000_000_000l * elapsedTime /
-   m_data.mClockFrequency);
+  long msecTicks = (1_000_000_000l * elapsedTime / m_data.mClockFrequency);
   assert (msecTicks > 0);
   return msecTicks;
  }
@@ -71,10 +68,10 @@ public final class btClock implements Serializable {
   long currentTime = System.nanoTime();
   long elapsedTime = currentTime - m_data.mStartTime;
   // Compute the number of millisecond ticks elapsed.
-  float msecTicks = ((float) elapsedTime /
-   (float) m_data.mClockFrequency);
+  float msecTicks = ((float) elapsedTime / (float) m_data.mClockFrequency);
   assert (msecTicks >= 0);
   return msecTicks;
  }
+
  btClockData m_data;
 }

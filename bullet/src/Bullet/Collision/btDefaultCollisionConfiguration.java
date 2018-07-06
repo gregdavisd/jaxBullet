@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision;
 
@@ -32,14 +32,15 @@ import Bullet.Collision.Broadphase.btBroadphaseProxy;
 import java.io.Serializable;
 
 /**
- * btCollisionConfiguration allows to configure Bullet collision detection stack allocator, pool
- * memory allocators
+ * btCollisionConfiguration allows to configure Bullet collision detection stack
+ * allocator, pool memory allocators
  *
  * @todo: describe the meaning
  *
  * @author Gregery Barton
  */
-public class btDefaultCollisionConfiguration implements btCollisionConfiguration, Serializable {
+public class btDefaultCollisionConfiguration implements btCollisionConfiguration,
+ Serializable {
 
  //default penetration depth solver
  final public btConvexPenetrationDepthSolver m_pdSolver;
@@ -63,7 +64,8 @@ public class btDefaultCollisionConfiguration implements btCollisionConfiguration
   this(new btDefaultCollisionConstructionInfo());
  }
 
- public btDefaultCollisionConfiguration(btDefaultCollisionConstructionInfo constructionInfo) {
+ public btDefaultCollisionConfiguration(
+  btDefaultCollisionConstructionInfo constructionInfo) {
   if (constructionInfo.m_useEpaPenetrationAlgorithm) {
    m_pdSolver = new btGjkEpaPenetrationDepthSolver();
   } else {
@@ -101,7 +103,8 @@ public class btDefaultCollisionConfiguration implements btCollisionConfiguration
   setConvexConvexMultipointIterations(3, 3);
  }
 
- public final void setConvexConvexMultipointIterations(int numPerturbationIterations) {
+ public final void setConvexConvexMultipointIterations(
+  int numPerturbationIterations) {
   setConvexConvexMultipointIterations(numPerturbationIterations, 3);
  }
 
@@ -113,7 +116,8 @@ public class btDefaultCollisionConfiguration implements btCollisionConfiguration
   setPlaneConvexMultipointIterations(3, 3);
  }
 
- public final void setPlaneConvexMultipointIterations(int numPerturbationIterations) {
+ public final void setPlaneConvexMultipointIterations(
+  int numPerturbationIterations) {
   setPlaneConvexMultipointIterations(numPerturbationIterations, 3);
  }
 
@@ -122,36 +126,46 @@ public class btDefaultCollisionConfiguration implements btCollisionConfiguration
  }
 
  @Override
- public btCollisionAlgorithmCreateFunc getCollisionAlgorithmCreateFunc(int proxyType0,
+ public btCollisionAlgorithmCreateFunc getCollisionAlgorithmCreateFunc(
+  int proxyType0,
   int proxyType1) {
-  if ((proxyType0 == SPHERE_SHAPE_PROXYTYPE) && (proxyType1 == SPHERE_SHAPE_PROXYTYPE)) {
+  if ((proxyType0 == SPHERE_SHAPE_PROXYTYPE) && (proxyType1
+   == SPHERE_SHAPE_PROXYTYPE)) {
    return m_sphereSphereCF;
   }
-  if ((proxyType0 == SPHERE_SHAPE_PROXYTYPE) && (proxyType1 == TRIANGLE_SHAPE_PROXYTYPE)) {
+  if ((proxyType0 == SPHERE_SHAPE_PROXYTYPE) && (proxyType1
+   == TRIANGLE_SHAPE_PROXYTYPE)) {
    return m_sphereTriangleCF;
   }
-  if ((proxyType0 == TRIANGLE_SHAPE_PROXYTYPE) && (proxyType1 == SPHERE_SHAPE_PROXYTYPE)) {
+  if ((proxyType0 == TRIANGLE_SHAPE_PROXYTYPE) && (proxyType1
+   == SPHERE_SHAPE_PROXYTYPE)) {
    return m_triangleSphereCF;
   }
   if ((proxyType0 == BOX_SHAPE_PROXYTYPE) && (proxyType1 == BOX_SHAPE_PROXYTYPE)) {
    return m_boxBoxCF;
   }
-  if (btBroadphaseProxy.isConvex(proxyType0) && (proxyType1 == STATIC_PLANE_PROXYTYPE)) {
+  if (btBroadphaseProxy.isConvex(proxyType0) && (proxyType1
+   == STATIC_PLANE_PROXYTYPE)) {
    return m_convexPlaneCF;
   }
-  if (btBroadphaseProxy.isConvex(proxyType1) && (proxyType0 == STATIC_PLANE_PROXYTYPE)) {
+  if (btBroadphaseProxy.isConvex(proxyType1) && (proxyType0
+   == STATIC_PLANE_PROXYTYPE)) {
    return m_planeConvexCF;
   }
-  if (btBroadphaseProxy.isConvex(proxyType0) && btBroadphaseProxy.isConvex(proxyType1)) {
+  if (btBroadphaseProxy.isConvex(proxyType0) && btBroadphaseProxy.isConvex(
+   proxyType1)) {
    return m_convexConvexCreateFunc;
   }
-  if (btBroadphaseProxy.isConvex(proxyType0) && btBroadphaseProxy.isConcave(proxyType1)) {
+  if (btBroadphaseProxy.isConvex(proxyType0) && btBroadphaseProxy.isConcave(
+   proxyType1)) {
    return m_convexConcaveCreateFunc;
   }
-  if (btBroadphaseProxy.isConvex(proxyType1) && btBroadphaseProxy.isConcave(proxyType0)) {
+  if (btBroadphaseProxy.isConvex(proxyType1) && btBroadphaseProxy.isConcave(
+   proxyType0)) {
    return m_swappedConvexConcaveCreateFunc;
   }
-  if (btBroadphaseProxy.isCompound(proxyType0) && btBroadphaseProxy.isCompound(proxyType1)) {
+  if (btBroadphaseProxy.isCompound(proxyType0) && btBroadphaseProxy.isCompound(
+   proxyType1)) {
    return m_compoundCompoundCreateFunc;
   }
   if (btBroadphaseProxy.isCompound(proxyType0)) {
@@ -164,33 +178,43 @@ public class btDefaultCollisionConfiguration implements btCollisionConfiguration
  }
 
  @Override
- public btCollisionAlgorithmCreateFunc getClosestPointsAlgorithmCreateFunc(int proxyType0,
+ public btCollisionAlgorithmCreateFunc getClosestPointsAlgorithmCreateFunc(
+  int proxyType0,
   int proxyType1) {
-  if ((proxyType0 == SPHERE_SHAPE_PROXYTYPE) && (proxyType1 == SPHERE_SHAPE_PROXYTYPE)) {
+  if ((proxyType0 == SPHERE_SHAPE_PROXYTYPE) && (proxyType1
+   == SPHERE_SHAPE_PROXYTYPE)) {
    return m_sphereSphereCF;
   }
-  if ((proxyType0 == SPHERE_SHAPE_PROXYTYPE) && (proxyType1 == TRIANGLE_SHAPE_PROXYTYPE)) {
+  if ((proxyType0 == SPHERE_SHAPE_PROXYTYPE) && (proxyType1
+   == TRIANGLE_SHAPE_PROXYTYPE)) {
    return m_sphereTriangleCF;
   }
-  if ((proxyType0 == TRIANGLE_SHAPE_PROXYTYPE) && (proxyType1 == SPHERE_SHAPE_PROXYTYPE)) {
+  if ((proxyType0 == TRIANGLE_SHAPE_PROXYTYPE) && (proxyType1
+   == SPHERE_SHAPE_PROXYTYPE)) {
    return m_triangleSphereCF;
   }
-  if (btBroadphaseProxy.isConvex(proxyType0) && (proxyType1 == STATIC_PLANE_PROXYTYPE)) {
+  if (btBroadphaseProxy.isConvex(proxyType0) && (proxyType1
+   == STATIC_PLANE_PROXYTYPE)) {
    return m_convexPlaneCF;
   }
-  if (btBroadphaseProxy.isConvex(proxyType1) && (proxyType0 == STATIC_PLANE_PROXYTYPE)) {
+  if (btBroadphaseProxy.isConvex(proxyType1) && (proxyType0
+   == STATIC_PLANE_PROXYTYPE)) {
    return m_planeConvexCF;
   }
-  if (btBroadphaseProxy.isConvex(proxyType0) && btBroadphaseProxy.isConvex(proxyType1)) {
+  if (btBroadphaseProxy.isConvex(proxyType0) && btBroadphaseProxy.isConvex(
+   proxyType1)) {
    return m_convexConvexCreateFunc;
   }
-  if (btBroadphaseProxy.isConvex(proxyType0) && btBroadphaseProxy.isConcave(proxyType1)) {
+  if (btBroadphaseProxy.isConvex(proxyType0) && btBroadphaseProxy.isConcave(
+   proxyType1)) {
    return m_convexConcaveCreateFunc;
   }
-  if (btBroadphaseProxy.isConvex(proxyType1) && btBroadphaseProxy.isConcave(proxyType0)) {
+  if (btBroadphaseProxy.isConvex(proxyType1) && btBroadphaseProxy.isConcave(
+   proxyType0)) {
    return m_swappedConvexConcaveCreateFunc;
   }
-  if (btBroadphaseProxy.isCompound(proxyType0) && btBroadphaseProxy.isCompound(proxyType1)) {
+  if (btBroadphaseProxy.isCompound(proxyType0) && btBroadphaseProxy.isCompound(
+   proxyType1)) {
    return m_compoundCompoundCreateFunc;
   }
   if (btBroadphaseProxy.isCompound(proxyType0)) {
@@ -201,4 +225,5 @@ public class btDefaultCollisionConfiguration implements btCollisionConfiguration
   //failed to find an algorithm
   return m_emptyCreateFunc;
  }
+
 }

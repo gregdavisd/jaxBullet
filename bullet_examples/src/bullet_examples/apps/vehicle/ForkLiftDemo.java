@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 ///September 2006: VehicleDemo is work in progress, this file is mostly just a placeholder
 ///This VehicleDemo file is very early in development, please check it later
@@ -130,7 +130,8 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
   }
   //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
   btDefaultMotionState myMotionState = new btDefaultMotionState(startTransform);
-  btRigidBodyConstructionInfo cInfo = new btRigidBodyConstructionInfo(mass, myMotionState, shape,
+  btRigidBodyConstructionInfo cInfo = new btRigidBodyConstructionInfo(mass,
+   myMotionState, shape,
    localInertia);
   btRigidBody body = new btRigidBody(cInfo);
   //body.setContactProcessingThreshold(m_defaultContactProcessingThreshold);
@@ -206,7 +207,8 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
   }
   tr.setOrigin(new btVector3(0, 0.f, 0));
   m_carChassis = localCreateRigidBody(800, tr, compound);
-  m_wheelShape = new btCylinderShapeX(new btVector3(wheelWidth, wheelRadius, wheelRadius));
+  m_wheelShape = new btCylinderShapeX(new btVector3(wheelWidth, wheelRadius,
+   wheelRadius));
   {
    btCollisionShape liftShape = new btBoxShape(new btVector3(0.5f, 2.0f, 0.05f));
    final btTransform liftTrans = new btTransform();
@@ -249,7 +251,8 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
    localA.setOrigin(new btVector3(0.0f, -1.9f, 0.05f));
    localB.setBasis(new btMatrix3x3().setEulerZYX(0, 0, M_PI_2));
    localB.setOrigin(new btVector3(0.0f, 0.0f, -0.1f));
-   m_forkSlider = new btSliderConstraint(m_liftBody, m_forkBody, localA, localB, true);
+   m_forkSlider = new btSliderConstraint(m_liftBody, m_forkBody, localA, localB,
+    true);
    m_forkSlider.setLowerLinLimit(0.1f);
    m_forkSlider.setUpperLinLimit(0.1f);
    m_forkSlider.setLowerAngLimit(0.0f);
@@ -284,22 +287,27 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
    boolean isFrontWheel = true;
    //choose coordinate system
    m_vehicle.setCoordinateSystem(rightIndex, upIndex, forwardIndex);
-   final btVector3 connectionPointCS0 = new btVector3(CUBE_HALF_EXTENTS - (0.3f * wheelWidth),
+   final btVector3 connectionPointCS0 = new btVector3(CUBE_HALF_EXTENTS - (0.3f
+    * wheelWidth),
     connectionHeight, 2f * CUBE_HALF_EXTENTS - wheelRadius);
-   m_vehicle.addWheel(connectionPointCS0, wheelDirectionCS0, wheelAxleCS, suspensionRestLength,
+   m_vehicle.addWheel(connectionPointCS0, wheelDirectionCS0, wheelAxleCS,
+    suspensionRestLength,
     wheelRadius, m_tuning, isFrontWheel);
-   connectionPointCS0.set(-CUBE_HALF_EXTENTS + (0.3f * wheelWidth), connectionHeight, 2f *
-    CUBE_HALF_EXTENTS - wheelRadius);
-   m_vehicle.addWheel(connectionPointCS0, wheelDirectionCS0, wheelAxleCS, suspensionRestLength,
+   connectionPointCS0.set(-CUBE_HALF_EXTENTS + (0.3f * wheelWidth),
+    connectionHeight, 2f * CUBE_HALF_EXTENTS - wheelRadius);
+   m_vehicle.addWheel(connectionPointCS0, wheelDirectionCS0, wheelAxleCS,
+    suspensionRestLength,
     wheelRadius, m_tuning, isFrontWheel);
-   connectionPointCS0.set(-CUBE_HALF_EXTENTS + (0.3f * wheelWidth), connectionHeight, -2f *
-    CUBE_HALF_EXTENTS + wheelRadius);
+   connectionPointCS0.set(-CUBE_HALF_EXTENTS + (0.3f * wheelWidth),
+    connectionHeight, -2f * CUBE_HALF_EXTENTS + wheelRadius);
    isFrontWheel = false;
-   m_vehicle.addWheel(connectionPointCS0, wheelDirectionCS0, wheelAxleCS, suspensionRestLength,
+   m_vehicle.addWheel(connectionPointCS0, wheelDirectionCS0, wheelAxleCS,
+    suspensionRestLength,
     wheelRadius, m_tuning, isFrontWheel);
-   connectionPointCS0.set(CUBE_HALF_EXTENTS - (0.3f * wheelWidth), connectionHeight, -2f *
-    CUBE_HALF_EXTENTS + wheelRadius);
-   m_vehicle.addWheel(connectionPointCS0, wheelDirectionCS0, wheelAxleCS, suspensionRestLength,
+   connectionPointCS0.set(CUBE_HALF_EXTENTS - (0.3f * wheelWidth),
+    connectionHeight, -2f * CUBE_HALF_EXTENTS + wheelRadius);
+   m_vehicle.addWheel(connectionPointCS0, wheelDirectionCS0, wheelAxleCS,
+    suspensionRestLength,
     wheelRadius, m_tuning, isFrontWheel);
    for (int i = 0; i < m_vehicle.getNumWheels(); i++) {
     btWheelInfo wheel = m_vehicle.getWheelInfo(i);
@@ -315,7 +323,8 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
 
  @Override
  public void resetCamera() {
-  camera().set(new btQuaternion(0.16222472f, -0.8316988f, -0.31638032f, 0.4264551f), new btVector3(
+  camera().set(new btQuaternion(0.16222472f, -0.8316988f, -0.31638032f,
+   0.4264551f), new btVector3(
    33.699688f, 37.90326f, -21.042444f));
  }
 
@@ -331,8 +340,8 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
 
  @Override
  public String get_description() {
-  return "Simulate a fork lift vehicle with a working fork lift that can be moved using the cursor keys. The wheels collision is simplified using ray tests." +
-   "Use arrow keys to drive the forklift, hold shift and arrows to drive the fork. ";
+  return "Simulate a fork lift vehicle with a working fork lift that can be moved using the cursor keys. The wheels collision is simplified using ray tests."
+   + "Use arrow keys to drive the forklift, hold shift and arrows to drive the fork. ";
  }
 
  void resetForklift() {
@@ -342,8 +351,9 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
   m_carChassis.setCenterOfMassTransform(btTransform.getIdentity());
   m_carChassis.setLinearVelocity(new btVector3());
   m_carChassis.setAngularVelocity(new btVector3());
-  world().getBroadphase().getOverlappingPairCache().cleanProxyFromPairs(m_carChassis
-   .getBroadphaseHandle(), world().getDispatcher());
+  world().getBroadphase().getOverlappingPairCache().cleanProxyFromPairs(
+   m_carChassis
+    .getBroadphaseHandle(), world().getDispatcher());
   if (m_vehicle != null) {
    m_vehicle.resetSuspension();
    for (int i = 0; i < m_vehicle.getNumWheels(); i++) {
@@ -392,6 +402,7 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
  boolean mouseButtonCallback(int button, int state, float x, float y) {
   return false;
  }
+
  private boolean turning_left = false;
  private boolean turning_right = false;
 
@@ -462,7 +473,8 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
      case Keyboard.KEY_F7: {
       handled = true;
       btDiscreteDynamicsWorld world = (btDiscreteDynamicsWorld) world();
-      world.setLatencyMotionStateInterpolation(!world.getLatencyMotionStateInterpolation());
+      world.setLatencyMotionStateInterpolation(!world
+       .getLatencyMotionStateInterpolation());
       System.out.printf("world latencyMotionStateInterpolation = %d\n", world
        .getLatencyMotionStateInterpolation() ? 1 : 0);
       break;
@@ -471,7 +483,8 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
       handled = true;
       //switch solver (needs demo restart)
       useMCLPSolver = !useMCLPSolver;
-      System.out.printf("switching to useMLCPSolver = %d\n", useMCLPSolver ? 1 : 0);
+      System.out.printf("switching to useMLCPSolver = %d\n",
+       useMCLPSolver ? 1 : 0);
       if (useMCLPSolver) {
        btDantzigSolver mlcp = new btDantzigSolver();
        //btSolveProjectedGaussSeidel* mlcp = new btSolveProjectedGaussSeidel;
@@ -552,7 +565,8 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
    if (numFallbacks > 0) {
     totalFailures += numFallbacks;
     System.out.printf(
-     "MLCP solver failed %d times, falling back to btSequentialImpulseSolver (SI)\n", totalFailures);
+     "MLCP solver failed %d times, falling back to btSequentialImpulseSolver (SI)\n",
+     totalFailures);
    }
    sol.setNumFallbacks(0);
   }
@@ -565,4 +579,5 @@ public class ForkLiftDemo extends DiscreteDemoContainer {
   }
   return activity;
  }
+
 }

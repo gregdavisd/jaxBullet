@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2011 Advanced Micro Devices, Inc.  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2011 Advanced Micro Devices, Inc.  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 ///This file was written by Erwin Coumans
 package Bullet.Collision;
@@ -37,12 +37,15 @@ public class btPolyhedralContactClipping implements Serializable {
  static int gActualNbTests;
  static boolean gUseInternalObject = true;
 
- public static void clipHullAgainstHull(final btVector3 separatingNormal1, btConvexPolyhedron hullA,
-  btConvexPolyhedron hullB, final btTransform transA, final btTransform transB, float minDist,
+ public static void clipHullAgainstHull(final btVector3 separatingNormal1,
+  btConvexPolyhedron hullA,
+  btConvexPolyhedron hullB, final btTransform transA, final btTransform transB,
+  float minDist,
   float maxDist,
   ArrayList<btVector3> worldVertsB1, ArrayList<btVector3> worldVertsB2,
   btDiscreteCollisionDetectorInterface.Result resultOut) {
-  final btVector3 separatingNormal = new btVector3(separatingNormal1).normalize();
+  final btVector3 separatingNormal = new btVector3(separatingNormal1)
+   .normalize();
   int closestFaceB = -1;
   float dmax = -FLT_MAX;
   {
@@ -67,14 +70,18 @@ public class btPolyhedralContactClipping implements Serializable {
    }
   }
   if (closestFaceB >= 0) {
-   clipFaceAgainstHull(separatingNormal, hullA, transA, worldVertsB1, worldVertsB2, minDist, maxDist,
+   clipFaceAgainstHull(separatingNormal, hullA, transA, worldVertsB1,
+    worldVertsB2, minDist, maxDist,
     resultOut);
   }
  }
 
- public static void clipFaceAgainstHull(final btVector3 separatingNormal, btConvexPolyhedron hullA,
-  final btTransform transA, ArrayList<btVector3> worldVertsB1, ArrayList<btVector3> worldVertsB2,
-  float minDist, float maxDist, btDiscreteCollisionDetectorInterface.Result resultOut) {
+ public static void clipFaceAgainstHull(final btVector3 separatingNormal,
+  btConvexPolyhedron hullA,
+  final btTransform transA, ArrayList<btVector3> worldVertsB1,
+  ArrayList<btVector3> worldVertsB2,
+  float minDist, float maxDist,
+  btDiscreteCollisionDetectorInterface.Result resultOut) {
   worldVertsB2.clear();
   ArrayList<btVector3> pVtxIn = worldVertsB1;
   ArrayList<btVector3> pVtxOut = worldVertsB2;
@@ -101,12 +108,15 @@ public class btPolyhedralContactClipping implements Serializable {
   int numVerticesA = polyA.m_indices.length;
   for (int e0 = 0; e0 < numVerticesA; e0++) {
    final btVector3 a = hullA.m_vertices.get(polyA.m_indices[e0]);
-   final btVector3 b = hullA.m_vertices.get(polyA.m_indices[(e0 + 1) % numVerticesA]);
+   final btVector3 b = hullA.m_vertices.get(polyA.m_indices[(e0 + 1)
+    % numVerticesA]);
    final btVector3 edge0 = new btVector3(a).sub(b);
    final btVector3 WorldEdge0 = transA.transform3x3(new btVector3(edge0));
-   final btVector3 worldPlaneAnormal1 = transA.transform3x3(new btVector3(polyA.m_plane[0],
+   final btVector3 worldPlaneAnormal1 = transA.transform3x3(new btVector3(
+    polyA.m_plane[0],
     polyA.m_plane[1], polyA.m_plane[2]));
-   final btVector3 planeNormalWS1 = new btVector3(WorldEdge0).negate().cross(worldPlaneAnormal1);//.cross(WorldEdge0);
+   final btVector3 planeNormalWS1 = new btVector3(WorldEdge0).negate().cross(
+    worldPlaneAnormal1);//.cross(WorldEdge0);
    final btVector3 worldA1 = transA.transform3x3(a, new btVector3());
    float planeEqWS1 = -worldA1.dot(planeNormalWS1);
    final btVector3 planeNormalWS = new btVector3(planeNormalWS1);
@@ -123,10 +133,12 @@ public class btPolyhedralContactClipping implements Serializable {
 //#define ONLY_REPORT_DEEPEST_POINT
 // only keep points that are behind the witness face
   {
-   final btVector3 localPlaneNormal = new btVector3(polyA.m_plane[0], polyA.m_plane[1],
+   final btVector3 localPlaneNormal = new btVector3(polyA.m_plane[0],
+    polyA.m_plane[1],
     polyA.m_plane[2]);
    float localPlaneEq = polyA.m_plane[3];
-   final btVector3 planeNormalWS = transA.transform3x3(new btVector3(localPlaneNormal));
+   final btVector3 planeNormalWS = transA.transform3x3(new btVector3(
+    localPlaneNormal));
    float planeEqWS = localPlaneEq - planeNormalWS.dot(transA.getOrigin());
    for (int i = 0; i < pVtxIn.size(); i++) {
     final btVector3 vtx = new btVector3(pVtxIn.get(i));
@@ -143,7 +155,8 @@ public class btPolyhedralContactClipping implements Serializable {
   }
  }
 
- public static boolean findSeparatingAxis(btConvexPolyhedron hullA, btConvexPolyhedron hullB,
+ public static boolean findSeparatingAxis(btConvexPolyhedron hullA,
+  btConvexPolyhedron hullB,
   final btTransform transA, final btTransform transB, final btVector3 sep,
   btDiscreteCollisionDetectorInterface.Result resultOut) {
   gActualSATPairTests++;
@@ -154,15 +167,17 @@ public class btPolyhedralContactClipping implements Serializable {
   int numFacesA = hullA.m_faces.size();
   // Test normals from hullA
   for (int i = 0; i < numFacesA; i++) {
-   final btVector3 Normal =
-    new btVector3(hullA.m_faces.get(i).m_plane[0], hullA.m_faces.get(i).m_plane[1], hullA.m_faces
+   final btVector3 Normal
+    = new btVector3(hullA.m_faces.get(i).m_plane[0],
+     hullA.m_faces.get(i).m_plane[1], hullA.m_faces
      .get(i).m_plane[2]);
    final btVector3 faceANormalWS = transA.transform3x3(new btVector3(Normal));
    if (DeltaC2.dot(faceANormalWS) < 0) {
     faceANormalWS.negate();
    }
    gExpectedNbTests++;
-   if (gUseInternalObject && !TestInternalObjects(transA, transB, DeltaC2, faceANormalWS, hullA,
+   if (gUseInternalObject && !TestInternalObjects(transA, transB, DeltaC2,
+    faceANormalWS, hullA,
     hullB, dmin)) {
     continue;
    }
@@ -181,16 +196,17 @@ public class btPolyhedralContactClipping implements Serializable {
   int numFacesB = hullB.m_faces.size();
   // Test normals from hullB
   for (int i = 0; i < numFacesB; i++) {
-   final btVector3 Normal =
-    new btVector3(hullB.m_faces.get(i).m_plane[0], hullB.m_faces.get(i).m_plane[1], hullB.m_faces
+   final btVector3 Normal
+    = new btVector3(hullB.m_faces.get(i).m_plane[0],
+     hullB.m_faces.get(i).m_plane[1], hullB.m_faces
      .get(i).m_plane[2]);
    final btVector3 WorldNormal = transB.transform3x3(new btVector3(Normal));
    if (DeltaC2.dot(WorldNormal) < 0) {
     WorldNormal.negate();
    }
    gExpectedNbTests++;
-   if (gUseInternalObject &&
-    !TestInternalObjects(transA, transB, DeltaC2, WorldNormal, hullA, hullB, dmin)) {
+   if (gUseInternalObject && !TestInternalObjects(transA, transB, DeltaC2,
+    WorldNormal, hullA, hullB, dmin)) {
     continue;
    }
    gActualNbTests++;
@@ -226,7 +242,8 @@ public class btPolyhedralContactClipping implements Serializable {
       Cross.negate();
      }
      gExpectedNbTests++;
-     if (gUseInternalObject && !TestInternalObjects(transA, transB, DeltaC2, Cross, hullA, hullB,
+     if (gUseInternalObject && !TestInternalObjects(transA, transB, DeltaC2,
+      Cross, hullA, hullB,
       dmin)) {
       continue;
      }
@@ -306,11 +323,13 @@ public class btPolyhedralContactClipping implements Serializable {
      ppVtxOut.add(endVertex);
     } else {
      // Start < 0, end >= 0, so output intersection
-     ppVtxOut.add(new btVector3(firstVertex).interpolate(endVertex, (ds * 1.f / (ds - de))));
+     ppVtxOut.add(new btVector3(firstVertex).interpolate(endVertex, (ds * 1.f
+      / (ds - de))));
     }
    } else if (de < 0) {
     // Start >= 0, end < 0 so output intersection and end
-    ppVtxOut.add(new btVector3(firstVertex).interpolate(endVertex, (ds * 1.f / (ds - de))));
+    ppVtxOut.add(new btVector3(firstVertex).interpolate(endVertex, (ds * 1.f
+     / (ds - de))));
     ppVtxOut.add(new btVector3(endVertex));
    }
    firstVertex.set(endVertex);
@@ -318,7 +337,8 @@ public class btPolyhedralContactClipping implements Serializable {
   }
  }
 
- static boolean TestInternalObjects(final btTransform trans0, final btTransform trans1,
+ static boolean TestInternalObjects(final btTransform trans0,
+  final btTransform trans1,
   final btVector3 delta_c, final btVector3 axis, btConvexPolyhedron convex0,
   btConvexPolyhedron convex1, float dmin) {
   float dp = delta_c.dot(axis);
@@ -330,8 +350,10 @@ public class btPolyhedralContactClipping implements Serializable {
   BoxSupport(convex0.m_extents, localAxis0, p0);
   float p1[] = new float[3];
   BoxSupport(convex1.m_extents, localAxis1, p1);
-  float Radius0 = p0[0] * localAxis0.x() + p0[1] * localAxis0.y() + p0[2] * localAxis0.z();
-  float Radius1 = p1[0] * localAxis1.x() + p1[1] * localAxis1.y() + p1[2] * localAxis1.z();
+  float Radius0 = p0[0] * localAxis0.x() + p0[1] * localAxis0.y() + p0[2]
+   * localAxis0.z();
+  float Radius1 = p1[0] * localAxis1.x() + p1[1] * localAxis1.y() + p1[2]
+   * localAxis1.z();
   float MinRadius = Radius0 > convex0.m_radius ? Radius0 : convex0.m_radius;
   float MaxRadius = Radius1 > convex1.m_radius ? Radius1 : convex1.m_radius;
   float MinMaxRadius = MaxRadius + MinRadius;
@@ -341,7 +363,8 @@ public class btPolyhedralContactClipping implements Serializable {
   return depth <= dmin;
  }
 
- static void InverseTransformPoint3x3(final btVector3 out, final btVector3 in, final btTransform tr) {
+ static void InverseTransformPoint3x3(final btVector3 out, final btVector3 in,
+  final btTransform tr) {
   float x = tr.m00 * in.x() + tr.m10 * in.y() + tr.m20 * in.z();
   float y = tr.m01 * in.x() + tr.m11 * in.y() + tr.m21 * in.z();
   float z = tr.m02 * in.x() + tr.m12 * in.y() + tr.m22 * in.z();
@@ -355,7 +378,8 @@ public class btPolyhedralContactClipping implements Serializable {
  }
 
  static boolean TestSepAxis(btConvexPolyhedron hullA, btConvexPolyhedron hullB,
-  final btTransform transA, final btTransform transB, final btVector3 sep_axis, float[] depth,
+  final btTransform transA, final btTransform transB, final btVector3 sep_axis,
+  float[] depth,
   final btVector3 witnessPointA, final btVector3 witnessPointB) {
   float[] Min0 = new float[1];
   float[] Max0 = new float[1];
@@ -392,7 +416,8 @@ public class btPolyhedralContactClipping implements Serializable {
 
  static void btSegmentsClosestPoints(
   final btVector3 ptsVector, final btVector3 offsetA, final btVector3 offsetB,
-  float[] tA, float[] tB, final btVector3 translation, final btVector3 dirA, float hlenA,
+  float[] tA, float[] tB, final btVector3 translation, final btVector3 dirA,
+  float hlenA,
   final btVector3 dirB, float hlenB) {
   // compute the parameters of the closest points on each line segment
   float dirA_dot_dirB = btDot(dirA, dirB);
@@ -432,4 +457,5 @@ public class btPolyhedralContactClipping implements Serializable {
   offsetB.set(new btVector3(dirB).scale(tB[0]));
   ptsVector.set(translation).sub(offsetA).add(offsetB);
  }
+
 }

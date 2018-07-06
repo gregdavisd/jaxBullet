@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision;
 
@@ -23,14 +23,16 @@ import Bullet.LinearMath.btVector4;
 import java.io.Serializable;
 
 /**
- * btPersistentManifold is a contact point cache, it stays persistent as long as objects are
- * overlapping in the broadphase. Those contact points are created by the collision narrow phase.
- * The cache can be empty, or hold 1,2,3 or 4 points. Some collision algorithms (GJK) might only add
- * one point at a time. updates/refreshes old contact points, and throw them away if necessary
- * (distance becomes too large) reduces the cache to 4 points, when more then 4 points are added,
- * using following rules: the contact point with deepest penetration is always kept, and it tries to
- * maximuze the area covered by the points note that some pairs of objects might have more then one
- * contact manifold.
+ * btPersistentManifold is a contact point cache, it stays persistent as long as
+ * objects are overlapping in the broadphase. Those contact points are created
+ * by the collision narrow phase. The cache can be empty, or hold 1,2,3 or 4
+ * points. Some collision algorithms (GJK) might only add one point at a time.
+ * updates/refreshes old contact points, and throw them away if necessary
+ * (distance becomes too large) reduces the cache to 4 points, when more then 4
+ * points are added, using following rules: the contact point with deepest
+ * penetration is always kept, and it tries to maximuze the area covered by the
+ * points note that some pairs of objects might have more then one contact
+ * manifold.
  *
  * @author Gregery Barton
  */
@@ -67,28 +69,32 @@ public class btPersistentManifold extends btTypedObject implements Serializable 
   float res0 = 0, res1 = 0, res2 = 0, res3 = 0;
   if (gContactCalcArea3Points) {
    if (maxPenetrationIndex != 0) {
-    final btVector3 a0 = new btVector3(pt.m_localPointA).sub(m_pointCache[1].m_localPointA);
+    final btVector3 a0 = new btVector3(pt.m_localPointA).sub(
+     m_pointCache[1].m_localPointA);
     final btVector3 b0 = new btVector3(m_pointCache[3].m_localPointA).sub(
      m_pointCache[2].m_localPointA);
     final btVector3 cross = a0.cross(b0);
     res0 = cross.lengthSquared();
    }
    if (maxPenetrationIndex != 1) {
-    final btVector3 a1 = new btVector3(pt.m_localPointA).sub(m_pointCache[0].m_localPointA);
+    final btVector3 a1 = new btVector3(pt.m_localPointA).sub(
+     m_pointCache[0].m_localPointA);
     final btVector3 b1 = new btVector3(m_pointCache[3].m_localPointA).sub(
      m_pointCache[2].m_localPointA);
     final btVector3 cross = a1.cross(b1);
     res1 = cross.lengthSquared();
    }
    if (maxPenetrationIndex != 2) {
-    final btVector3 a2 = new btVector3(pt.m_localPointA).sub(m_pointCache[0].m_localPointA);
+    final btVector3 a2 = new btVector3(pt.m_localPointA).sub(
+     m_pointCache[0].m_localPointA);
     final btVector3 b2 = new btVector3(m_pointCache[3].m_localPointA).sub(
      m_pointCache[1].m_localPointA);
     final btVector3 cross = a2.cross(b2);
     res2 = cross.lengthSquared();
    }
    if (maxPenetrationIndex != 3) {
-    final btVector3 a3 = new btVector3(pt.m_localPointA).sub(m_pointCache[0].m_localPointA);
+    final btVector3 a3 = new btVector3(pt.m_localPointA).sub(
+     m_pointCache[0].m_localPointA);
     final btVector3 b3 = new btVector3(m_pointCache[2].m_localPointA).sub(
      m_pointCache[1].m_localPointA);
     final btVector3 cross = a3.cross(b3);
@@ -116,6 +122,7 @@ public class btPersistentManifold extends btTypedObject implements Serializable 
   int biggestarea = maxvec.closestAxis4();
   return biggestarea;
  }
+
  //int		findContactPoint(  btManifoldPoint  unUsed, int numUnused,  btManifoldPoint  pt) 
  public int m_companionIdA;
  public int m_companionIdB;
@@ -128,7 +135,8 @@ public class btPersistentManifold extends btTypedObject implements Serializable 
   }
  }
 
- public btPersistentManifold(btCollisionObject body0, btCollisionObject body1, int a,
+ public btPersistentManifold(btCollisionObject body0, btCollisionObject body1,
+  int a,
   float contactBreakingThreshold, float contactProcessingThreshold) {
   this();
   assert (body0 != null);
@@ -197,12 +205,14 @@ public class btPersistentManifold extends btTypedObject implements Serializable 
  }
 
  int getCacheEntry(btManifoldPoint newPoint) {
-  float shortestDist = getContactBreakingThreshold() * getContactBreakingThreshold();
+  float shortestDist = getContactBreakingThreshold()
+   * getContactBreakingThreshold();
   int size = getNumContacts();
   int nearestPoint = -1;
   for (int i = 0; i < size; i++) {
    btManifoldPoint mp = m_pointCache[i];
-   final btVector3 diffA = new btVector3(mp.m_localPointA).sub(newPoint.m_localPointA);
+   final btVector3 diffA = new btVector3(mp.m_localPointA).sub(
+    newPoint.m_localPointA);
    float distToManiPoint = diffA.dot(diffA);
    if (distToManiPoint < shortestDist) {
     shortestDist = distToManiPoint;
@@ -284,10 +294,13 @@ public class btPersistentManifold extends btTypedObject implements Serializable 
   /// first refresh worldspace positions and distance
   for (i = getNumContacts() - 1; i >= 0; i--) {
    btManifoldPoint manifoldPoint = m_pointCache[i];
-   trA.transform(manifoldPoint.m_positionWorldOnA.set(manifoldPoint.m_localPointA));
-   trB.transform(manifoldPoint.m_positionWorldOnB.set(manifoldPoint.m_localPointB));
-   manifoldPoint.m_distance1 = (new btVector3(manifoldPoint.m_positionWorldOnA).sub(
-    manifoldPoint.m_positionWorldOnB)).dot(manifoldPoint.m_normalWorldOnB);
+   trA.transform(manifoldPoint.m_positionWorldOnA.set(
+    manifoldPoint.m_localPointA));
+   trB.transform(manifoldPoint.m_positionWorldOnB.set(
+    manifoldPoint.m_localPointB));
+   manifoldPoint.m_distance1 = (new btVector3(manifoldPoint.m_positionWorldOnA)
+    .sub(
+     manifoldPoint.m_positionWorldOnB)).dot(manifoldPoint.m_normalWorldOnB);
    manifoldPoint.m_lifeTime++;
   }
   /// then 
@@ -301,16 +314,20 @@ public class btPersistentManifold extends btTypedObject implements Serializable 
     removeContactPoint(i);
    } else {
     //contact also becomes invalid when relative movement orthogonal to normal exceeds margin
-    projectedPoint.scaleAdd(-manifoldPoint.m_distance1, manifoldPoint.m_normalWorldOnB,
+    projectedPoint.scaleAdd(-manifoldPoint.m_distance1,
+     manifoldPoint.m_normalWorldOnB,
      manifoldPoint.m_positionWorldOnA);
-    projectedDifference.set(manifoldPoint.m_positionWorldOnB).sub(projectedPoint);
+    projectedDifference.set(manifoldPoint.m_positionWorldOnB)
+     .sub(projectedPoint);
     distance2d = projectedDifference.dot(projectedDifference);
-    if (distance2d > getContactBreakingThreshold() * getContactBreakingThreshold()) {
+    if (distance2d > getContactBreakingThreshold()
+     * getContactBreakingThreshold()) {
      removeContactPoint(i);
     } else //contact point processed callback
     {
      if (gContactProcessedCallback != null) {
-      (gContactProcessedCallback).callback(manifoldPoint, (Object) m_body0, (Object) m_body1);
+      (gContactProcessedCallback).callback(manifoldPoint, (Object) m_body0,
+       (Object) m_body1);
      }
     }
    }
@@ -325,7 +342,8 @@ public class btPersistentManifold extends btTypedObject implements Serializable 
   m_cachedPoints = 0;
  }
 
- public static float calcArea4Points(final btVector3 p0, final btVector3 p1, final btVector3 p2,
+ public static float calcArea4Points(final btVector3 p0, final btVector3 p1,
+  final btVector3 p2,
   final btVector3 p3) {
   // It calculates possible 3 area constructed from random 4 points and returns the biggest one.
   btVector3[] a = {new btVector3(p0), new btVector3(p0), new btVector3(p0)};
@@ -340,14 +358,17 @@ public class btPersistentManifold extends btTypedObject implements Serializable 
   a[0].cross(b[0]);
   a[1].cross(b[1]);
   a[2].cross(b[2]);
-  return btMax(btMax(a[0].lengthSquared(), a[1].lengthSquared()), a[2].lengthSquared());
+  return btMax(btMax(a[0].lengthSquared(), a[1].lengthSquared()), a[2]
+   .lengthSquared());
  }
 
  static int getIslandId(btPersistentManifold lhs) {
   int islandId;
   btCollisionObject rcolObj0 = (lhs.getBody0());
   btCollisionObject rcolObj1 = (lhs.getBody1());
-  islandId = rcolObj0.getIslandTag() >= 0 ? rcolObj0.getIslandTag() : rcolObj1.getIslandTag();
+  islandId = rcolObj0.getIslandTag() >= 0 ? rcolObj0.getIslandTag() : rcolObj1
+   .getIslandTag();
   return islandId;
  }
+
 }

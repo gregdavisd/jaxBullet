@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2007 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2007 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 ///btDbvt implementation by Nathanael Presson
 package Bullet.Collision.Broadphase;
@@ -38,7 +38,9 @@ import org.apache.commons.collections.primitives.ArrayIntList;
  */
 public class btDbvt implements Serializable {
 
- /* Stack element	*/
+ /*
+  * Stack element
+  */
  public static class sStkNN implements Serializable {
 
   public btDbvtNode a;
@@ -51,6 +53,7 @@ public class btDbvt implements Serializable {
    a = na;
    b = nb;
   }
+
  };
 
  public static class sStkNP implements Serializable {
@@ -62,6 +65,7 @@ public class btDbvt implements Serializable {
    node = n;
    mask = m;
   }
+
  };
 
  public static class sStkNPS implements Serializable {
@@ -78,6 +82,7 @@ public class btDbvt implements Serializable {
    mask = m;
    value = v;
   }
+
  };
 
  public static class sStkCLN implements Serializable {
@@ -89,10 +94,13 @@ public class btDbvt implements Serializable {
    node = n;
    parent = p;
   }
+
  };
  // Policies/Interfaces
 
- /* ICollide	*/
+ /*
+  * ICollide
+  */
  public static class ICollide implements Serializable {
 
   public void process(btDbvtNode a, btDbvtNode b) {
@@ -112,23 +120,31 @@ public class btDbvt implements Serializable {
   public boolean allLeaves(btDbvtNode n) {
    return (true);
   }
+
  }
 
- /* IWriter	*/
+ /*
+  * IWriter
+  */
  public static abstract class IWriter implements Serializable {
 
   abstract void prepare(btDbvtNode root, int numnodes);
 
-  abstract void writeNode(btDbvtNode n, int index, int parent, int child0, int child1);
+  abstract void writeNode(btDbvtNode n, int index, int parent, int child0,
+   int child1);
 
   abstract void writeLeaf(btDbvtNode n, int index, int parent);
+
  }
 
- /* IClone	*/
+ /*
+  * IClone
+  */
  public static class IClone implements Serializable {
 
   void cloneLeaf(btDbvtNode n) {
   }
+
  };
  // Constants
  static final int SIMPLE_STACKSIZE = 64;
@@ -246,7 +262,8 @@ public class btDbvt implements Serializable {
   insertleaf(this, root, leaf);
  }
 
- public boolean update(btDbvtNode leaf, btDbvtAabbMm volume, final btVector3 velocity, float margin) {
+ public boolean update(btDbvtNode leaf, btDbvtAabbMm volume,
+  final btVector3 velocity, float margin) {
   if (leaf.volume().contain(volume)) {
    return (false);
   }
@@ -256,7 +273,8 @@ public class btDbvt implements Serializable {
   return (true);
  }
 
- public boolean update(btDbvtNode leaf, btDbvtAabbMm volume, final btVector3 velocity) {
+ public boolean update(btDbvtNode leaf, btDbvtAabbMm volume,
+  final btVector3 velocity) {
   if (leaf.volume().contain(volume)) {
    return (false);
   }
@@ -309,7 +327,8 @@ public class btDbvt implements Serializable {
    do {
     int i = stack.size() - 1;
     sStkCLN e = stack.get(i);
-    btDbvtNode n = createnode(dest, e.parent, e.node.volume(), e.node.dataAsInt(), e.node.data());
+    btDbvtNode n = createnode(dest, e.parent, e.node.volume(), e.node
+     .dataAsInt(), e.node.data());
     n.child0(e.node.child0());
     n.child1(e.node.child1());
     stack.remove(stack.size() - 1);
@@ -516,17 +535,22 @@ public class btDbvt implements Serializable {
 
  ///rayTest is a re-entrant ray test, and can be called in parallel as long as the btAlignedAlloc is thread-safe (uses locking etc)
  ///rayTest is slower than rayTestInternal, because it builds a local stack, using memory allocations, and it recomputes signs/rayDirectionInverses each time
- public static void rayTest(btDbvtNode root, final btVector3 rayFrom, final btVector3 rayTo,
+ public static void rayTest(btDbvtNode root, final btVector3 rayFrom,
+  final btVector3 rayTo,
   ICollide policy) {
   if (root != null) {
    final btVector3 rayDir = new btVector3(rayTo).sub(rayFrom);
    rayDir.normalize();
    ///what about division by zero? -. just set rayDirection[i] to INF/BT_LARGE_FLOAT
    final btVector3 rayDirectionInverse = new btVector3();
-   rayDirectionInverse.x = rayDir.x == (0.0f) ? (BT_LARGE_FLOAT) : (1.0f) / rayDir.x;
-   rayDirectionInverse.y = rayDir.y == (0.0f) ? (BT_LARGE_FLOAT) : (1.0f) / rayDir.y;
-   rayDirectionInverse.z = rayDir.z == (0.0f) ? (BT_LARGE_FLOAT) : (1.0f) / rayDir.z;
-   int[] signs = new int[]{rayDirectionInverse.x < 0.0 ? 1 : 0, rayDirectionInverse.y < 0.0 ? 1 : 0,
+   rayDirectionInverse.x = rayDir.x == (0.0f) ? (BT_LARGE_FLOAT) : (1.0f)
+    / rayDir.x;
+   rayDirectionInverse.y = rayDir.y == (0.0f) ? (BT_LARGE_FLOAT) : (1.0f)
+    / rayDir.y;
+   rayDirectionInverse.z = rayDir.z == (0.0f) ? (BT_LARGE_FLOAT) : (1.0f)
+    / rayDir.z;
+   int[] signs = new int[]{rayDirectionInverse.x < 0.0 ? 1 : 0,
+    rayDirectionInverse.y < 0.0 ? 1 : 0,
     rayDirectionInverse.z < 0.0 ? 1 : 0};
    float lambda_max = rayDir.dot(new btVector3(rayTo).sub(rayFrom));
    //final btVector3 resultNormal = new btVector3();
@@ -543,7 +567,8 @@ public class btDbvt implements Serializable {
     bounds[1].set(node.volume().maxs());
     float lambda_min = 0.f;
     float[] tmin = new float[]{1.f};
-    boolean result1 = btRayAabb2(rayFrom, rayDirectionInverse, signs, bounds, tmin, lambda_min,
+    boolean result1 = btRayAabb2(rayFrom, rayDirectionInverse, signs, bounds,
+     tmin, lambda_min,
      lambda_max);
     if (result1) {
      if (node.isinternal()) {
@@ -563,7 +588,8 @@ public class btDbvt implements Serializable {
 
  ///rayTestInternal is faster than rayTest, because it uses a persistent stack (to reduce dynamic memory allocations to a minimum) and it uses precomputed signs/rayInverseDirections
  ///rayTestInternal is used by btDbvtBroadphase to accelerate world ray casts
- void rayTestInternal(btDbvtNode root, final btVector3 rayFrom, final btVector3 rayTo,
+ void rayTestInternal(btDbvtNode root, final btVector3 rayFrom,
+  final btVector3 rayTo,
   final btVector3 rayDirectionInverse,
   int[] signs,
   float lambda_max, final btVector3 aabbMin, final btVector3 aabbMax,
@@ -585,7 +611,8 @@ public class btDbvt implements Serializable {
     bounds[1].set(node.volume().maxs()).sub(aabbMin);
     float[] tmin = new float[]{1.f};
     float lambda_min = 0.f;
-    boolean result1 = btRayAabb2(rayFrom, rayDirectionInverse, signs, bounds, tmin, lambda_min,
+    boolean result1 = btRayAabb2(rayFrom, rayDirectionInverse, signs, bounds,
+     tmin, lambda_min,
      lambda_max);
     if (result1) {
      if (node.isinternal()) {
@@ -614,9 +641,8 @@ public class btDbvt implements Serializable {
    int[] signs = new int[4 * 8];
    assert (count < signs.length);
    for (int i = 0; i < count; ++i) {
-    signs[i] = ((normals[i].x() >= 0) ? 1 : 0) +
-     ((normals[i].y() >= 0) ? 2 : 0) +
-     ((normals[i].z() >= 0) ? 4 : 0);
+    signs[i] = ((normals[i].x() >= 0) ? 1 : 0) + ((normals[i].y() >= 0) ? 2 : 0)
+     + ((normals[i].z() >= 0) ? 4 : 0);
    }
    stack.ensureCapacity(SIMPLE_STACKSIZE);
    stack.add(new sStkNP(root, 0));
@@ -656,9 +682,8 @@ public class btDbvt implements Serializable {
   ICollide policy,
   boolean fullsort) {
   if (root != null) {
-   int srtsgns = (sortaxis.x >= 0 ? 1 : 0) +
-    (sortaxis.y >= 0 ? 2 : 0) +
-    (sortaxis.z >= 0 ? 4 : 0);
+   int srtsgns = (sortaxis.x >= 0 ? 1 : 0) + (sortaxis.y >= 0 ? 2 : 0)
+    + (sortaxis.z >= 0 ? 4 : 0);
    int inside = (1 << count) - 1;
    final ArrayList<sStkNPS> stock = new ArrayList<>(0);
    final ArrayIntList ifree = new ArrayIntList();
@@ -666,15 +691,15 @@ public class btDbvt implements Serializable {
    int[] signs = new int[4 * 8];
    assert (count < signs.length);
    for (int i = 0; i < count; ++i) {
-    signs[i] = ((normals[i].x() >= 0) ? 1 : 0) +
-     ((normals[i].y() >= 0) ? 2 : 0) +
-     ((normals[i].z() >= 0) ? 4 : 0);
+    signs[i] = ((normals[i].x() >= 0) ? 1 : 0) + ((normals[i].y() >= 0) ? 2 : 0)
+     + ((normals[i].z() >= 0) ? 4 : 0);
    }
    stock.ensureCapacity(SIMPLE_STACKSIZE);
    stack.ensureCapacity(SIMPLE_STACKSIZE);
    ifree.ensureCapacity(SIMPLE_STACKSIZE);
-   stack.add(allocate(ifree, stock, new sStkNPS(root, 0, root.volume().projectMinimum(sortaxis,
-    srtsgns))));
+   stack.add(allocate(ifree, stock, new sStkNPS(root, 0, root.volume()
+    .projectMinimum(sortaxis,
+     srtsgns))));
    do {
     int id = stack.get(stack.size() - 1);
     sStkNPS se = stock.get(id);
@@ -702,13 +727,17 @@ public class btDbvt implements Serializable {
     if (policy.descent(se.node)) {
      if (se.node.isinternal()) {
       btDbvtNode[] pns = new btDbvtNode[]{se.node.child0(), se.node.child1()};
-      sStkNPS[] nes = new sStkNPS[]{new sStkNPS(pns[0], se.mask, pns[0].volume().projectMinimum(
+      sStkNPS[] nes = new sStkNPS[]{new sStkNPS(pns[0], se.mask, pns[0].volume()
+       .projectMinimum(
        sortaxis, srtsgns)),
-       new sStkNPS(pns[1], se.mask, pns[1].volume().projectMinimum(sortaxis, srtsgns))};
+       new sStkNPS(pns[1], se.mask, pns[1].volume().projectMinimum(sortaxis,
+       srtsgns))};
       int q = nes[0].value < nes[1].value ? 1 : 0;
       int j = stack.size();
       if (fullsort && (j > 0)) {
-       /* Insert 0	*/
+       /*
+        * Insert 0
+        */
        j = nearest(stack.toBackedArray(), stock, nes[q].value, 0, stack.size());
        stack.add(0);
        //void * memmove ( void * destination,   void * source, size_t num );
@@ -716,8 +745,11 @@ public class btDbvt implements Serializable {
         stack.set(k, stack.get(k - 1));
        }
        stack.set(j, allocate(ifree, stock, nes[q]));
-       /* Insert 1	*/
-       j = nearest(stack.toBackedArray(), stock, nes[1 - q].value, j, stack.size());
+       /*
+        * Insert 1
+        */
+       j = nearest(stack.toBackedArray(), stock, nes[1 - q].value, j, stack
+        .size());
        stack.add(0);
        for (int k = stack.size() - 1; k > j; --k) {
         stack.set(k, stack.get(k - 1));
@@ -848,7 +880,8 @@ public class btDbvt implements Serializable {
      }
     }
    }
-   btDbvtNode[] n = new btDbvtNode[]{leaves.get(minidx[0]), leaves.get(minidx[1])};
+   btDbvtNode[] n = new btDbvtNode[]{leaves.get(minidx[0]), leaves
+    .get(minidx[1])};
    btDbvtNode p = createnode(pdbvt, null, n[0].volume(), n[1].volume(), 0, null);
    p.child0(n[0]);
    p.child1(n[1]);
@@ -859,6 +892,7 @@ public class btDbvt implements Serializable {
    leaves.remove(leaves.size() - 1);
   }
  }
+
  static btVector3[] axis = new btVector3[]{new btVector3(1, 0, 0),
   new btVector3(0, 1, 0),
   new btVector3(0, 0, 1)};
@@ -871,7 +905,8 @@ public class btDbvt implements Serializable {
    if (leaves.size() > bu_treshold) {
     btDbvtAabbMm vol = bounds(leaves);
     final btVector3 org = vol.center();
-    ArrayList<btDbvtNode>[] sets = new ArrayList[]{new ArrayList<>(0), new ArrayList<>(0)};
+    ArrayList<btDbvtNode>[] sets = new ArrayList[]{new ArrayList<>(0),
+     new ArrayList<>(0)};
     int bestaxis = -1;
     int bestmidp = leaves.size();
     int[][] splitcount = new int[][]{{0, 0}, {0, 0}, {0, 0}};
@@ -1003,7 +1038,8 @@ public class btDbvt implements Serializable {
     } while (!do_root.isleaf());
    }
    btDbvtNode prev = do_root.parent();
-   btDbvtNode node = createnode(pdbvt, prev, leaf.volume(), do_root.volume(), 0, null);
+   btDbvtNode node = createnode(pdbvt, prev, leaf.volume(), do_root.volume(), 0,
+    null);
    if (prev != null) {
     prev.childs(indexof(do_root), node);
     node.child0(do_root);
@@ -1074,22 +1110,15 @@ public class btDbvt implements Serializable {
 //
  static boolean Intersect(btDbvtAabbMm a,
   btDbvtAabbMm b) {
-  return ((a.mi.x() <= b.mx.x()) &&
-   (a.mx.x() >= b.mi.x()) &&
-   (a.mi.y() <= b.mx.y()) &&
-   (a.mx.y() >= b.mi.y()) &&
-   (a.mi.z() <= b.mx.z()) &&
-   (a.mx.z() >= b.mi.z()));
+  return ((a.mi.x() <= b.mx.x()) && (a.mx.x() >= b.mi.x()) && (a.mi.y() <= b.mx
+   .y()) && (a.mx.y() >= b.mi.y()) && (a.mi.z() <= b.mx.z()) && (a.mx.z()
+   >= b.mi.z()));
  }
 //
 
  static boolean Intersect(btDbvtAabbMm a, final btVector3 b) {
-  return ((b.x() >= a.mi.x()) &&
-   (b.y() >= a.mi.y()) &&
-   (b.z() >= a.mi.z()) &&
-   (b.x() <= a.mx.x()) &&
-   (b.y() <= a.mx.y()) &&
-   (b.z() <= a.mx.z()));
+  return ((b.x() >= a.mi.x()) && (b.y() >= a.mi.y()) && (b.z() >= a.mi.z())
+   && (b.x() <= a.mx.x()) && (b.y() <= a.mx.y()) && (b.z() <= a.mx.z()));
  }
 
 //
@@ -1138,8 +1167,7 @@ public class btDbvt implements Serializable {
 // volume+edge lengths
  static float size(btDbvtAabbMm a) {
   final btVector3 edges = a.lengths();
-  return (edges.x() * edges.y() * edges.z() +
-   edges.x() + edges.y() + edges.z());
+  return (edges.x() * edges.y() * edges.z() + edges.x() + edges.y() + edges.z());
  }
 //
 
@@ -1188,11 +1216,9 @@ public class btDbvt implements Serializable {
 
  static boolean NotEqual(btDbvtAabbMm a,
   btDbvtAabbMm b) {
-  return ((a.mi.x() != b.mi.x()) ||
-   (a.mi.y() != b.mi.y()) ||
-   (a.mi.z() != b.mi.z()) ||
-   (a.mx.x() != b.mx.x()) ||
-   (a.mx.y() != b.mx.y()) ||
-   (a.mx.z() != b.mx.z()));
+  return ((a.mi.x() != b.mi.x()) || (a.mi.y() != b.mi.y()) || (a.mi.z() != b.mi
+   .z()) || (a.mx.x() != b.mx.x()) || (a.mx.y() != b.mx.y()) || (a.mx.z()
+   != b.mx.z()));
  }
+
 }

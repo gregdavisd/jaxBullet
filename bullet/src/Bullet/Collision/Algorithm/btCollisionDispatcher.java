@@ -1,15 +1,15 @@
 /*
-Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Algorithm;
 
@@ -42,10 +42,10 @@ public class btCollisionDispatcher implements btDispatcher, Serializable {
  final ArrayList<btPersistentManifold> m_manifoldsPtr = new ArrayList<>(0);
  //final btManifoldResult m_defaultManifoldResult= new btManifoldResult();
  btNearCallback m_nearCallback;
- final btCollisionAlgorithmCreateFunc[][] m_doubleDispatchContactPoints =
-  new btCollisionAlgorithmCreateFunc[MAX_BROADPHASE_COLLISION_TYPES][MAX_BROADPHASE_COLLISION_TYPES];
- final btCollisionAlgorithmCreateFunc[][] m_doubleDispatchClosestPoints =
-  new btCollisionAlgorithmCreateFunc[MAX_BROADPHASE_COLLISION_TYPES][MAX_BROADPHASE_COLLISION_TYPES];
+ final btCollisionAlgorithmCreateFunc[][] m_doubleDispatchContactPoints
+  = new btCollisionAlgorithmCreateFunc[MAX_BROADPHASE_COLLISION_TYPES][MAX_BROADPHASE_COLLISION_TYPES];
+ final btCollisionAlgorithmCreateFunc[][] m_doubleDispatchClosestPoints
+  = new btCollisionAlgorithmCreateFunc[MAX_BROADPHASE_COLLISION_TYPES][MAX_BROADPHASE_COLLISION_TYPES];
  btCollisionConfiguration m_collisionConfiguration;
  public static final int CD_STATIC_STATIC_REPORTED = 1;
  public static final int CD_USE_RELATIVE_CONTACT_BREAKING_THRESHOLD = 2;
@@ -77,29 +77,36 @@ public class btCollisionDispatcher implements btDispatcher, Serializable {
  static class DefaultNearCallback implements btNearCallback {
 
   @Override
-  public void callback(btBroadphasePair collisionPair, btCollisionDispatcher dispatcher,
+  public void callback(btBroadphasePair collisionPair,
+   btCollisionDispatcher dispatcher,
    btDispatcherInfo dispatchInfo) {
    btCollisionObject colObj0 = (btCollisionObject) collisionPair.m_pProxy0.m_clientObject;
    btCollisionObject colObj1 = (btCollisionObject) collisionPair.m_pProxy1.m_clientObject;
    if (dispatcher.needsCollision(colObj0, colObj1)) {
-    btCollisionObjectWrapper obj0Wrap = new btCollisionObjectWrapper(null, colObj0
-     .getCollisionShape(), colObj0, colObj0.getWorldTransformPtr(), -1, -1);
-    btCollisionObjectWrapper obj1Wrap = new btCollisionObjectWrapper(null, colObj1
-     .getCollisionShape(), colObj1, colObj1.getWorldTransformPtr(), -1, -1);
+    btCollisionObjectWrapper obj0Wrap = new btCollisionObjectWrapper(null,
+     colObj0
+      .getCollisionShape(), colObj0, colObj0.getWorldTransformPtr(), -1, -1);
+    btCollisionObjectWrapper obj1Wrap = new btCollisionObjectWrapper(null,
+     colObj1
+      .getCollisionShape(), colObj1, colObj1.getWorldTransformPtr(), -1, -1);
     //dispatcher will keep algorithms persistent in the collision pair
     if (collisionPair.m_algorithm == null) {
-     collisionPair.m_algorithm = dispatcher.findAlgorithm(obj0Wrap, obj1Wrap, null,
+     collisionPair.m_algorithm = dispatcher.findAlgorithm(obj0Wrap, obj1Wrap,
+      null,
       BT_CONTACT_POINT_ALGORITHMS);
     }
     if (collisionPair.m_algorithm != null) {
-     btManifoldResult contactPointResult = new btManifoldResult(obj0Wrap, obj1Wrap);
+     btManifoldResult contactPointResult = new btManifoldResult(obj0Wrap,
+      obj1Wrap);
      if (dispatchInfo.m_dispatchFunc == btDispatcherInfo.DISPATCH_DISCRETE) {
       //discrete collision detection query
-      collisionPair.m_algorithm.processCollision(obj0Wrap, obj1Wrap, dispatchInfo,
+      collisionPair.m_algorithm.processCollision(obj0Wrap, obj1Wrap,
+       dispatchInfo,
        contactPointResult);
      } else {
       //continuous collision detection query, time of impact (toi)
-      float toi = collisionPair.m_algorithm.calculateTimeOfImpact(colObj0, colObj1, dispatchInfo,
+      float toi = collisionPair.m_algorithm.calculateTimeOfImpact(colObj0,
+       colObj1, dispatchInfo,
        contactPointResult);
       if (dispatchInfo.m_timeOfImpact > toi) {
        dispatchInfo.m_timeOfImpact = toi;
@@ -108,6 +115,7 @@ public class btCollisionDispatcher implements btDispatcher, Serializable {
     }
    }
   }
+
  }
 
  public btCollisionDispatcher(btCollisionConfiguration collisionConfiguration) {
@@ -125,22 +133,28 @@ public class btCollisionDispatcher implements btDispatcher, Serializable {
    }
   }
  }
+
  static int gNumManifold = 0;
 
  @Override
- public btPersistentManifold getNewManifold(btCollisionObject body0, btCollisionObject body1) {
+ public btPersistentManifold getNewManifold(btCollisionObject body0,
+  btCollisionObject body1) {
   gNumManifold++;
   //assert(gNumManifold < 65535);
   //optional relative contact breaking threshold, turned on by default (use setDispatcherFlags to switch off feature for improved performance)
-  float contactBreakingThreshold = (m_dispatcherFlags &
-   btCollisionDispatcher.CD_USE_RELATIVE_CONTACT_BREAKING_THRESHOLD) != 0 ?
-    btMin(body0.getCollisionShape().getContactBreakingThreshold(gContactBreakingThreshold), body1
-     .getCollisionShape().getContactBreakingThreshold(gContactBreakingThreshold)) :
-    gContactBreakingThreshold;
-  float contactProcessingThreshold = btMin(body0.getContactProcessingThreshold(), body1
-   .getContactProcessingThreshold());
-  btPersistentManifold manifold =
-   new btPersistentManifold(body0, body1, 0, contactBreakingThreshold, contactProcessingThreshold);
+  float contactBreakingThreshold = (m_dispatcherFlags
+   & btCollisionDispatcher.CD_USE_RELATIVE_CONTACT_BREAKING_THRESHOLD) != 0
+    ? btMin(body0.getCollisionShape().getContactBreakingThreshold(
+     gContactBreakingThreshold), body1
+      .getCollisionShape()
+      .getContactBreakingThreshold(gContactBreakingThreshold))
+    : gContactBreakingThreshold;
+  float contactProcessingThreshold = btMin(body0.getContactProcessingThreshold(),
+   body1
+    .getContactProcessingThreshold());
+  btPersistentManifold manifold
+   = new btPersistentManifold(body0, body1, 0, contactBreakingThreshold,
+    contactProcessingThreshold);
   manifold.m_index1a = m_manifoldsPtr.size();
   m_manifoldsPtr.add(manifold);
   return manifold;
@@ -181,17 +195,22 @@ public class btCollisionDispatcher implements btDispatcher, Serializable {
 
  @Override
  public btCollisionAlgorithm findAlgorithm(btCollisionObjectWrapper body0Wrap,
-  btCollisionObjectWrapper body1Wrap, btPersistentManifold sharedManifold, int algoType) {
+  btCollisionObjectWrapper body1Wrap, btPersistentManifold sharedManifold,
+  int algoType) {
   btCollisionAlgorithmConstructionInfo ci = new btCollisionAlgorithmConstructionInfo();
   ci.m_dispatcher1 = this;
   ci.m_manifold = sharedManifold;
   btCollisionAlgorithm algo = null;
   if (algoType == BT_CONTACT_POINT_ALGORITHMS) {
-   algo = m_doubleDispatchContactPoints[body0Wrap.getCollisionShape().getShapeType()][body1Wrap
-    .getCollisionShape().getShapeType()].CreateCollisionAlgorithm(ci, body0Wrap, body1Wrap);
+   algo = m_doubleDispatchContactPoints[body0Wrap.getCollisionShape()
+    .getShapeType()][body1Wrap
+     .getCollisionShape().getShapeType()]
+    .CreateCollisionAlgorithm(ci, body0Wrap, body1Wrap);
   } else {
-   algo = m_doubleDispatchClosestPoints[body0Wrap.getCollisionShape().getShapeType()][body1Wrap
-    .getCollisionShape().getShapeType()].CreateCollisionAlgorithm(ci, body0Wrap, body1Wrap);
+   algo = m_doubleDispatchClosestPoints[body0Wrap.getCollisionShape()
+    .getShapeType()][body1Wrap
+     .getCollisionShape().getShapeType()]
+    .CreateCollisionAlgorithm(ci, body0Wrap, body1Wrap);
   }
   return algo;
  }
@@ -203,7 +222,8 @@ public class btCollisionDispatcher implements btDispatcher, Serializable {
   boolean needsCollision = true;
   if ((!body0.isActive()) && (!body1.isActive())) {
    needsCollision = false;
-  } else if ((!body0.checkCollideWith(body1)) || (!body1.checkCollideWith(body0))) {
+  } else if ((!body0.checkCollideWith(body1))
+   || (!body1.checkCollideWith(body0))) {
    needsCollision = false;
   }
   return needsCollision;
@@ -212,11 +232,11 @@ public class btCollisionDispatcher implements btDispatcher, Serializable {
  @Override
  public boolean needsResponse(btCollisionObject body0, btCollisionObject body1) {
   //here you can do filtering
-  boolean hasResponse =
-   (body0.hasContactResponse() && body1.hasContactResponse());
+  boolean hasResponse
+   = (body0.hasContactResponse() && body1.hasContactResponse());
   //no response between two static/kinematic bodies:
-  hasResponse = hasResponse &&
-   ((!body0.isStaticOrKinematicObject()) || (!body1.isStaticOrKinematicObject()));
+  hasResponse = hasResponse && ((!body0.isStaticOrKinematicObject()) || (!body1
+   .isStaticOrKinematicObject()));
   return hasResponse;
  }
 
@@ -224,7 +244,8 @@ public class btCollisionDispatcher implements btDispatcher, Serializable {
  public void dispatchAllCollisionPairs(btOverlappingPairCache pairCache,
   btDispatcherInfo dispatchInfo, btDispatcher dispatcher) {
   //m_blockedForChanges = true;
-  btCollisionPairCallback collisionCallback = new btCollisionPairCallback(dispatchInfo, this);
+  btCollisionPairCallback collisionCallback = new btCollisionPairCallback(
+   dispatchInfo, this);
   pairCache.processAllOverlappingPairs(collisionCallback, dispatcher);
   //m_blockedForChanges = false;
  }
@@ -238,29 +259,35 @@ public class btCollisionDispatcher implements btDispatcher, Serializable {
  }
 
  //by default, Bullet will use this near callback
- static void defaultNearCallback(btBroadphasePair collisionPair, btCollisionDispatcher dispatcher,
+ static void defaultNearCallback(btBroadphasePair collisionPair,
+  btCollisionDispatcher dispatcher,
   btDispatcherInfo dispatchInfo) {
   btCollisionObject colObj0 = (btCollisionObject) collisionPair.m_pProxy0.m_clientObject;
   btCollisionObject colObj1 = (btCollisionObject) collisionPair.m_pProxy1.m_clientObject;
   if (dispatcher.needsCollision(colObj0, colObj1)) {
-   btCollisionObjectWrapper obj0Wrap = new btCollisionObjectWrapper(null, colObj0
-    .getCollisionShape(), colObj0, colObj0.getWorldTransformPtr(), -1, -1);
-   btCollisionObjectWrapper obj1Wrap = new btCollisionObjectWrapper(null, colObj1
-    .getCollisionShape(), colObj1, colObj1.getWorldTransformPtr(), -1, -1);
+   btCollisionObjectWrapper obj0Wrap = new btCollisionObjectWrapper(null,
+    colObj0
+     .getCollisionShape(), colObj0, colObj0.getWorldTransformPtr(), -1, -1);
+   btCollisionObjectWrapper obj1Wrap = new btCollisionObjectWrapper(null,
+    colObj1
+     .getCollisionShape(), colObj1, colObj1.getWorldTransformPtr(), -1, -1);
    //dispatcher will keep algorithms persistent in the collision pair
    if (collisionPair.m_algorithm == null) {
-    collisionPair.m_algorithm = dispatcher.findAlgorithm(obj0Wrap, obj1Wrap, null,
+    collisionPair.m_algorithm = dispatcher.findAlgorithm(obj0Wrap, obj1Wrap,
+     null,
      BT_CONTACT_POINT_ALGORITHMS);
    }
    if (collisionPair.m_algorithm != null) {
-    btManifoldResult contactPointResult = new btManifoldResult(obj0Wrap, obj1Wrap);
+    btManifoldResult contactPointResult = new btManifoldResult(obj0Wrap,
+     obj1Wrap);
     if (dispatchInfo.m_dispatchFunc == btDispatcherInfo.DISPATCH_DISCRETE) {
      //discrete collision detection query
      collisionPair.m_algorithm
       .processCollision(obj0Wrap, obj1Wrap, dispatchInfo, contactPointResult);
     } else {
      //continuous collision detection query, time of impact (toi)
-     float toi = collisionPair.m_algorithm.calculateTimeOfImpact(colObj0, colObj1, dispatchInfo,
+     float toi = collisionPair.m_algorithm.calculateTimeOfImpact(colObj0,
+      colObj1, dispatchInfo,
       contactPointResult);
      if (dispatchInfo.m_timeOfImpact > toi) {
       dispatchInfo.m_timeOfImpact = toi;
@@ -277,4 +304,5 @@ public class btCollisionDispatcher implements btDispatcher, Serializable {
  void setCollisionConfiguration(btCollisionConfiguration config) {
   m_collisionConfiguration = config;
  }
+
 };

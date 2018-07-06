@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Dynamics.ConstraintSolver;
 
@@ -27,7 +27,6 @@ import java.io.Serializable;
 public class btSolverBody implements Serializable {
 
  private static final long serialVersionUID = 1L;
-
  public final btTransform m_worldTransform = new btTransform();
  public final btVector3 m_deltaLinearVelocity = new btVector3();
  public final btVector3 m_deltaAngularVelocity = new btVector3();
@@ -50,7 +49,8 @@ public class btSolverBody implements Serializable {
   return new btTransform(m_worldTransform);
  }
 
- public void getVelocityInLocalPointNoDelta(final btVector3 rel_pos, final btVector3 velocity) {
+ public void getVelocityInLocalPointNoDelta(final btVector3 rel_pos,
+  final btVector3 velocity) {
 //assert(m_externalForceImpulse.lengthSquared()>0);
   if (m_originalBody != null) {
    velocity
@@ -64,7 +64,8 @@ public class btSolverBody implements Serializable {
   }
  }
 
- public void getVelocityInLocalPointObsolete(final btVector3 rel_pos, final btVector3 velocity) {
+ public void getVelocityInLocalPointObsolete(final btVector3 rel_pos,
+  final btVector3 velocity) {
   if (m_originalBody != null) {
    velocity.set(m_angularVelocity)
     .add(m_deltaAngularVelocity)
@@ -87,7 +88,8 @@ public class btSolverBody implements Serializable {
  }
 
  //Optimization for the iterative solver: avoid calculating constant terms involving inertia, normal, relative position
- public void applyImpulse(final btVector3 linearComponent, final btVector3 angularComponent,
+ public void applyImpulse(final btVector3 linearComponent,
+  final btVector3 angularComponent,
   float impulseMagnitude) {
   if (m_originalBody != null) {
    m_deltaLinearVelocity
@@ -101,7 +103,7 @@ public class btSolverBody implements Serializable {
   }
  }
 
-   void internalApplyPushImpulse(final btVector3 linearComponent,
+ void internalApplyPushImpulse(final btVector3 linearComponent,
   final btVector3 angularComponent,
   float impulseMagnitude) {
   if (m_originalBody != null) {
@@ -134,35 +136,35 @@ public class btSolverBody implements Serializable {
 
  ////////////////////////////////////////////////
  ///some internal methods, don't use them
-   btVector3 internalGetDeltaLinearVelocity() {
+ btVector3 internalGetDeltaLinearVelocity() {
   return m_deltaLinearVelocity;
  }
 
-   btVector3 internalGetDeltaAngularVelocity() {
+ btVector3 internalGetDeltaAngularVelocity() {
   return m_deltaAngularVelocity;
  }
 
-   btVector3 internalGetAngularFactor() {
+ btVector3 internalGetAngularFactor() {
   return m_angularFactor;
  }
 
-   btVector3 internalGetInvMass() {
+ btVector3 internalGetInvMass() {
   return m_invMass;
  }
 
-   void internalSetInvMass(final btVector3 invMass) {
+ void internalSetInvMass(final btVector3 invMass) {
   m_invMass.set(invMass);
  }
 
-   btVector3 internalGetPushVelocity() {
+ btVector3 internalGetPushVelocity() {
   return m_pushVelocity;
  }
 
-   btVector3 internalGetTurnVelocity() {
+ btVector3 internalGetTurnVelocity() {
   return m_turnVelocity;
  }
 
-   void internalGetVelocityInLocalPointObsolete(final btVector3 rel_pos,
+ void internalGetVelocityInLocalPointObsolete(final btVector3 rel_pos,
   final btVector3 velocity) {
   velocity
    .set(m_angularVelocity)
@@ -177,7 +179,8 @@ public class btSolverBody implements Serializable {
  }
 
  //Optimization for the iterative solver: avoid calculating constant terms involving inertia, normal, relative position
-   void internalApplyImpulse(final btVector3 linearComponent, final btVector3 angularComponent,
+ void internalApplyImpulse(final btVector3 linearComponent,
+  final btVector3 angularComponent,
   float impulseMagnitude) {
   if (m_originalBody != null) {
    m_deltaLinearVelocity
@@ -191,25 +194,28 @@ public class btSolverBody implements Serializable {
   }
  }
 
-   void writebackVelocity() {
+ void writebackVelocity() {
   if (m_originalBody != null) {
    m_linearVelocity.add(m_deltaLinearVelocity);
    m_angularVelocity.add(m_deltaAngularVelocity);
   }
  }
 
- public void writebackVelocityAndTransform(float timeStep, float splitImpulseTurnErp) {
+ public void writebackVelocityAndTransform(float timeStep,
+  float splitImpulseTurnErp) {
   if (m_originalBody != null) {
    m_linearVelocity.add(m_deltaLinearVelocity);
    m_angularVelocity.add(m_deltaAngularVelocity);
    //correct the position/orientation based on push/turn recovery
-   if (m_pushVelocity.x != 0.f || m_pushVelocity.y != 0 || m_pushVelocity.z != 0 ||
-    m_turnVelocity.x != 0.f || m_turnVelocity.y != 0 || m_turnVelocity.z != 0) {
+   if (m_pushVelocity.x != 0.f || m_pushVelocity.y != 0 || m_pushVelocity.z != 0
+    || m_turnVelocity.x != 0.f || m_turnVelocity.y != 0 || m_turnVelocity.z != 0) {
     final btTransform newTransform = new btTransform();
-    btTransformUtil.integrateTransform(m_worldTransform, m_pushVelocity, new btVector3(
-     m_turnVelocity).scale(splitImpulseTurnErp), timeStep, newTransform);
+    btTransformUtil.integrateTransform(m_worldTransform, m_pushVelocity,
+     new btVector3(
+      m_turnVelocity).scale(splitImpulseTurnErp), timeStep, newTransform);
     m_worldTransform.set(newTransform);
    }
   }
  }
+
 };

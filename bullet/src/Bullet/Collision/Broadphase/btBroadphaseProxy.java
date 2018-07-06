@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Broadphase;
 
@@ -53,8 +53,8 @@ public abstract class btBroadphaseProxy implements Serializable {
  }
 
  public static boolean isConcave(int proxyType) {
-  return ((proxyType > CONCAVE_SHAPES_START_HERE) &&
-   (proxyType < CONCAVE_SHAPES_END_HERE));
+  return ((proxyType > CONCAVE_SHAPES_START_HERE) && (proxyType
+   < CONCAVE_SHAPES_END_HERE));
  }
 
  public static boolean isCompound(int proxyType) {
@@ -70,8 +70,10 @@ public abstract class btBroadphaseProxy implements Serializable {
  }
 
  public static boolean isConvex2d(int proxyType) {
-  return (proxyType == BOX_2D_SHAPE_PROXYTYPE) || (proxyType == CONVEX_2D_SHAPE_PROXYTYPE);
+  return (proxyType == BOX_2D_SHAPE_PROXYTYPE) || (proxyType
+   == CONVEX_2D_SHAPE_PROXYTYPE);
  }
+
  //Usually the client btCollisionObject or Rigidbody class
  public Object m_clientObject;
  public int m_collisionFilterGroup;
@@ -85,7 +87,8 @@ public abstract class btBroadphaseProxy implements Serializable {
   m_clientObject = null;
  }
 
- public btBroadphaseProxy(final btVector3 aabbMin, final btVector3 aabbMax, Object userPtr,
+ public btBroadphaseProxy(final btVector3 aabbMin, final btVector3 aabbMax,
+  Object userPtr,
   int collisionFilterGroup,
   int collisionFilterMask) {
   m_clientObject = userPtr;
@@ -100,4 +103,5 @@ public abstract class btBroadphaseProxy implements Serializable {
  }
 
  public abstract boolean intersect(btBroadphaseProxy other);
+
 }

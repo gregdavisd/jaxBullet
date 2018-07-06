@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Algorithm;
 
@@ -33,37 +33,45 @@ import java.util.ArrayList;
  *
  * @author Gregery Barton
  */
-public class btConvexConcaveCollisionAlgorithm extends btActivatingCollisionAlgorithm implements
+public class btConvexConcaveCollisionAlgorithm extends btActivatingCollisionAlgorithm
+ implements
  Serializable {
 
  final btConvexTriangleCallback m_btConvexTriangleCallback;
  boolean m_isSwapped;
 
  btConvexConcaveCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
-  btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap, boolean isSwapped) {
+  btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap,
+  boolean isSwapped) {
   super(ci, body0Wrap, body1Wrap);
-  m_btConvexTriangleCallback = new btConvexTriangleCallback(ci.m_dispatcher1, body0Wrap, body1Wrap,
+  m_btConvexTriangleCallback = new btConvexTriangleCallback(ci.m_dispatcher1,
+   body0Wrap, body1Wrap,
    isSwapped);
   m_isSwapped = isSwapped;
  }
 
  @Override
- public void processCollision(btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap,
+ public void processCollision(btCollisionObjectWrapper body0Wrap,
+  btCollisionObjectWrapper body1Wrap,
   btDispatcherInfo dispatchInfo, btManifoldResult resultOut) {
   BT_PROFILE("btConvexConcaveCollisionAlgorithm.processCollision");
   btCollisionObjectWrapper convexBodyWrap = m_isSwapped ? body1Wrap : body0Wrap;
   btCollisionObjectWrapper triBodyWrap = m_isSwapped ? body0Wrap : body1Wrap;
   if (triBodyWrap.getCollisionShape().isConcave()) {
-   btConcaveShape concaveShape = (btConcaveShape) (triBodyWrap.getCollisionShape());
+   btConcaveShape concaveShape = (btConcaveShape) (triBodyWrap
+    .getCollisionShape());
    if (convexBodyWrap.getCollisionShape().isConvex()) {
     float collisionMarginTriangle = concaveShape.getMargin();
     resultOut.setPersistentManifold(m_btConvexTriangleCallback.m_manifoldPtr);
-    m_btConvexTriangleCallback.setTimeStepAndCounters(collisionMarginTriangle, dispatchInfo,
+    m_btConvexTriangleCallback.setTimeStepAndCounters(collisionMarginTriangle,
+     dispatchInfo,
      convexBodyWrap, triBodyWrap, resultOut);
-    m_btConvexTriangleCallback.m_manifoldPtr.setBodies(convexBodyWrap.getCollisionObject(),
+    m_btConvexTriangleCallback.m_manifoldPtr.setBodies(convexBodyWrap
+     .getCollisionObject(),
      triBodyWrap.getCollisionObject());
-    concaveShape.processAllTriangles(m_btConvexTriangleCallback, m_btConvexTriangleCallback
-     .getAabbMin(), m_btConvexTriangleCallback.getAabbMax());
+    concaveShape.processAllTriangles(m_btConvexTriangleCallback,
+     m_btConvexTriangleCallback
+      .getAabbMin(), m_btConvexTriangleCallback.getAabbMax());
     resultOut.refreshContactPoints();
     m_btConvexTriangleCallback.clearWrapperData();
    }
@@ -71,15 +79,17 @@ public class btConvexConcaveCollisionAlgorithm extends btActivatingCollisionAlgo
  }
 
  @Override
- public float calculateTimeOfImpact(btCollisionObject body0, btCollisionObject body1,
+ public float calculateTimeOfImpact(btCollisionObject body0,
+  btCollisionObject body1,
   btDispatcherInfo dispatchInfo, btManifoldResult resultOut) {
   btCollisionObject convexbody = m_isSwapped ? body1 : body0;
   btCollisionObject triBody = m_isSwapped ? body0 : body1;
   //quick approximation using raycast, todo: hook up to the continuous collision detection (one of the btConvexCast)
   //only perform CCD above a certain threshold, this prevents blocking on the long run
   //because object in a blocked ccd state (hitfraction<1) get their linear velocity halved each frame...
-  float squareMot0 = (convexbody.getInterpolationWorldTransform().getOrigin().sub(convexbody
-   .getWorldTransformPtr().getOrigin())).lengthSquared();
+  float squareMot0 = (convexbody.getInterpolationWorldTransform().getOrigin()
+   .sub(convexbody
+    .getWorldTransformPtr().getOrigin())).lengthSquared();
   if (squareMot0 < convexbody.getCcdSquareMotionThreshold()) {
    return (1.f);
   }
@@ -87,7 +97,8 @@ public class btConvexConcaveCollisionAlgorithm extends btActivatingCollisionAlgo
   //btVector3 to = convexbody.m_interpolationWorldTransform.getOrigin();
   //todo: only do if the motion exceeds the 'radius'
   final btTransform triInv = triBody.getWorldTransform().invert();
-  final btTransform convexFromLocal = new btTransform(triInv).mul(convexbody.getWorldTransformPtr());
+  final btTransform convexFromLocal = new btTransform(triInv).mul(convexbody
+   .getWorldTransformPtr());
   final btTransform convexToLocal = new btTransform(triInv).mul(convexbody
    .getInterpolationWorldTransform());
   if (triBody.getCollisionShape().isConcave()) {
@@ -104,7 +115,8 @@ public class btConvexConcaveCollisionAlgorithm extends btActivatingCollisionAlgo
     convexbody.getCcdSweptSphereRadius(), curHitFraction);
    raycastCallback.m_hitFraction = convexbody.getHitFraction();
    btCollisionObject concavebody = triBody;
-   btConcaveShape triangleMesh = (btConcaveShape) concavebody.getCollisionShape();
+   btConcaveShape triangleMesh = (btConcaveShape) concavebody
+    .getCollisionShape();
    if (triangleMesh != null) {
     triangleMesh.processAllTriangles(raycastCallback, rayAabbMin, rayAabbMax);
    }
@@ -117,7 +129,8 @@ public class btConvexConcaveCollisionAlgorithm extends btActivatingCollisionAlgo
  }
 
  @Override
- public void getAllContactManifolds(ArrayList<btPersistentManifold> manifoldArray) {
+ public void getAllContactManifolds(
+  ArrayList<btPersistentManifold> manifoldArray) {
   if (m_btConvexTriangleCallback.m_manifoldPtr != null) {
    manifoldArray.add(m_btConvexTriangleCallback.m_manifoldPtr);
   }
@@ -135,18 +148,22 @@ public class btConvexConcaveCollisionAlgorithm extends btActivatingCollisionAlgo
  public static class CreateFunc extends btCollisionAlgorithmCreateFunc {
 
   @Override
-  public btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
+  public btCollisionAlgorithm CreateCollisionAlgorithm(
+   btCollisionAlgorithmConstructionInfo ci,
    btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap) {
    return new btConvexConcaveCollisionAlgorithm(ci, body0Wrap, body1Wrap, false);
   }
+
  }
 
  public static class SwappedCreateFunc extends btCollisionAlgorithmCreateFunc {
 
   @Override
-  public btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
+  public btCollisionAlgorithm CreateCollisionAlgorithm(
+   btCollisionAlgorithmConstructionInfo ci,
    btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap) {
    return new btConvexConcaveCollisionAlgorithm(ci, body0Wrap, body1Wrap, true);
   }
+
  }
 }

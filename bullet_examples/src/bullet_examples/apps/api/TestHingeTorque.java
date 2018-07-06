@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package bullet_examples.apps.api;
 
@@ -43,7 +43,8 @@ public class TestHingeTorque extends DiscreteDemoContainer {
  boolean m_once = true;
  final ArrayList<btJointFeedback> m_jointFeedback = new ArrayList<>(0);
  int collisionFilterGroup = (btBroadphaseProxy.CHARACTER_FILTER);
- int collisionFilterMask = (btBroadphaseProxy.ALL_FILTER ^ (btBroadphaseProxy.CHARACTER_FILTER));
+ int collisionFilterMask = (btBroadphaseProxy.ALL_FILTER
+  ^ (btBroadphaseProxy.CHARACTER_FILTER));
  static float radius = 0.2f;
 
  @Override
@@ -82,8 +83,8 @@ public class TestHingeTorque extends DiscreteDemoContainer {
    for (int i = 0; i < numLinks; i++) {
     final btTransform linkTrans = new btTransform();
     linkTrans.set(baseWorldTrans);
-    linkTrans.setOrigin(new btVector3(basePosition).sub(new btVector3(0, linkHalfExtents.y * 2.f *
-     (i + 1), 0)));
+    linkTrans.setOrigin(new btVector3(basePosition).sub(new btVector3(0,
+     linkHalfExtents.y * 2.f * (i + 1), 0)));
     btCollisionShape colOb;
     if (i == 0) {
      colOb = linkBox1;
@@ -107,11 +108,14 @@ public class TestHingeTorque extends DiscreteDemoContainer {
       axisInA, axisInB, useReferenceA);
      con = hinge;
     } else {
-     final btTransform pivotInA = new btTransform(btQuaternion.getIdentity(), new btVector3(0f,
-      -radius, 0f));						//par body's COM to cur body's COM offset
-     final btTransform pivotInB = new btTransform(btQuaternion.getIdentity(), new btVector3(0f,
-      radius, 0f));							//cur body's COM to cur body's PIV offset
-     btGeneric6DofSpring2Constraint fixed = new btGeneric6DofSpring2Constraint(prevBody, linkBody,
+     final btTransform pivotInA = new btTransform(btQuaternion.getIdentity(),
+      new btVector3(0f,
+       -radius, 0f));						//par body's COM to cur body's COM offset
+     final btTransform pivotInB = new btTransform(btQuaternion.getIdentity(),
+      new btVector3(0f,
+       radius, 0f));							//cur body's COM to cur body's PIV offset
+     btGeneric6DofSpring2Constraint fixed = new btGeneric6DofSpring2Constraint(
+      prevBody, linkBody,
       pivotInA, pivotInB);
      fixed.setLinearLowerLimit(new btVector3());
      fixed.setLinearUpperLimit(new btVector3());
@@ -140,7 +144,8 @@ public class TestHingeTorque extends DiscreteDemoContainer {
    start.setIdentity();
    final btVector3 groundOrigin = new btVector3(-0.4f, 3.f, 0.f);
    //	btVector3 basePosition = btVector3(-0.4f, 3.f, 0.f);
-   final btQuaternion groundOrn = new btQuaternion(new btVector3(0f, 1f, 0f), 0.25f * SIMD_PI);
+   final btQuaternion groundOrn = new btQuaternion(new btVector3(0f, 1f, 0f),
+    0.25f * SIMD_PI);
    groundOrigin.setElement(upAxis, groundOrigin.getElement(upAxis) - .5f);
    groundOrigin.z -= 0.6;
    start.setOrigin(groundOrigin);
@@ -151,7 +156,8 @@ public class TestHingeTorque extends DiscreteDemoContainer {
  }
 
  public void resetCamera() {
-  camera().set(new btQuaternion(0.07323081f, -0.69297534f, -0.07110454f, 0.7136992f), new btVector3(
+  camera().set(new btQuaternion(0.07323081f, -0.69297534f, -0.07110454f,
+   0.7136992f), new btVector3(
    9.543488f, 4.484767f, -0.20902833f));
  }
 
@@ -162,7 +168,8 @@ public class TestHingeTorque extends DiscreteDemoContainer {
 
  @Override
  public String get_description() {
-  return "Apply a torque to in the hinge axis. This example uses a btHingeConstraint and btRigidBody." +
-   "The setup is similar to the multi body example TestJointTorque.";
+  return "Apply a torque to in the hinge axis. This example uses a btHingeConstraint and btRigidBody."
+   + "The setup is similar to the multi body example TestJointTorque.";
  }
+
 };

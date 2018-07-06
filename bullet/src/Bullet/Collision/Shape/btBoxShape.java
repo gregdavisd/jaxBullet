@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -32,7 +32,8 @@ public class btBoxShape extends btPolyhedralConvexShape implements Serializable 
   super();
   m_shapeType = BOX_SHAPE_PROXYTYPE;
   setSafeMargin(boxHalfExtents);
-  final btVector3 margin = new btVector3(m_collisionMargin, m_collisionMargin, m_collisionMargin);
+  final btVector3 margin = new btVector3(m_collisionMargin, m_collisionMargin,
+   m_collisionMargin);
   m_implicitShapeDimensions.set(boxHalfExtents).mul(m_localScaling).sub(margin);
  }
 
@@ -66,7 +67,8 @@ public class btBoxShape extends btPolyhedralConvexShape implements Serializable 
  }
 
  @Override
- public void batchedUnitVectorGetSupportingVertexWithoutMargin(btVector3[] vectors,
+ public void batchedUnitVectorGetSupportingVertexWithoutMargin(
+  btVector3[] vectors,
   btVector3[] supportVerticesOut, int numVectors) {
   final btVector3 halfExtents = getHalfExtentsWithoutMargin();
   for (int i = 0; i < numVectors; i++) {
@@ -74,38 +76,48 @@ public class btBoxShape extends btPolyhedralConvexShape implements Serializable 
    if (supportVerticesOut[i] == null) {
     supportVerticesOut[i] = new btVector3();
    }
-   supportVerticesOut[i].set(btFsels(vec.x(), halfExtents.x(), -halfExtents.x()),
-    btFsels(vec.y(), halfExtents.y(), -halfExtents.y()),
-    btFsels(vec.z(), halfExtents.z(), -halfExtents.z()));
+   supportVerticesOut[i]
+    .set(btFsels(vec.x(), halfExtents.x(), -halfExtents.x()),
+     btFsels(vec.y(), halfExtents.y(), -halfExtents.y()),
+     btFsels(vec.z(), halfExtents.z(), -halfExtents.z()));
   }
  }
 
  @Override
  public void setMargin(float collisionMargin) {
   //correct the m_implicitShapeDimensions for the margin
-  final btVector3 oldMargin = new btVector3(getMargin(), getMargin(), getMargin());
-  final btVector3 implicitShapeDimensionsWithMargin = new btVector3(m_implicitShapeDimensions).add(
+  final btVector3 oldMargin = new btVector3(getMargin(), getMargin(),
+   getMargin());
+  final btVector3 implicitShapeDimensionsWithMargin = new btVector3(
+   m_implicitShapeDimensions).add(
    oldMargin);
   super.setMargin(collisionMargin);
-  final btVector3 newMargin = new btVector3(getMargin(), getMargin(), getMargin());
-  m_implicitShapeDimensions.set(implicitShapeDimensionsWithMargin).sub(newMargin);
+  final btVector3 newMargin = new btVector3(getMargin(), getMargin(),
+   getMargin());
+  m_implicitShapeDimensions.set(implicitShapeDimensionsWithMargin)
+   .sub(newMargin);
  }
 
  @Override
  public void setLocalScaling(final btVector3 scaling) {
-  final btVector3 oldMargin = new btVector3(getMargin(), getMargin(), getMargin());
-  final btVector3 implicitShapeDimensionsWithMargin = new btVector3(m_implicitShapeDimensions).add(
+  final btVector3 oldMargin = new btVector3(getMargin(), getMargin(),
+   getMargin());
+  final btVector3 implicitShapeDimensionsWithMargin = new btVector3(
+   m_implicitShapeDimensions).add(
    oldMargin);
   final btVector3 unScaledImplicitShapeDimensionsWithMargin = new btVector3(
    implicitShapeDimensionsWithMargin).div(m_localScaling);
   super.setLocalScaling(scaling);
-  m_implicitShapeDimensions.set(unScaledImplicitShapeDimensionsWithMargin).mul(m_localScaling).sub(
-   oldMargin);
+  m_implicitShapeDimensions.set(unScaledImplicitShapeDimensionsWithMargin).mul(
+   m_localScaling).sub(
+    oldMargin);
  }
 
  @Override
- public void getAabb(final btTransform t, final btVector3 aabbMin, final btVector3 aabbMax) {
-  btTransformAabb(getHalfExtentsWithoutMargin(), getMargin(), t, aabbMin, aabbMax);
+ public void getAabb(final btTransform t, final btVector3 aabbMin,
+  final btVector3 aabbMax) {
+  btTransformAabb(getHalfExtentsWithoutMargin(), getMargin(), t, aabbMin,
+   aabbMax);
  }
 
  @Override
@@ -121,12 +133,14 @@ public class btBoxShape extends btPolyhedralConvexShape implements Serializable 
  }
 
  @Override
- public void getPlane(final btVector3 planeNormal, final btVector3 planeSupport, int i) {
+ public void getPlane(final btVector3 planeNormal, final btVector3 planeSupport,
+  int i) {
   //this plane might not be aligned...
   btVector4 plane = new btVector4();
   getPlaneEquation(plane, i);
   planeNormal.set(plane.getX(), plane.getY(), plane.getZ());
-  planeSupport.set(localGetSupportingVertex(new btVector3(planeNormal).negate()));
+  planeSupport
+   .set(localGetSupportingVertex(new btVector3(planeNormal).negate()));
  }
 
  @Override
@@ -244,12 +258,12 @@ public class btBoxShape extends btPolyhedralConvexShape implements Serializable 
  public boolean isInside(final btVector3 pt, float tolerance) {
   final btVector3 halfExtents = getHalfExtentsWithoutMargin();
   //float minDist = 2*tolerance;
-  boolean result = (pt.x() <= (halfExtents.x() + tolerance)) &&
-   (pt.x() >= (-halfExtents.x() - tolerance)) &&
-   (pt.y() <= (halfExtents.y() + tolerance)) &&
-   (pt.y() >= (-halfExtents.y() - tolerance)) &&
-   (pt.z() <= (halfExtents.z() + tolerance)) &&
-   (pt.z() >= (-halfExtents.z() - tolerance));
+  boolean result = (pt.x() <= (halfExtents.x() + tolerance)) && (pt.x()
+   >= (-halfExtents.x() - tolerance)) && (pt.y()
+   <= (halfExtents.y() + tolerance)) && (pt.y()
+   >= (-halfExtents.y() - tolerance)) && (pt.z()
+   <= (halfExtents.z() + tolerance)) && (pt.z()
+   >= (-halfExtents.z() - tolerance));
   return result;
  }
 
@@ -265,7 +279,8 @@ public class btBoxShape extends btPolyhedralConvexShape implements Serializable 
  }
 
  @Override
- public void getPreferredPenetrationDirection(int index, final btVector3 penetrationVector) {
+ public void getPreferredPenetrationDirection(int index,
+  final btVector3 penetrationVector) {
   switch (index) {
    case 0:
     penetrationVector.set((1.f), (0.f), (0.f));
@@ -299,4 +314,5 @@ public class btBoxShape extends btPolyhedralConvexShape implements Serializable 
  public boolean equals(Object obj) {
   return super.equals(obj);
  }
+
 }

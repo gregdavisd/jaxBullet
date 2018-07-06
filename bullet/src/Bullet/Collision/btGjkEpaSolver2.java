@@ -1,22 +1,22 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2008 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the
-use of this software.
-Permission is granted to anyone to use this software for any purpose,
-including commercial applications, and to alter it and redistribute it
-freely,
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not
-claim that you wrote the original software. If you use this software in a
-product, an acknowledgment in the product documentation would be appreciated
-but is not required.
-2. Altered source versions must be plainly marked as such, and must not be
-misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2008 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the
+ * use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ * claim that you wrote the original software. If you use this software in a
+ * product, an acknowledgment in the product documentation would be appreciated
+ * but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ * misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision;
 
@@ -56,19 +56,21 @@ public class btGjkEpaSolver2 implements Serializable {
    for (int i = 0; i < gjk.m_simplex.rank; ++i) {
     float p = gjk.m_simplex.p[i];
     w0.add(shape.support(gjk.m_simplex.c[i].d, 0).scale(p));
-    w1.add(shape.support(new btVector3(gjk.m_simplex.c[i].d).negate(), 1).scale(p));
+    w1.add(shape.support(new btVector3(gjk.m_simplex.c[i].d).negate(), 1).scale(
+     p));
    }
    results.witnesses[0].set(wtrs0.transform(new btVector3(w0)));
    results.witnesses[1].set(wtrs0.transform(new btVector3(w1)));
    results.normal.set(w0).sub(w1);
    results.distance = results.normal.length();
-   results.normal.scale(1.0f / (results.distance > GJK_MIN_DISTANCE ? results.distance : 1.0f));
+   results.normal.scale(1.0f
+    / (results.distance > GJK_MIN_DISTANCE ? results.distance : 1.0f));
    return (true);
   } else {
-   results.status =
-    (gjk_status == GJK.eStatus.Inside) ?
-     sResults.eStatus.Penetrating :
-     sResults.eStatus.GJK_Failed;
+   results.status
+    = (gjk_status == GJK.eStatus.Inside)
+     ? sResults.eStatus.Penetrating
+     : sResults.eStatus.GJK_Failed;
    return (false);
   }
  }
@@ -123,7 +125,8 @@ public class btGjkEpaSolver2 implements Serializable {
   sResults results) {
   MinkowskiDiff shape = new MinkowskiDiff();
   btSphereShape shape1 = new btSphereShape(margin);
-  final btTransform wtrs1 = new btTransform(new btQuaternion(0f, 0f, 0f, 1f), position);
+  final btTransform wtrs1 = new btTransform(new btQuaternion(0f, 0f, 0f, 1f),
+   position);
   Initialize(shape0, wtrs0, shape1, wtrs1, results, shape, false);
   GJK gjk = new GJK();
   GJK.eStatus gjk_status = gjk.evaluate(shape, new btVector3(1, 1, 1));
@@ -133,14 +136,14 @@ public class btGjkEpaSolver2 implements Serializable {
    for (int i = 0; i < gjk.m_simplex.rank; ++i) {
     float p = gjk.m_simplex.p[i];
     w0.add(shape.support(gjk.m_simplex.c[i].d, 0).scale(p));
-    w1.add(shape.support(new btVector3(gjk.m_simplex.c[i].d).negate(), 1).scale(p));
+    w1.add(shape.support(new btVector3(gjk.m_simplex.c[i].d).negate(), 1).scale(
+     p));
    }
    wtrs0.transform(results.witnesses[0].set(w0));
    wtrs0.transform(results.witnesses[1].set(w1));
    final btVector3 delta = new btVector3(results.witnesses[1]).sub(
     results.witnesses[0]);
-   float margin_2 = shape0.getMarginNonVirtual() +
-    shape1.getMarginNonVirtual();
+   float margin_2 = shape0.getMarginNonVirtual() + shape1.getMarginNonVirtual();
    float length = delta.length();
    results.normal.set(delta).scale(1.0f / length);
    results.witnesses[0].add(new btVector3(results.normal).scale(margin));
@@ -174,11 +177,15 @@ public class btGjkEpaSolver2 implements Serializable {
   btGjkEpaSolver2.sResults results,
   MinkowskiDiff shape,
   boolean withmargins) {
-  /* Results		*/
+  /*
+   * Results
+   */
   results.witnesses[0].setZero();
   results.witnesses[1].setZero();
   results.status = btGjkEpaSolver2.sResults.eStatus.Separated;
-  /* Shape		*/
+  /*
+   * Shape
+   */
   shape.m_shapes[0] = shape0;
   shape.m_shapes[1] = shape1;
   shape.m_toshape1.set(wtrs1.getBasis().transposeTimes(wtrs0.getBasis()));
@@ -189,11 +196,19 @@ public class btGjkEpaSolver2 implements Serializable {
  static class sResults {
 
   static enum eStatus {
-   Separated, /* Shapes doesnt penetrate												*/
-   Penetrating, /* Shapes are penetrating												*/
-   GJK_Failed, /* GJK phase fail, no big issue, shapes are probably just 'touching'	*/
+   Separated, /*
+    * Shapes doesnt penetrate
+    */
+   Penetrating, /*
+    * Shapes are penetrating
+    */
+   GJK_Failed, /*
+    * GJK phase fail, no big issue, shapes are probably just 'touching'
+    */
    EPA_Failed
-   /* EPA phase fail, bigger problem, need to save parameters, and debug	*/
+   /*
+    * EPA phase fail, bigger problem, need to save parameters, and debug
+    */
   };
   eStatus status;
   final btVector3[] witnesses = new btVector3[2];
@@ -203,5 +218,6 @@ public class btGjkEpaSolver2 implements Serializable {
   public sResults() {
    init(witnesses);
   }
+
  }
 }

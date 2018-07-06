@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -27,21 +27,25 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * The btBvhTriangleMeshShape is a static-triangle mesh shape, it can only be used for
- * fixed/non-moving objects. If you required moving concave triangle meshes, it is recommended to
- * perform convex decomposition using HACD, see Bullet/Demos/ConvexDecompositionDemo. Alternatively,
- * you can use btGimpactMeshShape for moving concave triangle meshes. btBvhTriangleMeshShape has
- * several optimizations, such as bounding volume hierarchy and cache friendly traversal for
- * PlayStation 3 Cell SPU. It is recommended to enable useQuantizedAabbCompression for better memory
- * usage. It takes a triangle mesh as input, for example a btTriangleMesh or
- * btTriangleIndexVertexArray. The btBvhTriangleMeshShape class allows for triangle mesh
- * deformations by a refit or partialRefit method. Instead of building the bounding volume hierarchy
- * acceleration structure, it is also possible to serialize (save) and deserialize (load) the
- * structure from disk. See Demos\ConcaveDemo\ConcavePhysicsDemo.cpp for an example.
+ * The btBvhTriangleMeshShape is a static-triangle mesh shape, it can only be
+ * used for fixed/non-moving objects. If you required moving concave triangle
+ * meshes, it is recommended to perform convex decomposition using HACD, see
+ * Bullet/Demos/ConvexDecompositionDemo. Alternatively, you can use
+ * btGimpactMeshShape for moving concave triangle meshes. btBvhTriangleMeshShape
+ * has several optimizations, such as bounding volume hierarchy and cache
+ * friendly traversal for PlayStation 3 Cell SPU. It is recommended to enable
+ * useQuantizedAabbCompression for better memory usage. It takes a triangle mesh
+ * as input, for example a btTriangleMesh or btTriangleIndexVertexArray. The
+ * btBvhTriangleMeshShape class allows for triangle mesh deformations by a refit
+ * or partialRefit method. Instead of building the bounding volume hierarchy
+ * acceleration structure, it is also possible to serialize (save) and
+ * deserialize (load) the structure from disk. See
+ * Demos\ConcaveDemo\ConcavePhysicsDemo.cpp for an example.
  *
  * @author Gregery Barton
  */
-public class btBvhTriangleMeshShape extends btTriangleMeshShape implements Serializable {
+public class btBvhTriangleMeshShape extends btTriangleMeshShape implements
+ Serializable {
 
  private static final long serialVersionUID = -6792520148457019195L;
  btOptimizedBvh m_bvh;
@@ -82,7 +86,8 @@ public class btBvhTriangleMeshShape extends btTriangleMeshShape implements Seria
   //construct bvh from meshInterface
   if (buildBvh) {
    m_bvh = new btOptimizedBvh();
-   m_bvh.build(meshInterface, m_useQuantizedAabbCompression, bvhAabbMin, bvhAabbMax);
+   m_bvh.build(meshInterface, m_useQuantizedAabbCompression, bvhAabbMin,
+    bvhAabbMax);
    m_ownsBvh = true;
   } else {
    m_bvh = null;
@@ -99,24 +104,31 @@ public class btBvhTriangleMeshShape extends btTriangleMeshShape implements Seria
   return m_ownsBvh;
  }
 
- public void performRaycast(btTriangleCallback callback, final btVector3 raySource,
+ public void performRaycast(btTriangleCallback callback,
+  final btVector3 raySource,
   final btVector3 rayTarget) {
-  MyNodeOverlapCallbackRaycast myNodeCallback = new MyNodeOverlapCallbackRaycast(callback,
+  MyNodeOverlapCallbackRaycast myNodeCallback = new MyNodeOverlapCallbackRaycast(
+   callback,
    m_meshInterface);
   m_bvh.reportRayOverlappingNodex(myNodeCallback, raySource, rayTarget);
  }
 
- public void performConvexcast(btTriangleCallback callback, final btVector3 raySource,
+ public void performConvexcast(btTriangleCallback callback,
+  final btVector3 raySource,
   final btVector3 rayTarget, final btVector3 aabbMin, final btVector3 aabbMax) {
-  MyNodeOverlapCallbackConvexcast myNodeCallback = new MyNodeOverlapCallbackConvexcast(callback,
+  MyNodeOverlapCallbackConvexcast myNodeCallback = new MyNodeOverlapCallbackConvexcast(
+   callback,
    m_meshInterface);
-  m_bvh.reportBoxCastOverlappingNodex(myNodeCallback, raySource, rayTarget, aabbMin, aabbMax);
+  m_bvh.reportBoxCastOverlappingNodex(myNodeCallback, raySource, rayTarget,
+   aabbMin, aabbMax);
  }
 
  @Override
- public void processAllTriangles(btTriangleCallback callback, final btVector3 aabbMin,
+ public void processAllTriangles(btTriangleCallback callback,
+  final btVector3 aabbMin,
   final btVector3 aabbMax) {
-  MyNodeOverlapCallbackAllTriangles myNodeCallback = new MyNodeOverlapCallbackAllTriangles(callback,
+  MyNodeOverlapCallbackAllTriangles myNodeCallback = new MyNodeOverlapCallbackAllTriangles(
+   callback,
    m_meshInterface);
   m_bvh.reportAabbOverlappingNodex(myNodeCallback, aabbMin, aabbMax);
  }
@@ -141,7 +153,8 @@ public class btBvhTriangleMeshShape extends btTriangleMeshShape implements Seria
 
  @Override
  public void setLocalScaling(final btVector3 scaling) {
-  if ((new btVector3(getLocalScaling()).sub(scaling)).lengthSquared() > SIMD_EPSILON) {
+  if ((new btVector3(getLocalScaling()).sub(scaling)).lengthSquared()
+   > SIMD_EPSILON) {
    super.setLocalScaling(scaling);
    buildOptimizedBvh();
   }
@@ -161,7 +174,8 @@ public class btBvhTriangleMeshShape extends btTriangleMeshShape implements Seria
   m_bvh = bvh;
   m_ownsBvh = false;
   // update the scaling without rebuilding the bvh
-  if ((new btVector3(getLocalScaling()).sub(localScaling)).lengthSquared() > SIMD_EPSILON) {
+  if ((new btVector3(getLocalScaling()).sub(localScaling)).lengthSquared()
+   > SIMD_EPSILON) {
    super.setLocalScaling(localScaling);
   }
  }
@@ -170,7 +184,8 @@ public class btBvhTriangleMeshShape extends btTriangleMeshShape implements Seria
   ///m_localAabbMin/m_localAabbMax is already re-calculated in btTriangleMeshShape. We could just scale aabb, but this needs some more work
   m_bvh = new btOptimizedBvh();
   //rebuild the bvh...
-  m_bvh.build(m_meshInterface, m_useQuantizedAabbCompression, m_localAabbMin, m_localAabbMax);
+  m_bvh.build(m_meshInterface, m_useQuantizedAabbCompression, m_localAabbMin,
+   m_localAabbMax);
   m_ownsBvh = true;
  }
 
@@ -215,4 +230,5 @@ public class btBvhTriangleMeshShape extends btTriangleMeshShape implements Seria
   }
   return super.equals(obj);
  }
+
 };

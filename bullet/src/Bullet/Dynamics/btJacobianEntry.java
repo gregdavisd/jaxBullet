@@ -20,13 +20,14 @@ import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
 
 /**
- * notes: Another memory optimization would be to store m_1MinvJt in the remaining 3 w components
- * which makes the btJacobianEntry memory layout 16 bytes if you only are interested in angular
- * part, just feed massInvA and massInvB zero
+ * notes: Another memory optimization would be to store m_1MinvJt in the
+ * remaining 3 w components which makes the btJacobianEntry memory layout 16
+ * bytes if you only are interested in angular part, just feed massInvA and
+ * massInvB zero
  *
- * Jacobian entry is an abstraction that allows to describe constraints it can be used in
- * combination with a constraint solver Can be used to relate the effect of an impulse to the
- * constraint error
+ * Jacobian entry is an abstraction that allows to describe constraints it can
+ * be used in combination with a constraint solver Can be used to relate the
+ * effect of an impulse to the constraint error
  *
  * @author Gregery Barton
  */
@@ -46,7 +47,8 @@ public class btJacobianEntry implements Serializable {
  //constraint between two different rigidbodies
  public btJacobianEntry(
   final btMatrix3x3 world2A, final btMatrix3x3 world2B, final btVector3 rel_pos1,
-  final btVector3 rel_pos2, final btVector3 jointAxis, final btVector3 inertiaInvA,
+  final btVector3 rel_pos2, final btVector3 jointAxis,
+  final btVector3 inertiaInvA,
   float massInvA, final btVector3 inertiaInvB,
   float massInvB) {
   m_linearJointAxis.set(jointAxis);
@@ -61,7 +63,8 @@ public class btJacobianEntry implements Serializable {
 
  //angular constraint between two different rigidbodies
  public btJacobianEntry(final btVector3 jointAxis, final btMatrix3x3 world2A,
-  final btMatrix3x3 world2B, final btVector3 inertiaInvA, final btVector3 inertiaInvB) {
+  final btMatrix3x3 world2B, final btVector3 inertiaInvA,
+  final btVector3 inertiaInvB) {
   m_linearJointAxis.setZero();
   m_aJ.set(world2A.transform(new btVector3(jointAxis)));
   m_bJ.set(world2B.transform(new btVector3(jointAxis).negate()));
@@ -110,9 +113,11 @@ public class btJacobianEntry implements Serializable {
  }
 
  // for two constraints on sharing two same rigidbodies (for example two contact points between two rigidbodies)
- public float getNonDiagonal(btJacobianEntry jacB, float massInvA, float massInvB) {
+ public float getNonDiagonal(btJacobianEntry jacB, float massInvA,
+  float massInvB) {
   btJacobianEntry jacA = this;
-  final btVector3 lin = new btVector3(jacA.m_linearJointAxis).mul(jacB.m_linearJointAxis);
+  final btVector3 lin = new btVector3(jacA.m_linearJointAxis).mul(
+   jacB.m_linearJointAxis);
   final btVector3 ang0 = new btVector3(jacA.m_0MinvJt).mul(jacB.m_aJ);
   final btVector3 ang1 = new btVector3(jacA.m_1MinvJt).mul(jacB.m_bJ);
   final btVector3 lin0 = new btVector3(lin).scale(massInvA);
@@ -121,7 +126,8 @@ public class btJacobianEntry implements Serializable {
   return sum.x + sum.y + sum.z;
  }
 
- public float getRelativeVelocity(final btVector3 linvelA, final btVector3 angvelA,
+ public float getRelativeVelocity(final btVector3 linvelA,
+  final btVector3 angvelA,
   final btVector3 linvelB, final btVector3 angvelB) {
   final btVector3 linrel = new btVector3(linvelA).sub(linvelB);
   final btVector3 angvela = new btVector3(angvelA).mul(m_aJ);
@@ -132,4 +138,5 @@ public class btJacobianEntry implements Serializable {
   float rel_vel2 = angvela.x + angvela.y + angvela.z;
   return rel_vel2 + SIMD_EPSILON;
  }
+
 }

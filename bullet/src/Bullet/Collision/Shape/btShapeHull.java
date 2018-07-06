@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -59,12 +59,13 @@ public class btShapeHull implements Serializable {
     }
    }
   }
-  btVector3[] supportPoints = new btVector3[NUM_UNITSPHERE_POINTS +
-   MAX_PREFERRED_PENETRATION_DIRECTIONS * 2];
+  btVector3[] supportPoints = new btVector3[NUM_UNITSPHERE_POINTS
+   + MAX_PREFERRED_PENETRATION_DIRECTIONS * 2];
   init(supportPoints);
   int i;
   for (i = 0; i < numSampleDirections; i++) {
-   supportPoints[i].set(m_shape.localGetSupportingVertex(getUnitSpherePoints()[i]));
+   supportPoints[i].set(m_shape.localGetSupportingVertex(
+    getUnitSpherePoints()[i]));
   }
   HullDesc hd = new HullDesc();
   hd.mFlags = QF_TRIANGLES;
@@ -104,6 +105,7 @@ public class btShapeHull implements Serializable {
  public int[] getIndexPointer() {
   return m_indices;
  }
+
  static btVector3[] sUnitSpherePoints = new btVector3[]{
   new btVector3((0.000000f), (-0.000000f), (-1.000000f)),
   new btVector3((0.723608f), (-0.525725f), (-0.447219f)),
@@ -152,7 +154,7 @@ public class btShapeHull implements Serializable {
  @Override
  public int hashCode() {
   int hash = 5;
-  hash+=super.hashCode();
+  hash += super.hashCode();
   hash = 11 * hash + Arrays.deepHashCode(this.m_vertices);
   hash = 11 * hash + Arrays.hashCode(this.m_indices);
   hash = 11 * hash + this.m_numIndices;

@@ -1,25 +1,25 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose,
-including commercial applications, and to alter it and redistribute it freely,
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 /// 2009 March: btGeneric6DofConstraint refactored by Roman Ponomarev
 /// Added support for generic constraint solver through getInfo1/getInfo2 methods
 
 /*
-2007-09-09
-btGeneric6DofConstraint Refactored by Francisco Le?n
-email: projectileman@yahoo.com
-http://gimpact.sf.net
+ * 2007-09-09
+ * btGeneric6DofConstraint Refactored by Francisco Le?n
+ * email: projectileman@yahoo.com
+ * http://gimpact.sf.net
  */
 package Bullet.Dynamics.Constraint;
 
@@ -82,14 +82,14 @@ public class btTranslationalLimitMotor implements Serializable {
  }
 
  //! Test limit
- /*!
-    - free means upper < lower,
-    - locked means upper == lower
-    - limited means upper > lower
-    - limitIndex: first 3 are linear, next 3 are angular
+ /*
+  * !
+  * - free means upper < lower, - locked means upper == lower - limited means
+  * upper > lower - limitIndex: first 3 are linear, next 3 are angular
   */
  public boolean isLimited(int limitIndex) {
-  return (m_upperLimit.getElement(limitIndex) >= m_lowerLimit.getElement(limitIndex));
+  return (m_upperLimit.getElement(limitIndex) >= m_lowerLimit.getElement(
+   limitIndex));
  }
 
  public boolean needApplyForce(int limitIndex) {
@@ -127,8 +127,10 @@ public class btTranslationalLimitMotor implements Serializable {
   ///find relative velocity
   //    btVector3 rel_pos1 = pointInA - body1.getCenterOfMassPosition();
   //    btVector3 rel_pos2 = pointInB - body2.getCenterOfMassPosition();
-  final btVector3 rel_pos1 = new btVector3(anchorPos).sub(body1.getCenterOfMassPosition());
-  final btVector3 rel_pos2 = new btVector3(anchorPos).sub(body2.getCenterOfMassPosition());
+  final btVector3 rel_pos1 = new btVector3(anchorPos).sub(body1
+   .getCenterOfMassPosition());
+  final btVector3 rel_pos2 = new btVector3(anchorPos).sub(body2
+   .getCenterOfMassPosition());
   final btVector3 vel1 = body1.getVelocityInLocalPoint(rel_pos1);
   final btVector3 vel2 = body2.getVelocityInLocalPoint(rel_pos2);
   final btVector3 vel = new btVector3(vel1).sub(vel2);
@@ -154,15 +156,19 @@ public class btTranslationalLimitMotor implements Serializable {
     }
    }
   }
-  float normalImpulse = m_limitSoftness * (m_restitution * depth / timeStep - m_damping * rel_vel) *
-   jacDiagABInv;
+  float normalImpulse = m_limitSoftness * (m_restitution * depth / timeStep
+   - m_damping * rel_vel) * jacDiagABInv;
   float oldNormalImpulse = m_accumulatedImpulse.getElement(limit_index);
   float sum = oldNormalImpulse + normalImpulse;
-  m_accumulatedImpulse.setElement(limit_index, sum > hi ? (0.f) : sum < lo ? (0.f) : sum);
-  normalImpulse = m_accumulatedImpulse.getElement(limit_index) - oldNormalImpulse;
-  final btVector3 impulse_vector = new btVector3(axis_normal_on_a).scale(normalImpulse);
+  m_accumulatedImpulse.setElement(limit_index,
+   sum > hi ? (0.f) : sum < lo ? (0.f) : sum);
+  normalImpulse = m_accumulatedImpulse.getElement(limit_index)
+   - oldNormalImpulse;
+  final btVector3 impulse_vector = new btVector3(axis_normal_on_a).scale(
+   normalImpulse);
   body1.applyImpulse(impulse_vector, rel_pos1);
   body2.applyImpulse(new btVector3(impulse_vector).negate(), rel_pos2);
   return normalImpulse;
  }
+
 };

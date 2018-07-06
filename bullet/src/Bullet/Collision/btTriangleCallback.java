@@ -25,13 +25,15 @@ public interface btTriangleCallback extends Serializable {
 
  /**
   *
-  * @param triangle 3 vertices of the triangle, may return the same array every time so make copies
-  * if the vertices are going to be stored elsewhere.
+  * @param triangle 3 vertices of the triangle, may return the same array every
+  * time so make copies if the vertices are going to be stored elsewhere.
   * @param partId the mesh part
-  * @param triangleIndex index of the triangle, an arbitrary but consistent number
-  * @return false to stop batch processing, may be ignored if bullet is internally processing one
-  * triangle at a time. A call back that unconditionally returns false will only ever process one
-  * triangle.
+  * @param triangleIndex index of the triangle, an arbitrary but consistent
+  * number
+  * @return false to stop batch processing, may be ignored if bullet is
+  * internally processing one triangle at a time. A call back that
+  * unconditionally returns false will only ever process one triangle.
   */
  boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex);
+
 }

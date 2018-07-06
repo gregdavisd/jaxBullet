@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 ///btDbvtBroadphase implementation by Nathanael Presson
 package Bullet.Collision.Broadphase;
@@ -27,17 +27,28 @@ import static Bullet.Extras.btMinMax.btMin;
  *
  * @author Gregery Barton
  */
-public class btDbvtBroadphase extends btBroadphaseInterface implements Serializable {
+public class btDbvtBroadphase extends btBroadphaseInterface implements
+ Serializable {
 
- /* Config		*/
+ /*
+  * Config
+  */
  static final int DYNAMIC_SET = 0;
- /* Dynamic set index	*/
+ /*
+  * Dynamic set index
+  */
  static final int FIXED_SET = 1;
- /* Fixed set index		*/
+ /*
+  * Fixed set index
+  */
  static final int STAGECOUNT = 2;
- /* Number of stages		*/
+ /*
+  * Number of stages
+  */
 
- /* Fields		*/
+ /*
+  * Fields
+  */
  final btDbvt[] m_sets = new btDbvt[2];					// Dbvt sets
  final ArrayList<btDbvtProxy>[] m_stageRoots = new ArrayList[STAGECOUNT + 1];	// Stages list
  btOverlappingPairCache m_paircache;				// Pair cache
@@ -59,7 +70,9 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
  boolean m_needcleanup;				// Need to run cleanup?
  final ArrayList< ArrayList<  btDbvtNode>> m_rayTestStacks = new ArrayList<>(0);
 
- /* Methods		*/
+ /*
+  * Methods
+  */
  public btDbvtBroadphase() {
   this(null);
  }
@@ -93,14 +106,18 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
 
  void collide(btDispatcher dispatcher) {
   //SPC(m_profiling.m_total);
-  /* optimize				*/
+  /*
+   * optimize
+   */
   m_sets[0].optimizeIncremental(1 + (m_sets[0].m_leaves * m_dupdates) / 100);
   if (m_fixedleft != 0) {
    int count = 1 + (m_sets[1].m_leaves * m_fupdates) / 100;
    m_sets[1].optimizeIncremental(1 + (m_sets[1].m_leaves * m_fupdates) / 100);
    m_fixedleft = btMax(0, m_fixedleft - count);
   }
-  /* dynamic . fixed set	*/
+  /*
+   * dynamic . fixed set
+   */
   m_stageCurrent = (m_stageCurrent + 1) % STAGECOUNT;
   ArrayList<btDbvtProxy> stage_list = m_stageRoots[m_stageCurrent];
   //btDbvtTreeCollider	collider= new btDbvtTreeCollider(this);
@@ -110,29 +127,37 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
    m_stageRoots[current.stage].remove(stage_list.size() - 1);
    m_stageRoots[STAGECOUNT].add(current);
    m_sets[0].remove(current.leaf);
-   btDbvtAabbMm curAabb = btDbvtAabbMm.fromMM(current.m_aabbMin, current.m_aabbMax);
+   btDbvtAabbMm curAabb = btDbvtAabbMm.fromMM(current.m_aabbMin,
+    current.m_aabbMax);
    current.leaf = m_sets[1].insert(curAabb, 0, current);
    current.stage = STAGECOUNT;
   }
   m_fixedleft = m_sets[1].m_leaves;
   m_needcleanup = true;
 
-  /* collide dynamics		*/
+  /*
+   * collide dynamics
+   */
   {
    btDbvtTreeCollider collider = new btDbvtTreeCollider(this);
    if (m_deferedcollide) {
-    m_sets[0].collideTTpersistentStack(m_sets[0].m_root, m_sets[1].m_root, collider);
+    m_sets[0].collideTTpersistentStack(m_sets[0].m_root, m_sets[1].m_root,
+     collider);
    }
    if (m_deferedcollide) {
-    m_sets[0].collideTTpersistentStack(m_sets[0].m_root, m_sets[0].m_root, collider);
+    m_sets[0].collideTTpersistentStack(m_sets[0].m_root, m_sets[0].m_root,
+     collider);
    }
   }
-  /* clean up				*/
+  /*
+   * clean up
+   */
   if (m_needcleanup) {
    //SPC(m_profiling.m_cleanup);
    if (m_paircache.getNumOverlappingPairs() > 0) {
-    int ni = btMin(m_paircache.getNumOverlappingPairs(), btMax(m_newpairs, m_paircache
-     .getNumOverlappingPairs() * m_cupdates) / 100);
+    int ni = btMin(m_paircache.getNumOverlappingPairs(), btMax(m_newpairs,
+     m_paircache
+      .getNumOverlappingPairs() * m_cupdates) / 100);
     m_paircache.incrementalCleanup(ni, dispatcher);
    }
   }
@@ -153,11 +178,15 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
   m_sets[1].optimizeTopDown();
  }
 
- /* btBroadphaseInterface Implementation	*/
+ /*
+  * btBroadphaseInterface Implementation
+  */
  @Override
- public btBroadphaseProxy createProxy(final btVector3 aabbMin, final btVector3 aabbMax,
+ public btBroadphaseProxy createProxy(final btVector3 aabbMin,
+  final btVector3 aabbMax,
   int shapeType,
-  Object userPtr, int collisionFilterGroup, int collisionFilterMask, btDispatcher dispatcher) {
+  Object userPtr, int collisionFilterGroup, int collisionFilterMask,
+  btDispatcher dispatcher) {
   btDbvtProxy proxy = new btDbvtProxy(aabbMin, aabbMax, userPtr,
    collisionFilterGroup,
    collisionFilterMask);
@@ -188,26 +217,34 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
   m_paircache.removeOverlappingPairsContainingProxy(proxy, dispatcher);
   m_needcleanup = true;
  }
+
  static final float DBVT_BP_MARGIN = 0.05f;
 
  @Override
- public void setAabb(btBroadphaseProxy absproxy, final btVector3 aabbMin, final btVector3 aabbMax,
+ public void setAabb(btBroadphaseProxy absproxy, final btVector3 aabbMin,
+  final btVector3 aabbMax,
   btDispatcher dispatcher) {
   btDbvtProxy proxy = (btDbvtProxy) absproxy;
   btDbvtAabbMm aabb = btDbvtAabbMm.fromMM(aabbMin, aabbMax);
   {
    boolean docollide = false;
-   if (proxy.stage == STAGECOUNT) {/* fixed . dynamic set	*/
+   if (proxy.stage == STAGECOUNT) {/*
+     * fixed . dynamic set
+     */
     m_sets[1].remove(proxy.leaf);
     proxy.leaf = m_sets[0].insert(aabb, 0, proxy);
     docollide = true;
-   } else {/* dynamic set				*/
+   } else {/*
+     * dynamic set
+     */
     ++m_updates_call;
-    if (Intersect(proxy.leaf.volume(), aabb)) {/* Moving				*/
+    if (Intersect(proxy.leaf.volume(), aabb)) {/*
+      * Moving
+      */
 
      final btVector3 delta = new btVector3(aabbMin).sub(proxy.m_aabbMin);
-     final btVector3 velocity = new btVector3(proxy.m_aabbMax).sub(proxy.m_aabbMin).scale(1.0f /
-      2.0f)
+     final btVector3 velocity = new btVector3(proxy.m_aabbMax).sub(
+      proxy.m_aabbMin).scale(1.0f / 2.0f)
       .scale(m_prediction);
      if (delta.x < 0) {
       velocity.x = -velocity.x;
@@ -222,7 +259,9 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
       ++m_updates_done;
       docollide = true;
      }
-    } else {/* Teleporting			*/
+    } else {/*
+      * Teleporting
+      */
      m_sets[0].update(proxy.leaf, aabb);
      ++m_updates_done;
      docollide = true;
@@ -246,7 +285,8 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
 
  @Override
  public void rayTest(final btVector3 rayFrom, final btVector3 rayTo,
-  btBroadphaseRayCallback rayCallback, final btVector3 aabbMin, final btVector3 aabbMax) {
+  btBroadphaseRayCallback rayCallback, final btVector3 aabbMin,
+  final btVector3 aabbMax) {
   BroadphaseRayTester callback = new BroadphaseRayTester(rayCallback);
   ArrayList<  btDbvtNode> stack = m_rayTestStacks.get(0);
   m_sets[0].rayTestInternal(m_sets[0].m_root,
@@ -282,7 +322,8 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
  }
 
  @Override
- public void getAabb(btBroadphaseProxy absproxy, final btVector3 aabbMin, final btVector3 aabbMax) {
+ public void getAabb(btBroadphaseProxy absproxy, final btVector3 aabbMin,
+  final btVector3 aabbMax) {
   btDbvtProxy proxy = (btDbvtProxy) absproxy;
   aabbMin.set(proxy.m_aabbMin);
   aabbMax.set(proxy.m_aabbMax);
@@ -352,7 +393,8 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
 
  void performDeferredRemoval(btDispatcher dispatcher) {
   if (m_paircache.hasDeferredRemoval()) {
-   ArrayList<btBroadphasePair> overlappingPairArray = m_paircache.getOverlappingPairArrayPtr();
+   ArrayList<btBroadphasePair> overlappingPairArray = m_paircache
+    .getOverlappingPairArrayPtr();
    //perform a sort, to find duplicates and to sort 'invalid' pairs to the end
    overlappingPairArray.sort(new btBroadphasePairSortPredicate());
    int invalidPair = 0;
@@ -390,8 +432,10 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
    {
     int new_size = overlappingPairArray.size() - invalidPair;
     while (overlappingPairArray.size() > new_size) {
-     assert (overlappingPairArray.get(overlappingPairArray.size() - 1).m_pProxy0 == null);
-     assert (overlappingPairArray.get(overlappingPairArray.size() - 1).m_pProxy1 == null);
+     assert (overlappingPairArray.get(overlappingPairArray.size() - 1).m_pProxy0
+      == null);
+     assert (overlappingPairArray.get(overlappingPairArray.size() - 1).m_pProxy1
+      == null);
      overlappingPairArray.remove(overlappingPairArray.size() - 1);
     }
    }
@@ -416,13 +460,19 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
   btDbvtProxy proxy = (btDbvtProxy) absproxy;
   btDbvtAabbMm aabb = btDbvtAabbMm.fromMM(aabbMin, aabbMax);
   boolean docollide;
-  if (proxy.stage == STAGECOUNT) {/* fixed . dynamic set	*/
+  if (proxy.stage == STAGECOUNT) {/*
+    * fixed . dynamic set
+    */
    m_sets[1].remove(proxy.leaf);
    proxy.leaf = m_sets[0].insert(aabb, 0, proxy);
    docollide = true;
-  } else {/* dynamic set				*/
+  } else {/*
+    * dynamic set
+    */
    ++m_updates_call;
-   /* Teleporting			*/
+   /*
+    * Teleporting
+    */
    m_sets[0].update(proxy.leaf, aabb);
    ++m_updates_done;
    docollide = true;
@@ -444,4 +494,5 @@ public class btDbvtBroadphase extends btBroadphaseInterface implements Serializa
 
  static void benchmark(btBroadphaseInterface broadphase) {
  }
+
 }

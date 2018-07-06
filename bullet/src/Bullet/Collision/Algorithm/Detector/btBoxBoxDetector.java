@@ -2,19 +2,19 @@
  * Box-Box collision detection re-distributed under the ZLib license with permission from Russell L. Smith
  * Original version is from Open Dynamics Engine, Copyright (C) 2001,2002 Russell L. Smith.
  * All rights reserved.  Email: russ@q12.org   Web: www.q12.org
-
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ *
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Algorithm.Detector;
 
@@ -43,12 +43,13 @@ import javax.vecmath.FloatPointer;
 import static javax.vecmath.VecMath.different_epsilon;
 
 /**
- * btBoxBoxDetector wraps the ODE box-box collision detector re-distributed under the Zlib license
- * with permission from Russell L. Smith
+ * btBoxBoxDetector wraps the ODE box-box collision detector re-distributed
+ * under the Zlib license with permission from Russell L. Smith
  *
  * @author Gregery Barton
  */
-public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface implements Serializable {
+public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface
+ implements Serializable {
 
  private static final float dInfinity = FLT_MAX;
  private static final long serialVersionUID = 1L;
@@ -60,35 +61,43 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
  }
 
  private static float dDOT41(FloatPointer a, float[] b) {
-  return ((a).get(0) * (b)[(0)] + (a).get(4) * (b)[1] + (a).get(2 * (4)) * (b)[(2 * (1))]);
+  return ((a).get(0) * (b)[(0)] + (a).get(4) * (b)[1] + (a).get(2 * (4))
+   * (b)[(2 * (1))]);
  }
 
  private static float dDOT41(float[] a, float[] b) {
-  return ((a)[(0)] * (b)[(0)] + (a)[(4)] * (b)[1] + (a)[(2 * (4))] * (b)[(2 * (1))]);
+  return ((a)[(0)] * (b)[(0)] + (a)[(4)] * (b)[1] + (a)[(2 * (4))] * (b)[(2
+   * (1))]);
  }
 
  private static float dDOT44(FloatPointer a, FloatPointer b) {
-  return ((a).get(0) * (b).get(0) + (a).get(4) * (b).get(4) + (a).get(2 * (4)) * (b).get(2 * (4)));
+  return ((a).get(0) * (b).get(0) + (a).get(4) * (b).get(4) + (a).get(2 * (4))
+   * (b).get(2 * (4)));
  }
 
  private static float dDOT44(FloatPointer a, float[] b) {
-  return ((a).get(0) * (b)[(0)] + (a).get(4) * (b)[(4)] + (a).get(2 * (4)) * (b)[(2 * (4))]);
+  return ((a).get(0) * (b)[(0)] + (a).get(4) * (b)[(4)] + (a).get(2 * (4))
+   * (b)[(2 * (4))]);
  }
 
  private static float dDOT44(float[] a, float[] b) {
-  return ((a)[(0)] * (b)[(0)] + (a)[(4)] * (b)[(4)] + (a)[(2 * (4))] * (b)[(2 * (4))]);
+  return ((a)[(0)] * (b)[(0)] + (a)[(4)] * (b)[(4)] + (a)[(2 * (4))] * (b)[(2
+   * (4))]);
  }
 
  private static float dDOT44(float[] a, FloatPointer b) {
-  return ((a)[(0)] * (b).get(0) + (a)[(4)] * (b).get(4) + (a)[(2 * (4))] * (b).get(2 * 4));
+  return ((a)[(0)] * (b).get(0) + (a)[(4)] * (b).get(4) + (a)[(2 * (4))] * (b)
+   .get(2 * 4));
  }
 
  private static float dDOT(float[] a, FloatPointer b) {
-  return ((a)[(0)] * (b).get(0) + (a)[(1)] * (b).get(1) + (a)[(2 * (1))] * (b).get(2 * (1)));
+  return ((a)[(0)] * (b).get(0) + (a)[(1)] * (b).get(1) + (a)[(2 * (1))] * (b)
+   .get(2 * (1)));
  }
 
  private static float dDOT(FloatPointer a, float[] b) {
-  return ((a).get(0) * (b)[0] + (a).get(1) * (b)[1] + (a).get(2 * (1)) * (b)[2 * (1)]);
+  return ((a).get(0) * (b)[0] + (a).get(1) * (b)[1] + (a).get(2 * (1)) * (b)[2
+   * (1)]);
  }
 
  private static float dDOT(float[] a, float[] b) {
@@ -96,7 +105,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
  }
 
  private static float dDOT14(float[] a, FloatPointer b) {
-  return ((a)[0] * (b).get(0) + (a)[1] * (b).get(4) + (a)[2 * (1)] * (b).get(2 * (4)));
+  return ((a)[0] * (b).get(0) + (a)[1] * (b).get(4) + (a)[2 * (1)] * (b).get(2
+   * (4)));
  }
 
  private static void dLineClosestApproach(float[] pa, float[] ua,
@@ -160,8 +170,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
      FloatPointer nextq = (i > 1) ? new FloatPointer(pq, 2) : new FloatPointer(q);
      if ((sign * pq.get(dir) < h[dir]) ^ (sign * nextq.get(dir) < h[dir])) {
       // this line crosses the chopping line
-      pr.set(1 - dir, pq.get(1 - dir) + (nextq.get(1 - dir) - pq.get(1 - dir)) /
-       (nextq.get(dir) - pq.get(dir)) * (sign * h[dir] - pq.get(dir)));
+      pr.set(1 - dir, pq.get(1 - dir) + (nextq.get(1 - dir) - pq.get(1 - dir))
+       / (nextq.get(dir) - pq.get(dir)) * (sign * h[dir] - pq.get(dir)));
       pr.set(dir, sign * h[dir]);
       pr = new FloatPointer(pr, 2);
       nr++;
@@ -175,7 +185,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
     }
     if (!done) {
      q = r;
-     r = (q.is_pointing_to(ret)) ? new FloatPointer(buffer) : new FloatPointer(ret);
+     r = (q.is_pointing_to(ret)) ? new FloatPointer(buffer) : new FloatPointer(
+      ret);
      nq = nr;
     }
    }
@@ -260,6 +271,7 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
    i_iret++;
   }
  }
+
  final btBoxShape m_box1;
  final btBoxShape m_box2;
 
@@ -272,7 +284,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
  }
 
  @Override
- public void getClosestPoints(ClosestPointInput input, Result output, btIDebugDraw debugDraw,
+ public void getClosestPoints(ClosestPointInput input, Result output,
+  btIDebugDraw debugDraw,
   boolean swapResults) {
   final btTransform transformA = input.m_transformA;
   final btTransform transformB = input.m_transformB;
@@ -312,7 +325,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
   float[] normal, float[] depth, int[] return_code,
   int maxc, btDiscreteCollisionDetectorInterface.Result output) {
   int do_maxc = maxc;
-  /* c++ macros expanded to inline code
+  /*
+   * c++ macros expanded to inline code
    */
   float fudge_factor = (1.05f);
   final float[] p = new float[3];
@@ -402,7 +416,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
    invert_normal = ((dDOT41(R2, p)) < 0) ? 1 : 0;
    code = (4);
   }
-  s2 = btFabs(dDOT41(new FloatPointer(R2, 1), p)) - ((A[0] * Q12 + A[1] * Q22 + A[2] * Q32 + B[1]));
+  s2 = btFabs(dDOT41(new FloatPointer(R2, 1), p)) - ((A[0] * Q12 + A[1] * Q22
+   + A[2] * Q32 + B[1]));
   if (s2 > 0) {
    return 0;
   }
@@ -412,7 +427,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
    invert_normal = ((dDOT41(new FloatPointer(R2, 1), p)) < 0) ? 1 : 0;
    code = (5);
   }
-  s2 = btFabs(dDOT41(new FloatPointer(R2, 2), p)) - ((A[0] * Q13 + A[1] * Q23 + A[2] * Q33 + B[2]));
+  s2 = btFabs(dDOT41(new FloatPointer(R2, 2), p)) - ((A[0] * Q13 + A[1] * Q23
+   + A[2] * Q33 + B[2]));
   if (s2 > 0) {
    return 0;
   }
@@ -434,7 +450,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
   Q31 += fudge2;
   Q32 += fudge2;
   Q33 += fudge2;
-  s2 = btFabs(pp[2] * R21 - pp[1] * R31) - ((A[1] * Q31 + A[2] * Q21 + B[1] * Q13 + B[2] * Q12));
+  s2 = btFabs(pp[2] * R21 - pp[1] * R31) - ((A[1] * Q31 + A[2] * Q21 + B[1]
+   * Q13 + B[2] * Q12));
   if (s2 > SIMD_EPSILON) {
    return 0;
   }
@@ -451,7 +468,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
     code = (7);
    }
   }
-  s2 = btFabs(pp[2] * R22 - pp[1] * R32) - ((A[1] * Q32 + A[2] * Q22 + B[0] * Q13 + B[2] * Q11));
+  s2 = btFabs(pp[2] * R22 - pp[1] * R32) - ((A[1] * Q32 + A[2] * Q22 + B[0]
+   * Q13 + B[2] * Q11));
   if (s2 > SIMD_EPSILON) {
    return 0;
   }
@@ -468,7 +486,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
     code = (8);
    }
   }
-  s2 = btFabs(pp[2] * R23 - pp[1] * R33) - ((A[1] * Q33 + A[2] * Q23 + B[0] * Q12 + B[1] * Q11));
+  s2 = btFabs(pp[2] * R23 - pp[1] * R33) - ((A[1] * Q33 + A[2] * Q23 + B[0]
+   * Q12 + B[1] * Q11));
   if (s2 > SIMD_EPSILON) {
    return 0;
   }
@@ -485,7 +504,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
     code = (9);
    }
   }
-  s2 = btFabs(pp[0] * R31 - pp[2] * R11) - ((A[0] * Q31 + A[2] * Q11 + B[1] * Q23 + B[2] * Q22));
+  s2 = btFabs(pp[0] * R31 - pp[2] * R11) - ((A[0] * Q31 + A[2] * Q11 + B[1]
+   * Q23 + B[2] * Q22));
   if (s2 > SIMD_EPSILON) {
    return 0;
   }
@@ -502,7 +522,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
     code = (10);
    }
   }
-  s2 = btFabs(pp[0] * R32 - pp[2] * R12) - ((A[0] * Q32 + A[2] * Q12 + B[0] * Q23 + B[2] * Q21));
+  s2 = btFabs(pp[0] * R32 - pp[2] * R12) - ((A[0] * Q32 + A[2] * Q12 + B[0]
+   * Q23 + B[2] * Q21));
   if (s2 > SIMD_EPSILON) {
    return 0;
   }
@@ -519,7 +540,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
     code = (11);
    }
   }
-  s2 = btFabs(pp[0] * R33 - pp[2] * R13) - ((A[0] * Q33 + A[2] * Q13 + B[0] * Q22 + B[1] * Q21));
+  s2 = btFabs(pp[0] * R33 - pp[2] * R13) - ((A[0] * Q33 + A[2] * Q13 + B[0]
+   * Q22 + B[1] * Q21));
   if (s2 > SIMD_EPSILON) {
    return 0;
   }
@@ -536,7 +558,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
     code = (12);
    }
   }
-  s2 = btFabs(pp[1] * R11 - pp[0] * R21) - ((A[0] * Q21 + A[1] * Q11 + B[1] * Q33 + B[2] * Q32));
+  s2 = btFabs(pp[1] * R11 - pp[0] * R21) - ((A[0] * Q21 + A[1] * Q11 + B[1]
+   * Q33 + B[2] * Q32));
   if (s2 > SIMD_EPSILON) {
    return 0;
   }
@@ -553,7 +576,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
     code = (13);
    }
   }
-  s2 = btFabs(pp[1] * R12 - pp[0] * R22) - ((A[0] * Q22 + A[1] * Q12 + B[0] * Q33 + B[2] * Q31));
+  s2 = btFabs(pp[1] * R12 - pp[0] * R22) - ((A[0] * Q22 + A[1] * Q12 + B[0]
+   * Q33 + B[2] * Q31));
   if (s2 > SIMD_EPSILON) {
    return 0;
   }
@@ -570,7 +594,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
     code = (14);
    }
   }
-  s2 = btFabs(pp[1] * R13 - pp[0] * R23) - ((A[0] * Q23 + A[1] * Q13 + B[0] * Q32 + B[1] * Q31));
+  s2 = btFabs(pp[1] * R13 - pp[0] * R23) - ((A[0] * Q23 + A[1] * Q13 + B[0]
+   * Q32 + B[1] * Q31));
   if (s2 > SIMD_EPSILON) {
    return 0;
   }
@@ -638,7 +663,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
     pb[i] += ub[i] * beta[0];
    }
    {
-    output.addContactPoint(new btVector3(normal).negate(), new btVector3(pb), -depth[0]);
+    output.addContactPoint(new btVector3(normal).negate(), new btVector3(pb),
+     -depth[0]);
     return_code[0] = code;
    }
    return 1;
@@ -756,8 +782,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
    float k1 = m22 * (ret[j * 2] - c1) - m12 * (ret[j * 2 + 1] - c2);
    float k2 = -m21 * (ret[j * 2] - c1) + m11 * (ret[j * 2 + 1] - c2);
    for (i = 0; i < 3; i++) {
-    point[cnum * 3 + i] =
-     center[i] + k1 * Rb.get(i * 4 + a1) + k2 * Rb.get(i * 4 + a2);
+    point[cnum * 3 + i]
+     = center[i] + k1 * Rb.get(i * 4 + a1) + k2 * Rb.get(i * 4 + a2);
    }
    dep[cnum] = Sa.get(codeN) - dDOT(normal2, new FloatPointer(point, cnum * 3));
    if (dep[cnum] >= 0) {
@@ -784,7 +810,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
      for (i = 0; i < 3; i++) {
       pointInWorld[i] = point[j * 3 + i] + pa.get(i);
      }
-     output.addContactPoint(new btVector3(normal).negate(), new btVector3(pointInWorld), -dep[j]);
+     output.addContactPoint(new btVector3(normal).negate(), new btVector3(
+      pointInWorld), -dep[j]);
     }
    } else {
     // we have less contacts than we need, so we use them all
@@ -794,7 +821,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
       pointInWorld[i] = point[j * 3 + i] + pa.get(i) - normal[i] * dep[j];
      }
      //pointInWorld[i] = point[j*3+i] + pa[i];
-     output.addContactPoint(new btVector3(normal).negate(), new btVector3(pointInWorld), -dep[j]);
+     output.addContactPoint(new btVector3(normal).negate(), new btVector3(
+      pointInWorld), -dep[j]);
     }
    }
   } else {
@@ -816,11 +844,13 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
      posInWorld[i] = point[iret[j] * 3 + i] + pa.get(i);
     }
     if (code < 4) {
-     output.addContactPoint(new btVector3(normal).negate(), new btVector3(posInWorld),
+     output.addContactPoint(new btVector3(normal).negate(), new btVector3(
+      posInWorld),
       -dep[iret[j]]);
     } else {
      output.addContactPoint(new btVector3(normal).negate(),
-      new btVector3(normal).negate().scaleAdd(dep[iret[j]], new btVector3(posInWorld)),
+      new btVector3(normal).negate().scaleAdd(dep[iret[j]], new btVector3(
+       posInWorld)),
       -dep[iret[j]]);
     }
    }
@@ -830,7 +860,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
   return cnum;
  }
 
- private void calc_global_normal(FloatPointer normalR, float[] normal, float[] R1,
+ private void calc_global_normal(FloatPointer normalR, float[] normal,
+  float[] R1,
   final float[] normalC, int invert_normal) {
   if (normalR != null) {
    normal[0] = normalR.get(0);
@@ -850,7 +881,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
   }
  }
 
- private void calc_quad(float[] quad, float m11, float m12, float m21, float m22, FloatPointer Sb,
+ private void calc_quad(float[] quad, float m11, float m12, float m21, float m22,
+  FloatPointer Sb,
   int a1, int a2, float c1, float c2) {
   float k1 = m11 * Sb.get(a1);
   float k2 = m21 * Sb.get(a1);
@@ -866,7 +898,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
   quad[7] = c2 + k2 - k4;
  }
 
- private void calc_incident_face_center(float[] nr, int lanr, float[] center, FloatPointer pb,
+ private void calc_incident_face_center(float[] nr, int lanr, float[] center,
+  FloatPointer pb,
   FloatPointer pa, FloatPointer Sb, FloatPointer Rb) {
   if (nr[lanr] < 0) {
    for (int i = 0; i < 3; i++) {
@@ -879,7 +912,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
   }
  }
 
- private void calc_face_box_normal(int code, float[] normal2, float[] normal, float[] nr,
+ private void calc_face_box_normal(int code, float[] normal2, float[] normal,
+  float[] nr,
   FloatPointer Rb, float[] anr) {
   if (code <= 3) {
    normal2[0] = normal[0];
@@ -900,7 +934,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
   anr[2] = btFabs(nr[2]);
  }
 
- private void calc_half_extents(float[] A, float[] side1, float[] B, float[] side2) {
+ private void calc_half_extents(float[] A, float[] side1, float[] B,
+  float[] side2) {
   // get side lengths / 2
   A[0] = side1[0] * (0.5f);
   A[1] = side1[1] * (0.5f);
@@ -922,7 +957,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
   */
  private static class Testbed {
 
-  private static boolean compare_results(List<BoxBoxOutput> expected, List<BoxBoxOutput> results) {
+  private static boolean compare_results(List<BoxBoxOutput> expected,
+   List<BoxBoxOutput> results) {
    if (expected.size() != results.size()) {
     return false;
    }
@@ -984,7 +1020,8 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
    }
 
    @Override
-   public void addContactPoint(final btVector3 normalOnBInWorld, final btVector3 pointInWorld,
+   public void addContactPoint(final btVector3 normalOnBInWorld,
+    final btVector3 pointInWorld,
     float depth) {
     BoxBoxOutput o = new BoxBoxOutput();
     o.depth = depth;
@@ -992,6 +1029,7 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
     o.pointInWorld.set(pointInWorld);
     points.add(o);
    }
+
   }
 
   /**
@@ -1000,8 +1038,9 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
   private static void test() {
    List<BoxBoxRun> cpp_data = new ArrayList<>();
    try {
-    BufferedReader r =
-     new BufferedReader(new FileReader("../cppexamples/getClosesPoints_input.txt"));
+    BufferedReader r
+     = new BufferedReader(new FileReader(
+      "../cppexamples/getClosesPoints_input.txt"));
     while (true) {
      String start = r.readLine();
      if (start == null) {
@@ -1066,11 +1105,13 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
    System.out.println("all same");
   }
 
-  private static void read_transform(BufferedReader r, final btTransform t) throws
+  private static void read_transform(BufferedReader r, final btTransform t)
+   throws
    NumberFormatException, IOException {
-   String transA =
-    r.readLine().trim() + " " + r.readLine().trim() + " " + r.readLine().trim() + " " + r.readLine()
-    .trim();
+   String transA
+    = r.readLine().trim() + " " + r.readLine().trim() + " " + r.readLine()
+    .trim() + " " + r.readLine()
+     .trim();
    String[] split = transA.split("\\s+");
    float[] mv = new float[12];
    for (int i = 0; i < split.length; ++i) {
@@ -1092,5 +1133,6 @@ public class btBoxBoxDetector extends btDiscreteCollisionDetectorInterface imple
    }
    v.set(mv);
   }
+
  }
 }

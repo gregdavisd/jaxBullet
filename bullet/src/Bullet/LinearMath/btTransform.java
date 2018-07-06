@@ -1,15 +1,15 @@
 /*
-Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.LinearMath;
 
@@ -24,8 +24,8 @@ public class btTransform extends Matrix4f<btTransform> implements Serializable {
 
  static final btTransform IDENTITY = new btTransform().setIdentity();
 
- /* corresponding index in a column major OpenGL matrix 
-	
+ /*
+  * corresponding index in a column major OpenGL matrix   *
   */
  static final int M00 = 0;
  static final int M01 = 4;
@@ -64,9 +64,12 @@ public class btTransform extends Matrix4f<btTransform> implements Serializable {
   * @param m32
   * @param m33
   */
- public btTransform(float m00, float m01, float m02, float m03, float m10, float m11, float m12,
-  float m13, float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33) {
-  super(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
+ public btTransform(float m00, float m01, float m02, float m03, float m10,
+  float m11, float m12,
+  float m13, float m20, float m21, float m22, float m23, float m30, float m31,
+  float m32, float m33) {
+  super(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31,
+   m32, m33);
  }
 
  /**
@@ -84,6 +87,7 @@ public class btTransform extends Matrix4f<btTransform> implements Serializable {
  public btTransform(final btTransform m1) {
   super(m1);
  }
+
  public btTransform(final Matrix4f m1) {
   super(m1);
  }
@@ -152,8 +156,8 @@ public class btTransform extends Matrix4f<btTransform> implements Serializable {
  }
 
  /**
-  * The returned matrix does not back the original transform unlike in the c++ version. Use setBasis
-  * instead.
+  * The returned matrix does not back the original transform unlike in the c++
+  * version. Use setBasis instead.
   *
   * @return
   */
@@ -162,7 +166,8 @@ public class btTransform extends Matrix4f<btTransform> implements Serializable {
  }
 
  /**
-  * Get a 3 component vector from a columns. The returned vector is independent of the matrix.
+  * Get a 3 component vector from a columns. The returned vector is independent
+  * of the matrix.
   *
   * @param column
   * @return
@@ -174,7 +179,8 @@ public class btTransform extends Matrix4f<btTransform> implements Serializable {
  }
 
  /**
-  * Get a 3 component vector from a columns. The returned vector is independent of the matrix.
+  * Get a 3 component vector from a columns. The returned vector is independent
+  * of the matrix.
   *
   * @param column number
   * @param v vector output
@@ -204,7 +210,8 @@ public class btTransform extends Matrix4f<btTransform> implements Serializable {
  }
 
  /**
-  * Get a 3 component vector from a row. The returned vector is independent of the matrix.
+  * Get a 3 component vector from a row. The returned vector is independent of
+  * the matrix.
   *
   * @param row number
   * @return
@@ -215,7 +222,8 @@ public class btTransform extends Matrix4f<btTransform> implements Serializable {
  }
 
  /**
-  * Get a 3 component vector from a row. The returned vector is independent of the matrix.
+  * Get a 3 component vector from a row. The returned vector is independent of
+  * the matrix.
   *
   * @param row number
   * @param v output vector
@@ -261,7 +269,8 @@ public class btTransform extends Matrix4f<btTransform> implements Serializable {
  public btTransform inverseTimes(final btTransform t) {
   final btVector3 v = t.getOrigin().sub(getOrigin());
   final btMatrix3x3 basis = getBasis();
-  return new btTransform(basis.transposeTimes(t.getBasis()), basis.transposeTransform(v));
+  return new btTransform(basis.transposeTimes(t.getBasis()), basis
+   .transposeTransform(v));
  }
 
  /**
@@ -305,4 +314,5 @@ public class btTransform extends Matrix4f<btTransform> implements Serializable {
  public static btTransform getIdentity() {
   return new btTransform(IDENTITY);
  }
+
 }

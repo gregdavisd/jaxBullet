@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision;
 
@@ -29,11 +29,13 @@ import java.util.Arrays;
  *
  * @author Gregery Barton
  */
-class btMinkowskiPenetrationDepthSolver implements btConvexPenetrationDepthSolver, Serializable {
+class btMinkowskiPenetrationDepthSolver implements
+ btConvexPenetrationDepthSolver, Serializable {
 
  @Override
  public boolean calcPenDepth(btSimplexSolverInterface simplexSolver,
-  btConvexShape convexA, btConvexShape convexB, final btTransform transA, final btTransform transB,
+  btConvexShape convexA, btConvexShape convexB, final btTransform transA,
+  final btTransform transB,
   final btVector3 v, final btVector3 pa, final btVector3 pb,
   btIDebugDraw debugDraw
  ) {
@@ -50,20 +52,22 @@ class btMinkowskiPenetrationDepthSolver implements btConvexPenetrationDepthSolve
   final btVector3 pWorld = new btVector3();
   final btVector3 qWorld = new btVector3();
   final btVector3 w = new btVector3();
-  btVector3[] supportVerticesABatch = new btVector3[NUM_UNITSPHERE_POINTS +
-   MAX_PREFERRED_PENETRATION_DIRECTIONS * 2];
-  btVector3[] supportVerticesBBatch = new btVector3[NUM_UNITSPHERE_POINTS +
-   MAX_PREFERRED_PENETRATION_DIRECTIONS * 2];
-  btVector3[] seperatingAxisInABatch = new btVector3[NUM_UNITSPHERE_POINTS +
-   MAX_PREFERRED_PENETRATION_DIRECTIONS * 2];
-  btVector3[] seperatingAxisInBBatch = new btVector3[NUM_UNITSPHERE_POINTS +
-   MAX_PREFERRED_PENETRATION_DIRECTIONS * 2];
+  btVector3[] supportVerticesABatch = new btVector3[NUM_UNITSPHERE_POINTS
+   + MAX_PREFERRED_PENETRATION_DIRECTIONS * 2];
+  btVector3[] supportVerticesBBatch = new btVector3[NUM_UNITSPHERE_POINTS
+   + MAX_PREFERRED_PENETRATION_DIRECTIONS * 2];
+  btVector3[] seperatingAxisInABatch = new btVector3[NUM_UNITSPHERE_POINTS
+   + MAX_PREFERRED_PENETRATION_DIRECTIONS * 2];
+  btVector3[] seperatingAxisInBBatch = new btVector3[NUM_UNITSPHERE_POINTS
+   + MAX_PREFERRED_PENETRATION_DIRECTIONS * 2];
   int numSampleDirections = NUM_UNITSPHERE_POINTS;
   {
    for (int i = 0; i < numSampleDirections; i++) {
     final btVector3 norm = getPenetrationDirections()[i];
-    seperatingAxisInABatch[i] = transA.transposeTransform3x3(new btVector3(norm).negate());
-    seperatingAxisInBBatch[i] = transB.transposeTransform3x3(new btVector3(norm));
+    seperatingAxisInABatch[i] = transA.transposeTransform3x3(new btVector3(norm)
+     .negate());
+    seperatingAxisInBBatch[i] = transB
+     .transposeTransform3x3(new btVector3(norm));
    }
   }
   {
@@ -74,9 +78,11 @@ class btMinkowskiPenetrationDepthSolver implements btConvexPenetrationDepthSolve
      convexA.getPreferredPenetrationDirection(i, norm);
      transA.transform3x3(norm);
      getPenetrationDirections()[numSampleDirections].set(norm);
-     seperatingAxisInABatch[numSampleDirections] = transA.transposeTransform3x3(new btVector3(norm)
-      .negate());
-     seperatingAxisInBBatch[numSampleDirections] = transB.transposeTransform3x3(norm);
+     seperatingAxisInABatch[numSampleDirections] = transA.transposeTransform3x3(
+      new btVector3(norm)
+       .negate());
+     seperatingAxisInBBatch[numSampleDirections] = transB.transposeTransform3x3(
+      norm);
      numSampleDirections++;
     }
    }
@@ -89,15 +95,19 @@ class btMinkowskiPenetrationDepthSolver implements btConvexPenetrationDepthSolve
      convexB.getPreferredPenetrationDirection(i, norm);
      transB.transform3x3(norm);
      getPenetrationDirections()[numSampleDirections].set(norm);
-     seperatingAxisInABatch[numSampleDirections] = transA.transform3x3(new btVector3(norm).negate());
-     seperatingAxisInBBatch[numSampleDirections] = transB.transform3x3(new btVector3(norm));
+     seperatingAxisInABatch[numSampleDirections] = transA.transform3x3(
+      new btVector3(norm).negate());
+     seperatingAxisInBBatch[numSampleDirections] = transB.transform3x3(
+      new btVector3(norm));
      numSampleDirections++;
     }
    }
   }
-  convexA.batchedUnitVectorGetSupportingVertexWithoutMargin(seperatingAxisInABatch,
+  convexA.batchedUnitVectorGetSupportingVertexWithoutMargin(
+   seperatingAxisInABatch,
    supportVerticesABatch, numSampleDirections);
-  convexB.batchedUnitVectorGetSupportingVertexWithoutMargin(seperatingAxisInBBatch,
+  convexB.batchedUnitVectorGetSupportingVertexWithoutMargin(
+   seperatingAxisInBBatch,
    supportVerticesBBatch, numSampleDirections);
   for (int i = 0; i < numSampleDirections; i++) {
    final btVector3 norm = new btVector3(getPenetrationDirections()[i]);
@@ -134,8 +144,10 @@ class btMinkowskiPenetrationDepthSolver implements btConvexPenetrationDepthSolve
    return false;
   }
   float extraSeparation = 0.5f;///scale dependent
-  minProj += extraSeparation + (convexA.getMarginNonVirtual() + convexB.getMarginNonVirtual());
-  btGjkPairDetector gjkdet = new btGjkPairDetector(convexA, convexB, simplexSolver, null);
+  minProj += extraSeparation + (convexA.getMarginNonVirtual() + convexB
+   .getMarginNonVirtual());
+  btGjkPairDetector gjkdet = new btGjkPairDetector(convexA, convexB,
+   simplexSolver, null);
   float offsetDist = minProj;
   final btVector3 offset = new btVector3(minNorm).scale(offsetDist);
   btGjkPairDetector.ClosestPointInput input = new btGjkPairDetector.ClosestPointInput();
@@ -159,6 +171,7 @@ class btMinkowskiPenetrationDepthSolver implements btConvexPenetrationDepthSolve
   }
   return res.m_hasResult;
  }
+
  static btVector3[] sPenetrationDirections = new btVector3[]{
   new btVector3((0.000000f), (-0.000000f), (-1.000000f)),
   new btVector3((0.723608f), (-0.525725f), (-0.447219f)),
@@ -205,12 +218,13 @@ class btMinkowskiPenetrationDepthSolver implements btConvexPenetrationDepthSolve
  };
 
  static {
-  sPenetrationDirections = Arrays.copyOf(sPenetrationDirections, NUM_UNITSPHERE_POINTS +
-   MAX_PREFERRED_PENETRATION_DIRECTIONS * 2);
+  sPenetrationDirections = Arrays.copyOf(sPenetrationDirections,
+   NUM_UNITSPHERE_POINTS + MAX_PREFERRED_PENETRATION_DIRECTIONS * 2);
   init(sPenetrationDirections);
  }
 
  btVector3[] getPenetrationDirections() {
   return sPenetrationDirections;
  }
+
 }

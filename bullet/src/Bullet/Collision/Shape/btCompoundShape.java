@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 /// The btCompoundShape allows to store multiple other btCollisionShapes
@@ -70,7 +70,8 @@ public class btCompoundShape extends btCollisionShape implements Serializable {
   this(true, 0);
  }
 
- public void addChildShape(final btTransform localTransform, btCollisionShape shape) {
+ public void addChildShape(final btTransform localTransform,
+  btCollisionShape shape) {
   m_updateRevision++;
   //m_childTransforms.push_back(localTransform);
   //m_childShapes.push_back(shape);
@@ -152,7 +153,8 @@ public class btCompoundShape extends btCollisionShape implements Serializable {
  }
 
  ///set a new transform for a child, and update internal data structures (local aabb and dynamic tree)
- public void updateChildTransform(int childIndex, final btTransform newChildTransform,
+ public void updateChildTransform(int childIndex,
+  final btTransform newChildTransform,
   boolean shouldRecalculateLocalAabb
  ) {
   m_children.get(childIndex).m_transform.set(newChildTransform);
@@ -160,7 +162,8 @@ public class btCompoundShape extends btCollisionShape implements Serializable {
    ///update the dynamic aabb tree
    final btVector3 localAabbMin = new btVector3();
    final btVector3 localAabbMax = new btVector3();
-   m_children.get(childIndex).m_childShape.getAabb(newChildTransform, localAabbMin, localAabbMax);
+   m_children.get(childIndex).m_childShape.getAabb(newChildTransform,
+    localAabbMin, localAabbMax);
    btDbvtAabbMm bounds = btDbvtAabbMm.fromMM(localAabbMin, localAabbMax);
    //int index = m_children.size()-1;
    m_dynamicAabbTree.update(m_children.get(childIndex).m_node, bounds);
@@ -170,7 +173,8 @@ public class btCompoundShape extends btCollisionShape implements Serializable {
   }
  }
 
- public void updateChildTransform(int childIndex, final btTransform newChildTransform) {
+ public void updateChildTransform(int childIndex,
+  final btTransform newChildTransform) {
   updateChildTransform(childIndex, newChildTransform, true);
  }
 
@@ -180,9 +184,12 @@ public class btCompoundShape extends btCollisionShape implements Serializable {
 
  ///getAabb's default implementation is brute force, expected derived classes to implement a fast dedicated version
  @Override
- public void getAabb(final btTransform trans, final btVector3 aabbMin, final btVector3 aabbMax) {
-  final btVector3 localHalfExtents = new btVector3(m_localAabbMax).sub(m_localAabbMin).scale(0.5f);
-  final btVector3 localCenter = new btVector3(m_localAabbMax).add(m_localAabbMin).scale(0.5f);
+ public void getAabb(final btTransform trans, final btVector3 aabbMin,
+  final btVector3 aabbMax) {
+  final btVector3 localHalfExtents = new btVector3(m_localAabbMax).sub(
+   m_localAabbMin).scale(0.5f);
+  final btVector3 localCenter = new btVector3(m_localAabbMax)
+   .add(m_localAabbMin).scale(0.5f);
   //avoid an illegal AABB when there are no children
   if (m_children.isEmpty()) {
    localHalfExtents.set(0, 0, 0);
@@ -200,8 +207,8 @@ public class btCompoundShape extends btCollisionShape implements Serializable {
  }
 
  /**
-  * Re-calculate the local Aabb. Is called at the end of removeChildShapes. Use this yourself if you
-  * modify the children or their transforms.
+  * Re-calculate the local Aabb. Is called at the end of removeChildShapes. Use
+  * this yourself if you modify the children or their transforms.
   */
  public void recalculateLocalAabb() {
   // Recalculate the local aabb
@@ -212,7 +219,8 @@ public class btCompoundShape extends btCollisionShape implements Serializable {
   for (int j = 0; j < m_children.size(); j++) {
    final btVector3 localAabbMin = new btVector3();
    final btVector3 localAabbMax = new btVector3();
-   m_children.get(j).m_childShape.getAabb(m_children.get(j).m_transform, localAabbMin, localAabbMax);
+   m_children.get(j).m_childShape.getAabb(m_children.get(j).m_transform,
+    localAabbMin, localAabbMax);
    if (m_localAabbMin.x > localAabbMin.x) {
     m_localAabbMin.x = localAabbMin.x;
    }
@@ -315,7 +323,8 @@ public class btCompoundShape extends btCollisionShape implements Serializable {
  ///"principal" has to be applied inversely to all children transforms in order for the local coordinate system of the compound
  ///shape to be centered at the center of mass and to coincide with the principal axes. This also necessitates a correction of the world transform
  ///of the collision object by the principal transform.
- public void calculatePrincipalAxisTransform(float[] masses, final btTransform principal,
+ public void calculatePrincipalAxisTransform(float[] masses,
+  final btTransform principal,
   final btVector3 inertia) {
   int n = m_children.size();
   float totalMass = 0;
@@ -390,7 +399,8 @@ public class btCompoundShape extends btCollisionShape implements Serializable {
    return false;
   }
   final btCompoundShape other = (btCompoundShape) obj;
-  if (Float.floatToIntBits(this.m_collisionMargin) != Float.floatToIntBits(other.m_collisionMargin)) {
+  if (Float.floatToIntBits(this.m_collisionMargin) != Float.floatToIntBits(
+   other.m_collisionMargin)) {
    return false;
   }
   if (!Objects.equals(this.m_children, other.m_children)) {
@@ -407,4 +417,5 @@ public class btCompoundShape extends btCollisionShape implements Serializable {
   }
   return super.equals(obj);
  }
+
 }

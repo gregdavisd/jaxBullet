@@ -138,7 +138,8 @@ public class btRotationalLimitMotor implements Serializable {
  }
 
  //! apply the correction impulses for two bodies
- float solveAngularLimits(float timeStep, final btVector3 axis, float jacDiagABInv,
+ float solveAngularLimits(float timeStep, final btVector3 axis,
+  float jacDiagABInv,
   btRigidBody body0, btRigidBody body1) {
   if (needApplyTorques() == false) {
    return 0.0f;
@@ -167,11 +168,11 @@ public class btRotationalLimitMotor implements Serializable {
   float clippedMotorImpulse;
   ///@todo: should clip against accumulated impulse
   if (unclippedMotorImpulse > 0.0f) {
-   clippedMotorImpulse = unclippedMotorImpulse > maxMotorForce ? maxMotorForce :
-    unclippedMotorImpulse;
+   clippedMotorImpulse = unclippedMotorImpulse > maxMotorForce ? maxMotorForce
+    : unclippedMotorImpulse;
   } else {
-   clippedMotorImpulse = unclippedMotorImpulse < -maxMotorForce ? -maxMotorForce :
-    unclippedMotorImpulse;
+   clippedMotorImpulse = unclippedMotorImpulse < -maxMotorForce ? -maxMotorForce
+    : unclippedMotorImpulse;
   }
   // sort with accumulated impulses
   float lo = (-BT_LARGE_FLOAT);
@@ -185,4 +186,5 @@ public class btRotationalLimitMotor implements Serializable {
   body1.applyTorqueImpulse(new btVector3(motorImp).negate());
   return clippedMotorImpulse;
  }
+
 }

@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2013 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2013 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision;
 
@@ -78,13 +78,16 @@ public class btCollisionWorld implements Serializable {
  /// rayTestSingle performs a raycast call and calls the resultCallback. It is used internally by rayTest.
  /// In a future implementation, we consider moving the ray test as a   method in btCollisionShape.
  /// This allows more customization.
- public static void rayTestSingle(final btTransform rayFromTrans, final btTransform rayToTrans,
+ public static void rayTestSingle(final btTransform rayFromTrans,
+  final btTransform rayToTrans,
   btCollisionObject collisionObject,
   btCollisionShape collisionShape, final btTransform colObjWorldTransform,
   RayResultCallback resultCallback) {
-  btCollisionObjectWrapper colObWrap = new btCollisionObjectWrapper(null, collisionShape,
+  btCollisionObjectWrapper colObWrap = new btCollisionObjectWrapper(null,
+   collisionShape,
    collisionObject, colObjWorldTransform, -1, -1);
-  btCollisionWorld.rayTestSingleInternal(rayFromTrans, rayToTrans, colObWrap, resultCallback);
+  btCollisionWorld.rayTestSingleInternal(rayFromTrans, rayToTrans, colObWrap,
+   resultCallback);
  }
 
  public static void rayTestSingleInternal(final btTransform rayFromTrans,
@@ -95,7 +98,8 @@ public class btCollisionWorld implements Serializable {
   pointShape.setMargin(0.f);
   btConvexShape castShape = pointShape;
   btCollisionShape collisionShape = collisionObjectWrap.getCollisionShape();
-  final btTransform colObjWorldTransform = collisionObjectWrap.getWorldTransform();
+  final btTransform colObjWorldTransform = collisionObjectWrap
+   .getWorldTransform();
   if (collisionShape.isConvex()) {
    //		BT_PROFILE("rayTestConvex");
    btConvexCast.CastResult castResult = new btConvexCast.CastResult();
@@ -104,13 +108,16 @@ public class btCollisionWorld implements Serializable {
    btVoronoiSimplexSolver simplexSolver = new btVoronoiSimplexSolver();
    btConvexCast convexCasterPtr;
    //use kF_UseSubSimplexConvexCastRaytest by default
-   if ((resultCallback.m_flags & btTriangleRaycastCallback.kF_UseGjkConvexCastRaytest) != 0) {
+   if ((resultCallback.m_flags
+    & btTriangleRaycastCallback.kF_UseGjkConvexCastRaytest) != 0) {
     convexCasterPtr = new btGjkConvexCast(castShape, convexShape, simplexSolver);
    } else {
-    convexCasterPtr = new btSubsimplexConvexCast(castShape, convexShape, simplexSolver);
+    convexCasterPtr = new btSubsimplexConvexCast(castShape, convexShape,
+     simplexSolver);
    }
    btConvexCast convexCaster = convexCasterPtr;
-   if (convexCaster.calcTimeOfImpact(rayFromTrans, rayToTrans, colObjWorldTransform,
+   if (convexCaster.calcTimeOfImpact(rayFromTrans, rayToTrans,
+    colObjWorldTransform,
     colObjWorldTransform, castResult)) {
     //add hit
     if (castResult.m_normal.lengthSquared() > 0.0001f) {
@@ -127,25 +134,32 @@ public class btCollisionWorld implements Serializable {
     }
    }
   } else if (collisionShape.isConcave()) {
-   final btTransform worldTocollisionObject = new btTransform(colObjWorldTransform).invert();
-   final btVector3 rayFromLocal = worldTocollisionObject.transform(rayFromTrans.getOrigin());
-   final btVector3 rayToLocal = worldTocollisionObject.transform(rayToTrans.getOrigin());
+   final btTransform worldTocollisionObject = new btTransform(
+    colObjWorldTransform).invert();
+   final btVector3 rayFromLocal = worldTocollisionObject.transform(rayFromTrans
+    .getOrigin());
+   final btVector3 rayToLocal = worldTocollisionObject.transform(rayToTrans
+    .getOrigin());
    BT_PROFILE("rayTestConcave");
    if (collisionShape.getShapeType() == TRIANGLE_MESH_SHAPE_PROXYTYPE) {
     ///optimized version for btBvhTriangleMeshShape
     btBvhTriangleMeshShape triangleMesh = (btBvhTriangleMeshShape) collisionShape;
-    BridgeTriangleRaycastCallback rcb = new BridgeTriangleRaycastCallback(rayFromLocal, rayToLocal,
+    BridgeTriangleRaycastCallback rcb = new BridgeTriangleRaycastCallback(
+     rayFromLocal, rayToLocal,
      resultCallback,
-     collisionObjectWrap.getCollisionObject(), triangleMesh, colObjWorldTransform
+     collisionObjectWrap.getCollisionObject(), triangleMesh,
+     colObjWorldTransform
     );
     rcb.m_hitFraction = resultCallback.m_closestHitFraction;
     triangleMesh.performRaycast(rcb, rayFromLocal, rayToLocal);
    } else {
     //generic (slower) case
     btConcaveShape concaveShape = (btConcaveShape) collisionShape;
-    BridgeTriangleRaycastCallback rcb = new BridgeTriangleRaycastCallback(rayFromLocal, rayToLocal,
+    BridgeTriangleRaycastCallback rcb = new BridgeTriangleRaycastCallback(
+     rayFromLocal, rayToLocal,
      resultCallback,
-     collisionObjectWrap.getCollisionObject(), concaveShape, colObjWorldTransform
+     collisionObjectWrap.getCollisionObject(), concaveShape,
+     colObjWorldTransform
     );
     rcb.m_hitFraction = resultCallback.m_closestHitFraction;
     final btVector3 rayAabbMinLocal = rayFromLocal;
@@ -168,8 +182,10 @@ public class btCollisionWorld implements Serializable {
     );
     btDbvt dbvt = compoundShape.getDynamicAabbTree();
     if (dbvt != null) {
-     final btVector3 localRayFrom = colObjWorldTransform.inverseTimes(rayFromTrans).getOrigin();
-     final btVector3 localRayTo = colObjWorldTransform.inverseTimes(rayToTrans).getOrigin();
+     final btVector3 localRayFrom = colObjWorldTransform.inverseTimes(
+      rayFromTrans).getOrigin();
+     final btVector3 localRayTo = colObjWorldTransform.inverseTimes(rayToTrans)
+      .getOrigin();
      btDbvt.rayTest(dbvt.m_root, localRayFrom, localRayTo, rayCB);
     } else {
      for (int i = 0, n = compoundShape.getNumChildShapes(); i < n; ++i) {
@@ -194,10 +210,12 @@ public class btCollisionWorld implements Serializable {
    btConvexShape convexShape = (btConvexShape) collisionShape;
    btVoronoiSimplexSolver simplexSolver = new btVoronoiSimplexSolver();
    btGjkEpaPenetrationDepthSolver gjkEpaPenetrationSolver = new btGjkEpaPenetrationDepthSolver();
-   btContinuousConvexCollision convexCaster1 = new btContinuousConvexCollision(castShape,
+   btContinuousConvexCollision convexCaster1 = new btContinuousConvexCollision(
+    castShape,
     convexShape, simplexSolver, gjkEpaPenetrationSolver);
    btConvexCast castPtr = convexCaster1;
-   if (castPtr.calcTimeOfImpact(convexFromTrans, convexToTrans, colObjWorldTransform,
+   if (castPtr.calcTimeOfImpact(convexFromTrans, convexToTrans,
+    colObjWorldTransform,
     colObjWorldTransform, castResult)) {
     //add hit
     if (castResult.m_normal.lengthSquared() > 0.0001f) {
@@ -220,22 +238,29 @@ public class btCollisionWorld implements Serializable {
     case TRIANGLE_MESH_SHAPE_PROXYTYPE: {
      BT_PROFILE("convexSweepbtBvhTriangleMesh");
      btBvhTriangleMeshShape triangleMesh = (btBvhTriangleMeshShape) collisionShape;
-     final btTransform worldTocollisionObject = new btTransform(colObjWorldTransform).invert();
-     final btVector3 convexFromLocal = worldTocollisionObject.transform(convexFromTrans.getOrigin());
-     final btVector3 convexToLocal = worldTocollisionObject.transform(convexToTrans.getOrigin());
+     final btTransform worldTocollisionObject = new btTransform(
+      colObjWorldTransform).invert();
+     final btVector3 convexFromLocal = worldTocollisionObject.transform(
+      convexFromTrans.getOrigin());
+     final btVector3 convexToLocal = worldTocollisionObject.transform(
+      convexToTrans.getOrigin());
      // rotation of box in local mesh space = MeshRotation^-1 * ConvexToRotation
-     final btTransform rotationXform = new btTransform(worldTocollisionObject.getBasis().mul(
-      convexToTrans
-      .getBasis()));
-     BridgeTriangleConvexcastCallbackA tccb = new BridgeTriangleConvexcastCallbackA(castShape,
-      convexFromTrans, convexToTrans, resultCallback, colObjWrap.getCollisionObject(), triangleMesh,
+     final btTransform rotationXform = new btTransform(worldTocollisionObject
+      .getBasis().mul(
+       convexToTrans
+        .getBasis()));
+     BridgeTriangleConvexcastCallbackA tccb = new BridgeTriangleConvexcastCallbackA(
+      castShape,
+      convexFromTrans, convexToTrans, resultCallback, colObjWrap
+       .getCollisionObject(), triangleMesh,
       colObjWorldTransform);
      tccb.m_hitFraction = resultCallback.m_closestHitFraction;
      tccb.m_allowedPenetration = allowedPenetration;
      final btVector3 boxMinLocal = new btVector3();
      final btVector3 boxMaxLocal = new btVector3();
      castShape.getAabb(rotationXform, boxMinLocal, boxMaxLocal);
-     triangleMesh.performConvexcast(tccb, convexFromLocal, convexToLocal, boxMinLocal, boxMaxLocal);
+     triangleMesh.performConvexcast(tccb, convexFromLocal, convexToLocal,
+      boxMinLocal, boxMaxLocal);
      break;
     }
     case STATIC_PLANE_PROXYTYPE:
@@ -243,10 +268,12 @@ public class btCollisionWorld implements Serializable {
      castResult.m_allowedPenetration = allowedPenetration;
      castResult.m_fraction = resultCallback.m_closestHitFraction;
      btStaticPlaneShape planeShape = (btStaticPlaneShape) collisionShape;
-     btContinuousConvexCollision convexCaster1 = new btContinuousConvexCollision(castShape,
+     btContinuousConvexCollision convexCaster1 = new btContinuousConvexCollision(
+      castShape,
       planeShape);
      btConvexCast castPtr = convexCaster1;
-     if (castPtr.calcTimeOfImpact(convexFromTrans, convexToTrans, colObjWorldTransform,
+     if (castPtr.calcTimeOfImpact(convexFromTrans, convexToTrans,
+      colObjWorldTransform,
       colObjWorldTransform, castResult)) {
       //add hit
       if (castResult.m_normal.lengthSquared() > (0.0001f)) {
@@ -268,15 +295,21 @@ public class btCollisionWorld implements Serializable {
     default: {
      BT_PROFILE("convexSweepConcave");
      btConcaveShape concaveShape = (btConcaveShape) collisionShape;
-     final btTransform worldTocollisionObject = new btTransform(colObjWorldTransform).invert();
-     final btVector3 convexFromLocal = worldTocollisionObject.transform(convexFromTrans.getOrigin());
-     final btVector3 convexToLocal = worldTocollisionObject.transform(convexToTrans.getOrigin());
+     final btTransform worldTocollisionObject = new btTransform(
+      colObjWorldTransform).invert();
+     final btVector3 convexFromLocal = worldTocollisionObject.transform(
+      convexFromTrans.getOrigin());
+     final btVector3 convexToLocal = worldTocollisionObject.transform(
+      convexToTrans.getOrigin());
      // rotation of box in local mesh space = MeshRotation^-1 * ConvexToRotation
-     final btTransform rotationXform = new btTransform(worldTocollisionObject.getBasis().mul(
-      convexToTrans
-      .getBasis()));
-     BridgeTriangleConvexcastCallbackB tccb = new BridgeTriangleConvexcastCallbackB(castShape,
-      convexFromTrans, convexToTrans, resultCallback, colObjWrap.getCollisionObject(), concaveShape,
+     final btTransform rotationXform = new btTransform(worldTocollisionObject
+      .getBasis().mul(
+       convexToTrans
+        .getBasis()));
+     BridgeTriangleConvexcastCallbackB tccb = new BridgeTriangleConvexcastCallbackB(
+      castShape,
+      convexFromTrans, convexToTrans, resultCallback, colObjWrap
+       .getCollisionObject(), concaveShape,
       colObjWorldTransform);
      tccb.m_hitFraction = resultCallback.m_closestHitFraction;
      tccb.m_allowedPenetration = allowedPenetration;
@@ -300,19 +333,24 @@ public class btCollisionWorld implements Serializable {
    final btVector3 fromLocalAabbMax = new btVector3();
    final btVector3 toLocalAabbMin = new btVector3();
    final btVector3 toLocalAabbMax = new btVector3();
-   final btTransform colObjWorldTransform_inverted = new btTransform(colObjWorldTransform).invert();
-   castShape.getAabb(colObjWorldTransform_inverted.mul(convexFromTrans), fromLocalAabbMin,
+   final btTransform colObjWorldTransform_inverted = new btTransform(
+    colObjWorldTransform).invert();
+   castShape.getAabb(colObjWorldTransform_inverted.mul(convexFromTrans),
+    fromLocalAabbMin,
     fromLocalAabbMax);
-   castShape.getAabb(colObjWorldTransform_inverted.mul(convexToTrans), toLocalAabbMin,
+   castShape.getAabb(colObjWorldTransform_inverted.mul(convexToTrans),
+    toLocalAabbMin,
     toLocalAabbMax);
    fromLocalAabbMin.setMin(toLocalAabbMin);
    fromLocalAabbMax.setMax(toLocalAabbMax);
-   btCompoundLeafSweepCallback callback = new btCompoundLeafSweepCallback(colObjWrap, castShape,
+   btCompoundLeafSweepCallback callback = new btCompoundLeafSweepCallback(
+    colObjWrap, castShape,
     convexFromTrans, convexToTrans,
     allowedPenetration, compoundShape, colObjWorldTransform, resultCallback);
    btDbvt tree = compoundShape.getDynamicAabbTree();
    if (tree != null) {
-    btDbvtAabbMm bounds = btDbvtAabbMm.fromMM(fromLocalAabbMin, fromLocalAabbMax);
+    btDbvtAabbMm bounds = btDbvtAabbMm
+     .fromMM(fromLocalAabbMin, fromLocalAabbMax);
     tree.collideTV(tree.m_root, bounds, callback);
    } else {
     int i;
@@ -324,7 +362,9 @@ public class btCollisionWorld implements Serializable {
    }
   }
  }
- protected final ArrayList<btCollisionObject> m_collisionObjects = new ArrayList<>(0);
+
+ protected final ArrayList<btCollisionObject> m_collisionObjects = new ArrayList<>(
+  0);
  final protected btDispatcher m_dispatcher1;
  final protected btDispatcherInfo m_dispatchInfo = new btDispatcherInfo();
  protected btBroadphaseInterface m_broadphasePairCache;
@@ -339,7 +379,8 @@ public class btCollisionWorld implements Serializable {
   * @param broadphasePairCache
   * @param collisionConfiguration
   */
- public btCollisionWorld(btDispatcher dispatcher, btBroadphaseInterface broadphasePairCache,
+ public btCollisionWorld(btDispatcher dispatcher,
+  btBroadphaseInterface broadphasePairCache,
   btCollisionConfiguration collisionConfiguration) {
   m_dispatcher1 = dispatcher;
   m_broadphasePairCache = broadphasePairCache;
@@ -360,7 +401,8 @@ public class btCollisionWorld implements Serializable {
     //
     // only clear the cached algorithms
     //
-    getBroadphase().getOverlappingPairCache().cleanProxyFromPairs(bp, m_dispatcher1);
+    getBroadphase().getOverlappingPairCache().cleanProxyFromPairs(bp,
+     m_dispatcher1);
     getBroadphase().destroyProxy(bp, m_dispatcher1);
     collisionObject.setBroadphaseHandle(null);
    }
@@ -386,18 +428,21 @@ public class btCollisionWorld implements Serializable {
  public void updateSingleAabb(btCollisionObject colObj) {
   final btVector3 minAabb = new btVector3();
   final btVector3 maxAabb = new btVector3();
-  colObj.getCollisionShape().getAabb(colObj.getWorldTransformPtr(), minAabb, maxAabb);
+  colObj.getCollisionShape().getAabb(colObj.getWorldTransformPtr(), minAabb,
+   maxAabb);
   //need to increase the aabb for contact thresholds
   final btVector3 contactThreshold = new btVector3(gContactBreakingThreshold,
    gContactBreakingThreshold,
    gContactBreakingThreshold);
   minAabb.sub(contactThreshold);
   maxAabb.add(contactThreshold);
-  if (getDispatchInfo().m_useContinuous && colObj.getInternalType() == CO_RIGID_BODY && !colObj
-   .isStaticOrKinematicObject()) {
+  if (getDispatchInfo().m_useContinuous && colObj.getInternalType()
+   == CO_RIGID_BODY && !colObj
+    .isStaticOrKinematicObject()) {
    final btVector3 minAabb2 = new btVector3();
    final btVector3 maxAabb2 = new btVector3();
-   colObj.getCollisionShape().getAabb(colObj.getInterpolationWorldTransform(), minAabb2, maxAabb2);
+   colObj.getCollisionShape().getAabb(colObj.getInterpolationWorldTransform(),
+    minAabb2, maxAabb2);
    minAabb2.sub(contactThreshold);
    maxAabb2.sub(contactThreshold);
    minAabb.setMin(minAabb2);
@@ -405,7 +450,8 @@ public class btCollisionWorld implements Serializable {
   }
   btBroadphaseInterface bp = (btBroadphaseInterface) m_broadphasePairCache;
   //moving objects should be moderately sized, probably something wrong if not
-  if (colObj.isStaticObject() || ((new btVector3(maxAabb).sub(minAabb).lengthSquared() < 1e12f))) {
+  if (colObj.isStaticObject() || ((new btVector3(maxAabb).sub(minAabb)
+   .lengthSquared() < 1e12f))) {
    bp.setAabb(colObj.getBroadphaseHandle(), minAabb, maxAabb, m_dispatcher1);
   } else {
    //something went wrong, investigate
@@ -413,7 +459,8 @@ public class btCollisionWorld implements Serializable {
    colObj.setActivationState(DISABLE_SIMULATION);
    if (reportMe && m_debugDrawer != null) {
     reportMe = false;
-    m_debugDrawer.reportErrorWarning("Overflow in AABB, object removed from simulation");
+    m_debugDrawer.reportErrorWarning(
+     "Overflow in AABB, object removed from simulation");
     m_debugDrawer.reportErrorWarning(
      "If you can reproduce this, please email bugs@continuousphysics.com\n");
     m_debugDrawer.reportErrorWarning(
@@ -458,26 +505,28 @@ public class btCollisionWorld implements Serializable {
     if (getDispatcher() != null) {
      int numManifolds = getDispatcher().getNumManifolds();
      for (int i = 0; i < numManifolds; i++) {
-      btPersistentManifold contactManifold = getDispatcher().getManifoldByIndexInternal(i);
+      btPersistentManifold contactManifold = getDispatcher()
+       .getManifoldByIndexInternal(i);
       //btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold.getBody0());
       //btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold.getBody1());
       int numContacts = contactManifold.getNumContacts();
       for (int j = 0; j < numContacts; j++) {
        btManifoldPoint cp = contactManifold.getContactPoint(j);
-       getDebugDrawer().drawContactPoint(cp.m_positionWorldOnB, cp.m_normalWorldOnB, cp
-        .getDistance(), cp.getLifeTime(), defaultColors.m_contactPoint);
+       getDebugDrawer().drawContactPoint(cp.m_positionWorldOnB,
+        cp.m_normalWorldOnB, cp
+         .getDistance(), cp.getLifeTime(), defaultColors.m_contactPoint);
       }
      }
     }
    }
-   if ((getDebugDrawer().getDebugMode() & (btIDebugDraw.DBG_DrawWireframe |
-    btIDebugDraw.DBG_DrawAabb)) != 0) {
+   if ((getDebugDrawer().getDebugMode() & (btIDebugDraw.DBG_DrawWireframe
+    | btIDebugDraw.DBG_DrawAabb)) != 0) {
     int i;
     for (i = 0; i < m_collisionObjects.size(); i++) {
      btCollisionObject colObj = m_collisionObjects.get(i);
      if ((colObj.getCollisionFlags() & CF_DISABLE_VISUALIZE_OBJECT) == 0) {
-      if ((getDebugDrawer() != null) && ((getDebugDrawer().getDebugMode() &
-       btIDebugDraw.DBG_DrawWireframe) != 0)) {
+      if ((getDebugDrawer() != null) && ((getDebugDrawer().getDebugMode()
+       & btIDebugDraw.DBG_DrawWireframe) != 0)) {
        final btVector3 color = new btVector3();
        switch (colObj.getActivationState()) {
         case btCollisionObject.ACTIVE_TAG:
@@ -503,23 +552,28 @@ public class btCollisionWorld implements Serializable {
         }
        }
        colObj.getCustomDebugColor(color);
-       debugDrawObject(colObj.getWorldTransformPtr(), colObj.getCollisionShape(), color);
+       debugDrawObject(colObj.getWorldTransformPtr(), colObj.getCollisionShape(),
+        color);
       }
-      if ((m_debugDrawer != null) && ((m_debugDrawer.getDebugMode() & btIDebugDraw.DBG_DrawAabb) !=
-       0)) {
+      if ((m_debugDrawer != null) && ((m_debugDrawer.getDebugMode()
+       & btIDebugDraw.DBG_DrawAabb) != 0)) {
        final btVector3 minAabb = new btVector3();
        final btVector3 maxAabb = new btVector3();
        final btVector3 colorvec = defaultColors.m_aabb;
-       colObj.getCollisionShape().getAabb(colObj.getWorldTransformPtr(), minAabb, maxAabb);
-       final btVector3 contactThreshold = new btVector3(gContactBreakingThreshold,
+       colObj.getCollisionShape()
+        .getAabb(colObj.getWorldTransformPtr(), minAabb, maxAabb);
+       final btVector3 contactThreshold = new btVector3(
+        gContactBreakingThreshold,
         gContactBreakingThreshold, gContactBreakingThreshold);
        minAabb.sub(contactThreshold);
        maxAabb.add(contactThreshold);
        final btVector3 minAabb2 = new btVector3();
        final btVector3 maxAabb2 = new btVector3();
-       if (getDispatchInfo().m_useContinuous && colObj.getInternalType() == CO_RIGID_BODY && !colObj
-        .isStaticOrKinematicObject()) {
-        colObj.getCollisionShape().getAabb(colObj.getInterpolationWorldTransform(), minAabb2,
+       if (getDispatchInfo().m_useContinuous && colObj.getInternalType()
+        == CO_RIGID_BODY && !colObj
+         .isStaticOrKinematicObject()) {
+        colObj.getCollisionShape().getAabb(colObj
+         .getInterpolationWorldTransform(), minAabb2,
          maxAabb2);
         minAabb2.sub(contactThreshold);
         maxAabb2.add(contactThreshold);
@@ -537,11 +591,12 @@ public class btCollisionWorld implements Serializable {
   }
  }
 
- public void debugDrawObject(final btTransform worldTransform, btCollisionShape shape,
+ public void debugDrawObject(final btTransform worldTransform,
+  btCollisionShape shape,
   final btVector3 color) {
   // Draw a small simplex at the center of the object
-  if (getDebugDrawer() != null && (getDebugDrawer().getDebugMode() & btIDebugDraw.DBG_DrawFrames) !=
-   0) {
+  if (getDebugDrawer() != null && (getDebugDrawer().getDebugMode()
+   & btIDebugDraw.DBG_DrawFrames) != 0) {
    getDebugDrawer().drawTransform(worldTransform, 1);
   }
   if (shape.getShapeType() == COMPOUND_SHAPE_PROXYTYPE) {
@@ -549,14 +604,16 @@ public class btCollisionWorld implements Serializable {
    for (int i = compoundShape.getNumChildShapes() - 1; i >= 0; i--) {
     final btTransform childTrans = compoundShape.getChildTransform(i);
     btCollisionShape colShape = compoundShape.getChildShape(i);
-    debugDrawObject(new btTransform(worldTransform).mul(childTrans), colShape, color);
+    debugDrawObject(new btTransform(worldTransform).mul(childTrans), colShape,
+     color);
    }
   } else {
    switch (shape.getShapeType()) {
     case BOX_SHAPE_PROXYTYPE: {
      btBoxShape boxShape = (btBoxShape) (shape);
      final btVector3 halfExtents = boxShape.getHalfExtentsWithMargin();
-     getDebugDrawer().drawBox(new btVector3(halfExtents).negate(), halfExtents, worldTransform,
+     getDebugDrawer().drawBox(new btVector3(halfExtents).negate(), halfExtents,
+      worldTransform,
       color);
      break;
     }
@@ -572,8 +629,9 @@ public class btCollisionWorld implements Serializable {
      childTransform.setIdentity();
      for (int i = multiSphereShape.getSphereCount() - 1; i >= 0; i--) {
       childTransform.setOrigin(multiSphereShape.getSpherePosition(i));
-      getDebugDrawer().drawSphere(multiSphereShape.getSphereRadius(i), new btTransform(
-       worldTransform).mul(childTransform), color);
+      getDebugDrawer().drawSphere(multiSphereShape.getSphereRadius(i),
+       new btTransform(
+        worldTransform).mul(childTransform), color);
      }
      break;
     }
@@ -582,7 +640,8 @@ public class btCollisionWorld implements Serializable {
      float radius = capsuleShape.getRadius();
      float halfHeight = capsuleShape.getHalfHeight();
      int upAxis = capsuleShape.getUpAxis();
-     getDebugDrawer().drawCapsule(radius, halfHeight, upAxis, worldTransform, color);
+     getDebugDrawer().drawCapsule(radius, halfHeight, upAxis, worldTransform,
+      color);
      break;
     }
     case CONE_SHAPE_PROXYTYPE: {
@@ -598,7 +657,8 @@ public class btCollisionWorld implements Serializable {
      int upAxis = cylinder.getUpAxis();
      float radius = cylinder.getRadius();
      float halfHeight = cylinder.getHalfExtentsWithMargin().getElement(upAxis);
-     getDebugDrawer().drawCylinder(radius, halfHeight, upAxis, worldTransform, color);
+     getDebugDrawer().drawCylinder(radius, halfHeight, upAxis, worldTransform,
+      color);
      break;
     }
     case STATIC_PLANE_PROXYTYPE: {
@@ -614,37 +674,28 @@ public class btCollisionWorld implements Serializable {
       btPolyhedralConvexShape polyshape = (btPolyhedralConvexShape) shape;
       int i;
       if (polyshape.getConvexPolyhedron() != null) {
-       /* dead code */
+       /*
+        * dead code
+        */
        assert (false);
        /*
-       btConvexPolyhedron poly = polyshape.getConvexPolyhedron();
-       for (i = 0; i < poly.m_faces.size(); i++) {
-        btFace face = poly.m_faces.get(i);
-        final btVector3 centroid = new btVector3(0, 0, 0);
-        int numVerts = face.m_indices.length;
-        if (numVerts > 0) {
-         int lastV = face.m_indices[numVerts - 1];
-         for (int v = 0; v < face.m_indices.length; v++) {
-          int curVert = face.m_indices[v];
-          centroid.add(poly.m_vertices.get(curVert));
-          getDebugDrawer().drawLine(
-           worldTransform.transform(new btVector3(poly.m_vertices.get(lastV))),
-           worldTransform.transform(new btVector3(poly.m_vertices.get(curVert))),
-           color);
-          lastV = curVert;
-         }
-        }
-        centroid.scale(1.f / numVerts);
-        if ((getDebugDrawer().getDebugMode() & btIDebugDraw.DBG_DrawNormals) != 0) {
-         final btVector3 normalColor = new btVector3(1, 1, 0);
-         final btVector3 faceNormal = new btVector3(face.m_plane[0], face.m_plane[1],
-          face.m_plane[2]);
-         getDebugDrawer().drawLine(
-          worldTransform.transform(new btVector3(centroid)),
-          worldTransform.transform(new btVector3(centroid).add(faceNormal)),
-          normalColor);
-        }
-       }
+        * btConvexPolyhedron poly = polyshape.getConvexPolyhedron(); for (i = 0;
+        * i < poly.m_faces.size(); i++) { btFace face = poly.m_faces.get(i);
+        * final btVector3 centroid = new btVector3(0, 0, 0); int numVerts =
+        * face.m_indices.length; if (numVerts > 0) { int lastV =
+        * face.m_indices[numVerts - 1]; for (int v = 0; v <
+        * face.m_indices.length; v++) { int curVert = face.m_indices[v];
+        * centroid.add(poly.m_vertices.get(curVert)); getDebugDrawer().drawLine(
+        * worldTransform.transform(new btVector3(poly.m_vertices.get(lastV))),
+        * worldTransform.transform(new btVector3(poly.m_vertices.get(curVert))),
+        * color); lastV = curVert; } } centroid.scale(1.f / numVerts); if
+        * ((getDebugDrawer().getDebugMode() & btIDebugDraw.DBG_DrawNormals) !=
+        * 0) { final btVector3 normalColor = new btVector3(1, 1, 0); final
+        * btVector3 faceNormal = new btVector3(face.m_plane[0], face.m_plane[1],
+        * face.m_plane[2]); getDebugDrawer().drawLine(
+        * worldTransform.transform(new btVector3(centroid)),
+        * worldTransform.transform(new btVector3(centroid).add(faceNormal)),
+        * normalColor); } }
         */
       } else {
        final btVector3 a = new btVector3();
@@ -660,22 +711,27 @@ public class btCollisionWorld implements Serializable {
      if (shape.isConcave()) {
       btConcaveShape concaveMesh = (btConcaveShape) shape;
       ///@todo pass camera, for some culling? no . we are not a graphics lib
-      final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT), (BT_LARGE_FLOAT));
-      final btVector3 aabbMin = new btVector3((-BT_LARGE_FLOAT), (-BT_LARGE_FLOAT),
+      final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT),
+       (BT_LARGE_FLOAT));
+      final btVector3 aabbMin = new btVector3((-BT_LARGE_FLOAT),
+       (-BT_LARGE_FLOAT),
        (-BT_LARGE_FLOAT));
-      DebugDrawcallback drawCallback =
-       new DebugDrawcallback(getDebugDrawer(), worldTransform, color);
+      DebugDrawcallback drawCallback
+       = new DebugDrawcallback(getDebugDrawer(), worldTransform, color);
       concaveMesh.processAllTriangles(drawCallback, aabbMin, aabbMax);
      }
      if (shape.getShapeType() == CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE) {
       btConvexTriangleMeshShape convexMesh = (btConvexTriangleMeshShape) shape;
       //todo: pass camera for some culling			
-      final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT), (BT_LARGE_FLOAT));
-      final btVector3 aabbMin = new btVector3((-BT_LARGE_FLOAT), (-BT_LARGE_FLOAT),
+      final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT),
+       (BT_LARGE_FLOAT));
+      final btVector3 aabbMin = new btVector3((-BT_LARGE_FLOAT),
+       (-BT_LARGE_FLOAT),
        (-BT_LARGE_FLOAT));
-      DebugDrawcallback drawCallback =
-       new DebugDrawcallback(getDebugDrawer(), worldTransform, color);
-      convexMesh.getMeshInterface().InternalProcessAllTriangles(drawCallback, aabbMin, aabbMax);
+      DebugDrawcallback drawCallback
+       = new DebugDrawcallback(getDebugDrawer(), worldTransform, color);
+      convexMesh.getMeshInterface().InternalProcessAllTriangles(drawCallback,
+       aabbMin, aabbMax);
      }
     }
    }
@@ -693,15 +749,17 @@ public class btCollisionWorld implements Serializable {
   //BT_PROFILE("rayTest");
   /// use the broadphase to accelerate the search for objects, based on their aabb
   /// and for each object with ray-aabb overlap, perform an exact ray test
-  btSingleRayCallback rayCB =
-   new btSingleRayCallback(rayFromWorld, rayToWorld, this, resultCallback);
+  btSingleRayCallback rayCB
+   = new btSingleRayCallback(rayFromWorld, rayToWorld, this, resultCallback);
   m_broadphasePairCache.rayTest(rayFromWorld, rayToWorld, rayCB);
  }
 
  /// convexTest performs a swept convex cast on all objects in the btCollisionWorld, and calls the resultCallback
  /// This allows for several queries: first hit, all hits, any hit, dependent on the value return by the callback.
- public void convexSweepTest(btConvexShape castShape, final btTransform convexFromWorld,
-  final btTransform convexToWorld, ConvexResultCallback resultCallback, float allowedCcdPenetration) {
+ public void convexSweepTest(btConvexShape castShape,
+  final btTransform convexFromWorld,
+  final btTransform convexToWorld, ConvexResultCallback resultCallback,
+  float allowedCcdPenetration) {
   BT_PROFILE("convexSweepTest");
   /// use the broadphase to accelerate the search for objects, based on their aabb
   /// and for each object with ray-aabb overlap, perform an exact ray test
@@ -718,47 +776,59 @@ public class btCollisionWorld implements Serializable {
   {
    final btVector3 linVel = new btVector3();
    final btVector3 angVel = new btVector3();
-   btTransformUtil.calculateVelocity(convexFromTrans, convexToTrans, 1.0f, linVel, angVel);
+   btTransformUtil.calculateVelocity(convexFromTrans, convexToTrans, 1.0f,
+    linVel, angVel);
    final btVector3 zeroLinVel = new btVector3();
    final btTransform R = new btTransform();
    R.setIdentity();
    R.set3x3(convexFromTrans.getRotation());
-   castShape.calculateTemporalAabb(R, zeroLinVel, angVel, 1.0f, castShapeAabbMin, castShapeAabbMax);
+   castShape
+    .calculateTemporalAabb(R, zeroLinVel, angVel, 1.0f, castShapeAabbMin,
+     castShapeAabbMax);
   }
-  btSingleSweepCallback convexCB = new btSingleSweepCallback(castShape, convexFromWorld,
+  btSingleSweepCallback convexCB = new btSingleSweepCallback(castShape,
+   convexFromWorld,
    convexToWorld, this, resultCallback, allowedCcdPenetration);
-  m_broadphasePairCache.rayTest(convexFromTrans.getOrigin(), convexToTrans.getOrigin(), convexCB,
+  m_broadphasePairCache.rayTest(convexFromTrans.getOrigin(), convexToTrans
+   .getOrigin(), convexCB,
    castShapeAabbMin, castShapeAabbMax);
  }
 
- public void convexSweepTest(btConvexShape castShape, final btTransform convexFromWorld,
+ public void convexSweepTest(btConvexShape castShape,
+  final btTransform convexFromWorld,
   final btTransform convexToWorld, ConvexResultCallback resultCallback) {
   convexSweepTest(castShape, convexFromWorld, convexToWorld, resultCallback, 0f);
  }
 
  ///contactTest performs a discrete collision test between colObj against all objects in the btCollisionWorld, and calls the resultCallback.
  ///it reports one or more contact points for every overlapping object (including the one with deepest penetration)
- public void contactTest(btCollisionObject colObj, ContactResultCallback resultCallback) {
+ public void contactTest(btCollisionObject colObj,
+  ContactResultCallback resultCallback) {
   final btVector3 aabbMin = new btVector3();
   final btVector3 aabbMax = new btVector3();
-  colObj.getCollisionShape().getAabb(colObj.getWorldTransformPtr(), aabbMin, aabbMax);
-  btSingleContactCallback contactCB = new btSingleContactCallback(colObj, this, resultCallback);
+  colObj.getCollisionShape().getAabb(colObj.getWorldTransformPtr(), aabbMin,
+   aabbMax);
+  btSingleContactCallback contactCB = new btSingleContactCallback(colObj, this,
+   resultCallback);
   m_broadphasePairCache.aabbTest(aabbMin, aabbMax, contactCB);
  }
 
  ///contactTest performs a discrete collision test between two collision objects and calls the resultCallback if overlap if detected.
  ///it reports one or more contact points (including the one with deepest penetration)
- public void contactPairTest(btCollisionObject colObjA, btCollisionObject colObjB,
+ public void contactPairTest(btCollisionObject colObjA,
+  btCollisionObject colObjB,
   ContactResultCallback resultCallback) {
-  btCollisionObjectWrapper obA = new btCollisionObjectWrapper(null, colObjA.getCollisionShape(),
+  btCollisionObjectWrapper obA = new btCollisionObjectWrapper(null, colObjA
+   .getCollisionShape(),
    colObjA, colObjA.getWorldTransformPtr(), -1, -1);
-  btCollisionObjectWrapper obB = new btCollisionObjectWrapper(null, colObjB.getCollisionShape(),
+  btCollisionObjectWrapper obB = new btCollisionObjectWrapper(null, colObjB
+   .getCollisionShape(),
    colObjB, colObjB.getWorldTransformPtr(), -1, -1);
   btCollisionAlgorithm algorithm = getDispatcher().findAlgorithm(obA, obB, null,
    BT_CLOSEST_POINT_ALGORITHMS);
   if (algorithm != null) {
-   btBridgedManifoldResult contactPointResult =
-    new btBridgedManifoldResult(obA, obB, resultCallback);
+   btBridgedManifoldResult contactPointResult
+    = new btBridgedManifoldResult(obA, obB, resultCallback);
    contactPointResult.m_closestPointDistanceThreshold = resultCallback.m_closestDistanceThreshold;
    //discrete collision detection query
    algorithm.processCollision(obA, obB, getDispatchInfo(), contactPointResult);
@@ -766,31 +836,39 @@ public class btCollisionWorld implements Serializable {
  }
 
 /// objectQuerySingle performs a collision detection query and calls the resultCallback. It is used internally by rayTest.
- public static void objectQuerySingle(btConvexShape castShape, final btTransform convexFromTrans,
+ public static void objectQuerySingle(btConvexShape castShape,
+  final btTransform convexFromTrans,
   final btTransform convexToTrans,
   btCollisionObject collisionObject,
   btCollisionShape collisionShape, final btTransform colObjWorldTransform,
   ConvexResultCallback resultCallback, float allowedPenetration
  ) {
-  btCollisionObjectWrapper tmpOb = new btCollisionObjectWrapper(null, collisionShape,
+  btCollisionObjectWrapper tmpOb = new btCollisionObjectWrapper(null,
+   collisionShape,
    collisionObject, colObjWorldTransform, -1, -1);
-  btCollisionWorld.objectQuerySingleInternal(castShape, convexFromTrans, convexToTrans, tmpOb,
+  btCollisionWorld.objectQuerySingleInternal(castShape, convexFromTrans,
+   convexToTrans, tmpOb,
    resultCallback, allowedPenetration);
  }
 
  public void addCollisionObject(btCollisionObject collisionObject) {
-  addCollisionObject(collisionObject, btBroadphaseProxy.DEFAULT_FILTER, btBroadphaseProxy.ALL_FILTER);
+  addCollisionObject(collisionObject, btBroadphaseProxy.DEFAULT_FILTER,
+   btBroadphaseProxy.ALL_FILTER);
  }
 
- public void addCollisionObject(btCollisionObject collisionObject, int collisionFilterGroup) {
-  addCollisionObject(collisionObject, collisionFilterGroup, btBroadphaseProxy.ALL_FILTER);
+ public void addCollisionObject(btCollisionObject collisionObject,
+  int collisionFilterGroup) {
+  addCollisionObject(collisionObject, collisionFilterGroup,
+   btBroadphaseProxy.ALL_FILTER);
  }
 
- public void addCollisionObject(btCollisionObject collisionObject, int collisionFilterGroup,
+ public void addCollisionObject(btCollisionObject collisionObject,
+  int collisionFilterGroup,
   int collisionFilterMask) {
   assert (collisionObject != null);
   //check that the object isn't already added
-  assert (findLinearSearch(m_collisionObjects, collisionObject) == m_collisionObjects.size());
+  assert (findLinearSearch(m_collisionObjects, collisionObject)
+   == m_collisionObjects.size());
   assert (collisionObject.getWorldArrayIndex() == -1);  // do not add the same object to more than one collision world
   collisionObject.setWorldArrayIndex(m_collisionObjects.size());
   m_collisionObjects.add(collisionObject);
@@ -822,7 +900,8 @@ public class btCollisionWorld implements Serializable {
     //
     // only clear the cached algorithms
     //
-    getBroadphase().getOverlappingPairCache().cleanProxyFromPairs(bp, m_dispatcher1);
+    getBroadphase().getOverlappingPairCache().cleanProxyFromPairs(bp,
+     m_dispatcher1);
     getBroadphase().destroyProxy(bp, m_dispatcher1);
     collisionObject.setBroadphaseHandle(null);
    }
@@ -854,7 +933,8 @@ public class btCollisionWorld implements Serializable {
   {
    BT_PROFILE("dispatchAllCollisionPairs");
    if (dispatcher != null) {
-    dispatcher.dispatchAllCollisionPairs(m_broadphasePairCache.getOverlappingPairCache(),
+    dispatcher.dispatchAllCollisionPairs(m_broadphasePairCache
+     .getOverlappingPairCache(),
      dispatchInfo, m_dispatcher1);
    }
   }
@@ -871,4 +951,5 @@ public class btCollisionWorld implements Serializable {
  public void setForceUpdateAllAabbs(boolean forceUpdateAllAabbs) {
   m_forceUpdateAllAabbs = forceUpdateAllAabbs;
  }
+
 }

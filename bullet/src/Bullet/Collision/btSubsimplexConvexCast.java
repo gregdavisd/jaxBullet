@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision;
 
@@ -23,9 +23,10 @@ import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 import static javax.vecmath.VecMath.is_good_matrix;
 
 /**
- * btSubsimplexConvexCast implements Gino van den Bergens' paper "Ray Casting against bteral Convex
- * Objects with Application to Continuous Collision Detection" GJK based Ray Cast, optimized version
- * Objects should not start in overlap, otherwise results are not defined.
+ * btSubsimplexConvexCast implements Gino van den Bergens' paper "Ray Casting
+ * against bteral Convex Objects with Application to Continuous Collision
+ * Detection" GJK based Ray Cast, optimized version Objects should not start in
+ * overlap, otherwise results are not defined.
  *
  * @author Gregery Barton
  */
@@ -57,7 +58,8 @@ public class btSubsimplexConvexCast extends btConvexCast implements Serializable
   */
  @Override
  boolean calcTimeOfImpact(
-  final btTransform fromA, final btTransform toA, final btTransform fromB, final btTransform toB,
+  final btTransform fromA, final btTransform toA, final btTransform fromB,
+  final btTransform toB,
   CastResult result) {
   if (DEBUG_BLOCKS) {
    assert (is_good_matrix(fromA));
@@ -74,12 +76,14 @@ public class btSubsimplexConvexCast extends btConvexCast implements Serializable
   ///take relative motion
   final btVector3 r = new btVector3(linVelA).sub(linVelB);
   final btVector3 v;
-  final btVector3 supVertexA = fromA.transform(m_convexA.localGetSupportingVertex(fromA
-   .transposeTransform3x3(
-    new btVector3(r).negate())));
-  final btVector3 supVertexB = fromB.transform(m_convexB.localGetSupportingVertex(fromB
-   .transposeTransform3x3(
-    new btVector3(r))));
+  final btVector3 supVertexA = fromA.transform(m_convexA
+   .localGetSupportingVertex(fromA
+    .transposeTransform3x3(
+     new btVector3(r).negate())));
+  final btVector3 supVertexB = fromB.transform(m_convexB
+   .localGetSupportingVertex(fromB
+    .transposeTransform3x3(
+     new btVector3(r))));
   v = new btVector3(supVertexA).sub(supVertexB);
   int maxIter = MAX_ITERATIONS;
   final btVector3 n = new btVector3();
@@ -89,10 +93,12 @@ public class btSubsimplexConvexCast extends btConvexCast implements Serializable
   final btVector3 w = new btVector3();
   float VdotR;
   while ((dist2 > epsilon) && (maxIter-- > 0)) {
-   supVertexA.set(interpolatedTransA.transform(m_convexA.localGetSupportingVertex(interpolatedTransA
-    .transposeTransform3x3(new btVector3(v).negate()))));
-   supVertexB.set(interpolatedTransB.transform(m_convexB.localGetSupportingVertex(interpolatedTransB
-    .transposeTransform3x3(new btVector3(v)))));
+   supVertexA.set(interpolatedTransA.transform(m_convexA
+    .localGetSupportingVertex(interpolatedTransA
+     .transposeTransform3x3(new btVector3(v).negate()))));
+   supVertexB.set(interpolatedTransB.transform(m_convexB
+    .localGetSupportingVertex(interpolatedTransB
+     .transposeTransform3x3(new btVector3(v)))));
    w.set(supVertexA).sub(supVertexB);
    float VdotW = v.dot(w);
    if (lambda > (1.0f)) {
@@ -107,8 +113,10 @@ public class btSubsimplexConvexCast extends btConvexCast implements Serializable
      assert (lambda >= 0);
      //interpolate to next lambda
      //	x = s + lambda * r;
-     interpolatedTransA.setOrigin(new btVector3().mix(fromA.getOrigin(), toA.getOrigin(), lambda));
-     interpolatedTransB.setOrigin(new btVector3().mix(fromB.getOrigin(), toB.getOrigin(), lambda));
+     interpolatedTransA.setOrigin(new btVector3().mix(fromA.getOrigin(), toA
+      .getOrigin(), lambda));
+     interpolatedTransB.setOrigin(new btVector3().mix(fromB.getOrigin(), toB
+      .getOrigin(), lambda));
      //m_simplexSolver.reset();
      //check next line
      //w.set(supVertexA).sub(supVertexB);
@@ -149,4 +157,5 @@ public class btSubsimplexConvexCast extends btConvexCast implements Serializable
   result.m_hitPoint.set(hitB);
   return true;
  }
+
 };

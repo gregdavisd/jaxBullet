@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Algorithm;
 
@@ -50,14 +50,15 @@ import java.util.ArrayList;
 import javax.vecmath.AxisAngle4f;
 
 /**
- * Specialized capsule-capsule collision algorithm has been added for Bullet 2.75 release to
- * increase ragdoll performance If you experience problems with capsule-capsule collision, try to
- * define BT_DISABLE_CAPSULE_CAPSULE_COLLIDER and report it in the Bullet forums with reproduction
- * case
+ * Specialized capsule-capsule collision algorithm has been added for Bullet
+ * 2.75 release to increase ragdoll performance If you experience problems with
+ * capsule-capsule collision, try to define BT_DISABLE_CAPSULE_CAPSULE_COLLIDER
+ * and report it in the Bullet forums with reproduction case
  *
  * @author Gregery Barton
  */
-public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm implements Serializable {
+public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm
+ implements Serializable {
 
  static float capsuleCapsuleDistance(
   final btVector3 normalOnB, final btVector3 pointOnB,
@@ -95,14 +96,16 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
    // compute the contact normal
    normalOnB.set(ptsVector).scale(-btRecipSqrt(lenSqr));
   }
-  pointOnB.set(transformB.getOrigin().add(new btVector3().scaleAdd(capsuleRadiusB, normalOnB,
+  pointOnB.set(transformB.getOrigin().add(new btVector3().scaleAdd(
+   capsuleRadiusB, normalOnB,
    offsetB)));
   return distance;
  }
 
  static void segmentsClosestPoints(
   final btVector3 ptsVector, final btVector3 offsetA, final btVector3 offsetB,
-  float[] tA, float[] tB, final btVector3 translation, final btVector3 dirA, float hlenA,
+  float[] tA, float[] tB, final btVector3 translation, final btVector3 dirA,
+  float hlenA,
   final btVector3 dirB, float hlenB) {
   // compute the parameters of the closest points on each line segment
   float dirA_dot_dirB = btDot(dirA, dirB);
@@ -142,6 +145,7 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
   offsetB.set(dirB).scale(tB[0]);
   ptsVector.set(translation).sub(offsetA).add(offsetB);
  }
+
  final btConvexPenetrationDepthSolver m_pdSolver;
  final ArrayList<btVector3> worldVertsB1 = new ArrayList<>(0);
  final ArrayList<btVector3> worldVertsB2 = new ArrayList<>(0);
@@ -153,7 +157,8 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
  boolean disableCcd = false;
 
  ///cache separating vector to speedup collision detection
- btConvexConvexAlgorithm(btPersistentManifold mf, btCollisionAlgorithmConstructionInfo ci,
+ btConvexConvexAlgorithm(btPersistentManifold mf,
+  btCollisionAlgorithmConstructionInfo ci,
   btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap,
   btConvexPenetrationDepthSolver pdSolver, int numPerturbationIterations,
   int minimumPointsPerturbationThreshold) {
@@ -179,12 +184,14 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
 // Convex-Convex collision algorithm
 //
  @Override
- public void processCollision(btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap,
+ public void processCollision(btCollisionObjectWrapper body0Wrap,
+  btCollisionObjectWrapper body1Wrap,
   btDispatcherInfo dispatchInfo, btManifoldResult resultOut) {
   if (m_manifoldPtr == null) {
    //swapped?
-   m_manifoldPtr = m_dispatcher.getNewManifold(body0Wrap.getCollisionObject(), body1Wrap
-    .getCollisionObject());
+   m_manifoldPtr = m_dispatcher.getNewManifold(body0Wrap.getCollisionObject(),
+    body1Wrap
+     .getCollisionObject());
    m_ownManifold = true;
   }
   resultOut.setPersistentManifold(m_manifoldPtr);
@@ -194,15 +201,16 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
   btConvexShape min1 = (btConvexShape) (body1Wrap.getCollisionShape());
   final btVector3 normalOnB = new btVector3();
   final btVector3 pointOnBWorld = new btVector3();
-  if ((min0.getShapeType() == CAPSULE_SHAPE_PROXYTYPE) && (min1.getShapeType() ==
-   CAPSULE_SHAPE_PROXYTYPE)) {
- 
+  if ((min0.getShapeType() == CAPSULE_SHAPE_PROXYTYPE) && (min1.getShapeType()
+   == CAPSULE_SHAPE_PROXYTYPE)) {
    btCapsuleShape capsuleA = (btCapsuleShape) min0;
    btCapsuleShape capsuleB = (btCapsuleShape) min1;
    float threshold = m_manifoldPtr.getContactBreakingThreshold();
-   float dist = capsuleCapsuleDistance(normalOnB, pointOnBWorld, capsuleA.getHalfHeight(), capsuleA
-    .getRadius(),
-    capsuleB.getHalfHeight(), capsuleB.getRadius(), capsuleA.getUpAxis(), capsuleB.getUpAxis(),
+   float dist = capsuleCapsuleDistance(normalOnB, pointOnBWorld, capsuleA
+    .getHalfHeight(), capsuleA
+     .getRadius(),
+    capsuleB.getHalfHeight(), capsuleB.getRadius(), capsuleA.getUpAxis(),
+    capsuleB.getUpAxis(),
     body0Wrap.getWorldTransform(), body1Wrap.getWorldTransform(), threshold);
    if (dist < threshold) {
     assert (normalOnB.lengthSquared() >= (SIMD_EPSILON * SIMD_EPSILON));
@@ -211,14 +219,14 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
    resultOut.refreshContactPoints();
    return;
   }
-  if ((min0.getShapeType() == CAPSULE_SHAPE_PROXYTYPE) && (min1.getShapeType() ==
-   SPHERE_SHAPE_PROXYTYPE)) {
- 
+  if ((min0.getShapeType() == CAPSULE_SHAPE_PROXYTYPE) && (min1.getShapeType()
+   == SPHERE_SHAPE_PROXYTYPE)) {
    btCapsuleShape capsuleA = (btCapsuleShape) min0;
    btSphereShape capsuleB = (btSphereShape) min1;
    float threshold = m_manifoldPtr.getContactBreakingThreshold();
-   float dist = capsuleCapsuleDistance(normalOnB, pointOnBWorld, capsuleA.getHalfHeight(), capsuleA
-    .getRadius(),
+   float dist = capsuleCapsuleDistance(normalOnB, pointOnBWorld, capsuleA
+    .getHalfHeight(), capsuleA
+     .getRadius(),
     0.f, capsuleB.getRadius(), capsuleA.getUpAxis(), 1,
     body0Wrap.getWorldTransform(), body1Wrap.getWorldTransform(), threshold);
    if (dist < threshold) {
@@ -228,13 +236,13 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
    resultOut.refreshContactPoints();
    return;
   }
-  if ((min0.getShapeType() == SPHERE_SHAPE_PROXYTYPE) && (min1.getShapeType() ==
-   CAPSULE_SHAPE_PROXYTYPE)) {
- 
+  if ((min0.getShapeType() == SPHERE_SHAPE_PROXYTYPE) && (min1.getShapeType()
+   == CAPSULE_SHAPE_PROXYTYPE)) {
    btSphereShape capsuleA = (btSphereShape) min0;
    btCapsuleShape capsuleB = (btCapsuleShape) min1;
    float threshold = m_manifoldPtr.getContactBreakingThreshold();
-   float dist = capsuleCapsuleDistance(normalOnB, pointOnBWorld, 0.f, capsuleA.getRadius(),
+   float dist = capsuleCapsuleDistance(normalOnB, pointOnBWorld, 0.f, capsuleA
+    .getRadius(),
     capsuleB.getHalfHeight(), capsuleB.getRadius(), 1, capsuleB.getUpAxis(),
     body0Wrap.getWorldTransform(), body1Wrap.getWorldTransform(), threshold);
    if (dist < threshold) {
@@ -247,15 +255,15 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
   {
    btGjkPairDetector.ClosestPointInput input = new btGjkPairDetector.ClosestPointInput();
    btVoronoiSimplexSolver simplexSolver = new btVoronoiSimplexSolver();
-   btGjkPairDetector gjkPairDetector = new btGjkPairDetector(min0, min1, simplexSolver, m_pdSolver);
+   btGjkPairDetector gjkPairDetector = new btGjkPairDetector(min0, min1,
+    simplexSolver, m_pdSolver);
    //TODO: if (dispatchInfo.m_useContinuous)
    gjkPairDetector.setMinkowskiA(min0);
    gjkPairDetector.setMinkowskiB(min1);
    {
- 
-    input.m_maximumDistanceSquared = min0.getMargin() + min1.getMargin() + m_manifoldPtr
-     .getContactBreakingThreshold() + resultOut.m_closestPointDistanceThreshold;
- 
+    input.m_maximumDistanceSquared = min0.getMargin() + min1.getMargin()
+     + m_manifoldPtr
+      .getContactBreakingThreshold() + resultOut.m_closestPointDistanceThreshold;
     input.m_maximumDistanceSquared *= input.m_maximumDistanceSquared;
    }
    input.m_transformA.set(body0Wrap.getWorldTransform());
@@ -263,109 +271,99 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
    if (min0.isPolyhedral() && min1.isPolyhedral()) {
     btDummyResult dummy = new btDummyResult();
 ///btBoxShape is an exception: its vertices are created WITH margin so don't subtract it
-    float min0Margin = min0.getShapeType() == BOX_SHAPE_PROXYTYPE ? 0.f : min0.getMargin();
-    float min1Margin = min1.getShapeType() == BOX_SHAPE_PROXYTYPE ? 0.f : min1.getMargin();
-    btWithoutMarginResult withoutMargin = new btWithoutMarginResult(resultOut, min0Margin,
+    float min0Margin = min0.getShapeType() == BOX_SHAPE_PROXYTYPE ? 0.f : min0
+     .getMargin();
+    float min1Margin = min1.getShapeType() == BOX_SHAPE_PROXYTYPE ? 0.f : min1
+     .getMargin();
+    btWithoutMarginResult withoutMargin = new btWithoutMarginResult(resultOut,
+     min0Margin,
      min1Margin);
     btPolyhedralConvexShape polyhedronA = (btPolyhedralConvexShape) min0;
     btPolyhedralConvexShape polyhedronB = (btPolyhedralConvexShape) min1;
-    if (polyhedronA.getConvexPolyhedron() != null && polyhedronB.getConvexPolyhedron() != null) {
-     /* dead code */
+    if (polyhedronA.getConvexPolyhedron() != null && polyhedronB
+     .getConvexPolyhedron() != null) {
+     /*
+      * dead code
+      */
      assert (false);
      /*
-     float threshold = m_manifoldPtr.getContactBreakingThreshold();
-     float minDist = -1e30f;
-     final btVector3 sepNormalWorldSpace = new btVector3();
-     boolean foundSepAxis = true;
-     if (dispatchInfo.m_enableSatConvex) {
-      foundSepAxis = btPolyhedralContactClipping.findSeparatingAxis(
-       polyhedronA.getConvexPolyhedron(), polyhedronB.getConvexPolyhedron(),
-       body0Wrap.getWorldTransform(),
-       body1Wrap.getWorldTransform(),
-       sepNormalWorldSpace, resultOut);
-     } else {
-      gjkPairDetector.getClosestPoints(input, withoutMargin, dispatchInfo.m_debugDraw);
-      //gjkPairDetector.getClosestPoints(input,dummy,dispatchInfo.m_debugDraw);
-      //float l2 = gjkPairDetector.getCachedSeparatingAxis().lengthSquared();
-      //if (l2>SIMD_EPSILON)
-      {
-       sepNormalWorldSpace.set(withoutMargin.m_reportedNormalOnWorld);//gjkPairDetector.getCachedSeparatingAxis()*(1.f/l2);
-       //minDist = -1e30f;//gjkPairDetector.getCachedSeparatingDistance();
-       minDist = withoutMargin.m_reportedDistance;//gjkPairDetector.getCachedSeparatingDistance()+min0.getMargin()+min1.getMargin();
-       foundSepAxis = withoutMargin.m_foundResult && minDist < 0;//-(min0.getMargin()+min1.getMargin());
-      }
-     }
-     if (foundSepAxis) {
-//				printf("sepNormalWorldSpace=%f,%f,%f\n",sepNormalWorldSpace.getX(),sepNormalWorldSpace.getY(),sepNormalWorldSpace.getZ());
-      worldVertsB1.clear();
-      btPolyhedralContactClipping.clipHullAgainstHull(sepNormalWorldSpace, polyhedronA
-       .getConvexPolyhedron(), polyhedronB.getConvexPolyhedron(),
-       body0Wrap.getWorldTransform(),
-       body1Wrap.getWorldTransform(), minDist - threshold, threshold, worldVertsB1, worldVertsB2,
-       resultOut);
-     }
-     if (m_ownManifold) {
-      resultOut.refreshContactPoints();
-     }
-     return;
-*/
+      * float threshold = m_manifoldPtr.getContactBreakingThreshold(); float
+      * minDist = -1e30f; final btVector3 sepNormalWorldSpace = new btVector3();
+      * boolean foundSepAxis = true; if (dispatchInfo.m_enableSatConvex) {
+      * foundSepAxis = btPolyhedralContactClipping.findSeparatingAxis(
+      * polyhedronA.getConvexPolyhedron(), polyhedronB.getConvexPolyhedron(),
+      * body0Wrap.getWorldTransform(), body1Wrap.getWorldTransform(),
+      * sepNormalWorldSpace, resultOut); } else {
+      * gjkPairDetector.getClosestPoints(input, withoutMargin,
+      * dispatchInfo.m_debugDraw);
+      * //gjkPairDetector.getClosestPoints(input,dummy,dispatchInfo.m_debugDraw);
+      * //float l2 = gjkPairDetector.getCachedSeparatingAxis().lengthSquared();
+      * //if (l2>SIMD_EPSILON) {
+      * sepNormalWorldSpace.set(withoutMargin.m_reportedNormalOnWorld);//gjkPairDetector.getCachedSeparatingAxis()*(1.f/l2);
+      * //minDist = -1e30f;//gjkPairDetector.getCachedSeparatingDistance();
+      * minDist =
+      * withoutMargin.m_reportedDistance;//gjkPairDetector.getCachedSeparatingDistance()+min0.getMargin()+min1.getMargin();
+      * foundSepAxis = withoutMargin.m_foundResult && minDist <
+      * 0;//-(min0.getMargin()+min1.getMargin()); } } if (foundSepAxis) { //
+      * printf("sepNormalWorldSpace=%f,%f,%f\n",sepNormalWorldSpace.getX(),sepNormalWorldSpace.getY(),sepNormalWorldSpace.getZ());
+      * worldVertsB1.clear();
+      * btPolyhedralContactClipping.clipHullAgainstHull(sepNormalWorldSpace,
+      * polyhedronA .getConvexPolyhedron(), polyhedronB.getConvexPolyhedron(),
+      * body0Wrap.getWorldTransform(), body1Wrap.getWorldTransform(), minDist -
+      * threshold, threshold, worldVertsB1, worldVertsB2, resultOut); } if
+      * (m_ownManifold) { resultOut.refreshContactPoints(); } return;
+      */
     } else //we can also deal with convex versus triangle (without connectivity data)
     {
-     if (polyhedronA.getConvexPolyhedron() != null && polyhedronB.getShapeType() ==
-      TRIANGLE_SHAPE_PROXYTYPE) {
-      /* dead code */
-      assert(false);
+     if (polyhedronA.getConvexPolyhedron() != null && polyhedronB.getShapeType()
+      == TRIANGLE_SHAPE_PROXYTYPE) {
       /*
-      ArrayList<btVector3> vertices = new ArrayList<>(0);
-      btTriangleShape tri = (btTriangleShape) polyhedronB;
-      vertices.add(body1Wrap.getWorldTransform().transform(new btVector3(tri.m_vertices1[0])));
-      vertices.add(body1Wrap.getWorldTransform().transform(new btVector3(tri.m_vertices1[1])));
-      vertices.add(body1Wrap.getWorldTransform().transform(new btVector3(tri.m_vertices1[2])));
-      //tri.initializePolyhedralFeatures();
-      float threshold = m_manifoldPtr.getContactBreakingThreshold();
-      final btVector3 sepNormalWorldSpace = new btVector3();
-      float minDist = -1e30f;
-      float maxDist = threshold;
-      boolean foundSepAxis = false;
-      {
-       gjkPairDetector.getClosestPoints(input, dummy, dispatchInfo.m_debugDraw);
-       float l2 = gjkPairDetector.getCachedSeparatingAxis().lengthSquared();
-       if (l2 > SIMD_EPSILON) {
-        sepNormalWorldSpace.set(gjkPairDetector.getCachedSeparatingAxis().scale(1.f / l2));
-        //minDist = gjkPairDetector.getCachedSeparatingDistance();
-        //maxDist = threshold;
-        minDist = gjkPairDetector.getCachedSeparatingDistance() - min0.getMargin() - min1
-         .getMargin();
-        foundSepAxis = true;
-       }
-      }
-      if (foundSepAxis) {
-       worldVertsB2.clear();
-       btPolyhedralContactClipping.clipFaceAgainstHull(sepNormalWorldSpace, polyhedronA
-        .getConvexPolyhedron(),
-        body0Wrap.getWorldTransform(), vertices, worldVertsB2, minDist - threshold, maxDist,
-        resultOut);
-      }
-      if (m_ownManifold) {
-       resultOut.refreshContactPoints();
-      }
-      return;
-      */
+       * dead code
+       */
+      assert (false);
+      /*
+       * ArrayList<btVector3> vertices = new ArrayList<>(0); btTriangleShape tri
+       * = (btTriangleShape) polyhedronB;
+       * vertices.add(body1Wrap.getWorldTransform().transform(new
+       * btVector3(tri.m_vertices1[0])));
+       * vertices.add(body1Wrap.getWorldTransform().transform(new
+       * btVector3(tri.m_vertices1[1])));
+       * vertices.add(body1Wrap.getWorldTransform().transform(new
+       * btVector3(tri.m_vertices1[2]))); //tri.initializePolyhedralFeatures();
+       * float threshold = m_manifoldPtr.getContactBreakingThreshold(); final
+       * btVector3 sepNormalWorldSpace = new btVector3(); float minDist =
+       * -1e30f; float maxDist = threshold; boolean foundSepAxis = false; {
+       * gjkPairDetector.getClosestPoints(input, dummy,
+       * dispatchInfo.m_debugDraw); float l2 =
+       * gjkPairDetector.getCachedSeparatingAxis().lengthSquared(); if (l2 >
+       * SIMD_EPSILON) {
+       * sepNormalWorldSpace.set(gjkPairDetector.getCachedSeparatingAxis().scale(1.f
+       * / l2)); //minDist = gjkPairDetector.getCachedSeparatingDistance();
+       * //maxDist = threshold; minDist =
+       * gjkPairDetector.getCachedSeparatingDistance() - min0.getMargin() - min1
+       * .getMargin(); foundSepAxis = true; } } if (foundSepAxis) {
+       * worldVertsB2.clear();
+       * btPolyhedralContactClipping.clipFaceAgainstHull(sepNormalWorldSpace,
+       * polyhedronA .getConvexPolyhedron(), body0Wrap.getWorldTransform(),
+       * vertices, worldVertsB2, minDist - threshold, maxDist, resultOut); } if
+       * (m_ownManifold) { resultOut.refreshContactPoints(); } return;
+       */
      }
     }
    }
    gjkPairDetector.getClosestPoints(input, resultOut, dispatchInfo.m_debugDraw);
    //now perform 'm_numPerturbationIterations' collision queries with the perturbated collision objects
    //perform perturbation when more then 'm_minimumPointsPerturbationThreshold' points
-   if (m_numPerturbationIterations != 0 && resultOut.getPersistentManifold().getNumContacts() <
-    m_minimumPointsPerturbationThreshold) {
+   if (m_numPerturbationIterations != 0 && resultOut.getPersistentManifold()
+    .getNumContacts() < m_minimumPointsPerturbationThreshold) {
     int i;
     final btVector3 v0 = new btVector3();
     final btVector3 v1 = new btVector3();
     final btVector3 sepNormalWorldSpace = new btVector3();
     float l2 = gjkPairDetector.getCachedSeparatingAxis().lengthSquared();
     if (l2 > SIMD_EPSILON) {
-     sepNormalWorldSpace.set(gjkPairDetector.getCachedSeparatingAxis().scale(1.f / l2));
+     sepNormalWorldSpace.set(gjkPairDetector.getCachedSeparatingAxis().scale(1.f
+      / l2));
      btPlaneSpace1(sepNormalWorldSpace, v0, v1);
      boolean perturbeA = true;
      float angleLimit = 0.125f * SIMD_PI;
@@ -390,23 +388,29 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
      }
      for (i = 0; i < m_numPerturbationIterations; i++) {
       if (v0.lengthSquared() > SIMD_EPSILON) {
-       final btQuaternion perturbeRot = new btQuaternion().set(new AxisAngle4f(v0, perturbeAngle));
+       final btQuaternion perturbeRot = new btQuaternion().set(new AxisAngle4f(
+        v0, perturbeAngle));
        float iterationAngle = i * (SIMD_2_PI / (m_numPerturbationIterations));
-       final btQuaternion rotq = new btQuaternion().set(new AxisAngle4f(sepNormalWorldSpace,
+       final btQuaternion rotq = new btQuaternion().set(new AxisAngle4f(
+        sepNormalWorldSpace,
         iterationAngle));
        if (perturbeA) {
-        input.m_transformA.setBasis(new btMatrix3x3().set(new btQuaternion(rotq).conjugate().mul(
-         perturbeRot).mul(rotq)).mul(body0Wrap.getWorldTransform().getBasis()));
+        input.m_transformA.setBasis(new btMatrix3x3().set(new btQuaternion(rotq)
+         .conjugate().mul(
+          perturbeRot).mul(rotq)).mul(body0Wrap.getWorldTransform().getBasis()));
         input.m_transformB.set(body1Wrap.getWorldTransform());
        } else {
         input.m_transformA.set(body0Wrap.getWorldTransform());
-        input.m_transformB.setBasis(new btMatrix3x3().set(new btQuaternion(rotq).conjugate().mul(
-         perturbeRot).mul(rotq)).mul(body1Wrap.getWorldTransform().getBasis()));
+        input.m_transformB.setBasis(new btMatrix3x3().set(new btQuaternion(rotq)
+         .conjugate().mul(
+          perturbeRot).mul(rotq)).mul(body1Wrap.getWorldTransform().getBasis()));
        }
-       btPerturbedContactResult perturbedResultOut = new btPerturbedContactResult(resultOut,
+       btPerturbedContactResult perturbedResultOut = new btPerturbedContactResult(
+        resultOut,
         input.m_transformA, input.m_transformB, unPerturbedTransform, perturbeA,
         dispatchInfo.m_debugDraw);
-       gjkPairDetector.getClosestPoints(input, perturbedResultOut, dispatchInfo.m_debugDraw);
+       gjkPairDetector.getClosestPoints(input, perturbedResultOut,
+        dispatchInfo.m_debugDraw);
       }
      }
     }
@@ -418,7 +422,8 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
  }
 
  @Override
- public float calculateTimeOfImpact(btCollisionObject col0, btCollisionObject col1,
+ public float calculateTimeOfImpact(btCollisionObject col0,
+  btCollisionObject col1,
   btDispatcherInfo dispatchInfo, btManifoldResult resultOut) {
   ///Rather then checking ALL pairs, only calculate TOI when motion exceeds threshold
   ///Linear motion for one of objects needs to exceed m_ccdSquareMotionThreshold
@@ -430,8 +435,8 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
   float squareMot1 = (col1.getInterpolationWorldTransform().getOrigin().sub(col1
    .getWorldTransformPtr()
    .getOrigin())).lengthSquared();
-  if (squareMot0 < col0.getCcdSquareMotionThreshold() &&
-   squareMot1 < col1.getCcdSquareMotionThreshold()) {
+  if (squareMot0 < col0.getCcdSquareMotionThreshold() && squareMot1 < col1
+   .getCcdSquareMotionThreshold()) {
    return resultFraction;
   }
   if (disableCcd) {
@@ -452,7 +457,8 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
    ///Simplification, one object is simplified as a sphere
    btGjkConvexCast ccd1 = new btGjkConvexCast(convex0, sphere1, voronoiSimplex);
    //ContinuousConvexCollision ccd(min0,min1,&voronoiSimplex,0);
-   if (ccd1.calcTimeOfImpact(col0.getWorldTransformPtr(), col0.getInterpolationWorldTransform(),
+   if (ccd1.calcTimeOfImpact(col0.getWorldTransformPtr(), col0
+    .getInterpolationWorldTransform(),
     col1.getWorldTransformPtr(), col1.getInterpolationWorldTransform(), result)) {
     //store result.m_fraction in both bodies
     if (col0.getHitFraction() > result.m_fraction) {
@@ -476,7 +482,8 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
    ///Simplification, one object is simplified as a sphere
    btGjkConvexCast ccd1 = new btGjkConvexCast(sphere0, convex1, voronoiSimplex);
    //ContinuousConvexCollision ccd(min0,min1,&voronoiSimplex,0);
-   if (ccd1.calcTimeOfImpact(col0.getWorldTransformPtr(), col0.getInterpolationWorldTransform(),
+   if (ccd1.calcTimeOfImpact(col0.getWorldTransformPtr(), col0
+    .getInterpolationWorldTransform(),
     col1.getWorldTransformPtr(), col1.getInterpolationWorldTransform(), result)) {
     //store result.m_fraction in both bodies
     if (col0.getHitFraction() > result.m_fraction) {
@@ -494,7 +501,8 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
  }
 
  @Override
- public void getAllContactManifolds(ArrayList<btPersistentManifold> manifoldArray) {
+ public void getAllContactManifolds(
+  ArrayList<btPersistentManifold> manifoldArray) {
   ///should we use m_ownManifold to avoid adding duplicates?
   if (m_manifoldPtr != null && m_ownManifold) {
    manifoldArray.add(m_manifoldPtr);
@@ -520,9 +528,11 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
   }
 
   @Override
-  public void addContactPoint(final btVector3 normalOnBInWorld, final btVector3 pointInWorld,
+  public void addContactPoint(final btVector3 normalOnBInWorld,
+   final btVector3 pointInWorld,
    float depth) {
   }
+
  }
 
  static class btWithoutMarginResult extends btDiscreteCollisionDetectorInterface.Result {
@@ -534,7 +544,8 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
   float m_reportedDistance;
   boolean m_foundResult;
 
-  btWithoutMarginResult(btDiscreteCollisionDetectorInterface.Result result, float marginOnA,
+  btWithoutMarginResult(btDiscreteCollisionDetectorInterface.Result result,
+   float marginOnA,
    float marginOnB) {
    m_originalResult = result;
    m_marginOnA = marginOnA;
@@ -551,18 +562,22 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
   }
 
   @Override
-  public void addContactPoint(final btVector3 normalOnBInWorld, final btVector3 pointInWorldOrg,
+  public void addContactPoint(final btVector3 normalOnBInWorld,
+   final btVector3 pointInWorldOrg,
    float depthOrg) {
    m_reportedDistance = depthOrg;
    m_reportedNormalOnWorld.set(normalOnBInWorld);
-   final btVector3 adjustedPointB = new btVector3().scaleAdd(-m_marginOnB, normalOnBInWorld,
+   final btVector3 adjustedPointB = new btVector3().scaleAdd(-m_marginOnB,
+    normalOnBInWorld,
     pointInWorldOrg);
    m_reportedDistance = depthOrg + (m_marginOnA + m_marginOnB);
    if (m_reportedDistance < 0.f) {
     m_foundResult = true;
    }
-   m_originalResult.addContactPoint(normalOnBInWorld, adjustedPointB, m_reportedDistance);
+   m_originalResult.addContactPoint(normalOnBInWorld, adjustedPointB,
+    m_reportedDistance);
   }
+
  }
 
  public static class CreateFunc extends btCollisionAlgorithmCreateFunc {
@@ -578,10 +593,13 @@ public class btConvexConvexAlgorithm extends btActivatingCollisionAlgorithm impl
   }
 
   @Override
-  public btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
+  public btCollisionAlgorithm CreateCollisionAlgorithm(
+   btCollisionAlgorithmConstructionInfo ci,
    btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap) {
-   return new btConvexConvexAlgorithm(ci.m_manifold, ci, body0Wrap, body1Wrap, m_pdSolver,
+   return new btConvexConvexAlgorithm(ci.m_manifold, ci, body0Wrap, body1Wrap,
+    m_pdSolver,
     m_numPerturbationIterations, m_minimumPointsPerturbationThreshold);
   }
+
  }
 };

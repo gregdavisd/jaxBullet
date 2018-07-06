@@ -21,7 +21,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btDefaultVehicleRaycaster extends btVehicleRaycaster implements Serializable {
+public class btDefaultVehicleRaycaster extends btVehicleRaycaster implements
+ Serializable {
 
  private static final long serialVersionUID = 1L;
  private btDynamicsWorld m_dynamicsWorld;
@@ -30,7 +31,8 @@ public class btDefaultVehicleRaycaster extends btVehicleRaycaster implements Ser
   m_dynamicsWorld = world;
  }
 
- public Object castRay(final btVector3 from, final btVector3 to, btVehicleRaycasterResult result) {
+ public Object castRay(final btVector3 from, final btVector3 to,
+  btVehicleRaycasterResult result) {
 //	RayResultCallback& resultCallback;
   ClosestRayResultCallback rayCallback = new ClosestRayResultCallback(from, to);
   m_dynamicsWorld.rayTest(from, to, rayCallback);
@@ -46,4 +48,5 @@ public class btDefaultVehicleRaycaster extends btVehicleRaycaster implements Ser
   }
   return null;
  }
+
 }

@@ -1,17 +1,17 @@
 
 /*
-Stan Melax Convex Hull Computation
-Copyright (c) 2008 Stan Melax http://www.melax.com/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Stan Melax Convex Hull Computation
+ * Copyright (c) 2008 Stan Melax http://www.melax.com/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.LinearMath.Hull;
 
@@ -33,9 +33,10 @@ import org.apache.commons.collections.primitives.ArrayIntList;
 
 /**
  *
- * The HullLibrary class can create a convex hull from a collection of vertices, using the
- * ComputeHull method. The btShapeHull class uses this HullLibrary to create a approximate convex
- * mesh given a general (non-polyhedral) convex shape.
+ * The HullLibrary class can create a convex hull from a collection of vertices,
+ * using the ComputeHull method. The btShapeHull class uses this HullLibrary to
+ * create a approximate convex mesh given a general (non-polyhedral) convex
+ * shape.
  */
 public class HullLibrary implements Serializable {
 
@@ -47,6 +48,7 @@ public class HullLibrary implements Serializable {
   dest.set(x, y, z);
   vcount[0]++;
  }
+
  final ArrayList<btHullTriangle> m_tris = new ArrayList<>(0);
  public final ArrayIntList m_vertexIndexMapping = new ArrayIntList();
 
@@ -63,7 +65,8 @@ public class HullLibrary implements Serializable {
   init(vertexSource);
   final btVector3 scale = new btVector3();
   int[] ovcount = new int[1];
-  boolean ok = CleanupVertices(desc.mVcount, desc.mVertices, desc.mVertexStride, ovcount,
+  boolean ok = CleanupVertices(desc.mVcount, desc.mVertices, desc.mVertexStride,
+   ovcount,
    vertexSource, desc.mNormalEpsilon, scale); // normalize point cloud, remove duplicates!
   if (ok) {
 //		if ( 1 ) // scale vertices back to their original size.
@@ -78,7 +81,8 @@ public class HullLibrary implements Serializable {
     // re-index triangle mesh so it refers to only used vertices, rebuild a new vertex table.
     btVector3[] vertexScratch = new btVector3[hr.mVcount];
     init(vertexScratch);
-    BringOutYourDead(hr.mVertices, hr.mVcount, vertexScratch, ovcount, hr.m_Indices.toBackedArray(),
+    BringOutYourDead(hr.mVertices, hr.mVcount, vertexScratch, ovcount,
+     hr.m_Indices.toBackedArray(),
      hr.mIndexCount);
     ret = QE_OK;
     if (desc.HasHullFlag(QF_TRIANGLES)) // if he wants the results as triangle!
@@ -103,7 +107,8 @@ public class HullLibrary implements Serializable {
   return ret;
  }
 
- private void hr_indices_to_result_triangles(HullResult result, HullDesc desc, PHullResult hr) {
+ private void hr_indices_to_result_triangles(HullResult result, HullDesc desc,
+  PHullResult hr) {
   if (desc.HasHullFlag(QF_REVERSE_ORDER)) {
    ArrayIntList Indices = new ArrayIntList();
    Indices.ensureCapacity(hr.mFaceCount * 3);
@@ -114,11 +119,13 @@ public class HullLibrary implements Serializable {
    }
    result.m_Indices = Indices.toBackedArray();
   } else {
-   result.m_Indices = Arrays.copyOfRange(hr.m_Indices.toBackedArray(), 0, hr.mIndexCount);
+   result.m_Indices = Arrays.copyOfRange(hr.m_Indices.toBackedArray(), 0,
+    hr.mIndexCount);
   }
  }
 
- private void hr_indices_to_result_counted_triangles(HullResult result, HullDesc desc,
+ private void hr_indices_to_result_counted_triangles(HullResult result,
+  HullDesc desc,
   PHullResult hr) {
   ArrayIntList dest = new ArrayIntList();
   dest.ensureCapacity(hr.mFaceCount * 4);
@@ -146,7 +153,8 @@ public class HullLibrary implements Serializable {
   return QE_OK;
  }
 
- boolean ComputeHull(int vcount, btVector3[] vertices, PHullResult result, int vlimit) {
+ boolean ComputeHull(int vcount, btVector3[] vertices, PHullResult result,
+  int vlimit) {
   int[] tris_count = new int[1];
   int ret = calchull(vertices, vcount, result.m_Indices, tris_count, vlimit);
   if (ret == 0) {
@@ -242,7 +250,8 @@ public class HullLibrary implements Serializable {
   if (p.x == -1) {
    return 0; // simplex failed
   }
-  final btVector3 center = new btVector3(verts[p.x]).add(verts[p.y]).add(verts[p.z]).add(verts[p.w])
+  final btVector3 center = new btVector3(verts[p.x]).add(verts[p.y]).add(
+   verts[p.z]).add(verts[p.w])
    .scale(1.0f / 4.0f);  // a valid interior point
   btHullTriangle t0 = allocateTriangle(p.z, p.w, p.y);
   t0.n.set(2, 3, 1);
@@ -298,9 +307,10 @@ public class HullLibrary implements Serializable {
     if (!hasvert(nt, v)) {
      break;
     }
-    if (above(verts, nt, center, (0.01f) * epsilon) != 0 || (new btVector3(verts[nt.y]).sub(
-     verts[nt.x])).cross(new btVector3(verts[nt.z]).sub(verts[nt.y])).length() < epsilon * epsilon *
-     (0.1f)) {
+    if (above(verts, nt, center, (0.01f) * epsilon) != 0 || (new btVector3(
+     verts[nt.y]).sub(
+     verts[nt.x])).cross(new btVector3(verts[nt.z]).sub(verts[nt.y])).length()
+     < epsilon * epsilon * (0.1f)) {
      btHullTriangle nb = m_tris.get(m_tris.get(j).n.x);
      assert (nb != null);
      assert (!hasvert(nb, v));
@@ -336,7 +346,8 @@ public class HullLibrary implements Serializable {
   init(basis);
   basis[0].set(0.01f, 0.02f, 1.0f);
   int p0 = maxdirsterid(verts, verts_count, basis[0], allow);
-  int p1 = maxdirsterid(verts, verts_count, new btVector3(basis[0]).negate(), allow);
+  int p1 = maxdirsterid(verts, verts_count, new btVector3(basis[0]).negate(),
+   allow);
   basis[0].set(verts[p0]).sub(verts[p1]);
   if (p0 == p1 || basis[0].equals(new btVector3(0, 0, 0))) {
    return new Int4(-1, -1, -1, -1);
@@ -410,7 +421,8 @@ public class HullLibrary implements Serializable {
  //After the hull is generated it give you back a set of polygon faces which index the *original* point cloud.
  //The thing is, often times, there are many 'dead vertices' in the point cloud that are on longer referenced by the hull.
  //The routine 'BringOutYourDead' find only the referenced vertices, copies them to an new buffer, and re-indexes the hull so that it is a minimal representation.
- void BringOutYourDead(btVector3[] verts, int vcount, btVector3[] overts, int[] ocount,
+ void BringOutYourDead(btVector3[] verts, int vcount, btVector3[] overts,
+  int[] ocount,
   int[] indices, int indexcount) {
   int[] tmpIndices = m_vertexIndexMapping.toArray();
   int[] usedIndices = new int[vcount];
@@ -663,7 +675,8 @@ public class HullLibrary implements Serializable {
   return dx * dx + dy * dy + dz * dz;
  }
 
- int calchull(btVector3[] verts, int verts_count, ArrayIntList tris_out, int[] tris_count,
+ int calchull(btVector3[] verts, int verts_count, ArrayIntList tris_out,
+  int[] tris_count,
   int vlimit) {
   int rc = calchullgen(verts, verts_count, vlimit);
   if (rc == 0) {
@@ -711,11 +724,11 @@ public class HullLibrary implements Serializable {
     float c = btCos(SIMD_RADS_PER_DEG * (x));
     int mb = maxdirfiltered(p, count,
      new btVector3(dir)
-     .add((new btVector3(u)
-      .scale(s))
-      .add(new btVector3(v)
-       .scale(c))
-      .scale(0.025f)),
+      .add((new btVector3(u)
+       .scale(s))
+       .add(new btVector3(v)
+        .scale(c))
+       .scale(0.025f)),
      allow);
     if (ma == m && mb == m) {
      allow[m] = 3;
@@ -729,11 +742,11 @@ public class HullLibrary implements Serializable {
       c = btCos(SIMD_RADS_PER_DEG * (xx));
       int md = maxdirfiltered(p, count,
        new btVector3(dir)
-       .add((new btVector3(u)
-        .scale(s))
-        .add(new btVector3(v)
-         .scale(c))
-        .scale(0.025f)),
+        .add((new btVector3(u)
+         .scale(s))
+         .add(new btVector3(v)
+          .scale(c))
+         .scale(0.025f)),
        allow);
       if (mc == m && md == m) {
        allow[m] = 3;
@@ -783,7 +796,8 @@ public class HullLibrary implements Serializable {
  btVector3 TriNormal(final btVector3 v0, final btVector3 v1, final btVector3 v2) {
   // return the normal of the triangle
   // inscribed by v0, v1, and v2
-  final btVector3 cp = (new btVector3(v1).sub(v0)).cross(new btVector3(v2).sub(v1));
+  final btVector3 cp = (new btVector3(v1).sub(v0)).cross(new btVector3(v2).sub(
+   v1));
   float m = cp.length();
   if (m == 0) {
    return new btVector3(1, 0, 0);
@@ -794,4 +808,5 @@ public class HullLibrary implements Serializable {
  boolean hasvert(Int3 t, int v) {
   return (t.x == v || t.y == v || t.z == v);
  }
+
 }

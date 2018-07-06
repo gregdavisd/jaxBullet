@@ -1,15 +1,15 @@
 /*
-Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.LinearMath;
 
@@ -25,7 +25,8 @@ import javax.vecmath.Quat4f;
  *
  * @author Gregery Barton
  */
-public final class btQuaternion extends Quat4f<btQuaternion> implements Serializable {
+public final class btQuaternion extends Quat4f<btQuaternion> implements
+ Serializable {
 
  public btQuaternion(final btVector3 t1, float w) {
   set(new AxisAngle4f(t1, w));
@@ -104,11 +105,13 @@ public final class btQuaternion extends Quat4f<btQuaternion> implements Serializ
   return w;
  }
 
- public static btVector3 quatRotate(final btQuaternion rotation, final btVector3 v) {
+ public static btVector3 quatRotate(final btQuaternion rotation,
+  final btVector3 v) {
   return rotation.transform(new btVector3(v));
  }
 
- public static btQuaternion shortestArcQuat(final btVector3 v0, final btVector3 v1) // Game Programming Gems 2.10. make sure v0,v1 are normalized
+ public static btQuaternion shortestArcQuat(final btVector3 v0,
+  final btVector3 v1) // Game Programming Gems 2.10. make sure v0,v1 are normalized
  {
   final btVector3 c = new btVector3(v0).cross(v1);
   float d = v0.dot(v1);
@@ -122,13 +125,12 @@ public final class btQuaternion extends Quat4f<btQuaternion> implements Serializ
   float rs = 1.0f / s;
   return new btQuaternion(c.getX() * rs, c.getY() * rs, c.getZ() * rs, s * 0.5f);
  }
- 
-  public static btQuaternion 
-shortestArcQuatNormalize2(final btVector3 v0, final btVector3 v1)
-{
-	v0.normalize();
-	v1.normalize();
-	return shortestArcQuat(v0,v1);
-}
+
+ public static btQuaternion
+  shortestArcQuatNormalize2(final btVector3 v0, final btVector3 v1) {
+  v0.normalize();
+  v1.normalize();
+  return shortestArcQuat(v0, v1);
+ }
 
 }

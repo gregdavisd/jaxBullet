@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2013 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2013 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision;
 
@@ -50,8 +50,10 @@ public class RayTester extends btDbvt.ICollide implements Serializable {
  void processLeaf(int i) {
   btCollisionShape childCollisionShape = m_compoundShape.getChildShape(i);
   final btTransform childTrans = m_compoundShape.getChildTransform(i);
-  final btTransform childWorldTrans = new btTransform(m_colObjWorldTransform).mul(childTrans);
-  btCollisionObjectWrapper tmpOb = new btCollisionObjectWrapper(null, childCollisionShape,
+  final btTransform childWorldTrans = new btTransform(m_colObjWorldTransform)
+   .mul(childTrans);
+  btCollisionObjectWrapper tmpOb = new btCollisionObjectWrapper(null,
+   childCollisionShape,
    m_collisionObject, childWorldTrans, -1, i);
   // replace collision shape so that callback can determine the triangle
   LocalInfoAdder2 my_cb = new LocalInfoAdder2(i, m_resultCallback);
@@ -66,4 +68,5 @@ public class RayTester extends btDbvt.ICollide implements Serializable {
  public void process(btDbvtNode leaf) {
   processLeaf(leaf.dataAsInt());
  }
+
 };

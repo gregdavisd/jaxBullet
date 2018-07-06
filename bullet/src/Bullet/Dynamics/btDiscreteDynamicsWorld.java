@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Dynamics;
 
@@ -65,12 +65,13 @@ import java.util.List;
 import static javax.vecmath.VecMath.is_good_matrix;
 
 /**
- * btDiscreteDynamicsWorld provides discrete rigid body simulation those classes replace the
- * obsolete CcdPhysicsEnvironment/CcdPhysicsController
+ * btDiscreteDynamicsWorld provides discrete rigid body simulation those classes
+ * replace the obsolete CcdPhysicsEnvironment/CcdPhysicsController
  *
  * @author Gregery Barton
  */
-public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializable {
+public class btDiscreteDynamicsWorld extends btDynamicsWorld implements
+ Serializable {
 
  ///internal debugging variable. this value shouldn't be too high
  static int gNumClampedCcdMotions = 0;
@@ -79,9 +80,11 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
   int islandId;
   btCollisionObject rcolObj0 = lhs.getRigidBodyA();
   btCollisionObject rcolObj1 = lhs.getRigidBodyB();
-  islandId = rcolObj0.getIslandTag() >= 0 ? rcolObj0.getIslandTag() : rcolObj1.getIslandTag();
+  islandId = rcolObj0.getIslandTag() >= 0 ? rcolObj0.getIslandTag() : rcolObj1
+   .getIslandTag();
   return islandId;
  }
+
  final ArrayList<btTypedConstraint> m_sortedConstraints = new ArrayList<>(0);
  final InplaceSolverIslandCallback m_solverIslandCallback;
  btConstraintSolver m_constraintSolver;
@@ -104,8 +107,10 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
  final Object m_predictiveManifoldsMutex = new Object();  // used to synchronize threads creating predictive contacts
  ///this btDiscreteDynamicsWorld constructor gets created objects from the user, and will not delete those
 
- public btDiscreteDynamicsWorld(btDispatcher dispatcher, btBroadphaseInterface pairCache,
-  btConstraintSolver constraintSolver, btCollisionConfiguration collisionConfiguration) {
+ public btDiscreteDynamicsWorld(btDispatcher dispatcher,
+  btBroadphaseInterface pairCache,
+  btConstraintSolver constraintSolver,
+  btCollisionConfiguration collisionConfiguration) {
   super(dispatcher, pairCache, collisionConfiguration);
   m_gravity.set(0f, -10f, 0f);
   m_localTime = 0f;
@@ -126,7 +131,8 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
   }
   m_ownsIslandManager = true;
   {
-   m_solverIslandCallback = new InplaceSolverIslandCallback(m_constraintSolver, null, dispatcher);
+   m_solverIslandCallback = new InplaceSolverIslandCallback(m_constraintSolver,
+    null, dispatcher);
   }
  }
 
@@ -137,12 +143,14 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
    if (!body.isStaticOrKinematicObject()) {
     //don't integrate/update velocities here, it happens in the constraint solver
     body.applyDamping(timeStep);
-    body.predictIntegratedTransform(timeStep, body.getInterpolationWorldTransform());
+    body.predictIntegratedTransform(timeStep, body
+     .getInterpolationWorldTransform());
    }
   }
  }
 
- void integrateTransformsInternal(List<btRigidBody> bodies, int numBodies, float timeStep) // can be called in parallel
+ void integrateTransformsInternal(List<btRigidBody> bodies, int numBodies,
+  float timeStep) // can be called in parallel
  {
   final btTransform predictedTrans = new btTransform();
   for (int i = 0; i < numBodies; i++) {
@@ -151,16 +159,20 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
    if (body.isActive() && (!body.isStaticOrKinematicObject())) {
     body.predictIntegratedTransform(timeStep, predictedTrans);
     assert (is_good_matrix(predictedTrans));
-    float squareMotion = (predictedTrans.getOrigin().sub(body.getWorldTransformPtr().getOrigin()))
+    float squareMotion = (predictedTrans.getOrigin().sub(body
+     .getWorldTransformPtr().getOrigin()))
      .lengthSquared();
-    if (getDispatchInfo().m_useContinuous && body.getCcdSquareMotionThreshold() != 0.0f && body
-     .getCcdSquareMotionThreshold() < squareMotion) {
+    if (getDispatchInfo().m_useContinuous && body.getCcdSquareMotionThreshold()
+     != 0.0f && body
+      .getCcdSquareMotionThreshold() < squareMotion) {
      BT_PROFILE("CCD motion clamping");
      if (body.getCollisionShape().isConvex()) {
       gNumClampedCcdMotions++;
-      btClosestNotMeConvexResultCallback sweepResults = new btClosestNotMeConvexResultCallback(body,
-       body.getWorldTransformPtr().getOrigin(), predictedTrans.getOrigin(), getBroadphase()
-       .getOverlappingPairCache(), getDispatcher());
+      btClosestNotMeConvexResultCallback sweepResults = new btClosestNotMeConvexResultCallback(
+       body,
+       body.getWorldTransformPtr().getOrigin(), predictedTrans.getOrigin(),
+       getBroadphase()
+        .getOverlappingPairCache(), getDispatcher());
       assert (is_good_matrix(body.getWorldTransformPtr()));
       btSphereShape tmpSphere = new btSphereShape(body.getCcdSweptSphereRadius());//btConvexShape* convexShape = static_cast<btConvexShape*>(body.getCollisionShape());
       sweepResults.m_allowedPenetration = getDispatchInfo().m_allowedCcdPenetration;
@@ -170,12 +182,14 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
       assert (is_good_matrix(predictedTrans));
       modifiedPredictedTrans.setBasis(body.getWorldTransformPtr().getBasis());
       assert (is_good_matrix(modifiedPredictedTrans));
-      convexSweepTest(tmpSphere, body.getWorldTransformPtr(), modifiedPredictedTrans, sweepResults);
+      convexSweepTest(tmpSphere, body.getWorldTransformPtr(),
+       modifiedPredictedTrans, sweepResults);
       assert (is_good_matrix(modifiedPredictedTrans));
       assert (is_good_matrix(body.getWorldTransformPtr()));
       if (sweepResults.hasHit() && (sweepResults.m_closestHitFraction < 1.f)) {
        body.setHitFraction(sweepResults.m_closestHitFraction);
-       body.predictIntegratedTransform(timeStep * body.getHitFraction(), predictedTrans);
+       body.predictIntegratedTransform(timeStep * body.getHitFraction(),
+        predictedTrans);
        assert (is_good_matrix(predictedTrans));
        body.setHitFraction(0.f);
        body.proceedToTransform(predictedTrans);
@@ -197,28 +211,34 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
  void integrateTransforms(float timeStep) {
   BT_PROFILE("integrateTransforms");
   if (m_nonStaticRigidBodies.size() > 0) {
-   integrateTransformsInternal(m_nonStaticRigidBodies, m_nonStaticRigidBodies.size(), timeStep);
+   integrateTransformsInternal(m_nonStaticRigidBodies, m_nonStaticRigidBodies
+    .size(), timeStep);
   }
   ///this should probably be switched on by default, but it is not well tested yet
   if (m_applySpeculativeContactRestitution) {
    BT_PROFILE("apply speculative contact restitution");
    for (int i = 0; i < m_predictiveManifolds.size(); i++) {
     btPersistentManifold manifold = m_predictiveManifolds.get(i);
-    btRigidBody body0 = btRigidBody.upcast((btCollisionObject) manifold.getBody0());
-    btRigidBody body1 = btRigidBody.upcast((btCollisionObject) manifold.getBody1());
+    btRigidBody body0 = btRigidBody.upcast((btCollisionObject) manifold
+     .getBody0());
+    btRigidBody body1 = btRigidBody.upcast((btCollisionObject) manifold
+     .getBody1());
     if (body0 == null || body1 == null) {
      continue;
     }
     for (int p = 0; p < manifold.getNumContacts(); p++) {
      btManifoldPoint pt = manifold.getContactPoint(p);
-     float combinedRestitution = btManifoldResult.calculateCombinedRestitution(body0, body1);
+     float combinedRestitution = btManifoldResult.calculateCombinedRestitution(
+      body0, body1);
      if (combinedRestitution > 0 && pt.m_appliedImpulse != 0.f) //if (pt.getDistance()>0 && combinedRestitution>0 && pt.m_appliedImpulse != 0.f)
      {
-      final btVector3 imp = new btVector3(pt.m_normalWorldOnB).scale(-pt.m_appliedImpulse *
-       combinedRestitution);
-      final btVector3 rel_pos0 = pt.getPositionWorldOnA().sub(body0.getWorldTransformPtr()
+      final btVector3 imp = new btVector3(pt.m_normalWorldOnB).scale(
+       -pt.m_appliedImpulse * combinedRestitution);
+      final btVector3 rel_pos0 = pt.getPositionWorldOnA().sub(body0
+       .getWorldTransformPtr()
        .getOrigin());
-      final btVector3 rel_pos1 = pt.getPositionWorldOnB().sub(body1.getWorldTransformPtr()
+      final btVector3 rel_pos1 = pt.getPositionWorldOnB().sub(body1
+       .getWorldTransformPtr()
        .getOrigin());
       body0.applyImpulse(imp, rel_pos0);
       body1.applyImpulse(new btVector3(imp).negate(), rel_pos1);
@@ -230,18 +250,20 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
 
  void calculateSimulationIslands() {
   BT_PROFILE("calculateSimulationIslands");
-  getSimulationIslandManager().updateActivationState(getCollisionWorld(), getCollisionWorld()
-   .getDispatcher());
+  getSimulationIslandManager().updateActivationState(getCollisionWorld(),
+   getCollisionWorld()
+    .getDispatcher());
   {
    //merge islands based on speculative contact manifolds too
    for (int i = 0; i < this.m_predictiveManifolds.size(); i++) {
     btPersistentManifold manifold = m_predictiveManifolds.get(i);
     btCollisionObject colObj0 = manifold.getBody0();
     btCollisionObject colObj1 = manifold.getBody1();
-    if (!(colObj0).isStaticOrKinematicObject() &&
-     !(colObj1).isStaticOrKinematicObject()) {
-     getSimulationIslandManager().getUnionFind().unite((colObj0).getIslandTag(), (colObj1)
-      .getIslandTag());
+    if (!(colObj0).isStaticOrKinematicObject() && !(colObj1)
+     .isStaticOrKinematicObject()) {
+     getSimulationIslandManager().getUnionFind().unite((colObj0).getIslandTag(),
+      (colObj1)
+       .getIslandTag());
     }
    }
   }
@@ -253,10 +275,11 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
     if (constraint.isEnabled()) {
      btRigidBody colObj0 = constraint.getRigidBodyA();
      btRigidBody colObj1 = constraint.getRigidBodyB();
-     if (!colObj0.isStaticOrKinematicObject() &&
-      !(colObj1).isStaticOrKinematicObject()) {
-      getSimulationIslandManager().getUnionFind().unite((colObj0).getIslandTag(), (colObj1)
-       .getIslandTag());
+     if (!colObj0.isStaticOrKinematicObject() && !(colObj1)
+      .isStaticOrKinematicObject()) {
+      getSimulationIslandManager().getUnionFind()
+       .unite((colObj0).getIslandTag(), (colObj1)
+        .getIslandTag());
      }
     }
    }
@@ -270,14 +293,17 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
   m_sortedConstraints.clear();
   m_sortedConstraints.addAll(m_constraints);
   m_sortedConstraints.sort(new btSortConstraintOnIslandPredicate());
-  ArrayList<btTypedConstraint> constraintsPtr = getNumConstraints() != 0 ? m_sortedConstraints :
-   null;
-  m_solverIslandCallback.setup(solverInfo, constraintsPtr, m_sortedConstraints.size(),
+  ArrayList<btTypedConstraint> constraintsPtr = getNumConstraints() != 0 ? m_sortedConstraints
+   : null;
+  m_solverIslandCallback.setup(solverInfo, constraintsPtr, m_sortedConstraints
+   .size(),
    getDebugDrawer());
-  m_constraintSolver.prepareSolve(getCollisionWorld().getNumCollisionObjects(), getCollisionWorld()
-   .getDispatcher().getNumManifolds());
+  m_constraintSolver.prepareSolve(getCollisionWorld().getNumCollisionObjects(),
+   getCollisionWorld()
+    .getDispatcher().getNumManifolds());
   /// solve all the constraints for this island
-  m_islandManager.buildAndProcessIslands(getCollisionWorld().getDispatcher(), getCollisionWorld(),
+  m_islandManager.buildAndProcessIslands(getCollisionWorld().getDispatcher(),
+   getCollisionWorld(),
    m_solverIslandCallback);
   m_solverIslandCallback.processConstraints();
   m_constraintSolver.allSolved(solverInfo, m_debugDrawer);
@@ -354,7 +380,8 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
   m_predictiveManifolds.clear();
  }
 
- void createPredictiveContactsInternal(List<btRigidBody> bodies, int numBodies, float timeStep) // can be called in parallel
+ void createPredictiveContactsInternal(List<btRigidBody> bodies, int numBodies,
+  float timeStep) // can be called in parallel
  {
   final btTransform predictedTrans = new btTransform();
   for (int i = 0; i < numBodies; i++) {
@@ -362,36 +389,45 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
    body.setHitFraction(1.f);
    if (body.isActive() && (!body.isStaticOrKinematicObject())) {
     body.predictIntegratedTransform(timeStep, predictedTrans);
-    float squareMotion = (predictedTrans.getOrigin().sub(body.getWorldTransformPtr().getOrigin()))
+    float squareMotion = (predictedTrans.getOrigin().sub(body
+     .getWorldTransformPtr().getOrigin()))
      .lengthSquared();
-    if (getDispatchInfo().m_useContinuous && body.getCcdSquareMotionThreshold() != 0f && body
-     .getCcdSquareMotionThreshold() < squareMotion) {
+    if (getDispatchInfo().m_useContinuous && body.getCcdSquareMotionThreshold()
+     != 0f && body
+      .getCcdSquareMotionThreshold() < squareMotion) {
      BT_PROFILE("predictive convexSweepTest");
      if (body.getCollisionShape().isConvex()) {
       gNumClampedCcdMotions++;
-      btClosestNotMeConvexResultCallback sweepResults = new btClosestNotMeConvexResultCallback(body,
-       body.getWorldTransformPtr().getOrigin(), predictedTrans.getOrigin(), getBroadphase()
-       .getOverlappingPairCache(), getDispatcher());
+      btClosestNotMeConvexResultCallback sweepResults = new btClosestNotMeConvexResultCallback(
+       body,
+       body.getWorldTransformPtr().getOrigin(), predictedTrans.getOrigin(),
+       getBroadphase()
+        .getOverlappingPairCache(), getDispatcher());
       btSphereShape tmpSphere = new btSphereShape(body.getCcdSweptSphereRadius());
       sweepResults.m_allowedPenetration = getDispatchInfo().m_allowedCcdPenetration;
       sweepResults.m_collisionFilterGroup = body.getBroadphaseProxy().m_collisionFilterGroup;
       sweepResults.m_collisionFilterMask = body.getBroadphaseProxy().m_collisionFilterMask;
       final btTransform modifiedPredictedTrans = predictedTrans;
       modifiedPredictedTrans.setBasis(body.getWorldTransformPtr().getBasis());
-      convexSweepTest(tmpSphere, body.getWorldTransformPtr(), modifiedPredictedTrans, sweepResults);
+      convexSweepTest(tmpSphere, body.getWorldTransformPtr(),
+       modifiedPredictedTrans, sweepResults);
       if (sweepResults.hasHit() && (sweepResults.m_closestHitFraction < 1.f)) {
-       final btVector3 distVec = (predictedTrans.getOrigin().sub(body.getWorldTransformPtr()
+       final btVector3 distVec = (predictedTrans.getOrigin().sub(body
+        .getWorldTransformPtr()
         .getOrigin())).scale(sweepResults.m_closestHitFraction);
-       float distance = distVec.dot(new btVector3(sweepResults.m_hitNormalWorld).negate());
+       float distance = distVec.dot(new btVector3(sweepResults.m_hitNormalWorld)
+        .negate());
        btPersistentManifold manifold = m_dispatcher1.getNewManifold(body,
         sweepResults.m_hitCollisionObject);
        //synchronized (m_predictiveManifoldsMutex) {
        m_predictiveManifolds.add(manifold);
        // }
-       final btVector3 worldPointB = body.getWorldTransformPtr().getOrigin().add(distVec);
+       final btVector3 worldPointB = body.getWorldTransformPtr().getOrigin()
+        .add(distVec);
        final btVector3 localPointB = sweepResults.m_hitCollisionObject
         .getWorldTransform().invert().transform(new btVector3(worldPointB));
-       btManifoldPoint newPoint = new btManifoldPoint(new btVector3(), localPointB,
+       btManifoldPoint newPoint = new btManifoldPoint(new btVector3(),
+        localPointB,
         sweepResults.m_hitNormalWorld, distance);
        boolean isPredictive = true;
        int index = manifold.addManifoldPoint(newPoint, isPredictive);
@@ -412,7 +448,8 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
   BT_PROFILE("createPredictiveContacts");
   releasePredictiveContacts();
   if (m_nonStaticRigidBodies.size() > 0) {
-   createPredictiveContactsInternal(m_nonStaticRigidBodies, m_nonStaticRigidBodies.size(), timeStep);
+   createPredictiveContactsInternal(m_nonStaticRigidBodies,
+    m_nonStaticRigidBodies.size(), timeStep);
   }
  }
 
@@ -468,13 +505,13 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
   //process some debugging flags
   if (getDebugDrawer() != null) {
    btIDebugDraw debugDrawer = getDebugDrawer();
-   btRigidBody.gDisableDeactivation =
-    (debugDrawer.getDebugMode() & btIDebugDraw.DBG_NoDeactivation) != 0;
+   btRigidBody.gDisableDeactivation
+    = (debugDrawer.getDebugMode() & btIDebugDraw.DBG_NoDeactivation) != 0;
   }
   if (numSimulationSubSteps > 0) {
    //clamp the number of substeps, to prevent simulation grinding spiralling down to a halt
-   int clampedSimulationSteps = (numSimulationSubSteps > do_maxSubSteps) ? do_maxSubSteps :
-    numSimulationSubSteps;
+   int clampedSimulationSteps = (numSimulationSubSteps > do_maxSubSteps) ? do_maxSubSteps
+    : numSimulationSubSteps;
    saveKinematicState(do_fixedTimeStep * clampedSimulationSteps);
    applyGravity();
    for (int i = 0; i < clampedSimulationSteps; i++) {
@@ -522,9 +559,11 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
    {
     final btTransform interpolatedTransform = new btTransform();
     btTransformUtil.integrateTransform(body.getInterpolationWorldTransform(),
-     body.getInterpolationLinearVelocity(), body.getInterpolationAngularVelocity(),
-     (m_latencyMotionStateInterpolation && m_fixedTimeStep != 0f) ? m_localTime - m_fixedTimeStep :
-      m_localTime * body.getHitFraction(),
+     body.getInterpolationLinearVelocity(), body
+     .getInterpolationAngularVelocity(),
+     (m_latencyMotionStateInterpolation && m_fixedTimeStep != 0f) ? m_localTime
+      - m_fixedTimeStep
+      : m_localTime * body.getHitFraction(),
      interpolatedTransform);
     body.getMotionState().setWorldTransform(interpolatedTransform);
    }
@@ -590,20 +629,24 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
  }
 
  @Override
- public void addCollisionObject(btCollisionObject collisionObject, int collisionFilterGroup) {
-  addCollisionObject(collisionObject, collisionFilterGroup, btBroadphaseProxy.ALL_FILTER ^
-   btBroadphaseProxy.STATIC_FILTER);
+ public void addCollisionObject(btCollisionObject collisionObject,
+  int collisionFilterGroup) {
+  addCollisionObject(collisionObject, collisionFilterGroup,
+   btBroadphaseProxy.ALL_FILTER ^ btBroadphaseProxy.STATIC_FILTER);
  }
 
  @Override
- public void addCollisionObject(btCollisionObject collisionObject, int collisionFilterGroup,
+ public void addCollisionObject(btCollisionObject collisionObject,
+  int collisionFilterGroup,
   int collisionFilterMask) {
-  super.addCollisionObject(collisionObject, collisionFilterGroup, collisionFilterMask);
+  super.addCollisionObject(collisionObject, collisionFilterGroup,
+   collisionFilterMask);
  }
 
  @Override
  public void addRigidBody(btRigidBody body) {
-  if (!body.isStaticOrKinematicObject() && 0 == (body.getFlags() & BT_DISABLE_WORLD_GRAVITY)) {
+  if (!body.isStaticOrKinematicObject() && 0 == (body.getFlags()
+   & BT_DISABLE_WORLD_GRAVITY)) {
    body.setGravity(m_gravity);
   }
   if (body.getCollisionShape() != null) {
@@ -613,17 +656,18 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
     body.setActivationState(ISLAND_SLEEPING);
    }
    boolean isDynamic = !(body.isStaticObject() || body.isKinematicObject());
-   int collisionFilterGroup = isDynamic ? (btBroadphaseProxy.DEFAULT_FILTER) :
-    (btBroadphaseProxy.STATIC_FILTER);
-   int collisionFilterMask = isDynamic ? (btBroadphaseProxy.ALL_FILTER) :
-    (btBroadphaseProxy.ALL_FILTER ^ btBroadphaseProxy.STATIC_FILTER);
+   int collisionFilterGroup = isDynamic ? (btBroadphaseProxy.DEFAULT_FILTER)
+    : (btBroadphaseProxy.STATIC_FILTER);
+   int collisionFilterMask = isDynamic ? (btBroadphaseProxy.ALL_FILTER)
+    : (btBroadphaseProxy.ALL_FILTER ^ btBroadphaseProxy.STATIC_FILTER);
    addCollisionObject(body, collisionFilterGroup, collisionFilterMask);
   }
  }
 
  @Override
  public void addRigidBody(btRigidBody body, int group, int mask) {
-  if (!body.isStaticOrKinematicObject() && 0 == (body.getFlags() & BT_DISABLE_WORLD_GRAVITY)) {
+  if (!body.isStaticOrKinematicObject() && 0 == (body.getFlags()
+   & BT_DISABLE_WORLD_GRAVITY)) {
    body.setGravity(m_gravity);
   }
   if (body.getCollisionShape() != null) {
@@ -654,9 +698,10 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
  }
 
  void debugDrawConstraint(btTypedConstraint constraint) {
-  boolean drawFrames = (getDebugDrawer().getDebugMode() & btIDebugDraw.DBG_DrawConstraints) != 0;
-  boolean drawLimits = (getDebugDrawer().getDebugMode() & btIDebugDraw.DBG_DrawConstraintLimits) !=
-   0;
+  boolean drawFrames = (getDebugDrawer().getDebugMode()
+   & btIDebugDraw.DBG_DrawConstraints) != 0;
+  boolean drawLimits = (getDebugDrawer().getDebugMode()
+   & btIDebugDraw.DBG_DrawConstraintLimits) != 0;
   float dbgDrawSize = constraint.getDbgDrawSize();
   if (dbgDrawSize <= (0.f)) {
    return;
@@ -665,8 +710,9 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
    case POINT2POINT_CONSTRAINT_TYPE: {
     btPoint2PointConstraint p2pC = (btPoint2PointConstraint) constraint;
     final btTransform tr = new btTransform().setIdentity();
-    final btVector3 pivot =
-     p2pC.getRigidBodyA().getCenterOfMassTransform().transform(p2pC.getPivotInA());
+    final btVector3 pivot
+     = p2pC.getRigidBodyA().getCenterOfMassTransform().transform(p2pC
+      .getPivotInA());
     tr.setOrigin(pivot);
     getDebugDrawer().drawTransform(tr, dbgDrawSize);
     // that ideally should draw the same frame
@@ -680,11 +726,13 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
    break;
    case HINGE_CONSTRAINT_TYPE: {
     btHingeConstraint pHinge = (btHingeConstraint) constraint;
-    final btTransform tr = pHinge.getRigidBodyA().getCenterOfMassTransform().mul(pHinge.getAFrame());
+    final btTransform tr = pHinge.getRigidBodyA().getCenterOfMassTransform()
+     .mul(pHinge.getAFrame());
     if (drawFrames) {
      getDebugDrawer().drawTransform(tr, dbgDrawSize);
     }
-    tr.set(pHinge.getRigidBodyB().getCenterOfMassTransform()).mul(pHinge.getBFrame());
+    tr.set(pHinge.getRigidBodyB().getCenterOfMassTransform()).mul(pHinge
+     .getBFrame());
     if (drawFrames) {
      getDebugDrawer().drawTransform(tr, dbgDrawSize);
     }
@@ -703,14 +751,16 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
      final btVector3 center = tr.getOrigin();
      final btVector3 normal = tr.getBasisColumn(2);
      final btVector3 axis = tr.getBasisColumn(0);
-     getDebugDrawer().drawArc(center, normal, axis, dbgDrawSize, dbgDrawSize, minAng, maxAng,
+     getDebugDrawer().drawArc(center, normal, axis, dbgDrawSize, dbgDrawSize,
+      minAng, maxAng,
       new btVector3(), drawSect);
     }
    }
    break;
    case CONETWIST_CONSTRAINT_TYPE: {
     btConeTwistConstraint pCT = (btConeTwistConstraint) constraint;
-    final btTransform tr = pCT.getRigidBodyA().getCenterOfMassTransform().mul(pCT.getAFrame());
+    final btTransform tr = pCT.getRigidBodyA().getCenterOfMassTransform().mul(
+     pCT.getAFrame());
     if (drawFrames) {
      getDebugDrawer().drawTransform(tr, dbgDrawSize);
     }
@@ -722,7 +772,8 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
      //  float length = float(5);
      float length = dbgDrawSize;
      final int nSegments = 8 * 4;
-     float fAngleInRadians = (2.f * 3.1415926f) * (float) (nSegments - 1) / (float) (nSegments);
+     float fAngleInRadians = (2.f * 3.1415926f) * (float) (nSegments - 1)
+      / (float) (nSegments);
      final btVector3 pPrev = pCT.GetPointForAngle(fAngleInRadians, length);
      tr.transform(pPrev);
      for (int i = 0; i < nSegments; i++) {
@@ -739,15 +790,18 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
      float twa = pCT.getTwistAngle();
      boolean useFrameB = (pCT.getRigidBodyB().getInvMass() > (0.f));
      if (useFrameB) {
-      tr.set(pCT.getRigidBodyB().getCenterOfMassTransform().mul(pCT.getBFrame()));
+      tr
+       .set(pCT.getRigidBodyB().getCenterOfMassTransform().mul(pCT.getBFrame()));
      } else {
-      tr.set(pCT.getRigidBodyA().getCenterOfMassTransform().mul(pCT.getAFrame()));
+      tr
+       .set(pCT.getRigidBodyA().getCenterOfMassTransform().mul(pCT.getAFrame()));
      }
      final btVector3 pivot = tr.getOrigin();
      final btVector3 normal = tr.getBasisColumn(0);
      final btVector3 axis1 = tr.getBasisColumn(1);
      getDebugDrawer()
-      .drawArc(pivot, normal, axis1, dbgDrawSize, dbgDrawSize, -twa - tws, -twa + tws,
+      .drawArc(pivot, normal, axis1, dbgDrawSize, dbgDrawSize, -twa - tws, -twa
+       + tws,
        new btVector3(), true);
     }
    }
@@ -772,7 +826,8 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
      float maxTh = p6DOF.getRotationalLimitMotor(1).m_hiLimit;
      float minPs = p6DOF.getRotationalLimitMotor(2).m_loLimit;
      float maxPs = p6DOF.getRotationalLimitMotor(2).m_hiLimit;
-     getDebugDrawer().drawSpherePatch(center, up, axis, dbgDrawSize * (.9f), minTh, maxTh, minPs,
+     getDebugDrawer().drawSpherePatch(center, up, axis, dbgDrawSize * (.9f),
+      minTh, maxTh, minPs,
       maxPs, new btVector3());
      axis.set(tr.getBasisColumn(1));
      float ay = p6DOF.getAngle(1);
@@ -790,15 +845,19 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
      float minFi = p6DOF.getRotationalLimitMotor(0).m_loLimit;
      float maxFi = p6DOF.getRotationalLimitMotor(0).m_hiLimit;
      if (minFi > maxFi) {
-      getDebugDrawer().drawArc(center, normal, ref, dbgDrawSize, dbgDrawSize, -SIMD_PI, SIMD_PI,
+      getDebugDrawer().drawArc(center, normal, ref, dbgDrawSize, dbgDrawSize,
+       -SIMD_PI, SIMD_PI,
        new btVector3(), false);
      } else if (minFi < maxFi) {
-      getDebugDrawer().drawArc(center, normal, ref, dbgDrawSize, dbgDrawSize, minFi, maxFi,
+      getDebugDrawer().drawArc(center, normal, ref, dbgDrawSize, dbgDrawSize,
+       minFi, maxFi,
        new btVector3(), true);
      }
      tr.set(p6DOF.getCalculatedTransformA());
-     final btVector3 bbMin = new btVector3(p6DOF.getTranslationalLimitMotor().m_lowerLimit);
-     final btVector3 bbMax = new btVector3(p6DOF.getTranslationalLimitMotor().m_upperLimit);
+     final btVector3 bbMin = new btVector3(
+      p6DOF.getTranslationalLimitMotor().m_lowerLimit);
+     final btVector3 bbMax = new btVector3(
+      p6DOF.getTranslationalLimitMotor().m_upperLimit);
      getDebugDrawer().drawBox(bbMin, bbMax, tr, new btVector3());
     }
    }
@@ -824,7 +883,8 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
       float maxTh = p6DOF.getRotationalLimitMotor(1).m_hiLimit;
       float minPs = p6DOF.getRotationalLimitMotor(2).m_loLimit;
       float maxPs = p6DOF.getRotationalLimitMotor(2).m_hiLimit;
-      getDebugDrawer().drawSpherePatch(center, up, axis, dbgDrawSize * (.9f), minTh, maxTh, minPs,
+      getDebugDrawer().drawSpherePatch(center, up, axis, dbgDrawSize * (.9f),
+       minTh, maxTh, minPs,
        maxPs, new btVector3());
       axis.set(tr.getBasisColumn(1));
       float ay = p6DOF.getAngle(1);
@@ -842,10 +902,12 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
       float minFi = p6DOF.getRotationalLimitMotor(0).m_loLimit;
       float maxFi = p6DOF.getRotationalLimitMotor(0).m_hiLimit;
       if (minFi > maxFi) {
-       getDebugDrawer().drawArc(center, normal, ref, dbgDrawSize, dbgDrawSize, -SIMD_PI, SIMD_PI,
+       getDebugDrawer().drawArc(center, normal, ref, dbgDrawSize, dbgDrawSize,
+        -SIMD_PI, SIMD_PI,
         new btVector3(), false);
       } else if (minFi < maxFi) {
-       getDebugDrawer().drawArc(center, normal, ref, dbgDrawSize, dbgDrawSize, minFi, maxFi,
+       getDebugDrawer().drawArc(center, normal, ref, dbgDrawSize, dbgDrawSize,
+        minFi, maxFi,
         new btVector3(), true);
       }
       tr.set(p6DOF.getCalculatedTransformA());
@@ -867,17 +929,21 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
      getDebugDrawer().drawTransform(tr, dbgDrawSize);
     }
     if (drawLimits) {
-     tr.set(pSlider.getUseLinearReferenceFrameA() ? pSlider.getCalculatedTransformA() : pSlider
-      .getCalculatedTransformB());
-     final btVector3 li_min = tr.transform(new btVector3(pSlider.getLowerLinLimit(), 0.f, 0.f));
-     final btVector3 li_max = tr.transform(new btVector3(pSlider.getUpperLinLimit(), 0.f, 0.f));
+     tr.set(pSlider.getUseLinearReferenceFrameA() ? pSlider
+      .getCalculatedTransformA() : pSlider
+       .getCalculatedTransformB());
+     final btVector3 li_min = tr.transform(new btVector3(pSlider
+      .getLowerLinLimit(), 0.f, 0.f));
+     final btVector3 li_max = tr.transform(new btVector3(pSlider
+      .getUpperLinLimit(), 0.f, 0.f));
      getDebugDrawer().drawLine(li_min, li_max, new btVector3());
      final btVector3 normal = tr.getBasisColumn(0);
      final btVector3 axis = tr.getBasisColumn(1);
      float a_min = pSlider.getLowerAngLimit();
      float a_max = pSlider.getUpperAngLimit();
      final btVector3 center = pSlider.getCalculatedTransformB().getOrigin();
-     getDebugDrawer().drawArc(center, normal, axis, dbgDrawSize, dbgDrawSize, a_min, a_max,
+     getDebugDrawer().drawArc(center, normal, axis, dbgDrawSize, dbgDrawSize,
+      a_min, a_max,
       new btVector3(), true);
     }
    }
@@ -895,7 +961,8 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
   boolean drawConstraints = false;
   if (getDebugDrawer() != null) {
    int mode = getDebugDrawer().getDebugMode();
-   if (mode != 0 & (btIDebugDraw.DBG_DrawConstraints | btIDebugDraw.DBG_DrawConstraintLimits) != 0) {
+   if (mode != 0 & (btIDebugDraw.DBG_DrawConstraints
+    | btIDebugDraw.DBG_DrawConstraintLimits) != 0) {
     drawConstraints = true;
    }
   }
@@ -905,8 +972,9 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
     debugDrawConstraint(constraint);
    }
   }
-  if (getDebugDrawer() != null && (getDebugDrawer().getDebugMode() != 0 &
-   (btIDebugDraw.DBG_DrawWireframe | btIDebugDraw.DBG_DrawAabb | btIDebugDraw.DBG_DrawNormals) != 0)) {
+  if (getDebugDrawer() != null && (getDebugDrawer().getDebugMode() != 0
+   & (btIDebugDraw.DBG_DrawWireframe | btIDebugDraw.DBG_DrawAabb
+   | btIDebugDraw.DBG_DrawNormals) != 0)) {
    int i;
    if (getDebugDrawer() != null && getDebugDrawer().getDebugMode() != 0) {
     for (i = 0; i < m_actions.size(); i++) {
@@ -972,36 +1040,24 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
 
  void setNumTasks(int numTasks) {
  }
-/*
- ///obsolete, use updateActions instead
- void updateVehicles(float timeStep) {
-  updateActions(timeStep);
- }
 
- ///obsolete, use addAction instead
- @Override
- public void addVehicle(btActionInterface vehicle) {
-  addAction(vehicle);
- }
- ///obsolete, use removeAction instead
-
- @Override
- public void removeVehicle(btActionInterface vehicle) {
-  removeAction(vehicle);
- }
- ///obsolete, use addAction instead
-
- @Override
- public void addCharacter(btActionInterface character) {
-  addAction(character);
- }
- ///obsolete, use removeAction instead
-
- @Override
- public void removeCharacter(btActionInterface character) {
-  removeAction(character);
- }
-*/
+ /*
+  * ///obsolete, use updateActions instead void updateVehicles(float timeStep) {
+  * updateActions(timeStep); }
+  *
+  * ///obsolete, use addAction instead @Override public void
+  * addVehicle(btActionInterface vehicle) { addAction(vehicle); } ///obsolete,
+  * use removeAction instead
+  *
+  * @Override public void removeVehicle(btActionInterface vehicle) {
+  * removeAction(vehicle); } ///obsolete, use addAction instead
+  *
+  * @Override public void addCharacter(btActionInterface character) {
+  * addAction(character); } ///obsolete, use removeAction instead
+  *
+  * @Override public void removeCharacter(btActionInterface character) {
+  * removeAction(character); }
+  */
  void setSynchronizeAllMotionStates(boolean synchronizeAll) {
   m_synchronizeAllMotionStates = synchronizeAll;
  }
@@ -1027,4 +1083,5 @@ public class btDiscreteDynamicsWorld extends btDynamicsWorld implements Serializ
  public boolean getLatencyMotionStateInterpolation() {
   return m_latencyMotionStateInterpolation;
  }
+
 };

@@ -25,9 +25,10 @@ import java.util.Set;
 import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 
 /**
- * The bt32BitAxisSweep3 allows higher precision quantization and more objects compared to the
- * btAxisSweep3 sweep and prune. This comes at the cost of more memory per handle, and a bit slower
- * performance. It uses arrays rather then lists for storage of the 3 axis.
+ * The bt32BitAxisSweep3 allows higher precision quantization and more objects
+ * compared to the btAxisSweep3 sweep and prune. This comes at the cost of more
+ * memory per handle, and a bit slower performance. It uses arrays rather then
+ * lists for storage of the 3 axis.
  *
  * @author Gregery Barton
  */
@@ -47,6 +48,7 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
 
   public Edge() {
   }
+
  }
 
  public class Handle extends btBroadphaseProxy {
@@ -71,6 +73,7 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
   public boolean intersect(btBroadphaseProxy other) {
    return testAabbOverlap(this, other);
   }
+
  } 		// 24 bytes + 24 for Edge structures = 44 bytes total per entry
  protected final btVector3 m_worldAabbMin = new btVector3();						// overall system bounds
  protected final btVector3 m_worldAabbMax = new btVector3();						// overall system bounds
@@ -106,18 +109,20 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
   m_numHandles--;
  }
 
- protected boolean testOverlap2D(Handle pHandleA, Handle pHandleB, short axis0, short axis1) {
+ protected boolean testOverlap2D(Handle pHandleA, Handle pHandleB, short axis0,
+  short axis1) {
   //optimization 1: check the array index (memory address), instead of the m_pos
-  if (pHandleA.m_maxEdges[axis0] < pHandleB.m_minEdges[axis0] ||
-   pHandleB.m_maxEdges[axis0] < pHandleA.m_minEdges[axis0] ||
-   pHandleA.m_maxEdges[axis1] < pHandleB.m_minEdges[axis1] ||
-   pHandleB.m_maxEdges[axis1] < pHandleA.m_minEdges[axis1]) {
+  if (pHandleA.m_maxEdges[axis0] < pHandleB.m_minEdges[axis0]
+   || pHandleB.m_maxEdges[axis0] < pHandleA.m_minEdges[axis0]
+   || pHandleA.m_maxEdges[axis1] < pHandleB.m_minEdges[axis1]
+   || pHandleB.m_maxEdges[axis1] < pHandleA.m_minEdges[axis1]) {
    return false;
   }
   return true;
  }
 
- protected void sortMinDown(short axis, short edge, btDispatcher dispatcher, boolean updateOverlaps) {
+ protected void sortMinDown(short axis, short edge, btDispatcher dispatcher,
+  boolean updateOverlaps) {
   int i_pEdge = edge;
   int i_pPrev = (edge - 1);
   assert (i_pEdge > 0 && i_pPrev >= 0);
@@ -161,7 +166,8 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
   }
  }
 
- protected void sortMinUp(short axis, short edge, btDispatcher dispatcher, boolean updateOverlaps) {
+ protected void sortMinUp(short axis, short edge, btDispatcher dispatcher,
+  boolean updateOverlaps) {
   int i_pEdge = edge;
   int i_pNext = (i_pEdge + 1);
   assert (i_pEdge >= 0);
@@ -179,8 +185,7 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
     final short axis1 = (short) (((short) 1 << axis) & (short) 3);
     final short axis2 = (short) (((short) 1 << axis1) & (short) 3);
     // if next edge is maximum remove any overlap between the two handles
-    if (updateOverlaps &&
-     testOverlap2D(handle0, handle1, axis1, axis2)) {
+    if (updateOverlaps && testOverlap2D(handle0, handle1, axis1, axis2)) {
      m_pairCache.removeOverlappingPair(handle0, handle1, dispatcher);
      if (m_userPairCallback != null) {
       m_userPairCallback.removeOverlappingPair(handle0, handle1, dispatcher);
@@ -208,7 +213,8 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
   }
  }
 
- protected void sortMaxDown(short axis, short edge, btDispatcher dispatcher, boolean updateOverlaps) {
+ protected void sortMaxDown(short axis, short edge, btDispatcher dispatcher,
+  boolean updateOverlaps) {
   int i_pEdge = edge;
   int i_pPrev = (edge - 1);
   assert (i_pEdge > 0 && i_pPrev >= 0);
@@ -227,8 +233,7 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
     Handle handle1 = getHandle(pPrev.m_handle);
     final short axis1 = (short) (((short) 1 << axis) & (short) 3);
     final short axis2 = (short) (((short) 1 << axis1) & (short) 3);
-    if (updateOverlaps &&
-     testOverlap2D(handle0, handle1, axis1, axis2)) {
+    if (updateOverlaps && testOverlap2D(handle0, handle1, axis1, axis2)) {
      //this is done during the overlappingpairarray iteration/narrowphase collision
      m_pairCache.removeOverlappingPair(handle0, handle1, dispatcher);
      if (m_userPairCallback != null) {
@@ -287,7 +292,8 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
   }
  }
 
- protected void sortMaxUp(short axis, short edge, btDispatcher dispatcher, boolean updateOverlaps) {
+ protected void sortMaxUp(short axis, short edge, btDispatcher dispatcher,
+  boolean updateOverlaps) {
   int i_pEdge = edge;
   int i_pNext = (edge + 1);
   assert (i_pEdge > 0 && i_pNext < m_pEdges[axis].length);
@@ -350,12 +356,15 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
  }
 
  public btAxisSweep3(final btVector3 worldAabbMin, final btVector3 worldAabbMax,
-  int handleMask, int handleSentinel, int maxHandles, btOverlappingPairCache pairCache) {
-  this(worldAabbMin, worldAabbMax, handleMask, handleSentinel, maxHandles, pairCache, false);
+  int handleMask, int handleSentinel, int maxHandles,
+  btOverlappingPairCache pairCache) {
+  this(worldAabbMin, worldAabbMax, handleMask, handleSentinel, maxHandles,
+   pairCache, false);
  }
 
  public btAxisSweep3(final btVector3 worldAabbMin, final btVector3 worldAabbMax,
-  int handleMask, int handleSentinel, int userMaxHandles, btOverlappingPairCache pairCache,
+  int handleMask, int handleSentinel, int userMaxHandles,
+  btOverlappingPairCache pairCache,
   boolean disableRaycastAccelerator) {
   m_bpHandleMask = (short) handleMask;
   m_handleSentinel = (short) handleSentinel;
@@ -425,7 +434,8 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
 
  public void calculateOverlappingPairs(btDispatcher dispatcher) {
   if (m_pairCache.hasDeferredRemoval()) {
-   ArrayList<btBroadphasePair> overlappingPairArray = m_pairCache.getOverlappingPairArrayPtr();
+   ArrayList<btBroadphasePair> overlappingPairArray = m_pairCache
+    .getOverlappingPairArrayPtr();
    //perform a sort, to find duplicates and to sort 'invalid' pairs to the end
    overlappingPairArray.sort(new btBroadphasePairSortPredicate());
    if (m_invalidPair > 0) {
@@ -467,15 +477,19 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
     m_invalidPair = 0;
    }
   } else {
-   m_pairCache.incrementalCleanup(m_pairCache.getNumOverlappingPairs(), dispatcher);
+   m_pairCache.incrementalCleanup(m_pairCache.getNumOverlappingPairs(),
+    dispatcher);
   }
  }
 
- private void remove_invalid_pairs(ArrayList<btBroadphasePair> overlappingPairArray, int invalidPair) {
+ private void remove_invalid_pairs(
+  ArrayList<btBroadphasePair> overlappingPairArray, int invalidPair) {
   int new_size = (overlappingPairArray.size() - invalidPair);
   while (overlappingPairArray.size() > new_size) {
-   assert (overlappingPairArray.get(overlappingPairArray.size() - 1).m_pProxy0 == null);
-   assert (overlappingPairArray.get(overlappingPairArray.size() - 1).m_pProxy1 == null);
+   assert (overlappingPairArray.get(overlappingPairArray.size() - 1).m_pProxy0
+    == null);
+   assert (overlappingPairArray.get(overlappingPairArray.size() - 1).m_pProxy1
+    == null);
    overlappingPairArray.remove(overlappingPairArray.size() - 1);
   }
   if (DEBUG_BLOCKS) {
@@ -487,7 +501,8 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
   }
  }
 
- protected short addHandle(final btVector3 aabbMin, final btVector3 aabbMax, Object pOwner,
+ protected short addHandle(final btVector3 aabbMin, final btVector3 aabbMax,
+  Object pOwner,
   int collisionFilterGroup, int collisionFilterMask, btDispatcher dispatcher) {
   // quantize the bounds
   short[] min = new short[3];
@@ -571,7 +586,8 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
   }
  }
 
- public void updateHandle(int handle, final btVector3 aabbMin, final btVector3 aabbMax,
+ public void updateHandle(int handle, final btVector3 aabbMin,
+  final btVector3 aabbMax,
   btDispatcher dispatcher) {
 //	btAssert(bounds.IsFinite());
   //btAssert(bounds.HasVolume());
@@ -640,14 +656,18 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
 
  //Broadphase Interface
  @Override
- public btBroadphaseProxy createProxy(final btVector3 aabbMin, final btVector3 aabbMax,
-  int shapeType, Object userPtr, int collisionFilterGroup, int collisionFilterMask,
+ public btBroadphaseProxy createProxy(final btVector3 aabbMin,
+  final btVector3 aabbMax,
+  int shapeType, Object userPtr, int collisionFilterGroup,
+  int collisionFilterMask,
   btDispatcher dispatcher) {
-  short handleId = addHandle(aabbMin, aabbMax, userPtr, collisionFilterGroup, collisionFilterMask,
+  short handleId = addHandle(aabbMin, aabbMax, userPtr, collisionFilterGroup,
+   collisionFilterMask,
    dispatcher);
   Handle handle = getHandle(handleId);
   if (m_raycastAccelerator != null) {
-   btBroadphaseProxy rayProxy = m_raycastAccelerator.createProxy(aabbMin, aabbMax, shapeType,
+   btBroadphaseProxy rayProxy = m_raycastAccelerator.createProxy(aabbMin,
+    aabbMax, shapeType,
     userPtr, collisionFilterGroup, collisionFilterMask, dispatcher);
    handle.m_dbvtProxy = rayProxy;
   }
@@ -663,19 +683,22 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
   removeHandle((short) handle.m_uniqueId, dispatcher);
  }
 
- public void setAabb(btBroadphaseProxy proxy, final btVector3 aabbMin, final btVector3 aabbMax,
+ public void setAabb(btBroadphaseProxy proxy, final btVector3 aabbMin,
+  final btVector3 aabbMax,
   btDispatcher dispatcher) {
   Handle handle = (Handle) (proxy);
   handle.m_aabbMin.set(aabbMin);
   handle.m_aabbMax.set(aabbMax);
   updateHandle(handle.m_uniqueId, aabbMin, aabbMax, dispatcher);
   if (m_raycastAccelerator != null) {
-   m_raycastAccelerator.setAabb(handle.m_dbvtProxy, aabbMin, aabbMax, dispatcher);
+   m_raycastAccelerator
+    .setAabb(handle.m_dbvtProxy, aabbMin, aabbMax, dispatcher);
   }
  }
 
  @Override
- public void getAabb(btBroadphaseProxy proxy, final btVector3 aabbMin, final btVector3 aabbMax) {
+ public void getAabb(btBroadphaseProxy proxy, final btVector3 aabbMin,
+  final btVector3 aabbMax) {
   Handle pHandle = (Handle) (proxy);
   aabbMin.set(pHandle.m_aabbMin);
   aabbMax.set(pHandle.m_aabbMax);
@@ -688,7 +711,8 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
  }
 
  public void rayTest(final btVector3 rayFrom, final btVector3 rayTo,
-  btBroadphaseRayCallback rayCallback, final btVector3 aabbMin, final btVector3 aabbMax) {
+  btBroadphaseRayCallback rayCallback, final btVector3 aabbMin,
+  final btVector3 aabbMax) {
   if (m_raycastAccelerator != null) {
    m_raycastAccelerator.rayTest(rayFrom, rayTo, rayCallback, aabbMin, aabbMax);
   } else {
@@ -714,7 +738,8 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
    for (short i = 1; i < m_numHandles * 2 + 1; i++) {
     if (m_pEdges[axis][i].IsMax() != 0) {
      Handle handle = getHandle(m_pEdges[axis][i].m_handle);
-     if (TestAabbAgainstAabb2(aabbMin, aabbMax, handle.m_aabbMin, handle.m_aabbMax)) {
+     if (TestAabbAgainstAabb2(aabbMin, aabbMax, handle.m_aabbMin,
+      handle.m_aabbMax)) {
       callback.process(handle);
      }
     }
@@ -724,16 +749,17 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
 
  public void quantize(short[] out, final btVector3 point, short isMax) {
   final btVector3 v = (new btVector3(point).sub(m_worldAabbMin)).mul(m_quantize);
-  out[0] = (short) ((v.x <= 0) ? isMax : (v.x >= m_handleSentinel) ? ((m_handleSentinel &
-   m_bpHandleMask) | isMax) : (((short) v.x & m_bpHandleMask) | isMax));
-  out[1] = (short) ((v.y <= 0) ? isMax : (v.y >= m_handleSentinel) ? ((m_handleSentinel &
-   m_bpHandleMask) | isMax) : (((short) v.y & m_bpHandleMask) | isMax));
-  out[2] = (short) ((v.z <= 0) ? isMax : (v.z >= m_handleSentinel) ? ((m_handleSentinel &
-   m_bpHandleMask) | isMax) : (((short) v.z & m_bpHandleMask) | isMax));
+  out[0] = (short) ((v.x <= 0) ? isMax : (v.x >= m_handleSentinel) ? ((m_handleSentinel
+   & m_bpHandleMask) | isMax) : (((short) v.x & m_bpHandleMask) | isMax));
+  out[1] = (short) ((v.y <= 0) ? isMax : (v.y >= m_handleSentinel) ? ((m_handleSentinel
+   & m_bpHandleMask) | isMax) : (((short) v.y & m_bpHandleMask) | isMax));
+  out[2] = (short) ((v.z <= 0) ? isMax : (v.z >= m_handleSentinel) ? ((m_handleSentinel
+   & m_bpHandleMask) | isMax) : (((short) v.z & m_bpHandleMask) | isMax));
  }
  ///unQuantize should be conservative: aabbMin/aabbMax should be larger then 'getAabb' result
 
- public void unQuantize(btBroadphaseProxy proxy, final btVector3 aabbMin, final btVector3 aabbMax) {
+ public void unQuantize(btBroadphaseProxy proxy, final btVector3 aabbMin,
+  final btVector3 aabbMax) {
   Handle pHandle = (Handle) (proxy);
   short[] vecInMin = new short[3];
   short[] vecInMax = new short[3];
@@ -743,30 +769,34 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
   vecInMax[1] = (short) (m_pEdges[1][pHandle.m_maxEdges[1]].m_pos + 1);
   vecInMin[2] = m_pEdges[2][pHandle.m_minEdges[2]].m_pos;
   vecInMax[2] = (short) (m_pEdges[2][pHandle.m_maxEdges[2]].m_pos + 1);
-  aabbMin.set((float) (vecInMin[0]) / (m_quantize.getX()), (float) (vecInMin[1]) / (m_quantize
-   .getY()), (float) (vecInMin[2]) / (m_quantize.getZ()));
+  aabbMin.set((float) (vecInMin[0]) / (m_quantize.getX()), (float) (vecInMin[1])
+   / (m_quantize
+    .getY()), (float) (vecInMin[2]) / (m_quantize.getZ()));
   aabbMin.add(m_worldAabbMin);
-  aabbMax.set((float) (vecInMax[0]) / (m_quantize.getX()), (float) (vecInMax[1]) / (m_quantize
-   .getY()), (float) (vecInMax[2]) / (m_quantize.getZ()));
+  aabbMax.set((float) (vecInMax[0]) / (m_quantize.getX()), (float) (vecInMax[1])
+   / (m_quantize
+    .getY()), (float) (vecInMax[2]) / (m_quantize.getZ()));
   aabbMax.add(m_worldAabbMin);
  }
 
- public boolean testAabbOverlap(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1) {
+ public boolean testAabbOverlap(btBroadphaseProxy proxy0,
+  btBroadphaseProxy proxy1) {
   final Handle pHandleA = (Handle) (proxy0);
   final Handle pHandleB = (Handle) (proxy1);
   //optimization 1: check the array index (memory address), instead of the m_pos
   for (short axis = 0; axis < 3; axis++) {
-   if (pHandleA.m_maxEdges[axis] < pHandleB.m_minEdges[axis] ||
-    pHandleB.m_maxEdges[axis] < pHandleA.m_minEdges[axis]) {
-    assert (!TestAabbAgainstAabb2(proxy0.m_aabbMin, proxy0.m_aabbMax, proxy1.m_aabbMin,
+   if (pHandleA.m_maxEdges[axis] < pHandleB.m_minEdges[axis]
+    || pHandleB.m_maxEdges[axis] < pHandleA.m_minEdges[axis]) {
+    assert (!TestAabbAgainstAabb2(proxy0.m_aabbMin, proxy0.m_aabbMax,
+     proxy1.m_aabbMin,
      proxy1.m_aabbMax));
     return false;
    }
   }
   if (DEBUG_BLOCKS) {
    for (short axis = 0; axis < 3; axis++) {
-    if (pHandleB.m_maxEdges[axis] < pHandleA.m_minEdges[axis] ||
-     pHandleA.m_maxEdges[axis] < pHandleB.m_minEdges[axis]) {
+    if (pHandleB.m_maxEdges[axis] < pHandleA.m_minEdges[axis]
+     || pHandleA.m_maxEdges[axis] < pHandleB.m_minEdges[axis]) {
      assert (false);
     }
    }
@@ -778,7 +808,8 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
   return m_pairCache;
  }
 
- public void setOverlappingPairUserCallback(btOverlappingPairCallback pairCallback) {
+ public void setOverlappingPairUserCallback(
+  btOverlappingPairCallback pairCallback) {
   m_userPairCallback = pairCallback;
  }
 
@@ -795,10 +826,12 @@ public class btAxisSweep3 extends btBroadphaseInterface implements Serializable 
  }
 
  public void printStats() {
-  /*		printf("btAxisSweep3.h\n");
-		printf("numHandles = %d, maxHandles = %d\n",m_numHandles,m_maxHandles);
-		printf("aabbMin=%f,%f,%f,aabbMax=%f,%f,%f\n",m_worldAabbMin.getX(),m_worldAabbMin.getY(),m_worldAabbMin.getZ(),
-			m_worldAabbMax.getX(),m_worldAabbMax.getY(),m_worldAabbMax.getZ());
+  /*
+   * printf("btAxisSweep3.h\n"); printf("numHandles = %d, maxHandles =
+   * %d\n",m_numHandles,m_maxHandles);
+   * printf("aabbMin=%f,%f,%f,aabbMax=%f,%f,%f\n",m_worldAabbMin.getX(),m_worldAabbMin.getY(),m_worldAabbMin.getZ(),
+   * m_worldAabbMax.getX(),m_worldAabbMax.getY(),m_worldAabbMax.getZ());
    */
  }
+
 };

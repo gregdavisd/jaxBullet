@@ -1,25 +1,25 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose,
-including commercial applications, and to alter it and redistribute it freely,
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 
  /*
-Added by Roman Ponomarev (rponom@gmail.com)
-April 04, 2008
-
-TODO:
- - add clamping od accumulated impulse to improve stability
- - add conversion for ODE constraint solver
+ * Added by Roman Ponomarev (rponom@gmail.com)
+ * April 04, 2008
+ *
+ * TODO:
+ * - add clamping od accumulated impulse to improve stability
+ * - add conversion for ODE constraint solver
  */
 package Bullet.Dynamics.Constraint;
 
@@ -40,7 +40,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btSliderConstraint extends btTypedConstraint implements Serializable {
+public class btSliderConstraint extends btTypedConstraint implements
+ Serializable {
 
  public static final int BT_SLIDER_FLAGS_CFM_DIRLIN = (1);
  public static final int BT_SLIDER_FLAGS_ERP_DIRLIN = (1 << 1);
@@ -106,10 +107,12 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
  boolean m_solveLinLim;
  boolean m_solveAngLim;
  int m_flags;
- final btJacobianEntry[] m_jacLin = {new btJacobianEntry(), new btJacobianEntry(),
+ final btJacobianEntry[] m_jacLin = {new btJacobianEntry(),
+  new btJacobianEntry(),
   new btJacobianEntry()};
  final float[] m_jacLinDiagABInv = new float[3];
- final btJacobianEntry[] m_jacAng = {new btJacobianEntry(), new btJacobianEntry(),
+ final btJacobianEntry[] m_jacAng = {new btJacobianEntry(),
+  new btJacobianEntry(),
   new btJacobianEntry()};
  ;
 
@@ -178,11 +181,13 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   m_flags = 0;
   m_flags = 0;
   m_useOffsetForConstraintFrame = USE_OFFSET_FOR_CONSTANT_FRAME;
-  calculateTransforms(m_rbA.getCenterOfMassTransform(), m_rbB.getCenterOfMassTransform());
+  calculateTransforms(m_rbA.getCenterOfMassTransform(), m_rbB
+   .getCenterOfMassTransform());
  }
  // constructors
 
- public btSliderConstraint(btRigidBody rbA, btRigidBody rbB, final btTransform frameInA,
+ public btSliderConstraint(btRigidBody rbA, btRigidBody rbB,
+  final btTransform frameInA,
   final btTransform frameInB, boolean useLinearReferenceFrameA) {
   super(SLIDER_CONSTRAINT_TYPE, rbA, rbB);
   m_useSolveConstraintObsolete = false;
@@ -208,17 +213,19 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
  @Override
  public void getInfo1(btConstraintInfo1 info) {
   if (m_useSolveConstraintObsolete) {
-      /* dead code */
-   assert(false);
    /*
-   info.m_numConstraintRows = 0;
-   info.nub = 0;
-*/
+    * dead code
+    */
+   assert (false);
+   /*
+    * info.m_numConstraintRows = 0; info.nub = 0;
+    */
   } else {
    info.m_numConstraintRows = 4; // Fixed 2 linear + 2 angular
    info.nub = 2;
    //prepare constraint
-   calculateTransforms(m_rbA.getCenterOfMassTransform(), m_rbB.getCenterOfMassTransform());
+   calculateTransforms(m_rbA.getCenterOfMassTransform(), m_rbB
+    .getCenterOfMassTransform());
    testAngLimits();
    testLinLimits();
    if (getSolveLinLimit() || getPoweredLinMotor()) {
@@ -239,15 +246,18 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
 
  @Override
  public void getInfo2(btConstraintInfo2 info) {
-  getInfo2NonVirtual(info, m_rbA.getCenterOfMassTransform(), m_rbB.getCenterOfMassTransform(), m_rbA
-   .getLinearVelocity(), m_rbB.getLinearVelocity(), m_rbA.getInvMass(), m_rbB.getInvMass());
+  getInfo2NonVirtual(info, m_rbA.getCenterOfMassTransform(), m_rbB
+   .getCenterOfMassTransform(), m_rbA
+    .getLinearVelocity(), m_rbB.getLinearVelocity(), m_rbA.getInvMass(), m_rbB
+   .getInvMass());
 //  getInfo2NonVirtual(info, btTransform.getIdentity(), btTransform.getIdentity(), new btVector3(), 
 //   new btVector3(), m_rbA.getInvMass(), m_rbB.getInvMass());
  }
 
  public void getInfo2NonVirtual(btConstraintInfo2 info, final btTransform transA,
   final btTransform transB,
-  final btVector3 linVelA, final btVector3 linVelB, float rbAinvMass, float rbBinvMass) {
+  final btVector3 linVelA, final btVector3 linVelB, float rbAinvMass,
+  float rbBinvMass) {
   final btTransform trA = getCalculatedTransformAPtr();
   final btTransform trB = getCalculatedTransformBPtr();
   assert (!m_useSolveConstraintObsolete);
@@ -313,8 +323,8 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   // ax1 x ax2 is in the plane space of ax1, so we project the angular
   // velocity to p and q to find the right hand side.
 //	float k = info.fps * info.erp * getSoftnessOrthoAng();
-  float currERP = (m_flags & BT_SLIDER_FLAGS_ERP_ORTANG) != 0 ? m_softnessOrthoAng :
-   m_softnessOrthoAng * info.erp;
+  float currERP = (m_flags & BT_SLIDER_FLAGS_ERP_ORTANG) != 0 ? m_softnessOrthoAng
+   : m_softnessOrthoAng * info.erp;
   float k = info.fps * currERP;
   final btVector3 u = new btVector3(ax1A).cross(ax1B);
   info.m_constraintError[0].set(k * u.dot(p));
@@ -356,7 +366,8 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
    // get desired offset between frames A and B along slider axis
    float sliderOffs = m_linPos - m_depth.x;
    // desired vector from projection of center of bodyA to projection of center of bodyB to slider axis
-   final btVector3 totalDist = new btVector3(ax1).scale(sliderOffs).add(projA).sub(projB);
+   final btVector3 totalDist = new btVector3(ax1).scale(sliderOffs).add(projA)
+    .sub(projB);
    // get offset vectors relA and relB
    relA.scaleAdd(factA, totalDist, orthoA);
    relB.scaleAdd(-factB, totalDist, orthoB);
@@ -404,8 +415,8 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   }
   // compute two elements of right hand side
   //	k = info.fps * info.erp * getSoftnessOrthoLin();
-  currERP = (m_flags & BT_SLIDER_FLAGS_ERP_ORTLIN) != 0 ? m_softnessOrthoLin : m_softnessOrthoLin *
-   info.erp;
+  currERP = (m_flags & BT_SLIDER_FLAGS_ERP_ORTLIN) != 0 ? m_softnessOrthoLin : m_softnessOrthoLin
+   * info.erp;
   k = info.fps * currERP;
   float rhs = k * p.dot(ofs);
   info.m_constraintError[s2].set(rhs);
@@ -468,9 +479,10 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
      info.cfm[srow].set(m_cfmDirLin);
     }
     float tag_vel = getTargetLinMotorVelocity();
-    float mot_fact = getMotorFactor(m_linPos, m_lowerLinLimit, m_upperLinLimit, tag_vel, info.fps *
-     currERP);
-    info.m_constraintError[srow].plusEquals(-(signFact * mot_fact * getTargetLinMotorVelocity()));
+    float mot_fact = getMotorFactor(m_linPos, m_lowerLinLimit, m_upperLinLimit,
+     tag_vel, info.fps * currERP);
+    info.m_constraintError[srow].plusEquals(-(signFact * mot_fact
+     * getTargetLinMotorVelocity()));
     info.m_lowerLimit[srow].plusEquals(-getMaxLinMotorForce() / info.fps);
     info.m_upperLimit[srow].plusEquals(getMaxLinMotorForce() / info.fps);
    }
@@ -880,7 +892,8 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
  }
  // shared code used by ODE solver
 
- public void calculateTransforms(final btTransform transA, final btTransform transB) {
+ public void calculateTransforms(final btTransform transA,
+  final btTransform transB) {
   if (m_useLinearReferenceFrameA || (!m_useSolveConstraintObsolete)) {
    m_calculatedTransformA.set(transA).mul(m_frameInA);
    m_calculatedTransformB.set(transB).mul(m_frameInB);
@@ -896,7 +909,8 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
   } else {
    m_delta.set(m_realPivotAInW).sub(m_realPivotBInW);
   }
-  m_projPivotInW.scaleAdd(m_sliderAxis.dot(m_delta), m_sliderAxis, m_realPivotAInW);
+  m_projPivotInW.scaleAdd(m_sliderAxis.dot(m_delta), m_sliderAxis,
+   m_realPivotAInW);
   final btVector3 normalWorld = new btVector3();
   //linear part
   for (int i = 0; i < 3; i++) {
@@ -972,7 +986,8 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
  public void setFrames(final btTransform frameA, final btTransform frameB) {
   m_frameInA.set(frameA);
   m_frameInB.set(frameB);
-  calculateTransforms(m_rbA.getCenterOfMassTransform(), m_rbB.getCenterOfMassTransform());
+  calculateTransforms(m_rbA.getCenterOfMassTransform(), m_rbB
+   .getCenterOfMassTransform());
   buildJacobian();
  }
 
@@ -1086,4 +1101,5 @@ public class btSliderConstraint extends btTypedConstraint implements Serializabl
  public int getFlags() {
   return m_flags;
  }
+
 };

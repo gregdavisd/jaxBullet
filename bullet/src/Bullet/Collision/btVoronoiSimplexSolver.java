@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision;
 
@@ -25,7 +25,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btVoronoiSimplexSolver implements btSimplexSolverInterface, Serializable {
+public class btVoronoiSimplexSolver implements btSimplexSolverInterface,
+ Serializable {
 
  static final int VORONOI_SIMPLEX_MAX_VERTS = 5;
  static final float VORONOI_DEFAULT_EQUAL_VERTEX_THRESHOLD = 0.0001f;
@@ -131,8 +132,10 @@ public class btVoronoiSimplexSolver implements btSimplexSolverInterface, Seriali
      }
      m_cachedBC.setBarycentricCoordinates(1 - t, t);
      nearest.scaleAdd(t, v, from);
-     m_cachedP1.set(m_simplexPointsP[1]).sub(m_simplexPointsP[0]).scale(t).add(m_simplexPointsP[0]);
-     m_cachedP2.set(m_simplexPointsQ[1]).sub(m_simplexPointsQ[0]).scale(t).add(m_simplexPointsQ[0]);
+     m_cachedP1.set(m_simplexPointsP[1]).sub(m_simplexPointsP[0]).scale(t).add(
+      m_simplexPointsP[0]);
+     m_cachedP2.set(m_simplexPointsQ[1]).sub(m_simplexPointsQ[0]).scale(t).add(
+      m_simplexPointsQ[0]);
      m_cachedV.set(m_cachedP1).sub(m_cachedP2);
      reduceVertices(m_cachedBC.m_usedVertices);
      m_cachedValidClosest = m_cachedBC.isValid();
@@ -217,7 +220,8 @@ public class btVoronoiSimplexSolver implements btSimplexSolverInterface, Seriali
   return m_cachedValidClosest;
  }
 
- boolean closestPtPointTetrahedron(final btVector3 p, final btVector3 a, final btVector3 b,
+ boolean closestPtPointTetrahedron(final btVector3 p, final btVector3 a,
+  final btVector3 b,
   final btVector3 c, final btVector3 d,
   btSubSimplexClosestResult finalResult) {
   btSubSimplexClosestResult tempResult = new btSubSimplexClosestResult();
@@ -232,11 +236,13 @@ public class btVoronoiSimplexSolver implements btSimplexSolverInterface, Seriali
   int pointOutsideACD = pointOutsideOfPlane(p, a, c, d, b);
   int pointOutsideADB = pointOutsideOfPlane(p, a, d, b, c);
   int pointOutsideBDC = pointOutsideOfPlane(p, b, d, c, a);
-  if (pointOutsideABC < 0 || pointOutsideACD < 0 || pointOutsideADB < 0 || pointOutsideBDC < 0) {
+  if (pointOutsideABC < 0 || pointOutsideACD < 0 || pointOutsideADB < 0
+   || pointOutsideBDC < 0) {
    finalResult.m_degenerate = true;
    return false;
   }
-  if (pointOutsideABC == 0 && pointOutsideACD == 0 && pointOutsideADB == 0 && pointOutsideBDC == 0) {
+  if (pointOutsideABC == 0 && pointOutsideACD == 0 && pointOutsideADB == 0
+   && pointOutsideBDC == 0) {
    return false;
   }
   float bestSqDist = FLT_MAX;
@@ -333,9 +339,11 @@ public class btVoronoiSimplexSolver implements btSimplexSolverInterface, Seriali
   return true;
  }
 
- int pointOutsideOfPlane(final btVector3 p, final btVector3 a, final btVector3 b, final btVector3 c,
+ int pointOutsideOfPlane(final btVector3 p, final btVector3 a, final btVector3 b,
+  final btVector3 c,
   final btVector3 d) {
-  final btVector3 normal = (new btVector3(b).sub(a)).cross(new btVector3(c).sub(a));
+  final btVector3 normal = (new btVector3(b).sub(a)).cross(new btVector3(c).sub(
+   a));
   float signp = (new btVector3(p).sub(a)).dot(normal); // [AP AB AC]
   float signd = (new btVector3(d).sub(a)).dot(normal); // [AD AB AC]
   if (CATCH_DEGENERATE_TETRAHEDRON) {
@@ -348,7 +356,8 @@ public class btVoronoiSimplexSolver implements btSimplexSolverInterface, Seriali
   return (signp * signd < (0.f)) ? 1 : 0;
  }
 
- boolean closestPtPointTriangle(final btVector3 p, final btVector3 a, final btVector3 b,
+ boolean closestPtPointTriangle(final btVector3 p, final btVector3 a,
+  final btVector3 b,
   final btVector3 c,
   btSubSimplexClosestResult result) {
   result.m_usedVertices.reset();
@@ -589,4 +598,5 @@ public class btVoronoiSimplexSolver implements btSimplexSolverInterface, Seriali
  public int numVertices() {
   return m_numVertices;
  }
+
 }

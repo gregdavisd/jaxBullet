@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2011 Advanced Micro Devices, Inc.  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2011 Advanced Micro Devices, Inc.  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.stubs;
 
@@ -38,10 +38,12 @@ public final class GrahamVector3 extends Tuple3f<GrahamVector3> {
   m_angle = gv.m_angle;
   m_orgIndex = gv.m_orgIndex;
  }
+
  public float m_angle;
  public int m_orgIndex;
 
- public static void GrahamScanConvexHull2D(ArrayList<GrahamVector3> originalPoints,
+ public static void GrahamScanConvexHull2D(
+  ArrayList<GrahamVector3> originalPoints,
   ArrayList<GrahamVector3> hull, final btVector3 normalAxis) {
   final btVector3 axis0 = new btVector3();
   final btVector3 axis1 = new btVector3();
@@ -65,7 +67,8 @@ public final class GrahamVector3 extends Tuple3f<GrahamVector3> {
   //also precompute angles
   originalPoints.get(0).m_angle = -1e30f;
   for (int i = 1; i < originalPoints.size(); i++) {
-   Tuple3f ar = new GrahamVector3(originalPoints.get(i)).sub(originalPoints.get(0));
+   Tuple3f ar = new GrahamVector3(originalPoints.get(i)).sub(originalPoints.get(
+    0));
    float ar1 = axis1.dot(ar);
    float ar0 = axis0.dot(ar);
    if (ar1 * ar1 + ar0 * ar0 < FLT_EPSILON) {
@@ -87,7 +90,8 @@ public final class GrahamVector3 extends Tuple3f<GrahamVector3> {
    while (!isConvex && hull.size() > 1) {
     Tuple3f a = hull.get(hull.size() - 2);
     Tuple3f b = hull.get(hull.size() - 1);
-    isConvex = new btVector3(a).sub(b).cross(new btVector3(a).sub(originalPoints.get(i))).dot(
+    isConvex = new btVector3(a).sub(b).cross(new btVector3(a).sub(originalPoints
+     .get(i))).dot(
      normalAxis) > 0;
     if (!isConvex) {
      hull.remove(hull.size() - 1);
@@ -100,4 +104,5 @@ public final class GrahamVector3 extends Tuple3f<GrahamVector3> {
    }
   }
  }
+
 }

@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -37,7 +37,8 @@ abstract public class btCollisionShape implements Serializable {
  }
 
  ///getAabb returns the axis aligned bounding box in the coordinate frame of the given transform t.
- public abstract void getAabb(final btTransform t, final btVector3 aabbMin, final btVector3 aabbMax);
+ public abstract void getAabb(final btTransform t, final btVector3 aabbMin,
+  final btVector3 aabbMax);
 
  /**
   *
@@ -71,9 +72,11 @@ abstract public class btCollisionShape implements Serializable {
 
  ///calculateTemporalAabb calculates the enclosing aabb for the moving object over interval [0..timeStep)
  ///result is conservative
- public void calculateTemporalAabb(final btTransform curTrans, final btVector3 linvel,
+ public void calculateTemporalAabb(final btTransform curTrans,
+  final btVector3 linvel,
   final btVector3 angvel,
-  float timeStep, final btVector3 temporalAabbMin, final btVector3 temporalAabbMax) {
+  float timeStep, final btVector3 temporalAabbMin,
+  final btVector3 temporalAabbMax) {
   //start with static aabb
   getAabb(curTrans, temporalAabbMin, temporalAabbMax);
   float temporalAabbMaxx = temporalAabbMax.getX();
@@ -102,9 +105,12 @@ abstract public class btCollisionShape implements Serializable {
   }
   //add conservative angular motion
   float angularMotion = angvel.length() * getAngularMotionDisc() * timeStep;
-  final btVector3 angularMotion3d = new btVector3(angularMotion, angularMotion, angularMotion);
-  temporalAabbMin.set(new btVector3(temporalAabbMinx, temporalAabbMiny, temporalAabbMinz));
-  temporalAabbMax.set(new btVector3(temporalAabbMaxx, temporalAabbMaxy, temporalAabbMaxz));
+  final btVector3 angularMotion3d = new btVector3(angularMotion, angularMotion,
+   angularMotion);
+  temporalAabbMin.set(new btVector3(temporalAabbMinx, temporalAabbMiny,
+   temporalAabbMinz));
+  temporalAabbMax.set(new btVector3(temporalAabbMaxx, temporalAabbMaxy,
+   temporalAabbMaxz));
   temporalAabbMin.sub(angularMotion3d);
   temporalAabbMax.add(angularMotion3d);
  }
@@ -203,4 +209,5 @@ abstract public class btCollisionShape implements Serializable {
   final btCollisionShape other = (btCollisionShape) obj;
   return this.m_shapeType == other.m_shapeType;
  }
+
 }

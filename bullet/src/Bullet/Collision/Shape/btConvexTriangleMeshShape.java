@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -27,14 +27,16 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * The btConvexTriangleMeshShape is a convex hull of a triangle mesh, but the performance is not as
- * good as btConvexHullShape. A small benefit of this class is that it uses the
- * btStridingMeshInterface, so you can avoid the duplication of the triangle mesh data.
- * Nevertheless, most users should use the much better performing btConvexHullShape instead.
+ * The btConvexTriangleMeshShape is a convex hull of a triangle mesh, but the
+ * performance is not as good as btConvexHullShape. A small benefit of this
+ * class is that it uses the btStridingMeshInterface, so you can avoid the
+ * duplication of the triangle mesh data. Nevertheless, most users should use
+ * the much better performing btConvexHullShape instead.
  *
  * @author Gregery Barton
  */
-public final class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachingShape implements
+public final class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachingShape
+ implements
  Serializable {
 
  final btStridingMeshInterface m_stridingMesh;
@@ -43,7 +45,8 @@ public final class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachi
   this(meshInterface, true);
  }
 
- public btConvexTriangleMeshShape(btStridingMeshInterface meshInterface, boolean calcAabb) {
+ public btConvexTriangleMeshShape(btStridingMeshInterface meshInterface,
+  boolean calcAabb) {
   super();
   m_stridingMesh = meshInterface;
   m_shapeType = CONVEX_TRIANGLEMESH_SHAPE_PROXYTYPE;
@@ -65,9 +68,12 @@ public final class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachi
   } else {
    vec.normalize();
   }
-  LocalSupportVertexCallback supportCallback = new LocalSupportVertexCallback(vec);
-  final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT), (BT_LARGE_FLOAT));
-  m_stridingMesh.InternalProcessAllTriangles(supportCallback, new btVector3(aabbMax).negate(),
+  LocalSupportVertexCallback supportCallback = new LocalSupportVertexCallback(
+   vec);
+  final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT),
+   (BT_LARGE_FLOAT));
+  m_stridingMesh.InternalProcessAllTriangles(supportCallback, new btVector3(
+   aabbMax).negate(),
    aabbMax);
   return supportCallback.getSupportVertexLocal();
  }
@@ -83,16 +89,20 @@ public final class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachi
    float rlen = 1.f / btSqrt(lenSqr);
    vec.scale(rlen);
   }
-  LocalSupportVertexCallback supportCallback = new LocalSupportVertexCallback(vec);
-  final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT), (BT_LARGE_FLOAT));
-  m_stridingMesh.InternalProcessAllTriangles(supportCallback, new btVector3(aabbMax).negate(),
+  LocalSupportVertexCallback supportCallback = new LocalSupportVertexCallback(
+   vec);
+  final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT),
+   (BT_LARGE_FLOAT));
+  m_stridingMesh.InternalProcessAllTriangles(supportCallback, new btVector3(
+   aabbMax).negate(),
    aabbMax);
   supVec.set(supportCallback.getSupportVertexLocal());
   return supVec;
  }
 
  @Override
- public void batchedUnitVectorGetSupportingVertexWithoutMargin(btVector3[] vectors,
+ public void batchedUnitVectorGetSupportingVertexWithoutMargin(
+  btVector3[] vectors,
   btVector3[] supportVerticesOut, int numVectors) {
   //use 'w' component of supportVerticesOut?
   {
@@ -106,9 +116,12 @@ public final class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachi
   ///@todo: could do the batch inside the callback!
   for (int j = 0; j < numVectors; j++) {
    final btVector3 vec = vectors[j];
-   LocalSupportVertexCallback supportCallback = new LocalSupportVertexCallback(vec);
-   final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT), (BT_LARGE_FLOAT));
-   m_stridingMesh.InternalProcessAllTriangles(supportCallback, new btVector3(aabbMax).negate(),
+   LocalSupportVertexCallback supportCallback = new LocalSupportVertexCallback(
+    vec);
+   final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT),
+    (BT_LARGE_FLOAT));
+   m_stridingMesh.InternalProcessAllTriangles(supportCallback, new btVector3(
+    aabbMax).negate(),
     aabbMax);
    supportVerticesOut[j].set(supportCallback.getSupportVertexLocal());
   }
@@ -149,7 +162,8 @@ public final class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachi
  }
 
  @Override
- public void getPlane(final btVector3 planeNormal, final btVector3 planeSupport, int i) {
+ public void getPlane(final btVector3 planeNormal, final btVector3 planeSupport,
+  int i) {
   assert (false);
  }
 
@@ -175,17 +189,21 @@ public final class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachi
  ///by the mass. The resulting transform "principal" has to be applied inversely to the mesh in order for the local coordinate system of the
  ///shape to be centered at the center of mass and to coincide with the principal axes. This also necessitates a correction of the world transform
  ///of the collision object by the principal transform. This method also computes the volume of the convex mesh.
- public void calculatePrincipalAxisTransform(final btTransform principal, final btVector3 inertia,
+ public void calculatePrincipalAxisTransform(final btTransform principal,
+  final btVector3 inertia,
   float[] volume) {
   CenterCallback centerCallback = new CenterCallback();
-  final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT), (BT_LARGE_FLOAT));
-  m_stridingMesh.InternalProcessAllTriangles(centerCallback, new btVector3(aabbMax).negate(),
+  final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT),
+   (BT_LARGE_FLOAT));
+  m_stridingMesh.InternalProcessAllTriangles(centerCallback, new btVector3(
+   aabbMax).negate(),
    aabbMax);
   final btVector3 center = centerCallback.getCenter();
   principal.setOrigin(center);
   volume[0] = centerCallback.getVolume();
   InertiaCallback inertiaCallback = new InertiaCallback(center);
-  m_stridingMesh.InternalProcessAllTriangles(inertiaCallback, new btVector3(aabbMax).negate(),
+  m_stridingMesh.InternalProcessAllTriangles(inertiaCallback, new btVector3(
+   aabbMax).negate(),
    aabbMax);
   final btMatrix3x3 i = inertiaCallback.getInertia();
   i.diagonalize(principal.getBasis(), (0.00001f), 20);
@@ -218,4 +236,5 @@ public final class btConvexTriangleMeshShape extends btPolyhedralConvexAabbCachi
   }
   return super.equals(obj);
  }
+
 }

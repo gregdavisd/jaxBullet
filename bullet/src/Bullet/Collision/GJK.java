@@ -1,22 +1,22 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2008 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the
-use of this software.
-Permission is granted to anyone to use this software for any purpose,
-including commercial applications, and to alter it and redistribute it
-freely,
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not
-claim that you wrote the original software. If you use this software in a
-product, an acknowledgment in the product documentation would be appreciated
-but is not required.
-2. Altered source versions must be plainly marked as such, and must not be
-misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2008 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the
+ * use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ * claim that you wrote the original software. If you use this software in a
+ * product, an acknowledgment in the product documentation would be appreciated
+ * but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ * misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision;
 
@@ -44,7 +44,9 @@ public class GJK implements Serializable {
  static final int GJK_MAX_ITERATIONS = 128;
  private static final int[] imd3 = new int[]{1, 2, 0};
 
- /* Types		*/
+ /*
+  * Types
+  */
  static class sSV {
 
   final btVector3 d = new btVector3();
@@ -63,7 +65,9 @@ public class GJK implements Serializable {
   Inside,
   Failed
  }
- /* Fields		*/
+ /*
+  * Fields
+  */
  final MinkowskiDiff m_shape = new MinkowskiDiff();
  final btVector3 m_ray = new btVector3();
  float m_distance;
@@ -75,7 +79,9 @@ public class GJK implements Serializable {
  sSimplex m_simplex;
  GJK.eStatus m_status;
 
- /* Methods		*/
+ /*
+  * Methods
+  */
  GJK() {
   initialize();
  }
@@ -94,7 +100,9 @@ public class GJK implements Serializable {
   btVector3[] lastw = new btVector3[4];
   init(lastw);
   int clastw = 0;
-  /* initialize solver		*/
+  /*
+   * initialize solver
+   */
   m_free[0] = m_store[0];
   m_free[1] = m_store[1];
   m_free[2] = m_store[2];
@@ -104,11 +112,14 @@ public class GJK implements Serializable {
   m_status = eStatus.Valid;
   m_shape.set(shapearg);
   m_distance = 0;
-  /* initialize simplex		*/
+  /*
+   * initialize simplex
+   */
   m_simplices[0].rank = 0;
   m_ray.set(guess);
   float sqrl = m_ray.lengthSquared();
-  appendvertice(m_simplices[0], (sqrl > 0 ? new btVector3(m_ray).negate() : new btVector3(1, 0, 0)));
+  appendvertice(m_simplices[0],
+   (sqrl > 0 ? new btVector3(m_ray).negate() : new btVector3(1, 0, 0)));
   m_simplices[0].p[0] = 1;
   m_ray.set(m_simplices[0].c[0].w);
   sqdist = sqrl;
@@ -116,18 +127,26 @@ public class GJK implements Serializable {
   lastw[1].set(m_ray);
   lastw[2].set(m_ray);
   lastw[3].set(m_ray);
-  /* Loop						*/
+  /*
+   * Loop
+   */
   do {
    int next = 1 - m_current;
    sSimplex cs = m_simplices[m_current];
    sSimplex ns = m_simplices[next];
-   /* Check zero							*/
+   /*
+    * Check zero
+    */
    float rl = m_ray.length();
-   if (rl < GJK_MIN_DISTANCE) {/* Touching or inside				*/
+   if (rl < GJK_MIN_DISTANCE) {/*
+     * Touching or inside
+     */
     m_status = eStatus.Inside;
     break;
    }
-   /* Append new vertice in -'v' direction	*/
+   /*
+    * Append new vertice in -'v' direction
+    */
    appendvertice(cs, new btVector3(m_ray).negate());
    final btVector3 w = cs.c[cs.rank - 1].w;
    boolean found = false;
@@ -137,20 +156,30 @@ public class GJK implements Serializable {
      break;
     }
    }
-   if (found) {/* Return old simplex				*/
+   if (found) {/*
+     * Return old simplex
+     */
     removevertice(m_simplices[m_current]);
     break;
-   } else {/* Update lastw					*/
+   } else {/*
+     * Update lastw
+     */
     lastw[(clastw = (clastw + 1) & 3)].set(w);
    }
-   /* Check for termination				*/
+   /*
+    * Check for termination
+    */
    float omega = btDot(m_ray, w) / rl;
    alpha = btMax(omega, alpha);
-   if (((rl - alpha) - (GJK_ACCURACY * rl)) <= 0) {/* Return old simplex				*/
+   if (((rl - alpha) - (GJK_ACCURACY * rl)) <= 0) {/*
+     * Return old simplex
+     */
     removevertice(m_simplices[m_current]);
     break;
    }
-   /* Reduce simplex						*/
+   /*
+    * Reduce simplex
+    */
    float[] weights = new float[4];
    int[] mask = new int[1];
    switch (cs.rank) {
@@ -175,7 +204,9 @@ public class GJK implements Serializable {
     default:
      assert (false);
    }
-   if (sqdist >= 0) {/* Valid	*/
+   if (sqdist >= 0) {/*
+     * Valid
+     */
     ns.rank = 0;
     m_ray.setZero();
     m_current = next;
@@ -191,7 +222,9 @@ public class GJK implements Serializable {
     if (mask[0] == 15) {
      m_status = eStatus.Inside;
     }
-   } else {/* Return old simplex				*/
+   } else {/*
+     * Return old simplex
+     */
     removevertice(m_simplices[m_current]);
     break;
    }
@@ -252,8 +285,9 @@ public class GJK implements Serializable {
    }
    break;
    case 3: {
-    final btVector3 n = new btVector3(m_simplex.c[1].w).sub(m_simplex.c[0].w).cross(
-     new btVector3(m_simplex.c[2].w).sub(m_simplex.c[0].w));
+    final btVector3 n = new btVector3(m_simplex.c[1].w).sub(m_simplex.c[0].w)
+     .cross(
+      new btVector3(m_simplex.c[2].w).sub(m_simplex.c[0].w));
     if (n.lengthSquared() > 0) {
      appendvertice(m_simplex, n);
      if (encloseOrigin()) {
@@ -280,7 +314,9 @@ public class GJK implements Serializable {
   return (false);
  }
 
- /* Internals	*/
+ /*
+  * Internals
+  */
  void getsupport(final btVector3 d, sSV sv) {
   sv.d.set(d).scale(1.0f / d.length());
   sv.w.set(m_shape.support(sv.d));
@@ -296,7 +332,8 @@ public class GJK implements Serializable {
   getsupport(v, simplex.c[simplex.rank++]);
  }
 
- static float projectorigin(final btVector3 a, final btVector3 b, float[] w, int[] m) {
+ static float projectorigin(final btVector3 a, final btVector3 b, float[] w,
+  int[] m) {
   final btVector3 d = new btVector3(b).sub(a);
   float l = d.lengthSquared();
   if (l > GJK_SIMPLEX2_EPS) {
@@ -320,10 +357,12 @@ public class GJK implements Serializable {
   return (-1);
  }
 
- static float projectorigin(final btVector3 a, final btVector3 b, final btVector3 c, float[] w,
+ static float projectorigin(final btVector3 a, final btVector3 b,
+  final btVector3 c, float[] w,
   int[] m) {
   btVector3[] vt = new btVector3[]{a, b, c};
-  btVector3[] dl = new btVector3[]{new btVector3(a).sub(b), new btVector3(b).sub(c),
+  btVector3[] dl = new btVector3[]{new btVector3(a).sub(b), new btVector3(b)
+   .sub(c),
    new btVector3(c).sub(a)};
   final btVector3 n = new btVector3(dl[0]).cross(dl[1]);
   float l = n.lengthSquared();
@@ -337,7 +376,8 @@ public class GJK implements Serializable {
      float subd = projectorigin(vt[i], vt[j], subw, subm);
      if ((mindist < 0) || (subd < mindist)) {
       mindist = subd;
-      m[0] = (((subm[0] & 1) != 0 ? 1 << i : 0) + ((subm[0] & 2) != 0 ? 1 << j : 0));
+      m[0] = (((subm[0] & 1) != 0 ? 1 << i : 0)
+       + ((subm[0] & 2) != 0 ? 1 << j : 0));
       w[i] = subw[0];
       w[j] = subw[1];
       w[imd3[j]] = 0;
@@ -359,13 +399,16 @@ public class GJK implements Serializable {
   return (-1);
  }
 
- static float projectorigin(final btVector3 a, final btVector3 b, final btVector3 c,
+ static float projectorigin(final btVector3 a, final btVector3 b,
+  final btVector3 c,
   final btVector3 d,
   float[] w, int[] m) {
   btVector3 vt[] = {a, b, c, d};
-  btVector3 dl[] = {new btVector3(a).sub(d), new btVector3(b).sub(d), new btVector3(c).sub(d)};
+  btVector3 dl[] = {new btVector3(a).sub(d), new btVector3(b).sub(d),
+   new btVector3(c).sub(d)};
   float vl = det(dl[0], dl[1], dl[2]);
-  boolean ng = (vl * btDot(a, new btVector3(b).sub(c).cross(new btVector3(a).sub(b)))) <= 0;
+  boolean ng = (vl * btDot(a, new btVector3(b).sub(c).cross(new btVector3(a)
+   .sub(b)))) <= 0;
   if (ng && (btFabs(vl) > GJK_SIMPLEX4_EPS)) {
    float mindist = -1;
    float[] subw = new float[3];
@@ -377,9 +420,8 @@ public class GJK implements Serializable {
      float subd = projectorigin(vt[i], vt[j], d, subw, subm);
      if ((mindist < 0) || (subd < mindist)) {
       mindist = subd;
-      m[0] = (((subm[0] & 1) != 0 ? 1 << i : 0) +
-       ((subm[0] & 2) != 0 ? 1 << j : 0) +
-       ((subm[0] & 4) != 0 ? 8 : 0));
+      m[0] = (((subm[0] & 1) != 0 ? 1 << i : 0)
+       + ((subm[0] & 2) != 0 ? 1 << j : 0) + ((subm[0] & 4) != 0 ? 8 : 0));
       w[i] = subw[0];
       w[j] = subw[1];
       w[imd3[j]] = 0;
@@ -399,4 +441,5 @@ public class GJK implements Serializable {
   }
   return (-1);
  }
+
 };

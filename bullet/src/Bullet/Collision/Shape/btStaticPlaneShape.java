@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -45,15 +45,18 @@ public class btStaticPlaneShape extends btConcaveShape implements Serializable {
  }
 
  @Override
- public void getAabb(final btTransform t, final btVector3 aabbMin, final btVector3 aabbMax) {
+ public void getAabb(final btTransform t, final btVector3 aabbMin,
+  final btVector3 aabbMax) {
   aabbMin.set(-BT_LARGE_FLOAT, -BT_LARGE_FLOAT, -BT_LARGE_FLOAT);
   aabbMax.set(BT_LARGE_FLOAT, BT_LARGE_FLOAT, BT_LARGE_FLOAT);
  }
 
  @Override
- public void processAllTriangles(btTriangleCallback callback, final btVector3 aabbMin,
+ public void processAllTriangles(btTriangleCallback callback,
+  final btVector3 aabbMin,
   final btVector3 aabbMax) {
-  final btVector3 halfExtents = (new btVector3(aabbMax).sub(aabbMin)).scale(0.5f);
+  final btVector3 halfExtents = (new btVector3(aabbMax).sub(aabbMin))
+   .scale(0.5f);
   float radius = halfExtents.length();
   final btVector3 center = new btVector3(aabbMax).add(aabbMin).scale(0.5f);
   //this is where the triangles are generated, given AABB and plane equation (normal/constant)
@@ -61,24 +64,31 @@ public class btStaticPlaneShape extends btConcaveShape implements Serializable {
   final btVector3 tangentDir1 = new btVector3();
   //tangentDir0/tangentDir1 can be precalculated
   btPlaneSpace1(m_planeNormal, tangentDir0, tangentDir1);
-  final btVector3 projectedCenter = new btVector3(center).sub(new btVector3(m_planeNormal).scale(
+  final btVector3 projectedCenter = new btVector3(center).sub(new btVector3(
+   m_planeNormal).scale(
    m_planeNormal
-   .dot(center) - m_planeConstant));
+    .dot(center) - m_planeConstant));
   btVector3[] triangle = new btVector3[3];
   init(triangle);
-  triangle[0].set(projectedCenter).add(new btVector3(tangentDir0).scale(radius)).add(
-   new btVector3(tangentDir1).scale(radius));
-  triangle[1].set(projectedCenter).add(new btVector3(tangentDir0).scale(radius)).sub(
-   new btVector3(tangentDir1).scale(radius));
-  triangle[2].set(projectedCenter).sub(new btVector3(tangentDir0).scale(radius)).sub(
-   new btVector3(tangentDir1).scale(radius));
+  triangle[0].set(projectedCenter).add(new btVector3(tangentDir0).scale(radius))
+   .add(
+    new btVector3(tangentDir1).scale(radius));
+  triangle[1].set(projectedCenter).add(new btVector3(tangentDir0).scale(radius))
+   .sub(
+    new btVector3(tangentDir1).scale(radius));
+  triangle[2].set(projectedCenter).sub(new btVector3(tangentDir0).scale(radius))
+   .sub(
+    new btVector3(tangentDir1).scale(radius));
   callback.processTriangle(triangle, 0, 0);
-  triangle[0].set(projectedCenter).sub(new btVector3(tangentDir0).scale(radius)).sub(
-   new btVector3(tangentDir1).scale(radius));
-  triangle[1].set(projectedCenter).sub(new btVector3(tangentDir0).scale(radius)).add(
-   new btVector3(tangentDir1).scale(radius));
-  triangle[2].set(projectedCenter).add(new btVector3(tangentDir0).scale(radius)).add(
-   new btVector3(tangentDir1).scale(radius));
+  triangle[0].set(projectedCenter).sub(new btVector3(tangentDir0).scale(radius))
+   .sub(
+    new btVector3(tangentDir1).scale(radius));
+  triangle[1].set(projectedCenter).sub(new btVector3(tangentDir0).scale(radius))
+   .add(
+    new btVector3(tangentDir1).scale(radius));
+  triangle[2].set(projectedCenter).add(new btVector3(tangentDir0).scale(radius))
+   .add(
+    new btVector3(tangentDir1).scale(radius));
   callback.processTriangle(triangle, 0, 1);
  }
 
@@ -136,7 +146,8 @@ public class btStaticPlaneShape extends btConcaveShape implements Serializable {
    return false;
   }
   final btStaticPlaneShape other = (btStaticPlaneShape) obj;
-  if (Float.floatToIntBits(this.m_planeConstant) != Float.floatToIntBits(other.m_planeConstant)) {
+  if (Float.floatToIntBits(this.m_planeConstant) != Float.floatToIntBits(
+   other.m_planeConstant)) {
    return false;
   }
   if (!Objects.equals(this.m_localAabbMin, other.m_localAabbMin)) {
@@ -153,4 +164,5 @@ public class btStaticPlaneShape extends btConcaveShape implements Serializable {
   }
   return super.equals(obj);
  }
+
 }

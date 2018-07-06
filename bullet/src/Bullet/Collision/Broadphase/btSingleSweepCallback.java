@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose,
-including commercial applications, and to alter it and redistribute it freely,
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Broadphase;
 
@@ -27,7 +27,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btSingleSweepCallback extends btBroadphaseRayCallback implements Serializable {
+public class btSingleSweepCallback extends btBroadphaseRayCallback implements
+ Serializable {
 
  final btTransform m_convexFromTrans = new btTransform();
  final btTransform m_convexToTrans = new btTransform();
@@ -37,8 +38,10 @@ public class btSingleSweepCallback extends btBroadphaseRayCallback implements Se
  float m_allowedCcdPenetration;
  final btConvexShape m_castShape;
 
- public btSingleSweepCallback(btConvexShape castShape, final btTransform convexFromTrans,
-  final btTransform convexToTrans, btCollisionWorld world, ConvexResultCallback resultCallback,
+ public btSingleSweepCallback(btConvexShape castShape,
+  final btTransform convexFromTrans,
+  final btTransform convexToTrans, btCollisionWorld world,
+  ConvexResultCallback resultCallback,
   float allowedPenetration) {
   m_convexFromTrans.set(convexFromTrans);
   m_convexToTrans.set(convexToTrans);
@@ -50,9 +53,12 @@ public class btSingleSweepCallback extends btBroadphaseRayCallback implements Se
    .sub(m_convexFromTrans.getOrigin());
   final btVector3 rayDir = new btVector3(unnormalizedRayDir).normalize();
   ///what about division by zero? -. just set rayDirection[i] to INF/BT_LARGE_FLOAT
-  m_rayDirectionInverse.x = rayDir.x == (0.0f) ? (BT_LARGE_FLOAT) : (1.0f) / rayDir.x;
-  m_rayDirectionInverse.y = rayDir.y == (0.0f) ? (BT_LARGE_FLOAT) : (1.0f) / rayDir.y;
-  m_rayDirectionInverse.z = rayDir.z == (0.0f) ? (BT_LARGE_FLOAT) : (1.0f) / rayDir.z;
+  m_rayDirectionInverse.x = rayDir.x == (0.0f) ? (BT_LARGE_FLOAT) : (1.0f)
+   / rayDir.x;
+  m_rayDirectionInverse.y = rayDir.y == (0.0f) ? (BT_LARGE_FLOAT) : (1.0f)
+   / rayDir.y;
+  m_rayDirectionInverse.z = rayDir.z == (0.0f) ? (BT_LARGE_FLOAT) : (1.0f)
+   / rayDir.z;
   m_signs[0] = (m_rayDirectionInverse.x < 0.0) ? 1 : 0;
   m_signs[1] = (m_rayDirectionInverse.y < 0.0) ? 1 : 0;
   m_signs[2] = (m_rayDirectionInverse.z < 0.0) ? 1 : 0;
@@ -78,4 +84,5 @@ public class btSingleSweepCallback extends btBroadphaseRayCallback implements Se
   }
   return true;
  }
+
 };

@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -42,8 +42,9 @@ public class btConeShape extends btConvexInternalShape implements Serializable {
    tmp.setElement(m_coneIndices[2], 0);
    return tmp;
   } else {
-   float s = btSqrt(v.getElement(m_coneIndices[0]) * v.getElement(m_coneIndices[0]) + v.getElement(
-    m_coneIndices[2]) * v.getElement(m_coneIndices[2]));
+   float s = btSqrt(v.getElement(m_coneIndices[0]) * v.getElement(
+    m_coneIndices[0]) + v.getElement(
+     m_coneIndices[2]) * v.getElement(m_coneIndices[2]));
    if (s > SIMD_EPSILON) {
     float d = m_radius / s;
     final btVector3 tmp = new btVector3();
@@ -91,7 +92,8 @@ public class btConeShape extends btConvexInternalShape implements Serializable {
  }
 
  @Override
- public void batchedUnitVectorGetSupportingVertexWithoutMargin(btVector3[] vectors,
+ public void batchedUnitVectorGetSupportingVertexWithoutMargin(
+  btVector3[] vectors,
   btVector3[] supportVerticesOut, int numVectors) {
   for (int i = 0; i < numVectors; i++) {
    final btVector3 vec = vectors[i];
@@ -183,8 +185,8 @@ public class btConeShape extends btConvexInternalShape implements Serializable {
   int r1 = m_coneIndices[0];
   int r2 = m_coneIndices[2];
   m_height *= scaling.getElement(axis) / m_localScaling.getElement(axis);
-  m_radius *= (scaling.getElement(r1) / m_localScaling.getElement(r1) + scaling.getElement(r2) /
-   m_localScaling.getElement(r2)) / 2;
+  m_radius *= (scaling.getElement(r1) / m_localScaling.getElement(r1) + scaling
+   .getElement(r2) / m_localScaling.getElement(r2)) / 2;
   m_sinAngle = (m_radius / btSqrt(m_radius * m_radius + m_height * m_height));
   super.setLocalScaling(scaling);
  }
@@ -212,13 +214,16 @@ public class btConeShape extends btConvexInternalShape implements Serializable {
    return false;
   }
   final btConeShape other = (btConeShape) obj;
-  if (Float.floatToIntBits(this.m_sinAngle) != Float.floatToIntBits(other.m_sinAngle)) {
+  if (Float.floatToIntBits(this.m_sinAngle) != Float.floatToIntBits(
+   other.m_sinAngle)) {
    return false;
   }
-  if (Float.floatToIntBits(this.m_radius) != Float.floatToIntBits(other.m_radius)) {
+  if (Float.floatToIntBits(this.m_radius) != Float
+   .floatToIntBits(other.m_radius)) {
    return false;
   }
-  if (Float.floatToIntBits(this.m_height) != Float.floatToIntBits(other.m_height)) {
+  if (Float.floatToIntBits(this.m_height) != Float
+   .floatToIntBits(other.m_height)) {
    return false;
   }
   if (!Arrays.equals(this.m_coneIndices, other.m_coneIndices)) {
@@ -226,4 +231,5 @@ public class btConeShape extends btConvexInternalShape implements Serializable {
   }
   return super.equals(obj);
  }
+
 }

@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -26,7 +26,8 @@ import java.util.Arrays;
  *
  * @author Gregery Barton
  */
-public class btConvexPointCloudShape extends btPolyhedralConvexAabbCachingShape implements
+public class btConvexPointCloudShape extends btPolyhedralConvexAabbCachingShape
+ implements
  Serializable {
 
  btVector3[] m_unscaledPoints;
@@ -39,11 +40,13 @@ public class btConvexPointCloudShape extends btPolyhedralConvexAabbCachingShape 
   m_numPoints = 0;
  }
 
- btConvexPointCloudShape(btVector3[] points, int numPoints, final btVector3 localScaling) {
+ btConvexPointCloudShape(btVector3[] points, int numPoints,
+  final btVector3 localScaling) {
   this(points, numPoints, localScaling, true);
  }
 
- btConvexPointCloudShape(btVector3[] points, int numPoints, final btVector3 localScaling,
+ btConvexPointCloudShape(btVector3[] points, int numPoints,
+  final btVector3 localScaling,
   boolean computeAabb) {
   m_localScaling.set(localScaling);
   m_shapeType = CONVEX_POINT_CLOUD_SHAPE_PROXYTYPE;
@@ -63,7 +66,8 @@ public class btConvexPointCloudShape extends btPolyhedralConvexAabbCachingShape 
  }
 
  //	void setPoints (btVector3[] points, int numPoints, boolean computeAabb = true,  btVector3& localScaling=btVector3(1.f,1.f,1.f))
- void setPoints(btVector3[] points, int numPoints, boolean computeAabb, final btVector3 localScaling) {
+ void setPoints(btVector3[] points, int numPoints, boolean computeAabb,
+  final btVector3 localScaling) {
   m_unscaledPoints = Arrays.copyOfRange(points, 0, numPoints);
   m_numPoints = numPoints;
   m_localScaling.set(localScaling);
@@ -120,7 +124,8 @@ public class btConvexPointCloudShape extends btPolyhedralConvexAabbCachingShape 
  }
 
  @Override
- public void batchedUnitVectorGetSupportingVertexWithoutMargin(btVector3[] vectors,
+ public void batchedUnitVectorGetSupportingVertexWithoutMargin(
+  btVector3[] vectors,
   btVector3[] supportVerticesOut, int numVectors) {
   float[] maxDot = new float[1];
   for (int j = 0; j < numVectors; j++) {
@@ -172,7 +177,8 @@ public class btConvexPointCloudShape extends btPolyhedralConvexAabbCachingShape 
  }
 
  @Override
- public void getPlane(final btVector3 planeNormal, final btVector3 planeSupport, int i) {
+ public void getPlane(final btVector3 planeNormal, final btVector3 planeSupport,
+  int i) {
   assert (false);
  }
 
@@ -218,4 +224,5 @@ public class btConvexPointCloudShape extends btPolyhedralConvexAabbCachingShape 
   }
   return super.equals(obj);
  }
+
 }

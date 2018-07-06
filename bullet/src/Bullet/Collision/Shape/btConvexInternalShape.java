@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -24,7 +24,8 @@ import java.util.Objects;
  *
  * @author Gregery Barton
  */
-public abstract class btConvexInternalShape extends btConvexShape implements Serializable {
+public abstract class btConvexInternalShape extends btConvexShape implements
+ Serializable {
 
  public static final float CONVEX_DISTANCE_MARGIN = 0.04f;
  //local scaling. collisionMargin is not scaled !
@@ -89,23 +90,27 @@ public abstract class btConvexInternalShape extends btConvexShape implements Ser
 
  ///getAabb's default implementation is brute force, expected derived classes to implement a fast dedicated version
  @Override
- public void getAabb(final btTransform t, final btVector3 aabbMin, final btVector3 aabbMax) {
+ public void getAabb(final btTransform t, final btVector3 aabbMin,
+  final btVector3 aabbMax) {
   getAabbSlow(t, aabbMin, aabbMax);
  }
 
  @Override
- public void getAabbSlow(final btTransform trans, final btVector3 aabbMin, final btVector3 aabbMax) {
+ public void getAabbSlow(final btTransform trans, final btVector3 aabbMin,
+  final btVector3 aabbMax) {
   //use localGetSupportingVertexWithoutMargin?
   float margin = getMargin();
   for (int i = 0; i < 3; i++) {
    final btVector3 vec = new btVector3();
    vec.setElement(i, 1.f);
-   final btVector3 sv = localGetSupportingVertex(trans.transposeTransform3x3(new btVector3(vec)));
+   final btVector3 sv = localGetSupportingVertex(trans.transposeTransform3x3(
+    new btVector3(vec)));
    final btVector3 tmp = trans.transform(new btVector3(sv));
    aabbMax.setElement(i, tmp.getElement(i) + margin);
    vec.setElement(i, -1.f);
    tmp.set(trans
-    .transform(localGetSupportingVertex(trans.transposeTransform3x3(new btVector3(vec)))));
+    .transform(localGetSupportingVertex(trans.transposeTransform3x3(
+     new btVector3(vec)))));
    aabbMin.setElement(i, tmp.getElement(i) - margin);
   }
  }
@@ -144,7 +149,8 @@ public abstract class btConvexInternalShape extends btConvexShape implements Ser
  }
 
  @Override
- public void getPreferredPenetrationDirection(int index, final btVector3 penetrationVector) {
+ public void getPreferredPenetrationDirection(int index,
+  final btVector3 penetrationVector) {
   assert (false);
  }
 
@@ -170,15 +176,18 @@ public abstract class btConvexInternalShape extends btConvexShape implements Ser
    return false;
   }
   final btConvexInternalShape other = (btConvexInternalShape) obj;
-  if (Float.floatToIntBits(this.m_collisionMargin) != Float.floatToIntBits(other.m_collisionMargin)) {
+  if (Float.floatToIntBits(this.m_collisionMargin) != Float.floatToIntBits(
+   other.m_collisionMargin)) {
    return false;
   }
   if (!Objects.equals(this.m_localScaling, other.m_localScaling)) {
    return false;
   }
-  if (!Objects.equals(this.m_implicitShapeDimensions, other.m_implicitShapeDimensions)) {
+  if (!Objects.equals(this.m_implicitShapeDimensions,
+   other.m_implicitShapeDimensions)) {
    return false;
   }
   return super.equals(obj);
  }
+
 }

@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package bullet_examples.apps.benchmarks;
 
@@ -40,7 +40,8 @@ public class ConvexStack extends BenchmarkDemoContainer {
   convexHullShape.setLocalScaling(new btVector3(scaling, scaling, scaling));
   int TaruVtxCount = TaruVtx.length / 3;
   for (int i = 0; i < TaruVtxCount; i++) {
-   final btVector3 vtx = new btVector3(TaruVtx[i * 3], TaruVtx[i * 3 + 1], TaruVtx[i * 3 + 2]);
+   final btVector3 vtx = new btVector3(TaruVtx[i * 3], TaruVtx[i * 3 + 1],
+    TaruVtx[i * 3 + 2]);
    convexHullShape.addPoint(vtx.scale(1.f / scaling));
   }
   //this will enable polyhedral contact clipping, better quality, slightly slower
@@ -67,7 +68,8 @@ public class ConvexStack extends BenchmarkDemoContainer {
 
  @Override
  public void resetCamera() {
-  camera().set(new btQuaternion(0.17311957f, -0.0029539443f, -5.194773E-4f, 0.9848963f),
+  camera().set(new btQuaternion(0.17311957f, -0.0029539443f, -5.194773E-4f,
+   0.9848963f),
    new btVector3(-19.027628f, 131.53452f, 257.9421f));
  }
 
@@ -85,6 +87,7 @@ public class ConvexStack extends BenchmarkDemoContainer {
  public String get_description() {
   return "";
  }
+
  static float TaruVtx[] = {
   1.08664f, -1.99237f, 0.0f,
   0.768369f, -1.99237f, -0.768369f,

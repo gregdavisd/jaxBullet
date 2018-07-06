@@ -9,8 +9,8 @@ import static Bullet.LinearMath.btTransform.getIdentity;
 import java.io.Serializable;
 
 /**
- * The btDefaultMotionState provides a common implementation to synchronize world transforms with
- * offsets.
+ * The btDefaultMotionState provides a common implementation to synchronize
+ * world transforms with offsets.
  *
  * @author Gregery Barton
  */
@@ -29,7 +29,8 @@ public class btDefaultMotionState implements btMotionState, Serializable {
   this(startTrans, getIdentity());
  }
 
- public btDefaultMotionState(final btTransform startTrans, final btTransform centerOfMassOffset) {
+ public btDefaultMotionState(final btTransform startTrans,
+  final btTransform centerOfMassOffset) {
   m_graphicsWorldTrans.set(startTrans);
   m_centerOfMassOffset.set(centerOfMassOffset);
   m_startWorldTrans.set(startTrans);
@@ -39,7 +40,8 @@ public class btDefaultMotionState implements btMotionState, Serializable {
  ///synchronizes world transform from user to physics
  @Override
  public void getWorldTransform(final btTransform centerOfMassWorldTrans) {
-  centerOfMassWorldTrans.set(m_graphicsWorldTrans).mul(new btTransform(m_centerOfMassOffset)
+  centerOfMassWorldTrans.set(m_graphicsWorldTrans).mul(new btTransform(
+   m_centerOfMassOffset)
    .invert());
  }
 
@@ -49,4 +51,5 @@ public class btDefaultMotionState implements btMotionState, Serializable {
  public void setWorldTransform(final btTransform centerOfMassWorldTrans) {
   m_graphicsWorldTrans.set(centerOfMassWorldTrans).mul(m_centerOfMassOffset);
  }
+
 }

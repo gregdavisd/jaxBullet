@@ -1,15 +1,15 @@
 /*
-Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.LinearMath;
 
@@ -72,7 +72,8 @@ public class btGeometryUtil implements Serializable {
   * @param planeEquations
   * @param verticesOut
   */
- public static void getVerticesFromPlaneEquations(ArrayList<btVector4> planeEquations,
+ public static void getVerticesFromPlaneEquations(
+  ArrayList<btVector4> planeEquations,
   ArrayList<btVector3> verticesOut) {
   int numbrushes = planeEquations.size();
   // brute force:
@@ -95,9 +96,9 @@ public class btGeometryUtil implements Serializable {
      n2n3.set(tN2).cross(tN3);
      n3n1.set(tN3).cross(tN1);
      n1n2.set(tN1).cross(tN2);
-     if ((n2n3.lengthSquared() > (0.0001f)) &&
-      (n3n1.lengthSquared() > (0.0001f)) &&
-      (n1n2.lengthSquared() > (0.0001f))) {
+     if ((n2n3.lengthSquared() > (0.0001f))
+      && (n3n1.lengthSquared() > (0.0001f))
+      && (n1n2.lengthSquared() > (0.0001f))) {
       //point P out of 3 plane equations:
       //	d1 ( N2 * N3 ) + d2 ( N3 * N1 ) + d3 ( N1 * N2 )  
       //P =  -------------------------------------------------------------------------  
@@ -130,7 +131,8 @@ public class btGeometryUtil implements Serializable {
   * @param margin
   * @return
   */
- public static boolean isInside(ArrayList<btVector3> vertices, final btVector3 planeNormal,
+ public static boolean isInside(ArrayList<btVector3> vertices,
+  final btVector3 planeNormal,
   float margin) {
   // can't find c++ definition
   throw new AssertionError();
@@ -186,7 +188,8 @@ public class btGeometryUtil implements Serializable {
   * @param planeEquations
   * @return
   */
- public static boolean notExist(final btVector4 planeEquation, ArrayList<btVector4> planeEquations) {
+ public static boolean notExist(final btVector4 planeEquation,
+  ArrayList<btVector4> planeEquations) {
   int numbrushes = planeEquations.size();
   for (int i = 0; i < numbrushes; i++) {
    final btVector4 N1 = planeEquations.get(i);
@@ -196,4 +199,5 @@ public class btGeometryUtil implements Serializable {
   }
   return true;
  }
+
 }

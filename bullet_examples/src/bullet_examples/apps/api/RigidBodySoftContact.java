@@ -1,12 +1,12 @@
 /*
-  * Copyright (c) 2017  
-  * 
-  * This software is provided 'as-is', without any express or implied warranty.
+ * Copyright (c) 2017
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
- * Permission is granted to anyone to use this software for any purpose, 
- * including commercial applications, and to alter it and redistribute it freely, 
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
  * subject to the following restrictions:
- * 
+ *
  * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
  * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
@@ -52,8 +52,9 @@ public class RigidBodySoftContact extends DiscreteDemoContainer {
   groundTransform.setOrigin(new btVector3(0f, -50f, 0f));
   {
    float mass = 0.f;
-   btRigidBody body = createRigidBody(mass, groundTransform, groundShape, new btVector4(0f, 0f, 1f,
-    1f));
+   btRigidBody body = createRigidBody(mass, groundTransform, groundShape,
+    new btVector4(0f, 0f, 1f,
+     1f));
    body.setContactStiffnessAndDamping(300, 10);
   }
   {
@@ -66,7 +67,8 @@ public class RigidBodySoftContact extends DiscreteDemoContainer {
    /// Create Dynamic Objects
    final btTransform startTransform = new btTransform();
    startTransform.setIdentity();
-   startTransform.set3x3(new btQuaternion(new btVector3(1f, 1f, 1f), SIMD_PI / 10.f));
+   startTransform.set3x3(new btQuaternion(new btVector3(1f, 1f, 1f), SIMD_PI
+    / 10.f));
    float mass = (1.f);
    //rigidbody is dynamic if and only if mass is non zero, otherwise static
    boolean isDynamic = (mass != 0.f);
@@ -92,7 +94,8 @@ public class RigidBodySoftContact extends DiscreteDemoContainer {
 
  @Override
  public void resetCamera() {
-  camera().set(new btQuaternion(0.10903801f, 0.066217855f, 0.007279983f, 0.9918029f), new btVector3(
+  camera().set(new btQuaternion(0.10903801f, 0.066217855f, 0.007279983f,
+   0.9918029f), new btVector3(
    -0.9730224f, 3.1672342f, 8.696599f));
  }
 
@@ -110,4 +113,5 @@ public class RigidBodySoftContact extends DiscreteDemoContainer {
  public String get_description() {
   return "Using the error correction parameter (ERP) and constraint force mixing (CFM) values for contacts to simulate compliant contact.";
  }
+
 }

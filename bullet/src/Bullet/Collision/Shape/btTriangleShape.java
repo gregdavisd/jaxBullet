@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -25,7 +25,8 @@ import java.util.Arrays;
  *
  * @author Gregery Barton
  */
-public class btTriangleShape extends btPolyhedralConvexShape implements Serializable {
+public class btTriangleShape extends btPolyhedralConvexShape implements
+ Serializable {
 
  public final btVector3[] m_vertices1;
 
@@ -59,23 +60,27 @@ public class btTriangleShape extends btPolyhedralConvexShape implements Serializ
  }
 
  @Override
- public void getAabb(final btTransform t, final btVector3 aabbMin, final btVector3 aabbMax) {
+ public void getAabb(final btTransform t, final btVector3 aabbMin,
+  final btVector3 aabbMax) {
 //		assert(0);
   getAabbSlow(t, aabbMin, aabbMax);
  }
 
  @Override
  public btVector3 localGetSupportingVertexWithoutMargin(final btVector3 dir) {
-  final btVector3 dots = dir.dot3(m_vertices1[0], m_vertices1[1], m_vertices1[2]);
+  final btVector3 dots = dir
+   .dot3(m_vertices1[0], m_vertices1[1], m_vertices1[2]);
   return new btVector3(m_vertices1[dots.maxAxis()]);
  }
 
  @Override
- public void batchedUnitVectorGetSupportingVertexWithoutMargin(btVector3[] vectors,
+ public void batchedUnitVectorGetSupportingVertexWithoutMargin(
+  btVector3[] vectors,
   btVector3[] supportVerticesOut, int numVectors) {
   for (int i = 0; i < numVectors; i++) {
    final btVector3 dir = vectors[i];
-   final btVector3 dots = dir.dot3(m_vertices1[0], m_vertices1[1], m_vertices1[2]);
+   final btVector3 dots = dir.dot3(m_vertices1[0], m_vertices1[1],
+    m_vertices1[2]);
    if (supportVerticesOut[i] == null) {
     supportVerticesOut[i] = new btVector3();
    }
@@ -90,14 +95,17 @@ public class btTriangleShape extends btPolyhedralConvexShape implements Serializ
   init(m_vertices1);
  }
 
- public btTriangleShape(final btVector3 p0, final btVector3 p1, final btVector3 p2) {
+ public btTriangleShape(final btVector3 p0, final btVector3 p1,
+  final btVector3 p2) {
   super();
   m_shapeType = TRIANGLE_SHAPE_PROXYTYPE;
-  m_vertices1 = new btVector3[]{new btVector3(p0), new btVector3(p1), new btVector3(p2)};
+  m_vertices1 = new btVector3[]{new btVector3(p0), new btVector3(p1),
+   new btVector3(p2)};
  }
 
  @Override
- public void getPlane(final btVector3 planeNormal, final btVector3 planeSupport, int i) {
+ public void getPlane(final btVector3 planeNormal, final btVector3 planeSupport,
+  int i) {
   getPlaneEquation(i, planeNormal, planeSupport);
  }
 
@@ -115,7 +123,8 @@ public class btTriangleShape extends btPolyhedralConvexShape implements Serializ
    .normalize();
  }
 
- void getPlaneEquation(int i, final btVector3 planeNormal, final btVector3 planeSupport) {
+ void getPlaneEquation(int i, final btVector3 planeNormal,
+  final btVector3 planeSupport) {
   calcNormal(planeNormal);
   planeSupport.set(m_vertices1[0]);
  }
@@ -168,7 +177,8 @@ public class btTriangleShape extends btPolyhedralConvexShape implements Serializ
  }
 
  @Override
- public void getPreferredPenetrationDirection(int index, final btVector3 penetrationVector) {
+ public void getPreferredPenetrationDirection(int index,
+  final btVector3 penetrationVector) {
   calcNormal(penetrationVector);
   if (index != 0) {
    penetrationVector.negate();
@@ -200,4 +210,5 @@ public class btTriangleShape extends btPolyhedralConvexShape implements Serializ
   }
   return super.equals(obj);
  }
+
 }

@@ -318,7 +318,7 @@ public class CharacterDemo extends DiscreteDemoContainer {
   glMultMatrix(put_matrix(m));
   GL11.glScalef(1.25f * capsule.getRadius(), 1.25f * capsule.getRadius(),
    1.25f * capsule
-   .getRadius());
+    .getRadius());
   draw_color();
   bind(HAT);
   HAT.draw();

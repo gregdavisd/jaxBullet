@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -35,11 +35,13 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public abstract class btConvexShape extends btCollisionShape implements Serializable {
+public abstract class btConvexShape extends btCollisionShape implements
+ Serializable {
 
  public static final int MAX_PREFERRED_PENETRATION_DIRECTIONS = 10;
 
- static btVector3 convexHullSupport(final btVector3 localDirOrg, btVector3[] points, int numPoints,
+ static btVector3 convexHullSupport(final btVector3 localDirOrg,
+  btVector3[] points, int numPoints,
   final btVector3 localScaling) {
   final btVector3 vec = new btVector3(localDirOrg).mul(localScaling);
   float[] maxDot = new float[1];
@@ -54,9 +56,11 @@ public abstract class btConvexShape extends btCollisionShape implements Serializ
 
  public abstract btVector3 localGetSupportingVertex(final btVector3 vec);
 
- public abstract btVector3 localGetSupportingVertexWithoutMargin(final btVector3 vec);
+ public abstract btVector3 localGetSupportingVertexWithoutMargin(
+  final btVector3 vec);
 
- public btVector3 localGetSupportVertexWithoutMarginNonVirtual(final btVector3 localDir) {
+ public btVector3 localGetSupportVertexWithoutMarginNonVirtual(
+  final btVector3 localDir) {
   switch (m_shapeType) {
    case SPHERE_SHAPE_PROXYTYPE: {
     return new btVector3();
@@ -64,13 +68,15 @@ public abstract class btConvexShape extends btCollisionShape implements Serializ
    case BOX_SHAPE_PROXYTYPE: {
     btBoxShape convexShape = (btBoxShape) this;
     final btVector3 halfExtents = convexShape.getImplicitShapeDimensions();
-    return new btVector3(btFsels(localDir.x(), halfExtents.x(), -halfExtents.x()),
+    return new btVector3(
+     btFsels(localDir.x(), halfExtents.x(), -halfExtents.x()),
      btFsels(localDir.y(), halfExtents.y(), -halfExtents.y()),
      btFsels(localDir.z(), halfExtents.z(), -halfExtents.z()));
    }
    case TRIANGLE_SHAPE_PROXYTYPE: {
     btTriangleShape triangleShape = (btTriangleShape) this;
-    final btVector3 dir = new btVector3(localDir.getX(), localDir.getY(), localDir.getZ());
+    final btVector3 dir = new btVector3(localDir.getX(), localDir.getY(),
+     localDir.getZ());
     btVector3[] vertices = triangleShape.m_vertices1;
     final btVector3 dots = dir.dot3(vertices[0], vertices[1], vertices[2]);
     final btVector3 sup = vertices[dots.maxAxis()];
@@ -80,7 +86,8 @@ public abstract class btConvexShape extends btCollisionShape implements Serializ
     btCylinderShape cylShape = (btCylinderShape) this;
     //mapping of halfextents/dimension onto radius/height depends on how cylinder local orientation is (upAxis)
     final btVector3 halfExtents = cylShape.getImplicitShapeDimensions();
-    final btVector3 v = new btVector3(localDir.getX(), localDir.getY(), localDir.getZ());
+    final btVector3 v = new btVector3(localDir.getX(), localDir.getY(), localDir
+     .getZ());
     int cylinderUpAxis = cylShape.getUpAxis();
     int XX = 1, YY = 0, ZZ = 2;
     switch (cylinderUpAxis) {
@@ -110,7 +117,8 @@ public abstract class btConvexShape extends btCollisionShape implements Serializ
     float halfHeight = halfExtents.getElement(cylinderUpAxis);
     final btVector3 tmp = new btVector3();
     float d;
-    float s = btSqrt(v.getElement(XX) * v.getElement(XX) + v.getElement(ZZ) * v.getElement(ZZ));
+    float s = btSqrt(v.getElement(XX) * v.getElement(XX) + v.getElement(ZZ) * v
+     .getElement(ZZ));
     if (s != (0.0f)) {
      d = radius / s;
      tmp.setElement(XX, v.getElement(XX) * d);
@@ -130,7 +138,8 @@ public abstract class btConvexShape extends btCollisionShape implements Serializ
     int capsuleUpAxis = capsuleShape.getUpAxis();
     final btVector3 supVec = new btVector3();
     float maxDot = ((-BT_LARGE_FLOAT));
-    final btVector3 vec = new btVector3(localDir.getX(), localDir.getY(), localDir.getZ());
+    final btVector3 vec = new btVector3(localDir.getX(), localDir.getY(),
+     localDir.getZ());
     float lenSqr = vec.lengthSquared();
     if (lenSqr < SIMD_EPSILON * SIMD_EPSILON) {
      vec.set(1, 0, 0);
@@ -166,13 +175,15 @@ public abstract class btConvexShape extends btCollisionShape implements Serializ
     btConvexPointCloudShape convexPointCloudShape = (btConvexPointCloudShape) this;
     btVector3[] points = convexPointCloudShape.getUnscaledPoints();
     int numPoints = convexPointCloudShape.getNumPoints();
-    return convexHullSupport(localDir, points, numPoints, convexPointCloudShape.getLocalScalingNV());
+    return convexHullSupport(localDir, points, numPoints, convexPointCloudShape
+     .getLocalScalingNV());
    }
    case CONVEX_HULL_SHAPE_PROXYTYPE: {
     btConvexHullShape convexHullShape = (btConvexHullShape) this;
     btVector3[] points = convexHullShape.getUnscaledPoints();
     int numPoints = convexHullShape.getNumPoints();
-    return convexHullSupport(localDir, points, numPoints, convexHullShape.getLocalScalingNV());
+    return convexHullSupport(localDir, points, numPoints, convexHullShape
+     .getLocalScalingNV());
    }
    default:
     return this.localGetSupportingVertexWithoutMargin(localDir);
@@ -220,7 +231,9 @@ public abstract class btConvexShape extends btCollisionShape implements Serializ
     return capsuleShape.getMarginNV();
    }
    case CONVEX_POINT_CLOUD_SHAPE_PROXYTYPE:
-   /* fall through */
+   /*
+    * fall through
+    */
    case CONVEX_HULL_SHAPE_PROXYTYPE: {
     btPolyhedralConvexShape convexHullShape = (btPolyhedralConvexShape) this;
     return convexHullShape.getMarginNV();
@@ -233,7 +246,8 @@ public abstract class btConvexShape extends btCollisionShape implements Serializ
   //return (0.0f);
  }
 
- public final void getAabbNonVirtual(final btTransform t, final btVector3 aabbMin,
+ public final void getAabbNonVirtual(final btTransform t,
+  final btVector3 aabbMin,
   final btVector3 aabbMax) {
   switch (m_shapeType) {
    case SPHERE_SHAPE_PROXYTYPE: {
@@ -247,7 +261,9 @@ public abstract class btConvexShape extends btCollisionShape implements Serializ
    }
    break;
    case CYLINDER_SHAPE_PROXYTYPE:
-   /* fall through */
+   /*
+    * fall through
+    */
    case BOX_SHAPE_PROXYTYPE: {
     btBoxShape convexShape = (btBoxShape) this;
     float margin = convexShape.getMarginNonVirtual();
@@ -255,7 +271,8 @@ public abstract class btConvexShape extends btCollisionShape implements Serializ
     halfExtents.add(new btVector3(margin, margin, margin));
     final btMatrix3x3 abs_b = t.getBasis().abs();
     final btVector3 center = t.getOrigin();
-    final btVector3 extent = halfExtents.dot3(abs_b.getRow(0), abs_b.getRow(1), abs_b.getRow(2));
+    final btVector3 extent = halfExtents.dot3(abs_b.getRow(0), abs_b.getRow(1),
+     abs_b.getRow(2));
     aabbMin.set(center).sub(extent);
     aabbMax.set(center).add(extent);
     break;
@@ -266,28 +283,33 @@ public abstract class btConvexShape extends btCollisionShape implements Serializ
     for (int i = 0; i < 3; i++) {
      final btVector3 vec = new btVector3((0.f), (0.f), (0.f));
      vec.setElement(i, (1.f));
-     final btVector3 sv = localGetSupportVertexWithoutMarginNonVirtual(t.transposeTransform3x3(
-      new btVector3(
-       vec)));
+     final btVector3 sv = localGetSupportVertexWithoutMarginNonVirtual(t
+      .transposeTransform3x3(
+       new btVector3(
+        vec)));
      final btVector3 tmp = t.transform(new btVector3(sv));
      aabbMax.setElement(i, tmp.getElement(i) + margin);
      vec.setElement(i, (-1.f));
-     tmp.set(t.transform(localGetSupportVertexWithoutMarginNonVirtual(t.transposeTransform3x3(
-      new btVector3(
-       vec)))));
+     tmp.set(t.transform(localGetSupportVertexWithoutMarginNonVirtual(t
+      .transposeTransform3x3(
+       new btVector3(
+        vec)))));
      aabbMin.setElement(i, tmp.getElement(i) - margin);
     }
    }
    break;
    case CAPSULE_SHAPE_PROXYTYPE: {
     btCapsuleShape capsuleShape = (btCapsuleShape) this;
-    final btVector3 halfExtents = new btVector3(capsuleShape.getRadius(), capsuleShape.getRadius(),
+    final btVector3 halfExtents = new btVector3(capsuleShape.getRadius(),
+     capsuleShape.getRadius(),
      capsuleShape.getRadius());
     int m_upAxis = capsuleShape.getUpAxis();
-    halfExtents.setElement(m_upAxis, capsuleShape.getRadius() + capsuleShape.getHalfHeight());
+    halfExtents.setElement(m_upAxis, capsuleShape.getRadius() + capsuleShape
+     .getHalfHeight());
     final btMatrix3x3 abs_b = t.getBasis().abs();
     final btVector3 center = t.getOrigin();
-    final btVector3 extent = halfExtents.dot3(abs_b.getRow(0), abs_b.getRow(1), abs_b.getRow(2));
+    final btVector3 extent = halfExtents.dot3(abs_b.getRow(0), abs_b.getRow(1),
+     abs_b.getRow(2));
     aabbMin.set(center).sub(extent);
     aabbMax.set(center).add(extent);
    }
@@ -307,7 +329,8 @@ public abstract class btConvexShape extends btCollisionShape implements Serializ
   assert (false);
  }
 
- public void project(final btTransform trans, final btVector3 dir, float[] min, float[] max,
+ public void project(final btTransform trans, final btVector3 dir, float[] min,
+  float[] max,
   final btVector3 witnesPtMin, final btVector3 witnesPtMax) {
   final btVector3 localAxis = trans.transposeTransform3x3(new btVector3(dir));
   final btVector3 vtx1 = trans.transform(localGetSupportingVertex(localAxis));
@@ -327,12 +350,14 @@ public abstract class btConvexShape extends btCollisionShape implements Serializ
  }
 
  //notice that the vectors should be unit length
- public abstract void batchedUnitVectorGetSupportingVertexWithoutMargin(btVector3[] vectors,
+ public abstract void batchedUnitVectorGetSupportingVertexWithoutMargin(
+  btVector3[] vectors,
   btVector3[] supportVerticesOut, int numVectors);
 
  ///getAabb's default implementation is brute force, expected derived classes to implement a fast dedicated version
  @Override
- public abstract void getAabb(final btTransform t, final btVector3 aabbMin, final btVector3 aabbMax);
+ public abstract void getAabb(final btTransform t, final btVector3 aabbMin,
+  final btVector3 aabbMax);
 
  public abstract void getAabbSlow(final btTransform t, final btVector3 aabbMin,
   final btVector3 aabbMax);
@@ -351,5 +376,7 @@ public abstract class btConvexShape extends btCollisionShape implements Serializ
 
  public abstract int getNumPreferredPenetrationDirections();
 
- public abstract void getPreferredPenetrationDirection(int index, final btVector3 penetrationVector);
+ public abstract void getPreferredPenetrationDirection(int index,
+  final btVector3 penetrationVector);
+
 }

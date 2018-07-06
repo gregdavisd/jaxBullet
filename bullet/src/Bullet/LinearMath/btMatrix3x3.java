@@ -1,15 +1,15 @@
 /*
-Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.LinearMath;
 
@@ -27,7 +27,8 @@ import javax.vecmath.Matrix4f;
  *
  * @author Gregery Barton
  */
-public final class btMatrix3x3 extends Matrix3f<btMatrix3x3> implements Serializable {
+public final class btMatrix3x3 extends Matrix3f<btMatrix3x3> implements
+ Serializable {
 
  static final int M00 = 0;
  static final int M01 = 4;
@@ -67,7 +68,8 @@ public final class btMatrix3x3 extends Matrix3f<btMatrix3x3> implements Serializ
   * @param m21
   * @param m22
   */
- public btMatrix3x3(float m00, float m01, float m02, float m10, float m11, float m12, float m20,
+ public btMatrix3x3(float m00, float m01, float m02, float m10, float m11,
+  float m12, float m20,
   float m21, float m22) {
   super(m00, m01, m02, m10, m11, m12, m20, m21, m22);
  }
@@ -131,8 +133,9 @@ public final class btMatrix3x3 extends Matrix3f<btMatrix3x3> implements Serializ
  /**
   * @param maxSteps
   * @brief diagonalizes this matrix by the Jacobi method.
-  * @param rot stores the rotation from the coordinate system in which the matrix is diagonal to the
-  * original coordinate system, i.e., old_this = rot * new_this * rot^T.
+  * @param rot stores the rotation from the coordinate system in which the
+  * matrix is diagonal to the original coordinate system, i.e., old_this = rot *
+  * new_this * rot^T.
   * @param threshold See iteration
   */
  public void diagonalize(final btMatrix3x3 rot, float threshold, int maxSteps) {
@@ -170,8 +173,8 @@ public final class btMatrix3x3 extends Matrix3f<btMatrix3x3> implements Serializ
    float cos;
    float sin;
    if (theta2 * theta2 < (10f / SIMD_EPSILON)) {
-    t = (theta >= 0) ? 1f / (theta + btSqrt(1 + theta2)) :
-     1f / (theta - btSqrt(1f + theta2));
+    t = (theta >= 0) ? 1f / (theta + btSqrt(1 + theta2))
+     : 1f / (theta - btSqrt(1f + theta2));
     cos = 1f / btSqrt(1f + t * t);
     sin = cos * t;
    } else {
@@ -263,8 +266,9 @@ public final class btMatrix3x3 extends Matrix3f<btMatrix3x3> implements Serializ
   * @param eulerY Pitch around Y axis
   * @param eulerZ Yaw aboud Z axis
   *
-  * These angles are used to produce a rotation matrix. The euler angles are applied in ZYX order.
-  * I.e a vector is first rotated about X then Y and then Z
+  * These angles are used to produce a rotation matrix. The euler angles are
+  * applied in ZYX order. I.e a vector is first rotated about X then Y and then
+  * Z
   *
   */
  public btMatrix3x3 setEulerZYX(float eulerX, float eulerY, float eulerZ) {
@@ -284,4 +288,5 @@ public final class btMatrix3x3 extends Matrix3f<btMatrix3x3> implements Serializ
    -sj, cj * si, cj * ci);
   return this;
  }
+
 }

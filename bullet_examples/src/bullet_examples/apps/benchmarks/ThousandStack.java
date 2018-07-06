@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package bullet_examples.apps.benchmarks;
 
@@ -32,18 +32,25 @@ public class ThousandStack extends BenchmarkDemoContainer {
   setUpAxis(1);
   create_ground();
   final float cubeSize = 1.0f;
-  createPyramid(new btVector3(-20.0f, 0.0f, 0.0f), 12, new btVector3(cubeSize, cubeSize, cubeSize));
-  createWall(new btVector3(-2.0f, 0.0f, 0.0f), 12, new btVector3(cubeSize, cubeSize, cubeSize));
-  createWall(new btVector3(4.0f, 0.0f, 0.0f), 12, new btVector3(cubeSize, cubeSize, cubeSize));
-  createWall(new btVector3(10.0f, 0.0f, 0.0f), 12, new btVector3(cubeSize, cubeSize, cubeSize));
-  createTowerCircle(new btVector3(25.0f, 0.0f, 0.0f), 8, 24, new btVector3(cubeSize, cubeSize,
+  createPyramid(new btVector3(-20.0f, 0.0f, 0.0f), 12, new btVector3(cubeSize,
+   cubeSize, cubeSize));
+  createWall(new btVector3(-2.0f, 0.0f, 0.0f), 12, new btVector3(cubeSize,
+   cubeSize, cubeSize));
+  createWall(new btVector3(4.0f, 0.0f, 0.0f), 12, new btVector3(cubeSize,
+   cubeSize, cubeSize));
+  createWall(new btVector3(10.0f, 0.0f, 0.0f), 12, new btVector3(cubeSize,
+   cubeSize, cubeSize));
+  createTowerCircle(new btVector3(25.0f, 0.0f, 0.0f), 8, 24, new btVector3(
+   cubeSize, cubeSize,
    cubeSize));
  }
 
- void createTowerCircle(final btVector3 offsetPosition, int stackSize, int rotSize,
+ void createTowerCircle(final btVector3 offsetPosition, int stackSize,
+  int rotSize,
   final btVector3 boxSize) {
-  btBoxShape blockShape = new btBoxShape(new btVector3(boxSize.x - COLLISION_RADIUS, boxSize.y -
-   COLLISION_RADIUS, boxSize.z - COLLISION_RADIUS));
+  btBoxShape blockShape = new btBoxShape(new btVector3(boxSize.x
+   - COLLISION_RADIUS, boxSize.y - COLLISION_RADIUS, boxSize.z
+   - COLLISION_RADIUS));
   final btTransform trans = new btTransform();
   trans.setIdentity();
   float mass = 1.f;
@@ -59,16 +66,19 @@ public class ThousandStack extends BenchmarkDemoContainer {
      rotate(rotY, new btVector3(0.0f, posY, radius))));
     trans.setRotation(rotY);
     createRigidBody(mass, trans, blockShape);
-    rotY.mul(new btQuaternion(new btVector3(0, 1, 0), SIMD_PI / (rotSize * (0.5f))));
+    rotY.mul(new btQuaternion(new btVector3(0, 1, 0), SIMD_PI / (rotSize
+     * (0.5f))));
    }
    posY += boxSize.y * 2.0f;
    rotY.mul(new btQuaternion(new btVector3(0, 1, 0), SIMD_PI / (float) rotSize));
   }
  }
 
- void createWall(final btVector3 offsetPosition, int stackSize, final btVector3 boxSize) {
-  btBoxShape blockShape = new btBoxShape(new btVector3(boxSize.x - COLLISION_RADIUS, boxSize.y -
-   COLLISION_RADIUS, boxSize.z - COLLISION_RADIUS));
+ void createWall(final btVector3 offsetPosition, int stackSize,
+  final btVector3 boxSize) {
+  btBoxShape blockShape = new btBoxShape(new btVector3(boxSize.x
+   - COLLISION_RADIUS, boxSize.y - COLLISION_RADIUS, boxSize.z
+   - COLLISION_RADIUS));
   float mass = 1.f;
   final btVector3 localInertia = new btVector3();
   blockShape.calculateLocalInertia(mass, localInertia);
@@ -91,11 +101,13 @@ public class ThousandStack extends BenchmarkDemoContainer {
   }
  }
 
- void createPyramid(final btVector3 offsetPosition, int stackSize, final btVector3 boxSize) {
+ void createPyramid(final btVector3 offsetPosition, int stackSize,
+  final btVector3 boxSize) {
   float space = 0.0001f;
   final btVector3 pos = new btVector3(0.0f, boxSize.y, 0.0f);
-  btBoxShape blockShape = new btBoxShape(new btVector3(boxSize.x - COLLISION_RADIUS, boxSize.y -
-   COLLISION_RADIUS, boxSize.z - COLLISION_RADIUS));
+  btBoxShape blockShape = new btBoxShape(new btVector3(boxSize.x
+   - COLLISION_RADIUS, boxSize.y - COLLISION_RADIUS, boxSize.z
+   - COLLISION_RADIUS));
   final btTransform trans = new btTransform();
   trans.setIdentity();
   float mass = 1.f;
@@ -124,7 +136,8 @@ public class ThousandStack extends BenchmarkDemoContainer {
 
  @Override
  public void resetCamera() {
-  camera().set(new btQuaternion(-0.053713836f, -0.9136668f, -0.12852196f, -0.38185087f),
+  camera().set(new btQuaternion(-0.053713836f, -0.9136668f, -0.12852196f,
+   -0.38185087f),
    new btVector3(-130.70317f, 61.614944f, -125.73166f));
  }
 
@@ -142,4 +155,5 @@ public class ThousandStack extends BenchmarkDemoContainer {
  public String get_description() {
   return "";
  }
+
 }

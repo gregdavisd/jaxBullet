@@ -1,12 +1,12 @@
 /*
-  * Copyright (c) 2017   
-  * 
-  * This software is provided 'as-is', without any express or implied warranty.
+ * Copyright (c) 2017
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
- * Permission is granted to anyone to use this software for any purpose, 
- * including commercial applications, and to alter it and redistribute it freely, 
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
  * subject to the following restrictions:
- * 
+ *
  * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
  * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
@@ -69,8 +69,9 @@ public class GyroscopicDemo extends DiscreteDemoContainer {
     pin.setMargin(0.01f);
     btCompoundShape compound = new btCompoundShape();
     compound.addChildShape(btTransform.getIdentity(), pin);
-    final btTransform offsetBox = new btTransform(new btMatrix3x3().setIdentity(), new btVector3(0f,
-     0f, 0.2f));
+    final btTransform offsetBox = new btTransform(new btMatrix3x3()
+     .setIdentity(), new btVector3(0f,
+      0f, 0.2f));
     compound.addChildShape(offsetBox, box);
     float[] masses = {0.3f, 0.1f};
     final btVector3 localInertia = new btVector3();
@@ -91,7 +92,8 @@ public class GyroscopicDemo extends DiscreteDemoContainer {
    }
    {
     //btCollisionShape* groundShape = new btBoxShape(btVector3(float(50.),float(50.),float(0.5)));
-    btCollisionShape groundShape = new btStaticPlaneShape(new btVector3(0f, 1f, 0f), 0f);
+    btCollisionShape groundShape = new btStaticPlaneShape(new btVector3(0f, 1f,
+     0f), 0f);
     final btTransform groundTransform = new btTransform();
     groundTransform.setIdentity();
     groundTransform.setOrigin(new btVector3());
@@ -116,12 +118,14 @@ public class GyroscopicDemo extends DiscreteDemoContainer {
      labels[i] = label;
     }
    }
+
   });
  }
 
  @Override
  public void resetCamera() {
-  camera().set(new btQuaternion(0.016998531f, -0.007998617f, -1.3600693E-4f, 0.9998236f),
+  camera().set(new btQuaternion(0.016998531f, -0.007998617f, -1.3600693E-4f,
+   0.9998236f),
    new btVector3(-0.8655993f, 9.381297f, 42.344086f));
  }
 
@@ -137,12 +141,12 @@ public class GyroscopicDemo extends DiscreteDemoContainer {
 
  @Override
  public String get_description() {
-  return "Show the Dzhanibekov effect using various settings of the gyroscopic term. " +
-   "You can select the gyroscopic term computation using btRigidBody::setFlags," +
-   "with arguments\n\nBT_ENABLE_GYROSCOPIC_FORCE_EXPLICIT (using explicit " +
-   "integration, which adds energy can lead to explosions)\n\nBT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_WORLD\n\n" +
-   "BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_BODY\n\n If you don't set any of these flags, " +
-   "there is no gyroscopic term used.";
+  return "Show the Dzhanibekov effect using various settings of the gyroscopic term. "
+   + "You can select the gyroscopic term computation using btRigidBody::setFlags,"
+   + "with arguments\n\nBT_ENABLE_GYROSCOPIC_FORCE_EXPLICIT (using explicit "
+   + "integration, which adds energy can lead to explosions)\n\nBT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_WORLD\n\n"
+   + "BT_ENABLE_GYROSCOPIC_FORCE_IMPLICIT_BODY\n\n If you don't set any of these flags, "
+   + "there is no gyroscopic term used.";
  }
 
  @Override
@@ -150,7 +154,8 @@ public class GyroscopicDemo extends DiscreteDemoContainer {
 //render method names above objects
   final btVector3 camera_dir = camera().forward();
   for (int i = 0; i < world().getNumCollisionObjects(); i++) {
-   btRigidBody body = btRigidBody.upcast(world().getCollisionObjectArray().get(i));
+   btRigidBody body = btRigidBody.upcast(world().getCollisionObjectArray()
+    .get(i));
    if (body != null && body.getInvMass() > 0) {
     if (labels[i] != null) {
      final btTransform tr = body.getWorldTransform();
@@ -165,6 +170,7 @@ public class GyroscopicDemo extends DiscreteDemoContainer {
         labels[label_i].setVisible(true);
         labels[label_i].setLocation((int) screen_pos.x, (int) screen_pos.y);
        }
+
       });
      } else {
       java.awt.EventQueue.invokeLater(new Runnable() {
@@ -172,6 +178,7 @@ public class GyroscopicDemo extends DiscreteDemoContainer {
        public void run() {
         labels[label_i].setVisible(false);
        }
+
       });
      }
 //      labels[i].setVisible(true);
@@ -182,4 +189,5 @@ public class GyroscopicDemo extends DiscreteDemoContainer {
   boolean activity = super.render_scene();
   return activity;
  }
+
 }

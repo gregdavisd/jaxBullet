@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Broadphase;
 
@@ -23,7 +23,8 @@ import static java.util.Collections.swap;
  *
  * @author Gregery Barton
  */
-public class btSortedOverlappingPairCache implements btOverlappingPairCache, Serializable {
+public class btSortedOverlappingPairCache implements btOverlappingPairCache,
+ Serializable {
 
  //avoid brute-force finding all the time
  final ArrayList<btBroadphasePair> m_overlappingPairArray = new ArrayList<>(0);
@@ -43,7 +44,8 @@ public class btSortedOverlappingPairCache implements btOverlappingPairCache, Ser
  }
 
  @Override
- public void processAllOverlappingPairs(btOverlapCallback callback, btDispatcher dispatcher) {
+ public void processAllOverlappingPairs(btOverlapCallback callback,
+  btDispatcher dispatcher) {
   int i;
   for (i = 0; i < m_overlappingPairArray.size();) {
    btBroadphasePair pair = m_overlappingPairArray.get(i);
@@ -65,7 +67,8 @@ public class btSortedOverlappingPairCache implements btOverlappingPairCache, Ser
   * @return
   */
  @Override
- public Object removeOverlappingPair(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1,
+ public Object removeOverlappingPair(btBroadphaseProxy proxy0,
+  btBroadphaseProxy proxy1,
   btDispatcher dispatcher) {
   btBroadphaseProxy do_proxy0 = proxy0;
   btBroadphaseProxy do_proxy1 = proxy1;
@@ -104,7 +107,8 @@ public class btSortedOverlappingPairCache implements btOverlappingPairCache, Ser
   * @return
   */
  @Override
- public btBroadphasePair addOverlappingPair(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1) {
+ public btBroadphasePair addOverlappingPair(btBroadphaseProxy proxy0,
+  btBroadphaseProxy proxy1) {
   btBroadphaseProxy do_proxy0 = proxy0;
   btBroadphaseProxy do_proxy1 = proxy1;
   if (do_proxy0.m_uniqueId > do_proxy1.m_uniqueId) {
@@ -126,7 +130,8 @@ public class btSortedOverlappingPairCache implements btOverlappingPairCache, Ser
  }
 
  @Override
- public btBroadphasePair findPair(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1) {
+ public btBroadphasePair findPair(btBroadphaseProxy proxy0,
+  btBroadphaseProxy proxy1) {
   btBroadphaseProxy do_proxy0 = proxy0;
   btBroadphaseProxy do_proxy1 = proxy1;
   if (do_proxy0.m_uniqueId > do_proxy1.m_uniqueId) {
@@ -148,7 +153,8 @@ public class btSortedOverlappingPairCache implements btOverlappingPairCache, Ser
  }
 
  @Override
- public void cleanProxyFromPairs(btBroadphaseProxy proxy, btDispatcher dispatcher) {
+ public void cleanProxyFromPairs(btBroadphaseProxy proxy,
+  btDispatcher dispatcher) {
   CleanPairCallback cleanPairs = new CleanPairCallback(proxy, this, dispatcher);
   processAllOverlappingPairs(cleanPairs, dispatcher);
  }
@@ -159,17 +165,21 @@ public class btSortedOverlappingPairCache implements btOverlappingPairCache, Ser
   * @param dispatcher
   */
  @Override
- public void removeOverlappingPairsContainingProxy(btBroadphaseProxy proxy, btDispatcher dispatcher) {
+ public void removeOverlappingPairsContainingProxy(btBroadphaseProxy proxy,
+  btDispatcher dispatcher) {
   RemovePairCallback removeCallback = new RemovePairCallback(proxy);
   processAllOverlappingPairs(removeCallback, dispatcher);
  }
 
- public boolean needsBroadphaseCollision(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1) {
+ public boolean needsBroadphaseCollision(btBroadphaseProxy proxy0,
+  btBroadphaseProxy proxy1) {
   if (m_overlapFilterCallback != null) {
    return m_overlapFilterCallback.needBroadphaseCollision(proxy0, proxy1);
   }
-  boolean collides = (proxy0.m_collisionFilterGroup & proxy1.m_collisionFilterMask) != 0;
-  collides = collides && ((proxy1.m_collisionFilterGroup & proxy0.m_collisionFilterMask) != 0);
+  boolean collides = (proxy0.m_collisionFilterGroup
+   & proxy1.m_collisionFilterMask) != 0;
+  collides = collides && ((proxy1.m_collisionFilterGroup
+   & proxy0.m_collisionFilterMask) != 0);
   return collides;
  }
 
@@ -203,7 +213,8 @@ public class btSortedOverlappingPairCache implements btOverlappingPairCache, Ser
  }
 
  @Override
- public void setInternalGhostPairCallback(btOverlappingPairCallback ghostPairCallback) {
+ public void setInternalGhostPairCallback(
+  btOverlappingPairCallback ghostPairCallback) {
   m_ghostPairCallback = ghostPairCallback;
  }
 
@@ -216,4 +227,5 @@ public class btSortedOverlappingPairCache implements btOverlappingPairCache, Ser
  public void incrementalCleanup(int ni, btDispatcher dispatcher) {
   assert (false);
  }
+
 };

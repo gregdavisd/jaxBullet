@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Dynamics.Constraint;
 
@@ -25,7 +25,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btPoint2PointConstraint extends btTypedConstraint implements Serializable {
+public class btPoint2PointConstraint extends btTypedConstraint implements
+ Serializable {
 
  public static final int BT_P2P_FLAGS_ERP = 1;
  public static final int BT_P2P_FLAGS_CFM = 2;
@@ -40,7 +41,8 @@ public class btPoint2PointConstraint extends btTypedConstraint implements Serial
  public boolean m_useSolveConstraintObsolete;
  public final btConstraintSetting m_setting = new btConstraintSetting();
 
- public btPoint2PointConstraint(btRigidBody rbA, btRigidBody rbB, final btVector3 pivotInA,
+ public btPoint2PointConstraint(btRigidBody rbA, btRigidBody rbB,
+  final btVector3 pivotInA,
   final btVector3 pivotInB) {
   super(POINT2POINT_CONSTRAINT_TYPE, rbA, rbB);
   m_pivotInA.set(pivotInA);
@@ -68,10 +70,12 @@ public class btPoint2PointConstraint extends btTypedConstraint implements Serial
     m_jac[i] = new btJacobianEntry(
      m_rbA.getCenterOfMassTransform().getBasis().transpose(),
      m_rbB.getCenterOfMassTransform().getBasis().transpose(),
-     m_rbA.getCenterOfMassTransform().transform(new btVector3(m_pivotInA)).sub(m_rbA
-     .getCenterOfMassPosition()),
-     m_rbB.getCenterOfMassTransform().transform(new btVector3(m_pivotInB)).sub(m_rbB
-     .getCenterOfMassPosition()),
+     m_rbA.getCenterOfMassTransform().transform(new btVector3(m_pivotInA)).sub(
+      m_rbA
+       .getCenterOfMassPosition()),
+     m_rbB.getCenterOfMassTransform().transform(new btVector3(m_pivotInB)).sub(
+      m_rbB
+       .getCenterOfMassPosition()),
      normal,
      m_rbA.getInvInertiaDiagLocal(),
      m_rbA.getInvMass(),
@@ -89,12 +93,13 @@ public class btPoint2PointConstraint extends btTypedConstraint implements Serial
 
  public final void getInfo1NonVirtual(btConstraintInfo1 info) {
   if (m_useSolveConstraintObsolete) {
-      /* dead code */
-   assert(false);
    /*
-   info.m_numConstraintRows = 0;
-   info.nub = 0;
-*/
+    * dead code
+    */
+   assert (false);
+   /*
+    * info.m_numConstraintRows = 0; info.nub = 0;
+    */
   } else {
    info.m_numConstraintRows = 3;
    info.nub = 3;
@@ -103,10 +108,12 @@ public class btPoint2PointConstraint extends btTypedConstraint implements Serial
 
  @Override
  public void getInfo2(btConstraintInfo2 info) {
-  getInfo2NonVirtual(info, m_rbA.getCenterOfMassTransform(), m_rbB.getCenterOfMassTransform());
+  getInfo2NonVirtual(info, m_rbA.getCenterOfMassTransform(), m_rbB
+   .getCenterOfMassTransform());
  }
 
- public final void getInfo2NonVirtual(btConstraintInfo2 info, final btTransform body0_trans,
+ public final void getInfo2NonVirtual(btConstraintInfo2 info,
+  final btTransform body0_trans,
   final btTransform body1_trans) {
   assert (!m_useSolveConstraintObsolete);
   //retrieve matrices
@@ -142,8 +149,9 @@ public class btPoint2PointConstraint extends btTypedConstraint implements Serial
   final btVector3 body1_origin = body1_trans.getOrigin();
   for (j = 0; j < 3; j++) {
    info.m_constraintError[j * info.rowskip].set(
-    k * (a2.getElement(j) + body1_origin.getElement(j) - a1.getElement(j) - body0_origin.getElement(
-    j)));
+    k * (a2.getElement(j) + body1_origin.getElement(j) - a1.getElement(j)
+    - body0_origin.getElement(
+     j)));
   }
   if ((m_flags & BT_P2P_FLAGS_CFM) != 0) {
    for (j = 0; j < 3; j++) {
@@ -231,4 +239,5 @@ public class btPoint2PointConstraint extends btTypedConstraint implements Serial
  public int getFlags() {
   return m_flags;
  }
+
 };

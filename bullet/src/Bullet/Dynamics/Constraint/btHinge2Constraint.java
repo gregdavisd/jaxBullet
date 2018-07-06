@@ -1,16 +1,15 @@
 /*
-Bullet Continuous Collision Detection and Physics Library, http://bulletphysics.org
-Copyright (C) 2006, 2007 Sony Computer Entertainment Inc. 
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library, http://bulletphysics.org
+ * Copyright (C) 2006, 2007 Sony Computer Entertainment Inc.  *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Dynamics.Constraint;
 
@@ -23,13 +22,14 @@ import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
 
 /**
- * Constraint similar to ODE Hinge2 Joint has 3 degrees of freedom: 2 rotational degrees of freedom,
- * similar to Euler rotations around Z (axis 1) and X (axis 2) 1 translational (along axis Z) with
- * suspension spring
+ * Constraint similar to ODE Hinge2 Joint has 3 degrees of freedom: 2 rotational
+ * degrees of freedom, similar to Euler rotations around Z (axis 1) and X (axis
+ * 2) 1 translational (along axis Z) with suspension spring
  *
  * @author Gregery Barton
  */
-public class btHinge2Constraint extends btGeneric6DofSpring2Constraint implements Serializable {
+public class btHinge2Constraint extends btGeneric6DofSpring2Constraint
+ implements Serializable {
 
  final btVector3 m_anchor = new btVector3();
  final btVector3 m_axis1 = new btVector3();
@@ -38,7 +38,8 @@ public class btHinge2Constraint extends btGeneric6DofSpring2Constraint implement
  // constructor
  // anchor, axis1 and axis2 are in world coordinate system
  // axis1 must be orthogonal to axis2
- public btHinge2Constraint(btRigidBody rbA, btRigidBody rbB, final btVector3 anchor,
+ public btHinge2Constraint(btRigidBody rbA, btRigidBody rbB,
+  final btVector3 anchor,
   final btVector3 axis1,
   final btVector3 axis2) {
   super(rbA, rbB, btTransform.getIdentity(), btTransform.getIdentity(), RO_XYZ);
@@ -112,4 +113,5 @@ public class btHinge2Constraint extends btGeneric6DofSpring2Constraint implement
  public final void setLowerLimit(float ang1min) {
   setAngularLowerLimit(new btVector3(1.f, 0.f, ang1min));
  }
+
 }

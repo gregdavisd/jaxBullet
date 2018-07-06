@@ -53,5 +53,6 @@ public class Int3 extends Tuple3i<Int3> implements Serializable {
   public void set(int value) {
    object().setElement(element, value);
   }
+
  }
 }

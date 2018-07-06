@@ -1,15 +1,15 @@
 /*
-Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision;
 
@@ -35,7 +35,9 @@ public class EPA implements Serializable {
  static final float EPA_FALLBACK = (10f * EPA_ACCURACY);
  static final int EPA_MAX_FACES = (EPA_MAX_VERTICES * 2);
 
- /* Types		*/
+ /*
+  * Types
+  */
  static class sFace {
 
   final btVector3 n = new btVector3();
@@ -67,6 +69,7 @@ public class EPA implements Serializable {
    d = o.d;
    pass = o.pass;
   }
+
  };
 
  static class sList {
@@ -78,6 +81,7 @@ public class EPA implements Serializable {
    root = null;
    count = 0;
   }
+
  };
 
  static class sHorizon {
@@ -91,6 +95,7 @@ public class EPA implements Serializable {
    ff = null;
    nf = 0;
   }
+
  };
 
  static enum eStatus {
@@ -106,7 +111,9 @@ public class EPA implements Serializable {
   Failed
  }
 
- /* Fields		*/
+ /*
+  * Fields
+  */
  eStatus m_status;
  final GJK.sSimplex m_result = new GJK.sSimplex();
  final btVector3 m_normal = new btVector3();
@@ -117,7 +124,9 @@ public class EPA implements Serializable {
  final sList m_hull = new sList();
  final sList m_stock = new sList();
 
- /* Methods		*/
+ /*
+  * Methods
+  */
  EPA() {
   initialize();
  }
@@ -171,7 +180,9 @@ public class EPA implements Serializable {
   GJK.sSimplex simplex = gjk.m_simplex;
   if ((simplex.rank > 1) && gjk.encloseOrigin()) {
 
-   /* Clean up				*/
+   /*
+    * Clean up
+    */
    while (m_hull.root != null) {
     sFace f = m_hull.root;
     remove(m_hull, f);
@@ -179,7 +190,9 @@ public class EPA implements Serializable {
    }
    m_status = eStatus.Valid;
    m_nextsv = 0;
-   /* Orient simplex		*/
+   /*
+    * Orient simplex
+    */
    if (det(new btVector3(simplex.c[0].w).sub(simplex.c[3].w),
     new btVector3(simplex.c[1].w).sub(simplex.c[3].w),
     new btVector3(simplex.c[2].w).sub(simplex.c[3].w)) < 0) {
@@ -194,8 +207,11 @@ public class EPA implements Serializable {
      simplex.p[1] = swapper;
     }
    }
-   /* Build initial hull	*/
-   sFace[] tetra = new sFace[]{newface(simplex.c[0], simplex.c[1], simplex.c[2], true),
+   /*
+    * Build initial hull
+    */
+   sFace[] tetra = new sFace[]{newface(simplex.c[0], simplex.c[1], simplex.c[2],
+    true),
     newface(simplex.c[1], simplex.c[0], simplex.c[3], true),
     newface(simplex.c[2], simplex.c[1], simplex.c[3], true),
     newface(simplex.c[0], simplex.c[2], simplex.c[3], true)};
@@ -264,7 +280,9 @@ public class EPA implements Serializable {
     return (m_status);
    }
   }
-  /* Fallback		*/
+  /*
+   * Fallback
+   */
   m_status = eStatus.FallBack;
   m_normal.set(guess).negate();
   float nl = m_normal.length();
@@ -298,7 +316,8 @@ public class EPA implements Serializable {
    } else {
     // Pick distance to edge a.b
     float a_dot_b = btDot(a.w, b.w);
-    dist[0] = btSqrt(btMax((a.w.lengthSquared() * b.w.lengthSquared() - a_dot_b * a_dot_b) / ba_l2,
+    dist[0] = btSqrt(btMax((a.w.lengthSquared() * b.w.lengthSquared() - a_dot_b
+     * a_dot_b) / ba_l2,
      0f));
    }
    return true;
@@ -321,9 +340,8 @@ public class EPA implements Serializable {
    if (v) {
     {
      float[] face_d = {face.d};
-     if (!(getedgedist(face, a, b, face_d) ||
-      getedgedist(face, b, c, face_d) ||
-      getedgedist(face, c, a, face_d))) {
+     if (!(getedgedist(face, a, b, face_d) || getedgedist(face, b, c, face_d)
+      || getedgedist(face, c, a, face_d))) {
       // Origin projects to the interior of the triangle
       // Use distance to triangle plane
       face.d = btDot(a.w, face.n) / l;
@@ -360,6 +378,7 @@ public class EPA implements Serializable {
   }
   return (minf);
  }
+
  static final int[] i1m3 = new int[]{1, 2, 0};
  static final int[] i2m3 = new int[]{2, 0, 1};
 
@@ -382,8 +401,8 @@ public class EPA implements Serializable {
    } else {
     int e2 = i2m3[e];
     f.pass = pass;
-    if (expand(pass, w, f.f[e1], f.e[e1], horizon) &&
-     expand(pass, w, f.f[e2], f.e[e2], horizon)) {
+    if (expand(pass, w, f.f[e1], f.e[e1], horizon) && expand(pass, w, f.f[e2],
+     f.e[e2], horizon)) {
      remove(m_hull, f);
      append(m_stock, f);
      return (true);
@@ -392,4 +411,5 @@ public class EPA implements Serializable {
   }
   return (false);
  }
+
 };

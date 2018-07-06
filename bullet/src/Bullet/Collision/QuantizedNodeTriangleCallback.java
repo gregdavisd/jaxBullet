@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2013 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2013 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision;
 
@@ -29,7 +29,8 @@ class QuantizedNodeTriangleCallback implements btTriangleCallback, Serializable 
  final ArrayList<btQuantizedBvhNode> m_triangleNodes;
  final btQuantizedBvh m_optimizedTree; // for quantization
 
- QuantizedNodeTriangleCallback(ArrayList<btQuantizedBvhNode> triangleNodes, btQuantizedBvh tree) {
+ QuantizedNodeTriangleCallback(ArrayList<btQuantizedBvhNode> triangleNodes,
+  btQuantizedBvh tree) {
   m_triangleNodes = triangleNodes;
   m_optimizedTree = tree;
  }
@@ -38,13 +39,14 @@ class QuantizedNodeTriangleCallback implements btTriangleCallback, Serializable 
   m_triangleNodes.ensureCapacity(other.m_triangleNodes.size());
   m_triangleNodes.clear();
   for (btQuantizedBvhNode node : other.m_triangleNodes) {
-    m_triangleNodes.add(new btQuantizedBvhNode(node));
+   m_triangleNodes.add(new btQuantizedBvhNode(node));
   }
   return this;
  }
 
  @Override
- public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
+ public boolean processTriangle(btVector3[] triangle, int partId,
+  int triangleIndex) {
   // The partId and triangle index must fit in the same (positive) integer
   assert (partId < (1 << MAX_NUM_PARTS_IN_BITS));
   assert (triangleIndex < (1 << (31 - MAX_NUM_PARTS_IN_BITS)));
@@ -78,8 +80,10 @@ class QuantizedNodeTriangleCallback implements btTriangleCallback, Serializable 
   }
   m_optimizedTree.quantize(node.m_quantizedAabbMin, aabbMin, 0);
   m_optimizedTree.quantize(node.m_quantizedAabbMax, aabbMax, 1);
-  node.m_escapeIndexOrTriangleIndex = (partId << (31 - MAX_NUM_PARTS_IN_BITS)) | triangleIndex;
+  node.m_escapeIndexOrTriangleIndex = (partId << (31 - MAX_NUM_PARTS_IN_BITS))
+   | triangleIndex;
   m_triangleNodes.add(node);
   return true;
  }
+
 };

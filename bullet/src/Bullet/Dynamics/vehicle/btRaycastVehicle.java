@@ -4,8 +4,8 @@
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies.
- * Erwin Coumans makes no representations about the suitability 
- * of this software for any purpose.  
+ * Erwin Coumans makes no representations about the suitability
+ * of this software for any purpose.
  * It is provided "as is" without express or implied warranty.
  */
 package Bullet.Dynamics.vehicle;
@@ -54,7 +54,8 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
  }
 
  //constructor to create a car from an existing rigidbody
- public btRaycastVehicle(btVehicleTuning tuning, btRigidBody chassis, btVehicleRaycaster raycaster) {
+ public btRaycastVehicle(btVehicleTuning tuning, btRigidBody chassis,
+  btVehicleRaycaster raycaster) {
   m_vehicleRaycaster = raycaster;
   //m_pitchControl = ((0.f));
   m_chassisBody = chassis;
@@ -86,8 +87,10 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
     getWheelInfo(v).m_worldTransform.getElement(1, getRightAxis()),
     getWheelInfo(v).m_worldTransform.getElement(2, getRightAxis()));
    //debug wheels (cylinders)
-   debugDrawer.drawLine(wheelPosWS, new btVector3(wheelPosWS).add(axle), wheelColor);
-   debugDrawer.drawLine(wheelPosWS, getWheelInfo(v).m_raycastInfo.m_contactPointWS, wheelColor);
+   debugDrawer.drawLine(wheelPosWS, new btVector3(wheelPosWS).add(axle),
+    wheelColor);
+   debugDrawer.drawLine(wheelPosWS,
+    getWheelInfo(v).m_raycastInfo.m_contactPointWS, wheelColor);
   }
  }
 
@@ -99,13 +102,14 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
   updateWheelTransformsWS(wheel, false);
   float depth = -1;
   float raylen = wheel.getSuspensionRestLength() + wheel.m_wheelsRadius;
-  final btVector3 rayvector = new btVector3(wheel.m_raycastInfo.m_wheelDirectionWS).scale(raylen);
+  final btVector3 rayvector = new btVector3(
+   wheel.m_raycastInfo.m_wheelDirectionWS).scale(raylen);
   final btVector3 source = wheel.m_raycastInfo.m_hardPointWS;
   wheel.m_raycastInfo.m_contactPointWS.set(source).add(rayvector);
   final btVector3 target = wheel.m_raycastInfo.m_contactPointWS;
   float param;
-  btVehicleRaycaster.btVehicleRaycasterResult rayResults =
-   new btVehicleRaycaster.btVehicleRaycasterResult();
+  btVehicleRaycaster.btVehicleRaycasterResult rayResults
+   = new btVehicleRaycaster.btVehicleRaycasterResult();
   assert (m_vehicleRaycaster != null);
   Object object = m_vehicleRaycaster.castRay(source, target, rayResults);
   wheel.m_raycastInfo.m_groundObject = null;
@@ -119,10 +123,10 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
    float hitDistance = param * raylen;
    wheel.m_raycastInfo.m_suspensionLength = hitDistance - wheel.m_wheelsRadius;
    //clamp on max suspension travel
-   float minSuspensionLength = wheel.getSuspensionRestLength() - wheel.m_maxSuspensionTravelCm *
-    (0.01f);
-   float maxSuspensionLength = wheel.getSuspensionRestLength() + wheel.m_maxSuspensionTravelCm *
-    (0.01f);
+   float minSuspensionLength = wheel.getSuspensionRestLength()
+    - wheel.m_maxSuspensionTravelCm * (0.01f);
+   float maxSuspensionLength = wheel.getSuspensionRestLength()
+    + wheel.m_maxSuspensionTravelCm * (0.01f);
    if (wheel.m_raycastInfo.m_suspensionLength < minSuspensionLength) {
     wheel.m_raycastInfo.m_suspensionLength = minSuspensionLength;
    }
@@ -133,11 +137,13 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
    float denominator = wheel.m_raycastInfo.m_contactNormalWS.dot(
     wheel.m_raycastInfo.m_wheelDirectionWS);
    final btVector3 chassis_velocity_at_contactPoint = new btVector3();
-   final btVector3 relpos = new btVector3(wheel.m_raycastInfo.m_contactPointWS).sub(getRigidBody()
-    .getCenterOfMassPosition());
+   final btVector3 relpos = new btVector3(wheel.m_raycastInfo.m_contactPointWS)
+    .sub(getRigidBody()
+     .getCenterOfMassPosition());
    chassis_velocity_at_contactPoint.set(
     new btVector3(getRigidBody().getVelocityInLocalPoint(relpos)));
-   float projVel = wheel.m_raycastInfo.m_contactNormalWS.dot(chassis_velocity_at_contactPoint);
+   float projVel = wheel.m_raycastInfo.m_contactNormalWS.dot(
+    chassis_velocity_at_contactPoint);
    if (denominator >= (-0.1f)) {
     wheel.m_suspensionRelativeVelocity = (0.0f);
     wheel.m_clippedInvContactDotSuspension = (1.0f) / (0.1f);
@@ -150,7 +156,8 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
    //put wheel info as in rest position
    wheel.m_raycastInfo.m_suspensionLength = wheel.getSuspensionRestLength();
    wheel.m_suspensionRelativeVelocity = (0.0f);
-   wheel.m_raycastInfo.m_contactNormalWS.set(wheel.m_raycastInfo.m_wheelDirectionWS).negate();
+   wheel.m_raycastInfo.m_contactNormalWS.set(
+    wheel.m_raycastInfo.m_wheelDirectionWS).negate();
    wheel.m_clippedInvContactDotSuspension = (1.0f);
   }
   return depth;
@@ -162,7 +169,8 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
     updateWheelTransform(i, false);
    }
   }
-  m_currentVehicleSpeedKmHour = (3.6f) * getRigidBody().getLinearVelocity().length();
+  m_currentVehicleSpeedKmHour = (3.6f) * getRigidBody().getLinearVelocity()
+   .length();
   final btTransform chassisTrans = getChassisWorldTransform();
   final btVector3 forwardW = new btVector3(
    chassisTrans.getElement(0, m_indexForwardAxis),
@@ -187,17 +195,20 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
    if (suspensionForce > wheel.m_maxSuspensionForce) {
     suspensionForce = wheel.m_maxSuspensionForce;
    }
-   final btVector3 impulse = new btVector3(wheel.m_raycastInfo.m_contactNormalWS).scale(
-    suspensionForce).scale(step);
-   final btVector3 relpos = new btVector3(wheel.m_raycastInfo.m_contactPointWS).sub(getRigidBody()
-    .getCenterOfMassPosition());
+   final btVector3 impulse = new btVector3(wheel.m_raycastInfo.m_contactNormalWS)
+    .scale(
+     suspensionForce).scale(step);
+   final btVector3 relpos = new btVector3(wheel.m_raycastInfo.m_contactPointWS)
+    .sub(getRigidBody()
+     .getCenterOfMassPosition());
    getRigidBody().applyImpulse(impulse, relpos);
   }
   updateFriction(step);
   for (int i = 0; i < m_wheelInfo.size(); i++) {
    btWheelInfo wheel = m_wheelInfo.get(i);
-   final btVector3 relpos = new btVector3(wheel.m_raycastInfo.m_hardPointWS).sub(getRigidBody()
-    .getCenterOfMassPosition());
+   final btVector3 relpos = new btVector3(wheel.m_raycastInfo.m_hardPointWS)
+    .sub(getRigidBody()
+     .getCenterOfMassPosition());
    final btVector3 vel = getRigidBody().getVelocityInLocalPoint(relpos);
    if (wheel.m_raycastInfo.m_isInContact) {
     final btTransform chassisWorldTransform = getChassisWorldTransform();
@@ -223,7 +234,8 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
    btWheelInfo wheel = m_wheelInfo.get(i);
    wheel.m_raycastInfo.m_suspensionLength = wheel.getSuspensionRestLength();
    wheel.m_suspensionRelativeVelocity = (0.0f);
-   wheel.m_raycastInfo.m_contactNormalWS.set(wheel.m_raycastInfo.m_wheelDirectionWS).negate();
+   wheel.m_raycastInfo.m_contactNormalWS.set(
+    wheel.m_raycastInfo.m_wheelDirectionWS).negate();
    wheel.m_clippedInvContactDotSuspension = (1.0f);
   }
  }
@@ -257,7 +269,8 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
  public void updateWheelTransform(int wheelIndex, boolean interpolatedTransform) {
   btWheelInfo wheel = m_wheelInfo.get(wheelIndex);
   updateWheelTransformsWS(wheel, interpolatedTransform);
-  final btVector3 up = new btVector3(wheel.m_raycastInfo.m_wheelDirectionWS).negate();
+  final btVector3 up = new btVector3(wheel.m_raycastInfo.m_wheelDirectionWS)
+   .negate();
   final btVector3 right = wheel.m_raycastInfo.m_wheelAxleWS;
   final btVector3 fwd = new btVector3(up).cross(right);
   fwd.normalize();
@@ -274,16 +287,20 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
    right.y, fwd.y, up.y,
    right.z, fwd.z, up.z
   );
-  wheel.m_worldTransform.setBasis(new btMatrix3x3(steeringMat).mul(rotatingMat).mul(basis2));
+  wheel.m_worldTransform.setBasis(new btMatrix3x3(steeringMat).mul(rotatingMat)
+   .mul(basis2));
   wheel.m_worldTransform.setOrigin(
    new btVector3(wheel.m_raycastInfo.m_hardPointWS).add(new btVector3(
-    wheel.m_raycastInfo.m_wheelDirectionWS).scale(wheel.m_raycastInfo.m_suspensionLength))
+    wheel.m_raycastInfo.m_wheelDirectionWS).scale(
+    wheel.m_raycastInfo.m_suspensionLength))
   );
  }
 
 //	void	setRaycastWheelInfo( int wheelIndex , bool isInContact, const btVector3& hitPoint, const btVector3& hitNormal,float depth);
- public btWheelInfo addWheel(final btVector3 connectionPointCS, final btVector3 wheelDirectionCS0,
-  final btVector3 wheelAxleCS, float suspensionRestLength, float wheelRadius, btVehicleTuning tuning,
+ public btWheelInfo addWheel(final btVector3 connectionPointCS,
+  final btVector3 wheelDirectionCS0,
+  final btVector3 wheelAxleCS, float suspensionRestLength, float wheelRadius,
+  btVehicleTuning tuning,
   boolean isFrontWheel) {
   btWheelInfoConstructionInfo ci = new btWheelInfoConstructionInfo();
   ci.m_chassisConnectionCS.set(connectionPointCS);
@@ -308,6 +325,7 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
  public int getNumWheels() {
   return (m_wheelInfo.size());
  }
+
  protected final ArrayList<btWheelInfo> m_wheelInfo = new ArrayList<>();
 
  public btWheelInfo getWheelInfo(int index) {
@@ -319,15 +337,19 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
   updateWheelTransformsWS(wheel, true);
  }
 
- public void updateWheelTransformsWS(btWheelInfo wheel, boolean interpolatedTransform) {
+ public void updateWheelTransformsWS(btWheelInfo wheel,
+  boolean interpolatedTransform) {
   wheel.m_raycastInfo.m_isInContact = false;
   final btTransform chassisTrans = getChassisWorldTransform();
   if (interpolatedTransform && (getRigidBody().getMotionState() != null)) {
    getRigidBody().getMotionState().getWorldTransform(chassisTrans);
   }
-  chassisTrans.transform(wheel.m_raycastInfo.m_hardPointWS.set(wheel.m_chassisConnectionPointCS));
-  chassisTrans.transform3x3(wheel.m_raycastInfo.m_wheelDirectionWS.set(wheel.m_wheelDirectionCS));
-  chassisTrans.transform3x3(wheel.m_raycastInfo.m_wheelAxleWS.set(wheel.m_wheelAxleCS));
+  chassisTrans.transform(wheel.m_raycastInfo.m_hardPointWS.set(
+   wheel.m_chassisConnectionPointCS));
+  chassisTrans.transform3x3(wheel.m_raycastInfo.m_wheelDirectionWS.set(
+   wheel.m_wheelDirectionCS));
+  chassisTrans.transform3x3(wheel.m_raycastInfo.m_wheelAxleWS.set(
+   wheel.m_wheelAxleCS));
  }
 
  public void setBrake(float brake, int wheelIndex) {
@@ -350,8 +372,8 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
      float susp_length = wheel_info.getSuspensionRestLength();
      float current_length = wheel_info.m_raycastInfo.m_suspensionLength;
      float length_diff = (susp_length - current_length);
-     force = wheel_info.m_suspensionStiffness *
-      length_diff * wheel_info.m_clippedInvContactDotSuspension;
+     force = wheel_info.m_suspensionStiffness * length_diff
+      * wheel_info.m_clippedInvContactDotSuspension;
     }
     // Damper
     {
@@ -376,6 +398,7 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
    }
   }
  }
+
  public float sideFrictionStiffness2 = (1.0f);
 
  public void updateFriction(float timeStep) {
@@ -417,7 +440,8 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
      m_forwardWS.add(new btVector3(surfNormalWS).cross(m_axle.get(i)));
      m_forwardWS.get(i).normalize();
      float[] sideImpulse = new float[1];
-     resolveSingleBilateral(m_chassisBody, wheelInfo.m_raycastInfo.m_contactPointWS,
+     resolveSingleBilateral(m_chassisBody,
+      wheelInfo.m_raycastInfo.m_contactPointWS,
       groundObject, wheelInfo.m_raycastInfo.m_contactPointWS,
       (0.f), m_axle.get(i), sideImpulse, timeStep);
      m_sideImpulse.set(i, sideImpulse[0] * sideFrictionStiffness2);
@@ -440,10 +464,12 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
       rollingFriction = wheelInfo.m_engineForce * timeStep;
      } else {
       float defaultRollingFrictionImpulse = 0.f;
-      float maxImpulse = wheelInfo.m_brake != 0.0f ? wheelInfo.m_brake :
-       defaultRollingFrictionImpulse;
-      btWheelContactPoint contactPt = new btWheelContactPoint(m_chassisBody, groundObject,
-       wheelInfo.m_raycastInfo.m_contactPointWS, m_forwardWS.get(wheel), maxImpulse);
+      float maxImpulse = wheelInfo.m_brake != 0.0f ? wheelInfo.m_brake
+       : defaultRollingFrictionImpulse;
+      btWheelContactPoint contactPt = new btWheelContactPoint(m_chassisBody,
+       groundObject,
+       wheelInfo.m_raycastInfo.m_contactPointWS, m_forwardWS.get(wheel),
+       maxImpulse);
       rollingFriction = calcRollingFriction(contactPt);
      }
     }
@@ -452,7 +478,8 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
     m_wheelInfo.get(wheel).m_skidInfo = (1.f);
     if (groundObject != null) {
      m_wheelInfo.get(wheel).m_skidInfo = (1.f);
-     float maximp = wheelInfo.m_wheelsSuspensionForce * timeStep * wheelInfo.m_frictionSlip;
+     float maximp = wheelInfo.m_wheelsSuspensionForce * timeStep
+      * wheelInfo.m_frictionSlip;
      float maximpSide = maximp;
      float maximpSquared = maximp * maximpSide;
      m_forwardImpulse.set(wheel, rollingFriction);//wheelInfo.m_engineForce* timeStep;
@@ -471,8 +498,10 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
    for (int wheel = 0; wheel < getNumWheels(); wheel++) {
     if (m_sideImpulse.get(wheel) != (0.f)) {
      if (m_wheelInfo.get(wheel).m_skidInfo < (1.f)) {
-      m_forwardImpulse.set(wheel, m_forwardImpulse.get(wheel) * m_wheelInfo.get(wheel).m_skidInfo);
-      m_sideImpulse.set(wheel, m_sideImpulse.get(wheel) * m_wheelInfo.get(wheel).m_skidInfo);
+      m_forwardImpulse.set(wheel, m_forwardImpulse.get(wheel) * m_wheelInfo.get(
+       wheel).m_skidInfo);
+      m_sideImpulse.set(wheel, m_sideImpulse.get(wheel)
+       * m_wheelInfo.get(wheel).m_skidInfo);
      }
     }
    }
@@ -481,21 +510,26 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
   {
    for (int wheel = 0; wheel < getNumWheels(); wheel++) {
     btWheelInfo wheelInfo = m_wheelInfo.get(wheel);
-    final btVector3 rel_pos = new btVector3(wheelInfo.m_raycastInfo.m_contactPointWS).sub(
+    final btVector3 rel_pos = new btVector3(
+     wheelInfo.m_raycastInfo.m_contactPointWS).sub(
      m_chassisBody.getCenterOfMassPosition());
     if (m_forwardImpulse.get(wheel) != (0.f)) {
-     m_chassisBody.applyImpulse(new btVector3(m_forwardWS.get(wheel)).scale(m_forwardImpulse.get(
-      wheel)), rel_pos);
+     m_chassisBody.applyImpulse(new btVector3(m_forwardWS.get(wheel)).scale(
+      m_forwardImpulse.get(
+       wheel)), rel_pos);
     }
     if (m_sideImpulse.get(wheel) != (0.f)) {
      btRigidBody groundObject = (btRigidBody) m_wheelInfo.get(wheel).m_raycastInfo.m_groundObject;
-     final btVector3 rel_pos2 = new btVector3(wheelInfo.m_raycastInfo.m_contactPointWS).sub(
+     final btVector3 rel_pos2 = new btVector3(
+      wheelInfo.m_raycastInfo.m_contactPointWS).sub(
       groundObject.getCenterOfMassPosition());
-     final btVector3 sideImp = new btVector3(m_axle.get(wheel)).scale(m_sideImpulse.get(wheel));
-     final btVector3 vChassisWorldUp = getRigidBody().getCenterOfMassTransformPtr().getBasisColumn(
-      m_indexUpAxis);
-     rel_pos.sub(new btVector3(vChassisWorldUp).scale((vChassisWorldUp.dot(rel_pos) * (1.f -
-      wheelInfo.m_rollInfluence))));
+     final btVector3 sideImp = new btVector3(m_axle.get(wheel)).scale(
+      m_sideImpulse.get(wheel));
+     final btVector3 vChassisWorldUp = getRigidBody()
+      .getCenterOfMassTransformPtr().getBasisColumn(
+       m_indexUpAxis);
+     rel_pos.sub(new btVector3(vChassisWorldUp).scale((vChassisWorldUp.dot(
+      rel_pos) * (1.f - wheelInfo.m_rollInfluence))));
      m_chassisBody.applyImpulse(sideImp, rel_pos);
      //apply friction impulse on the ground
      groundObject.applyImpulse(new btVector3(sideImp).negate(), rel_pos2);
@@ -549,9 +583,8 @@ public class btRaycastVehicle implements btActionInterface, Serializable {
  public void setUserConstraintType(int userConstraintType) {
   m_userConstraintType = userConstraintType;
  }
- 
 
-public void setUserConstraintId(int uid) {
+ public void setUserConstraintId(int uid) {
   m_userConstraintId = uid;
  }
 
@@ -561,10 +594,12 @@ public void setUserConstraintId(int uid) {
 
  private static float calcRollingFriction(btWheelContactPoint contactPoint) {
   final btVector3 contactPosWorld = contactPoint.m_frictionPositionWorld;
-  final btVector3 rel_pos1 = new btVector3(contactPosWorld).sub(contactPoint.m_body0
-   .getCenterOfMassPosition());
-  final btVector3 rel_pos2 = new btVector3(contactPosWorld).sub(contactPoint.m_body1
-   .getCenterOfMassPosition());
+  final btVector3 rel_pos1 = new btVector3(contactPosWorld).sub(
+   contactPoint.m_body0
+    .getCenterOfMassPosition());
+  final btVector3 rel_pos2 = new btVector3(contactPosWorld).sub(
+   contactPoint.m_body1
+    .getCenterOfMassPosition());
   float maxImpulse = contactPoint.m_maxImpulse;
   final btVector3 vel1 = contactPoint.m_body0.getVelocityInLocalPoint(rel_pos1);
   final btVector3 vel2 = contactPoint.m_body1.getVelocityInLocalPoint(rel_pos2);
@@ -576,4 +611,5 @@ public void setUserConstraintId(int uid) {
   j1 = Math.max(j1, -maxImpulse);
   return j1;
  }
+
 }

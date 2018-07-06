@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Dynamics.CollisionObjects;
 
@@ -22,13 +22,14 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * The btRigidBodyConstructionInfo structure provides information to create a rigid body. Setting
- * mass to zero creates a fixed (non-dynamic) rigid body. For dynamic objects, you can use the
- * collision shape to approximate the local inertia tensor, otherwise use the zero vector (default
- * argument) You can use the motion state to synchronize the world transform between physics and
- * graphics objects. And if the motion state is provided, the rigid body will initialize its initial
- * world transform from the motion state, m_startWorldTransform is only used when you don't provide
- * a motion state.
+ * The btRigidBodyConstructionInfo structure provides information to create a
+ * rigid body. Setting mass to zero creates a fixed (non-dynamic) rigid body.
+ * For dynamic objects, you can use the collision shape to approximate the local
+ * inertia tensor, otherwise use the zero vector (default argument) You can use
+ * the motion state to synchronize the world transform between physics and
+ * graphics objects. And if the motion state is provided, the rigid body will
+ * initialize its initial world transform from the motion state,
+ * m_startWorldTransform is only used when you don't provide a motion state.
  *
  * @author Gregery Barton
  */
@@ -108,8 +109,10 @@ public class btRigidBodyConstructionInfo implements Serializable {
   hash = 71 * hash + Float.floatToIntBits(this.m_angularSleepingThreshold);
   hash = 71 * hash + (this.m_additionalDamping ? 1 : 0);
   hash = 71 * hash + Float.floatToIntBits(this.m_additionalDampingFactor);
-  hash = 71 * hash + Float.floatToIntBits(this.m_additionalLinearDampingThresholdSqr);
-  hash = 71 * hash + Float.floatToIntBits(this.m_additionalAngularDampingThresholdSqr);
+  hash = 71 * hash + Float.floatToIntBits(
+   this.m_additionalLinearDampingThresholdSqr);
+  hash = 71 * hash + Float.floatToIntBits(
+   this.m_additionalAngularDampingThresholdSqr);
   hash = 71 * hash + Float.floatToIntBits(this.m_additionalAngularDampingFactor);
   return hash;
  }
@@ -129,50 +132,55 @@ public class btRigidBodyConstructionInfo implements Serializable {
   if (Float.floatToIntBits(this.m_mass) != Float.floatToIntBits(other.m_mass)) {
    return false;
   }
-  if (Float.floatToIntBits(this.m_linearDamping) != Float.floatToIntBits(other.m_linearDamping)) {
+  if (Float.floatToIntBits(this.m_linearDamping) != Float.floatToIntBits(
+   other.m_linearDamping)) {
    return false;
   }
-  if (Float.floatToIntBits(this.m_angularDamping) != Float.floatToIntBits(other.m_angularDamping)) {
+  if (Float.floatToIntBits(this.m_angularDamping) != Float.floatToIntBits(
+   other.m_angularDamping)) {
    return false;
   }
-  if (Float.floatToIntBits(this.m_friction) != Float.floatToIntBits(other.m_friction)) {
+  if (Float.floatToIntBits(this.m_friction) != Float.floatToIntBits(
+   other.m_friction)) {
    return false;
   }
-  if (Float.floatToIntBits(this.m_rollingFriction) != Float.floatToIntBits(other.m_rollingFriction)) {
+  if (Float.floatToIntBits(this.m_rollingFriction) != Float.floatToIntBits(
+   other.m_rollingFriction)) {
    return false;
   }
-  if (Float.floatToIntBits(this.m_spinningFriction) !=
-   Float.floatToIntBits(other.m_spinningFriction)) {
+  if (Float.floatToIntBits(this.m_spinningFriction) != Float.floatToIntBits(
+   other.m_spinningFriction)) {
    return false;
   }
-  if (Float.floatToIntBits(this.m_restitution) != Float.floatToIntBits(other.m_restitution)) {
+  if (Float.floatToIntBits(this.m_restitution) != Float.floatToIntBits(
+   other.m_restitution)) {
    return false;
   }
-  if (Float.floatToIntBits(this.m_linearSleepingThreshold) !=
-   Float.floatToIntBits(other.m_linearSleepingThreshold)) {
+  if (Float.floatToIntBits(this.m_linearSleepingThreshold) != Float
+   .floatToIntBits(other.m_linearSleepingThreshold)) {
    return false;
   }
-  if (Float.floatToIntBits(this.m_angularSleepingThreshold) !=
-   Float.floatToIntBits(other.m_angularSleepingThreshold)) {
+  if (Float.floatToIntBits(this.m_angularSleepingThreshold) != Float
+   .floatToIntBits(other.m_angularSleepingThreshold)) {
    return false;
   }
   if (this.m_additionalDamping != other.m_additionalDamping) {
    return false;
   }
-  if (Float.floatToIntBits(this.m_additionalDampingFactor) !=
-   Float.floatToIntBits(other.m_additionalDampingFactor)) {
+  if (Float.floatToIntBits(this.m_additionalDampingFactor) != Float
+   .floatToIntBits(other.m_additionalDampingFactor)) {
    return false;
   }
-  if (Float.floatToIntBits(this.m_additionalLinearDampingThresholdSqr) !=
-   Float.floatToIntBits(other.m_additionalLinearDampingThresholdSqr)) {
+  if (Float.floatToIntBits(this.m_additionalLinearDampingThresholdSqr) != Float
+   .floatToIntBits(other.m_additionalLinearDampingThresholdSqr)) {
    return false;
   }
-  if (Float.floatToIntBits(this.m_additionalAngularDampingThresholdSqr) !=
-   Float.floatToIntBits(other.m_additionalAngularDampingThresholdSqr)) {
+  if (Float.floatToIntBits(this.m_additionalAngularDampingThresholdSqr) != Float
+   .floatToIntBits(other.m_additionalAngularDampingThresholdSqr)) {
    return false;
   }
-  if (Float.floatToIntBits(this.m_additionalAngularDampingFactor) !=
-   Float.floatToIntBits(other.m_additionalAngularDampingFactor)) {
+  if (Float.floatToIntBits(this.m_additionalAngularDampingFactor) != Float
+   .floatToIntBits(other.m_additionalAngularDampingFactor)) {
    return false;
   }
   if (!Objects.equals(this.m_motionState, other.m_motionState)) {
@@ -189,4 +197,5 @@ public class btRigidBodyConstructionInfo implements Serializable {
   }
   return true;
  }
+
 }

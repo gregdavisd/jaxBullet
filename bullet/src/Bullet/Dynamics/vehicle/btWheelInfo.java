@@ -4,8 +4,8 @@
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies.
- * Erwin Coumans makes no representations about the suitability 
- * of this software for any purpose.  
+ * Erwin Coumans makes no representations about the suitability
+ * of this software for any purpose.
  * It is provided "as is" without express or implied warranty.
  */
 package Bullet.Dynamics.vehicle;
@@ -46,6 +46,7 @@ public class btWheelInfo implements Serializable {
  public float getSuspensionRestLength() {
   return m_suspensionRestLength1;
  }
+
  public float m_wheelsRadius;//const
  public float m_suspensionStiffness;//const
  public float m_wheelsDampingCompression;//const
@@ -84,12 +85,15 @@ public class btWheelInfo implements Serializable {
 
  public void updateWheel(btRigidBody chassis, RaycastInfo raycastInfo) {
   if (m_raycastInfo.m_isInContact) {
-   float project = m_raycastInfo.m_contactNormalWS.dot(m_raycastInfo.m_wheelDirectionWS);
+   float project = m_raycastInfo.m_contactNormalWS.dot(
+    m_raycastInfo.m_wheelDirectionWS);
    final btVector3 chassis_velocity_at_contactPoint = new btVector3();
-   final btVector3 relpos = new btVector3(m_raycastInfo.m_contactPointWS).sub(chassis
-    .getCenterOfMassPosition());
+   final btVector3 relpos = new btVector3(m_raycastInfo.m_contactPointWS).sub(
+    chassis
+     .getCenterOfMassPosition());
    chassis_velocity_at_contactPoint.set(chassis.getVelocityInLocalPoint(relpos));
-   float projVel = m_raycastInfo.m_contactNormalWS.dot(chassis_velocity_at_contactPoint);
+   float projVel = m_raycastInfo.m_contactNormalWS.dot(
+    chassis_velocity_at_contactPoint);
    if (project >= (-0.1f)) {
     m_suspensionRelativeVelocity = (0.0f);
     m_clippedInvContactDotSuspension = (1.0f) / (0.1f);
@@ -102,10 +106,12 @@ public class btWheelInfo implements Serializable {
   {
    m_raycastInfo.m_suspensionLength = getSuspensionRestLength();
    m_suspensionRelativeVelocity = (0.0f);
-   m_raycastInfo.m_contactNormalWS.set(m_raycastInfo.m_wheelDirectionWS).negate();
+   m_raycastInfo.m_contactNormalWS.set(m_raycastInfo.m_wheelDirectionWS)
+    .negate();
    m_clippedInvContactDotSuspension = 1.0f;
   }
  }
+
  public float m_clippedInvContactDotSuspension;
  public float m_suspensionRelativeVelocity;
  //calculated by suspension

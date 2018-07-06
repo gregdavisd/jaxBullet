@@ -1,15 +1,15 @@
 /*
-Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Copyright (c) 2003-2006 Gino van den Bergen / Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.LinearMath;
 
@@ -33,7 +33,8 @@ public final class btVector3 extends Tuple3f<btVector3> implements Serializable 
   * @param p
   * @param q
   */
- public static void btPlaneSpace1(final btVector3 n, final btVector3 p, final btVector3 q) {
+ public static void btPlaneSpace1(final btVector3 n, final btVector3 p,
+  final btVector3 q) {
   if (btFabs(n.z) > SIMDSQRT12) {
    // choose p in y-z plane
    float a = n.y * n.y + n.z * n.z;
@@ -99,9 +100,8 @@ public final class btVector3 extends Tuple3f<btVector3> implements Serializable 
   * @return
   */
  public static float det(final btVector3 a, final btVector3 b, final btVector3 c) {
-  return (a.y() * b.z() * c.x() + a.z() * b.x() * c.y() -
-   a.x() * b.z() * c.y() - a.y() * b.x() * c.z() +
-   a.x() * b.y() * c.z() - a.z() * b.y() * c.x());
+  return (a.y() * b.z() * c.x() + a.z() * b.x() * c.y() - a.x() * b.z() * c.y()
+   - a.y() * b.x() * c.z() + a.x() * b.y() * c.z() - a.z() * b.y() * c.x());
  }
 
  /**
@@ -210,15 +210,16 @@ public final class btVector3 extends Tuple3f<btVector3> implements Serializable 
 //  return w;
 // }
  /**
-  * create a vector as btVector3( this->dot( btVector3 v0 ), this->dot( btVector3 v1), this->dot(
-  * btVector3 v2 ))
+  * create a vector as btVector3( this->dot( btVector3 v0 ), this->dot(
+  * btVector3 v1), this->dot( btVector3 v2 ))
   *
   * @param v0
   * @param v1
   * @param v2
   * @return
   */
- public btVector3 dot3(final btVector3 v0, final btVector3 v1, final btVector3 v2) {
+ public btVector3 dot3(final btVector3 v0, final btVector3 v1,
+  final btVector3 v2) {
   return new btVector3(dot(v0), dot(v1), dot(v2));
  }
 
@@ -272,8 +273,8 @@ public final class btVector3 extends Tuple3f<btVector3> implements Serializable 
   * @return
   */
  public float triple(final btVector3 v1, final btVector3 v2) {
-  return x * (v1.y * v2.z - v1.z * v2.y) + y * (v1.z * v2.x - v1.x * v2.z) + z * (v1.x * v2.y -
-   v1.y * v2.x);
+  return x * (v1.y * v2.z - v1.z * v2.y) + y * (v1.z * v2.x - v1.x * v2.z) + z
+   * (v1.x * v2.y - v1.y * v2.x);
  }
 
  public void getSkewSymmetricMatrix(final btMatrix3x3 m) {
@@ -282,7 +283,8 @@ public final class btVector3 extends Tuple3f<btVector3> implements Serializable 
    -y(), x(), 0.f);
  }
 
- public void getSkewSymmetricMatrix(final btVector3 x, final btVector3 y, final btVector3 z) {
+ public void getSkewSymmetricMatrix(final btVector3 x, final btVector3 y,
+  final btVector3 z) {
   x.set(0f, -z(), y());
   y.set(z(), 0.f, -x());
   z.set(-y(), x(), 0.f);
@@ -291,4 +293,5 @@ public final class btVector3 extends Tuple3f<btVector3> implements Serializable 
  public boolean fuzzyZero() {
   return lengthSquared() < SIMD_EPSILON * SIMD_EPSILON;
  }
+
 }

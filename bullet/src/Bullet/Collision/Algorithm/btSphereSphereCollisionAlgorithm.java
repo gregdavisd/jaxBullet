@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Algorithm;
 
@@ -26,26 +26,29 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * btSphereSphereCollisionAlgorithm provides sphere-sphere collision detection. Other features are
- * frame-coherency (persistent data) and collision response. Also provides the most basic sample for
- * custom/user btCollisionAlgorithm
+ * btSphereSphereCollisionAlgorithm provides sphere-sphere collision detection.
+ * Other features are frame-coherency (persistent data) and collision response.
+ * Also provides the most basic sample for custom/user btCollisionAlgorithm
  *
  * @author Gregery Barton
  */
-public class btSphereSphereCollisionAlgorithm extends btActivatingCollisionAlgorithm implements
+public class btSphereSphereCollisionAlgorithm extends btActivatingCollisionAlgorithm
+ implements
  Serializable {
 
  boolean m_ownManifold;
  btPersistentManifold m_manifoldPtr;
 
- btSphereSphereCollisionAlgorithm(btPersistentManifold mf, btCollisionAlgorithmConstructionInfo ci,
+ btSphereSphereCollisionAlgorithm(btPersistentManifold mf,
+  btCollisionAlgorithmConstructionInfo ci,
   btCollisionObjectWrapper col0Wrap, btCollisionObjectWrapper col1Wrap) {
   super(ci, col0Wrap, col1Wrap);
   m_ownManifold = false;
   m_manifoldPtr = mf;
   if (m_manifoldPtr == null) {
-   m_manifoldPtr = m_dispatcher.getNewManifold(col0Wrap.getCollisionObject(), col1Wrap
-    .getCollisionObject());
+   m_manifoldPtr = m_dispatcher.getNewManifold(col0Wrap.getCollisionObject(),
+    col1Wrap
+     .getCollisionObject());
    m_ownManifold = true;
   }
  }
@@ -55,7 +58,8 @@ public class btSphereSphereCollisionAlgorithm extends btActivatingCollisionAlgor
  }
 
  @Override
- public void processCollision(btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap,
+ public void processCollision(btCollisionObjectWrapper body0Wrap,
+  btCollisionObjectWrapper body1Wrap,
   btDispatcherInfo dispatchInfo, btManifoldResult resultOut) {
   if (m_manifoldPtr == null) {
    return;
@@ -63,7 +67,8 @@ public class btSphereSphereCollisionAlgorithm extends btActivatingCollisionAlgor
   resultOut.setPersistentManifold(m_manifoldPtr);
   btSphereShape sphere0 = (btSphereShape) body0Wrap.getCollisionShape();
   btSphereShape sphere1 = (btSphereShape) body1Wrap.getCollisionShape();
-  final btVector3 diff = body0Wrap.getWorldTransform().getOrigin().sub(body1Wrap.getWorldTransform()
+  final btVector3 diff = body0Wrap.getWorldTransform().getOrigin().sub(body1Wrap
+   .getWorldTransform()
    .getOrigin());
   float len = diff.length();
   float radius0 = sphere0.getRadius();
@@ -82,22 +87,25 @@ public class btSphereSphereCollisionAlgorithm extends btActivatingCollisionAlgor
   ///point on A (worldspace)
   ///btVector3 pos0 = col0.getWorldTransform().getOrigin() - radius0 * normalOnSurfaceB;
   ///point on B (worldspace)
-  final btVector3 pos1 = new btVector3().scaleAdd(radius1, normalOnSurfaceB, body1Wrap
-   .getWorldTransform()
-   .getOrigin());
+  final btVector3 pos1 = new btVector3().scaleAdd(radius1, normalOnSurfaceB,
+   body1Wrap
+    .getWorldTransform()
+    .getOrigin());
   /// report a contact. internally this will be kept persistent, and contact reduction is done
   resultOut.addContactPoint(normalOnSurfaceB, pos1, dist);
  }
 
  @Override
- public float calculateTimeOfImpact(btCollisionObject body0, btCollisionObject body1,
+ public float calculateTimeOfImpact(btCollisionObject body0,
+  btCollisionObject body1,
   btDispatcherInfo dispatchInfo, btManifoldResult resultOut) {
   //not yet
   return (1.f);
  }
 
  @Override
- public void getAllContactManifolds(ArrayList<btPersistentManifold> manifoldArray) {
+ public void getAllContactManifolds(
+  ArrayList<btPersistentManifold> manifoldArray) {
   if (m_manifoldPtr != null && m_ownManifold) {
    manifoldArray.add(m_manifoldPtr);
   }
@@ -115,9 +123,11 @@ public class btSphereSphereCollisionAlgorithm extends btActivatingCollisionAlgor
  public static class CreateFunc extends btCollisionAlgorithmCreateFunc {
 
   @Override
-  public btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
+  public btCollisionAlgorithm CreateCollisionAlgorithm(
+   btCollisionAlgorithmConstructionInfo ci,
    btCollisionObjectWrapper col0Wrap, btCollisionObjectWrapper col1Wrap) {
    return new btSphereSphereCollisionAlgorithm(null, ci, col0Wrap, col1Wrap);
   }
+
  };
 };

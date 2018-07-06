@@ -1,12 +1,12 @@
 /*
-  * Copyright (c) 2017  
-  * 
-  * This software is provided 'as-is', without any express or implied warranty.
+ * Copyright (c) 2017
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
- * Permission is granted to anyone to use this software for any purpose, 
- * including commercial applications, and to alter it and redistribute it freely, 
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
  * subject to the following restrictions:
- * 
+ *
  * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
  * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
@@ -51,7 +51,8 @@ public class PrimVsMesh extends BenchmarkDemoContainer {
      pos.z = offset + (float) j * (cubeSize * 2.0f + spacing);
      for (int i = 0; i < size; i++) {
       pos.x = offset + (float) i * (cubeSize * 2.0f + spacing);
-      final btVector3 bpos = new btVector3(0, 25, 0).add(new btVector3(5.0f, 1.0f, 5.0f).mul(pos));
+      final btVector3 bpos = new btVector3(0, 25, 0).add(new btVector3(5.0f,
+       1.0f, 5.0f).mul(pos));
       int idx = ThreadLocalRandom.current().nextInt() % 9;
       final btTransform trans = new btTransform();
       trans.setIdentity();
@@ -77,7 +78,8 @@ public class PrimVsMesh extends BenchmarkDemoContainer {
        case 7:
        case 8: {
         float r = 0.5f * (idx - 6 + 1);
-        btCapsuleShape capsuleShape = new btCapsuleShape(capsuleRadius * r, capsuleHalf * r);
+        btCapsuleShape capsuleShape = new btCapsuleShape(capsuleRadius * r,
+         capsuleHalf * r);
         createRigidBody(capsuleMass * r, trans, capsuleShape);
        }
        break;
@@ -95,7 +97,8 @@ public class PrimVsMesh extends BenchmarkDemoContainer {
 
  @Override
  public void resetCamera() {
-  camera().set(new btQuaternion(-0.19792123f, -0.3747349f, -0.08222372f, -0.9020201f),
+  camera().set(new btQuaternion(-0.19792123f, -0.3747349f, -0.08222372f,
+   -0.9020201f),
    new btVector3(-452.2333f, 324.1984f, 456.52335f));
  }
 
@@ -113,4 +116,5 @@ public class PrimVsMesh extends BenchmarkDemoContainer {
  public String get_description() {
   return "";
  }
+
 }

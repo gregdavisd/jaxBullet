@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -30,7 +30,8 @@ import org.apache.commons.collections.primitives.ArrayFloatList;
  *
  * @author Gregery Barton
  */
-public class btMultiSphereShape extends btConvexInternalAabbCachingShape implements Serializable {
+public class btMultiSphereShape extends btConvexInternalAabbCachingShape
+ implements Serializable {
 
  final ArrayList<btVector3> m_localPositionArray = new ArrayList<>(0);
  final ArrayFloatList m_radiArray = new ArrayFloatList();
@@ -55,7 +56,8 @@ public class btMultiSphereShape extends btConvexInternalAabbCachingShape impleme
   final btVector3 localAabbMin = new btVector3();
   final btVector3 localAabbMax = new btVector3();
   getCachedLocalAabb(localAabbMin, localAabbMax);
-  final btVector3 halfExtents = new btVector3(localAabbMax).sub(localAabbMin).scale(0.5f);
+  final btVector3 halfExtents = new btVector3(localAabbMax).sub(localAabbMin)
+   .scale(0.5f);
   float lx = (2.f) * (halfExtents.x());
   float ly = (2.f) * (halfExtents.y());
   float lz = (2.f) * (halfExtents.z());
@@ -107,7 +109,8 @@ public class btMultiSphereShape extends btConvexInternalAabbCachingShape impleme
  }
 
  @Override
- public void batchedUnitVectorGetSupportingVertexWithoutMargin(btVector3[] vectors,
+ public void batchedUnitVectorGetSupportingVertexWithoutMargin(
+  btVector3[] vectors,
   btVector3[] supportVerticesOut, int numVectors) {
   int numSpheres = m_localPositionArray.size();
   btVector3[] temp = new btVector3[btMin(numSpheres, 128)];
@@ -190,4 +193,5 @@ public class btMultiSphereShape extends btConvexInternalAabbCachingShape impleme
   }
   return super.equals(obj);
  }
+
 }

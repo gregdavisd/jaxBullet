@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision;
 
@@ -96,7 +96,8 @@ public class btCollisionObject implements Serializable {
  protected float m_ccdMotionThreshold;
  /// If some object should have elaborate collision filtering by sub-classes
  protected boolean m_checkCollideWith;
- protected final ArrayList<btCollisionObject> m_objectsWithoutCollisionCheck = new ArrayList<>(0);
+ protected final ArrayList<btCollisionObject> m_objectsWithoutCollisionCheck = new ArrayList<>(
+  0);
  ///internal update revision number. It will be increased when the object changes. This allows some subsystems to perform lazy evaluation.
  protected final btVector3 m_customDebugColorRGB = new btVector3();
  //public String debug_name = "";
@@ -135,18 +136,19 @@ public class btCollisionObject implements Serializable {
 
  public boolean mergesSimulationIslands() {
   ///static objects, kinematic and object without contact response don't merge islands
-  return ((m_collisionFlags & (CF_STATIC_OBJECT | CF_KINEMATIC_OBJECT | CF_NO_CONTACT_RESPONSE)) ==
-   0);
+  return ((m_collisionFlags & (CF_STATIC_OBJECT | CF_KINEMATIC_OBJECT
+   | CF_NO_CONTACT_RESPONSE)) == 0);
  }
 
  public btVector3 getAnisotropicFriction() {
   return new btVector3(m_anisotropicFriction);
  }
 
- public void setAnisotropicFriction(final btVector3 anisotropicFriction, int frictionMode) {
+ public void setAnisotropicFriction(final btVector3 anisotropicFriction,
+  int frictionMode) {
   m_anisotropicFriction.set(anisotropicFriction);
-  boolean isUnity = (anisotropicFriction.x != 1.f) || (anisotropicFriction.y != 1.f) ||
-   (anisotropicFriction.z != 1.f);
+  boolean isUnity = (anisotropicFriction.x != 1.f) || (anisotropicFriction.y
+   != 1.f) || (anisotropicFriction.z != 1.f);
   m_hasAnisotropicFriction = isUnity ? frictionMode : 0;
  }
 
@@ -197,7 +199,8 @@ public class btCollisionObject implements Serializable {
   return m_collisionShape;
  }
 
- public void setIgnoreCollisionCheck(btCollisionObject co, boolean ignoreCollisionCheck
+ public void setIgnoreCollisionCheck(btCollisionObject co,
+  boolean ignoreCollisionCheck
  ) {
   if (ignoreCollisionCheck) {
    //We don't check for duplicates. Is it ok to leave that up to the user of this API?
@@ -234,7 +237,8 @@ public class btCollisionObject implements Serializable {
  }
 
  public void setActivationState(int newState) {
-  if ((m_activationState1 != DISABLE_DEACTIVATION) && (m_activationState1 != DISABLE_SIMULATION)) {
+  if ((m_activationState1 != DISABLE_DEACTIVATION) && (m_activationState1
+   != DISABLE_SIMULATION)) {
    m_activationState1 = newState;
   }
  }
@@ -252,7 +256,8 @@ public class btCollisionObject implements Serializable {
  }
 
  public void activate(boolean forceActivation) {
-  if (forceActivation || !((m_collisionFlags & (CF_STATIC_OBJECT | CF_KINEMATIC_OBJECT)) != 0)) {
+  if (forceActivation || !((m_collisionFlags & (CF_STATIC_OBJECT
+   | CF_KINEMATIC_OBJECT)) != 0)) {
    setActivationState(ACTIVE_TAG);
    m_deactivationTime = 0;
   }
@@ -263,7 +268,8 @@ public class btCollisionObject implements Serializable {
  }
 
  public boolean isActive() {
-  return ((getActivationState() != ISLAND_SLEEPING) && (getActivationState() != DISABLE_SIMULATION));
+  return ((getActivationState() != ISLAND_SLEEPING) && (getActivationState()
+   != DISABLE_SIMULATION));
  }
 
  public void setRestitution(float rest) {
@@ -482,7 +488,8 @@ public class btCollisionObject implements Serializable {
  }
 
  public boolean getCustomDebugColor(final btVector3 colorRGB) {
-  boolean hasCustomColor = (0 != (m_collisionFlags & CF_HAS_CUSTOM_DEBUG_RENDERING_COLOR));
+  boolean hasCustomColor = (0 != (m_collisionFlags
+   & CF_HAS_CUSTOM_DEBUG_RENDERING_COLOR));
   if (hasCustomColor) {
    colorRGB.set(m_customDebugColorRGB);
   }
@@ -495,4 +502,5 @@ public class btCollisionObject implements Serializable {
   }
   return true;
  }
+
 }

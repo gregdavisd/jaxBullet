@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision;
 
@@ -29,7 +29,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * SimulationIslandManager creates and handles simulation islands, using btUnionFind
+ * SimulationIslandManager creates and handles simulation islands, using
+ * btUnionFind
  *
  * @author Gregery Barton
  */
@@ -52,13 +53,15 @@ public class btSimulationIslandManager implements Serializable {
   return m_unionFind;
  }
 
- public void updateActivationState(btCollisionWorld colWorld, btDispatcher dispatcher) {
+ public void updateActivationState(btCollisionWorld colWorld,
+  btDispatcher dispatcher) {
   // put the index into m_controllers into m_tag   
   int index = 0;
   {
    int i;
    for (i = 0; i < colWorld.getCollisionObjectArray().size(); i++) {
-    btCollisionObject collisionObject = colWorld.getCollisionObjectArray().get(i);
+    btCollisionObject collisionObject = colWorld.getCollisionObjectArray()
+     .get(i);
     //Adding filtering here
     if (!collisionObject.isStaticOrKinematicObject()) {
      collisionObject.setIslandTag(index++);
@@ -78,7 +81,8 @@ public class btSimulationIslandManager implements Serializable {
    int index = 0;
    int i;
    for (i = 0; i < colWorld.getCollisionObjectArray().size(); i++) {
-    btCollisionObject collisionObject = colWorld.getCollisionObjectArray().get(i);
+    btCollisionObject collisionObject = colWorld.getCollisionObjectArray()
+     .get(i);
     if (!collisionObject.isStaticOrKinematicObject()) {
      collisionObject.setIslandTag(m_unionFind.find(index));
      //Set the correct object offset in Collision Object Array
@@ -98,7 +102,8 @@ public class btSimulationIslandManager implements Serializable {
    btOverlappingPairCache pairCachePtr = colWorld.getPairCache();
    int numOverlappingPairs = pairCachePtr.getNumOverlappingPairs();
    if (numOverlappingPairs != 0) {
-    Collection<btBroadphasePair> pairPtr = pairCachePtr.getOverlappingPairArray();
+    Collection<btBroadphasePair> pairPtr = pairCachePtr
+     .getOverlappingPairArray();
 //    if (DEBUG_BLOCKS) {
 //     Set<btBroadphasePair> pair_set = new HashSet<>();
 //     for (btBroadphasePair broadphasePair : pairPtr) {
@@ -109,8 +114,8 @@ public class btSimulationIslandManager implements Serializable {
     for (btBroadphasePair collisionPair : pairPtr) {
      btCollisionObject colObj0 = (btCollisionObject) collisionPair.m_pProxy0.m_clientObject;
      btCollisionObject colObj1 = (btCollisionObject) collisionPair.m_pProxy1.m_clientObject;
-     if (((colObj0 != null) && ((colObj0).mergesSimulationIslands())) && ((colObj1 != null) &&
-      ((colObj1).mergesSimulationIslands()))) {
+     if (((colObj0 != null) && ((colObj0).mergesSimulationIslands()))
+      && ((colObj1 != null) && ((colObj1).mergesSimulationIslands()))) {
       m_unionFind.unite((colObj0).getIslandTag(),
        (colObj1).getIslandTag());
      }
@@ -121,22 +126,28 @@ public class btSimulationIslandManager implements Serializable {
 
  public static abstract class IslandCallback {
 
-  public abstract void processIsland(List<btCollisionObject> bodies, int numBodies,
+  public abstract void processIsland(List<btCollisionObject> bodies,
+   int numBodies,
    List<btPersistentManifold> manifolds, int numManifolds, int islandId);
+
  };
 
- public void buildAndProcessIslands(btDispatcher dispatcher, btCollisionWorld collisionWorld,
+ public void buildAndProcessIslands(btDispatcher dispatcher,
+  btCollisionWorld collisionWorld,
   IslandCallback callback) {
-  ArrayList<btCollisionObject> collisionObjects = collisionWorld.getCollisionObjectArray();
+  ArrayList<btCollisionObject> collisionObjects = collisionWorld
+   .getCollisionObjectArray();
   buildIslands(dispatcher, collisionWorld);
   int endIslandIndex = 1;
   int startIslandIndex;
   int numElem = getUnionFind().getNumElements();
   BT_PROFILE("processIslands");
   if (!m_splitIslands) {
-   ArrayList<btPersistentManifold> manifold = dispatcher.getInternalManifoldPointer();
+   ArrayList<btPersistentManifold> manifold = dispatcher
+    .getInternalManifoldPointer();
    int maxNumManifolds = dispatcher.getNumManifolds();
-   callback.processIsland(collisionObjects, collisionObjects.size(), manifold, maxNumManifolds, -1);
+   callback.processIsland(collisionObjects, collisionObjects.size(), manifold,
+    maxNumManifolds, -1);
   } else {
    // Sort manifolds, based on islands
    // Sort the vector using predicate and std.sort
@@ -152,11 +163,13 @@ public class btSimulationIslandManager implements Serializable {
    //int islandId;
    //	printf("Start Islands\n");
    //traverse the simulation islands, and call the solver, unless all objects are sleeping/deactivated
-   for (startIslandIndex = 0; startIslandIndex < numElem; startIslandIndex = endIslandIndex) {
+   for (startIslandIndex = 0; startIslandIndex < numElem;
+    startIslandIndex = endIslandIndex) {
     int islandId = getUnionFind().getElement(startIslandIndex).m_id;
     boolean islandSleeping = true;
-    for (endIslandIndex = startIslandIndex; (endIslandIndex < numElem) && (getUnionFind()
-     .getElement(endIslandIndex).m_id == islandId); endIslandIndex++) {
+    for (endIslandIndex = startIslandIndex; (endIslandIndex < numElem)
+     && (getUnionFind()
+      .getElement(endIslandIndex).m_id == islandId); endIslandIndex++) {
      int i = getUnionFind().getElement(endIslandIndex).m_sz;
      btCollisionObject colObj0 = collisionObjects.get(i);
      m_islandBodies.add(colObj0);
@@ -171,18 +184,19 @@ public class btSimulationIslandManager implements Serializable {
      int curIslandId = getIslandId(m_islandmanifold.get(startManifoldIndex));
      if (curIslandId == islandId) {
       startManifold = startManifoldIndex;
-      for (endManifoldIndex = startManifoldIndex + 1; (endManifoldIndex < numManifolds) &&
-       (islandId ==
-       getIslandId(m_islandmanifold.get(endManifoldIndex))); endManifoldIndex++) {
+      for (endManifoldIndex = startManifoldIndex + 1; (endManifoldIndex
+       < numManifolds) && (islandId == getIslandId(m_islandmanifold.get(
+        endManifoldIndex))); endManifoldIndex++) {
       }
       /// Process the actual simulation, only if not sleeping/deactivated
       numIslandManifolds = endManifoldIndex - startManifoldIndex;
      }
     }
     if (!islandSleeping) {
-     callback.processIsland(m_islandBodies, m_islandBodies.size(), m_islandmanifold.subList(
-      startManifold,
-      startManifold + numIslandManifolds), numIslandManifolds, islandId);
+     callback.processIsland(m_islandBodies, m_islandBodies.size(),
+      m_islandmanifold.subList(
+       startManifold,
+       startManifold + numIslandManifolds), numIslandManifolds, islandId);
     }
     if (numIslandManifolds != 0) {
      startManifoldIndex = endManifoldIndex;
@@ -194,7 +208,8 @@ public class btSimulationIslandManager implements Serializable {
 
  void buildIslands(btDispatcher dispatcher, btCollisionWorld collisionWorld) {
   BT_PROFILE("islandUnionFindAndQuickSort");
-  ArrayList<btCollisionObject> collisionObjects = collisionWorld.getCollisionObjectArray();
+  ArrayList<btCollisionObject> collisionObjects = collisionWorld
+   .getCollisionObjectArray();
   m_islandmanifold.clear();
   //we are going to sort the unionfind array, and store the element id in the size
   //afterwards, we clean unionfind, to make sure no-one uses it anymore
@@ -203,10 +218,12 @@ public class btSimulationIslandManager implements Serializable {
   int endIslandIndex = 1;
   int startIslandIndex;
   //update the sleeping state for bodies, if all are sleeping
-  for (startIslandIndex = 0; startIslandIndex < numElem; startIslandIndex = endIslandIndex) {
+  for (startIslandIndex = 0; startIslandIndex < numElem;
+   startIslandIndex = endIslandIndex) {
    int islandId = getUnionFind().getElement(startIslandIndex).m_id;
-   for (endIslandIndex = startIslandIndex + 1; (endIslandIndex < numElem) && (getUnionFind()
-    .getElement(endIslandIndex).m_id == islandId); endIslandIndex++) {
+   for (endIslandIndex = startIslandIndex + 1; (endIslandIndex < numElem)
+    && (getUnionFind()
+     .getElement(endIslandIndex).m_id == islandId); endIslandIndex++) {
    }
    //int numSleeping = 0;
    boolean allSleeping = true;
@@ -216,7 +233,8 @@ public class btSimulationIslandManager implements Serializable {
     if ((colObj0.getIslandTag() != islandId) && (colObj0.getIslandTag() != -1)) {
 //				printf("error in island management\n");
     }
-    assert ((colObj0.getIslandTag() == islandId) || (colObj0.getIslandTag() == -1));
+    assert ((colObj0.getIslandTag() == islandId) || (colObj0.getIslandTag()
+     == -1));
     if (colObj0.getIslandTag() == islandId) {
      if (colObj0.getActivationState() == ACTIVE_TAG) {
       allSleeping = false;
@@ -233,7 +251,8 @@ public class btSimulationIslandManager implements Serializable {
      if ((colObj0.getIslandTag() != islandId) && (colObj0.getIslandTag() != -1)) {
 //					printf("error in island management\n");
      }
-     assert ((colObj0.getIslandTag() == islandId) || (colObj0.getIslandTag() == -1));
+     assert ((colObj0.getIslandTag() == islandId) || (colObj0.getIslandTag()
+      == -1));
      if (colObj0.getIslandTag() == islandId) {
       colObj0.setActivationState(ISLAND_SLEEPING);
      }
@@ -246,7 +265,8 @@ public class btSimulationIslandManager implements Serializable {
      if ((colObj0.getIslandTag() != islandId) && (colObj0.getIslandTag() != -1)) {
 //					printf("error in island management\n");
      }
-     assert ((colObj0.getIslandTag() == islandId) || (colObj0.getIslandTag() == -1));
+     assert ((colObj0.getIslandTag() == islandId) || (colObj0.getIslandTag()
+      == -1));
      if (colObj0.getIslandTag() == islandId) {
       if (colObj0.getActivationState() == ISLAND_SLEEPING) {
        colObj0.setActivationState(WANTS_DEACTIVATION);
@@ -266,15 +286,17 @@ public class btSimulationIslandManager implements Serializable {
    btCollisionObject colObj0 = (manifold.getBody0());
    btCollisionObject colObj1 = (manifold.getBody1());
    ///@todo: check sleeping conditions!
-   if ((colObj0.getActivationState() != ISLAND_SLEEPING) || (colObj1.getActivationState() !=
-    ISLAND_SLEEPING)) {
+   if ((colObj0.getActivationState() != ISLAND_SLEEPING) || (colObj1
+    .getActivationState() != ISLAND_SLEEPING)) {
     //kinematic objects don't merge islands, but wake up all connected objects
-    if (colObj0.isKinematicObject() && colObj0.getActivationState() != ISLAND_SLEEPING) {
+    if (colObj0.isKinematicObject() && colObj0.getActivationState()
+     != ISLAND_SLEEPING) {
      if (colObj0.hasContactResponse()) {
       colObj1.activate();
      }
     }
-    if (colObj1.isKinematicObject() && colObj1.getActivationState() != ISLAND_SLEEPING) {
+    if (colObj1.isKinematicObject() && colObj1.getActivationState()
+     != ISLAND_SLEEPING) {
      if (colObj1.hasContactResponse()) {
       colObj0.activate();
      }
@@ -296,4 +318,5 @@ public class btSimulationIslandManager implements Serializable {
  void setSplitIslands(boolean doSplitIslands) {
   m_splitIslands = doSplitIslands;
  }
+
 };

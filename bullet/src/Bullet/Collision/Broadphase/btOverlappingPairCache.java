@@ -22,7 +22,8 @@ import java.util.Collection;
  *
  * @author Gregery Barton
  */
-abstract public interface btOverlappingPairCache extends btOverlappingPairCallback, Serializable {
+abstract public interface btOverlappingPairCache extends
+ btOverlappingPairCallback, Serializable {
 
  final int BT_NULL_PAIR = 0xffffffff;
 
@@ -38,7 +39,8 @@ abstract public interface btOverlappingPairCache extends btOverlappingPairCallba
 
  void setOverlapFilterCallback(btOverlapFilterCallback callback);
 
- void processAllOverlappingPairs(btOverlapCallback callback, btDispatcher dispatcher);
+ void processAllOverlappingPairs(btOverlapCallback callback,
+  btDispatcher dispatcher);
 
  btBroadphasePair findPair(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1);
 
@@ -49,4 +51,5 @@ abstract public interface btOverlappingPairCache extends btOverlappingPairCallba
  void sortOverlappingPairs(btDispatcher dispatcher);
 
  void incrementalCleanup(int ni, btDispatcher dispatcher);
+
 };

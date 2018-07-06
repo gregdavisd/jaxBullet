@@ -20,17 +20,20 @@ import org.apache.commons.collections.primitives.ArrayFloatList;
 import org.apache.commons.collections.primitives.ArrayIntList;
 
 /**
- * The btTriangleMesh class is a convenience class derived from btTriangleIndexVertexArray, that
- * provides storage for a concave triangle mesh. It can be used as data for the
- * btBvhTriangleMeshShape. It allows either 32bit or 16bit indices, and 4 (x-y-z-w) or 3 (x-y-z)
- * component vertices. If you want to share triangle/index data between graphics mesh and collision
- * mesh (btBvhTriangleMeshShape), you can directly use btTriangleIndexVertexArray or derive your own
- * class from btStridingMeshInterface. Performance of btTriangleMesh and btTriangleIndexVertexArray
- * used in a btBvhTriangleMeshShape is the same.
+ * The btTriangleMesh class is a convenience class derived from
+ * btTriangleIndexVertexArray, that provides storage for a concave triangle
+ * mesh. It can be used as data for the btBvhTriangleMeshShape. It allows either
+ * 32bit or 16bit indices, and 4 (x-y-z-w) or 3 (x-y-z) component vertices. If
+ * you want to share triangle/index data between graphics mesh and collision
+ * mesh (btBvhTriangleMeshShape), you can directly use
+ * btTriangleIndexVertexArray or derive your own class from
+ * btStridingMeshInterface. Performance of btTriangleMesh and
+ * btTriangleIndexVertexArray used in a btBvhTriangleMeshShape is the same.
  *
  * @author Gregery Barton
  */
-public class btTriangleMesh extends btTriangleIndexVertexArray implements Serializable {
+public class btTriangleMesh extends btTriangleIndexVertexArray implements
+ Serializable {
 
  private static final long serialVersionUID = 1L;
  private final ArrayFloatList m_3componentVertices = new ArrayFloatList(0);
@@ -67,11 +70,13 @@ public class btTriangleMesh extends btTriangleIndexVertexArray implements Serial
  ///By default addTriangle won't search for duplicate vertices, because the search is very slow for large triangle meshes.
  ///In general it is better to directly use btTriangleIndexVertexArray instead.
 
- public void addTriangle(final btVector3 vertex0, final btVector3 vertex1, final btVector3 vertex2) {
+ public void addTriangle(final btVector3 vertex0, final btVector3 vertex1,
+  final btVector3 vertex2) {
   addTriangle(vertex0, vertex1, vertex2, false);
  }
 
- public void addTriangle(final btVector3 vertex0, final btVector3 vertex1, final btVector3 vertex2,
+ public void addTriangle(final btVector3 vertex0, final btVector3 vertex1,
+  final btVector3 vertex2,
   boolean removeDuplicateVertices) {
   m_indexedMeshes.get(0).m_numTriangles++;
   addIndex(findOrAddVertex(vertex0, removeDuplicateVertices));
@@ -100,15 +105,16 @@ public class btTriangleMesh extends btTriangleIndexVertexArray implements Serial
  }
 
  ///findOrAddVertex is an internal method, use addTriangle instead
- private int findOrAddVertex(final btVector3 vertex, boolean removeDuplicateVertices) {
+ private int findOrAddVertex(final btVector3 vertex,
+  boolean removeDuplicateVertices) {
   //return index of new/existing vertex
   ///@todo: could use acceleration structure for this
   if (removeDuplicateVertices) {
    final btVector3 vtx = new btVector3();
    for (int i = 0; i < m_3componentVertices.size(); i += 3) {
-    vtx.set(m_3componentVertices.get(i), m_3componentVertices.get(i + 1), m_3componentVertices.get(
-     i +
-     2));
+    vtx.set(m_3componentVertices.get(i), m_3componentVertices.get(i + 1),
+     m_3componentVertices.get(
+      i + 2));
     if (vtx.sub(vertex).lengthSquared() <= m_weldingThreshold) {
      return i / 3;
     }
@@ -127,4 +133,5 @@ public class btTriangleMesh extends btTriangleIndexVertexArray implements Serial
   m_32bitIndices.add(index);
   m_indexedMeshes.get(0).m_triangleIndexBase = m_32bitIndices;
  }
+
 }

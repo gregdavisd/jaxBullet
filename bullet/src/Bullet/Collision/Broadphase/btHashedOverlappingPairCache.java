@@ -28,7 +28,8 @@ import javax.vecmath.Tuple2i;
  *
  * @author Gregery Barton
  */
-public class btHashedOverlappingPairCache implements btOverlappingPairCache, Serializable {
+public class btHashedOverlappingPairCache implements btOverlappingPairCache,
+ Serializable {
 
  private static final long serialVersionUID = 1L;
  final HashMap<BroadphasePairKey, btBroadphasePair> m_overlappingPairMap = new HashMap<>();
@@ -47,7 +48,8 @@ public class btHashedOverlappingPairCache implements btOverlappingPairCache, Ser
   * @param dispatcher
   */
  @Override
- public void removeOverlappingPairsContainingProxy(btBroadphaseProxy proxy, btDispatcher dispatcher) {
+ public void removeOverlappingPairsContainingProxy(btBroadphaseProxy proxy,
+  btDispatcher dispatcher) {
   RemovePairCallback removeCallback = new RemovePairCallback(proxy);
   processAllOverlappingPairs(removeCallback, dispatcher);
  }
@@ -60,7 +62,8 @@ public class btHashedOverlappingPairCache implements btOverlappingPairCache, Ser
   * @return
   */
  @Override
- public Object removeOverlappingPair(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1,
+ public Object removeOverlappingPair(btBroadphaseProxy proxy0,
+  btBroadphaseProxy proxy1,
   btDispatcher dispatcher) {
 //gRemovePairs++;
   btBroadphaseProxy do_proxy0 = proxy0;
@@ -73,7 +76,8 @@ public class btHashedOverlappingPairCache implements btOverlappingPairCache, Ser
   }
   int proxyId1 = do_proxy0.getUid();
   int proxyId2 = do_proxy1.getUid();
-  btBroadphasePair pair = m_overlappingPairMap.remove(new BroadphasePairKey(proxyId1, proxyId2));
+  btBroadphasePair pair = m_overlappingPairMap.remove(new BroadphasePairKey(
+   proxyId1, proxyId2));
   if (pair == null) {
    return null;
   }
@@ -87,21 +91,26 @@ public class btHashedOverlappingPairCache implements btOverlappingPairCache, Ser
   return null;
  }
 
- void removeOverlappingPair(btBroadphasePair pair, btDispatcher dispatcher, Iterator iter) {
+ void removeOverlappingPair(btBroadphasePair pair, btDispatcher dispatcher,
+  Iterator iter) {
 //gRemovePairs++;
   iter.remove();
   cleanOverlappingPair(pair, dispatcher);
   if (m_ghostPairCallback != null) {
-   m_ghostPairCallback.removeOverlappingPair(pair.m_pProxy0, pair.m_pProxy1, dispatcher);
+   m_ghostPairCallback.removeOverlappingPair(pair.m_pProxy0, pair.m_pProxy1,
+    dispatcher);
   }
  }
 
- boolean needsBroadphaseCollision(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1) {
+ boolean needsBroadphaseCollision(btBroadphaseProxy proxy0,
+  btBroadphaseProxy proxy1) {
   if (m_overlapFilterCallback != null) {
    return m_overlapFilterCallback.needBroadphaseCollision(proxy0, proxy1);
   }
-  boolean collides = (proxy0.m_collisionFilterGroup & proxy1.m_collisionFilterMask) != 0;
-  collides = collides && ((proxy1.m_collisionFilterGroup & proxy0.m_collisionFilterMask) != 0);
+  boolean collides = (proxy0.m_collisionFilterGroup
+   & proxy1.m_collisionFilterMask) != 0;
+  collides = collides && ((proxy1.m_collisionFilterGroup
+   & proxy0.m_collisionFilterMask) != 0);
   return collides;
  }
 
@@ -114,7 +123,8 @@ public class btHashedOverlappingPairCache implements btOverlappingPairCache, Ser
   * @return
   */
  @Override
- public btBroadphasePair addOverlappingPair(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1) {
+ public btBroadphasePair addOverlappingPair(btBroadphaseProxy proxy0,
+  btBroadphaseProxy proxy1) {
   if (!needsBroadphaseCollision(proxy0, proxy1)) {
    return null;
   }
@@ -127,16 +137,19 @@ public class btHashedOverlappingPairCache implements btOverlappingPairCache, Ser
   * @param dispatcher
   */
  @Override
- public void cleanProxyFromPairs(btBroadphaseProxy proxy, btDispatcher dispatcher) {
+ public void cleanProxyFromPairs(btBroadphaseProxy proxy,
+  btDispatcher dispatcher) {
   CleanPairCallback cleanPairs = new CleanPairCallback(proxy, this, dispatcher);
   processAllOverlappingPairs(cleanPairs, dispatcher);
  }
 
  @Override
- public void processAllOverlappingPairs(btOverlapCallback callback, btDispatcher dispatcher) {
+ public void processAllOverlappingPairs(btOverlapCallback callback,
+  btDispatcher dispatcher) {
   BT_PROFILE("btHashedOverlappingPairCache.processAllOverlappingPairs");
 //	printf("m_overlappingPairArray.size()=%d\n",m_overlappingPairArray.size());
-  for (Iterator<Entry<BroadphasePairKey, btBroadphasePair>> i = m_overlappingPairMap.entrySet()
+  for (Iterator<Entry<BroadphasePairKey, btBroadphasePair>> i = m_overlappingPairMap
+   .entrySet()
    .iterator(); i.hasNext();) {
    btBroadphasePair pair = i.next().getValue();
    if (callback.processOverlap(pair)) {
@@ -167,7 +180,8 @@ public class btHashedOverlappingPairCache implements btOverlappingPairCache, Ser
  }
 
  @Override
- public btBroadphasePair findPair(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1) {
+ public btBroadphasePair findPair(btBroadphaseProxy proxy0,
+  btBroadphaseProxy proxy1) {
   btBroadphaseProxy do_proxy0 = proxy0;
   btBroadphaseProxy do_proxy1 = proxy1;
   if (do_proxy0.m_uniqueId > do_proxy1.m_uniqueId) {
@@ -200,7 +214,8 @@ public class btHashedOverlappingPairCache implements btOverlappingPairCache, Ser
   return m_overlappingPairMap.size();
  }
 
- btBroadphasePair internalAddPair(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1) {
+ btBroadphasePair internalAddPair(btBroadphaseProxy proxy0,
+  btBroadphaseProxy proxy1) {
   btBroadphaseProxy do_proxy0 = proxy0;
   btBroadphaseProxy do_proxy1 = proxy1;
   if (do_proxy0.m_uniqueId > do_proxy1.m_uniqueId) {
@@ -229,7 +244,8 @@ public class btHashedOverlappingPairCache implements btOverlappingPairCache, Ser
  }
 
  boolean equalsPair(btBroadphasePair pair, int proxyId1, int proxyId2) {
-  return pair.m_pProxy0.getUid() == proxyId1 && pair.m_pProxy1.getUid() == proxyId2;
+  return pair.m_pProxy0.getUid() == proxyId1 && pair.m_pProxy1.getUid()
+   == proxyId2;
  }
 
  @Override
@@ -238,7 +254,8 @@ public class btHashedOverlappingPairCache implements btOverlappingPairCache, Ser
  }
 
  @Override
- public void setInternalGhostPairCallback(btOverlappingPairCallback ghostPairCallback) {
+ public void setInternalGhostPairCallback(
+  btOverlappingPairCallback ghostPairCallback) {
   m_ghostPairCallback = ghostPairCallback;
  }
 
@@ -280,8 +297,9 @@ public class btHashedOverlappingPairCache implements btOverlappingPairCache, Ser
   @Override
   public int hashCode() {
    /**
-    * Thomas Wang's hash, see: http://www.concentric.net/~Ttwang/tech/inthash.htm This assumes
-    * proxyId1 and proxyId2 are 16-bit.
+    * Thomas Wang's hash, see:
+    * http://www.concentric.net/~Ttwang/tech/inthash.htm This assumes proxyId1
+    * and proxyId2 are 16-bit.
     */
    int key = ((x) | ((y) << 16));
    // Thomas Wang's hash
@@ -293,5 +311,6 @@ public class btHashedOverlappingPairCache implements btOverlappingPairCache, Ser
    key ^= (key >>> 16);
    return (int) Math.abs(key);
   }
+
  }
 }

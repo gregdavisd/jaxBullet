@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision;
 
@@ -27,7 +27,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btContinuousConvexCollision extends btConvexCast implements Serializable {
+public class btContinuousConvexCollision extends btConvexCast implements
+ Serializable {
 
  static final int MAX_ITERATIONS = 64;
  final btSimplexSolverInterface m_simplexSolver;
@@ -62,8 +63,10 @@ public class btContinuousConvexCollision extends btConvexCast implements Seriali
   btPointCollector pointCollector) {
   if (m_convexB1 != null) {
    m_simplexSolver.reset();
-   btGjkPairDetector gjk = new btGjkPairDetector(m_convexA, m_convexB1, m_convexA.getShapeType(),
-    m_convexB1.getShapeType(), m_convexA.getMargin(), m_convexB1.getMargin(), m_simplexSolver,
+   btGjkPairDetector gjk = new btGjkPairDetector(m_convexA, m_convexB1,
+    m_convexA.getShapeType(),
+    m_convexB1.getShapeType(), m_convexA.getMargin(), m_convexB1.getMargin(),
+    m_simplexSolver,
     m_penetrationDepthSolver);
    btGjkPairDetector.ClosestPointInput input = new btGjkPairDetector.ClosestPointInput();
    input.m_transformA.set(transA);
@@ -76,16 +79,21 @@ public class btContinuousConvexCollision extends btConvexCast implements Seriali
    final btVector3 planeNormal = planeShape.getPlaneNormal();
    final float planeConstant = planeShape.getPlaneConstant();
    final btTransform convexWorldTransform = new btTransform(transA);
-   final btTransform convexInPlaneTrans = new btTransform(transB).invert().mul(convexWorldTransform);
-   final btTransform planeInConvex = new btTransform(convexWorldTransform).invert().mul(transB);
-   final btVector3 vtx = convexShape.localGetSupportingVertex(planeInConvex.transform3x3(
-    new btVector3(planeNormal).negate()));
+   final btTransform convexInPlaneTrans = new btTransform(transB).invert().mul(
+    convexWorldTransform);
+   final btTransform planeInConvex = new btTransform(convexWorldTransform)
+    .invert().mul(transB);
+   final btVector3 vtx = convexShape.localGetSupportingVertex(planeInConvex
+    .transform3x3(
+     new btVector3(planeNormal).negate()));
    final btVector3 vtxInPlane = convexInPlaneTrans.transform(new btVector3(vtx));
    float distance = (planeNormal.dot(vtxInPlane) - planeConstant);
    final btVector3 vtxInPlaneProjected = new btVector3()
     .scaleAdd(-distance, planeNormal, vtxInPlane);
-   final btVector3 vtxInPlaneWorld = transB.transform(new btVector3(vtxInPlaneProjected));
-   final btVector3 normalOnSurfaceB = transB.transform3x3(new btVector3(planeNormal));
+   final btVector3 vtxInPlaneWorld = transB.transform(new btVector3(
+    vtxInPlaneProjected));
+   final btVector3 normalOnSurfaceB = transB.transform3x3(new btVector3(
+    planeNormal));
    pointCollector.addContactPoint(
     normalOnSurfaceB,
     vtxInPlaneWorld,
@@ -95,7 +103,8 @@ public class btContinuousConvexCollision extends btConvexCast implements Seriali
 
  @Override
  boolean calcTimeOfImpact(
-  final btTransform fromA, final btTransform toA, final btTransform fromB, final btTransform toB,
+  final btTransform fromA, final btTransform toA, final btTransform fromB,
+  final btTransform toB,
   CastResult result) {
   /// compute linear and angular velocity for this interval, to interpolate
   final btVector3 linVelA = new btVector3();
@@ -106,8 +115,8 @@ public class btContinuousConvexCollision extends btConvexCast implements Seriali
   btTransformUtil.calculateVelocity(fromB, toB, 1f, linVelB, angVelB);
   float boundingRadiusA = m_convexA.getAngularMotionDisc();
   float boundingRadiusB = m_convexB1 != null ? m_convexB1.getAngularMotionDisc() : 0.f;
-  float maxAngularProjectedVelocity = angVelA.length() * boundingRadiusA + angVelB.length() *
-   boundingRadiusB;
+  float maxAngularProjectedVelocity = angVelA.length() * boundingRadiusA
+   + angVelB.length() * boundingRadiusB;
   final btVector3 relLinVel = new btVector3(linVelB).sub(linVelA);
   float relLinVelocLength = relLinVel.length();
   if ((relLinVelocLength + maxAngularProjectedVelocity) == 0.f) {
@@ -149,7 +158,8 @@ public class btContinuousConvexCollision extends btConvexCast implements Seriali
     if ((projectedLinearVelocity + maxAngularProjectedVelocity) <= SIMD_EPSILON) {
      return false;
     }
-    float dLambda = dist / (projectedLinearVelocity + maxAngularProjectedVelocity);
+    float dLambda = dist / (projectedLinearVelocity
+     + maxAngularProjectedVelocity);
     lambda += dLambda;
     if (lambda > (1.f)) {
      return false;
@@ -165,11 +175,14 @@ public class btContinuousConvexCollision extends btConvexCast implements Seriali
     //interpolate to next lambda
     final btTransform interpolatedTransA = new btTransform();
     final btTransform interpolatedTransB = new btTransform();
-    btTransformUtil.integrateTransform(fromA, linVelA, angVelA, lambda, interpolatedTransA);
-    btTransformUtil.integrateTransform(fromB, linVelB, angVelB, lambda, interpolatedTransB);
+    btTransformUtil.integrateTransform(fromA, linVelA, angVelA, lambda,
+     interpolatedTransA);
+    btTransformUtil.integrateTransform(fromB, linVelB, angVelB, lambda,
+     interpolatedTransB);
     //btTransform relativeTrans = interpolatedTransB.inverseTimes(interpolatedTransA);
     if (result.m_debugDrawer != null) {
-     result.m_debugDrawer.drawSphere(interpolatedTransA.getOrigin(), 0.2f, new btVector3(1, 0, 0));
+     result.m_debugDrawer.drawSphere(interpolatedTransA.getOrigin(), 0.2f,
+      new btVector3(1, 0, 0));
     }
     result.DebugDraw(lambda);
     btPointCollector pointCollector = new btPointCollector();
@@ -195,4 +208,5 @@ public class btContinuousConvexCollision extends btConvexCast implements Seriali
   }
   return false;
  }
+
 }

@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2007 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2007 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 ///btDbvt implementation by Nathanael Presson
 package Bullet.Collision.Broadphase;
@@ -58,21 +58,14 @@ public class btDbvtAabbMm implements Serializable {
 
  public static boolean intersect(btDbvtAabbMm a,
   btDbvtAabbMm b) {
-  return ((a.mi.x() <= b.mx.x()) &&
-   (a.mx.x() >= b.mi.x()) &&
-   (a.mi.y() <= b.mx.y()) &&
-   (a.mx.y() >= b.mi.y()) &&
-   (a.mi.z() <= b.mx.z()) &&
-   (a.mx.z() >= b.mi.z()));
+  return ((a.mi.x() <= b.mx.x()) && (a.mx.x() >= b.mi.x()) && (a.mi.y() <= b.mx
+   .y()) && (a.mx.y() >= b.mi.y()) && (a.mi.z() <= b.mx.z()) && (a.mx.z()
+   >= b.mi.z()));
  }
 
  public static boolean intersect(btDbvtAabbMm a, final btVector3 b) {
-  return ((b.x() >= a.mi.x()) &&
-   (b.y() >= a.mi.y()) &&
-   (b.z() >= a.mi.z()) &&
-   (b.x() <= a.mx.x()) &&
-   (b.y() <= a.mx.y()) &&
-   (b.z() <= a.mx.z()));
+  return ((b.x() >= a.mi.x()) && (b.y() >= a.mi.y()) && (b.z() >= a.mi.z())
+   && (b.x() <= a.mx.x()) && (b.y() <= a.mx.y()) && (b.z() <= a.mx.z()));
  }
 
  public static float proximity(btDbvtAabbMm a,
@@ -124,13 +117,11 @@ public class btDbvtAabbMm implements Serializable {
 
  public static boolean notEqual(btDbvtAabbMm a,
   btDbvtAabbMm b) {
-  return ((a.mi.x() != b.mi.x()) ||
-   (a.mi.y() != b.mi.y()) ||
-   (a.mi.z() != b.mi.z()) ||
-   (a.mx.x() != b.mx.x()) ||
-   (a.mx.y() != b.mx.y()) ||
-   (a.mx.z() != b.mx.z()));
+  return ((a.mi.x() != b.mi.x()) || (a.mi.y() != b.mi.y()) || (a.mi.z() != b.mi
+   .z()) || (a.mx.x() != b.mx.x()) || (a.mx.y() != b.mx.y()) || (a.mx.z()
+   != b.mx.z()));
  }
+
  final btVector3 mi = new btVector3();
  final btVector3 mx = new btVector3();
 
@@ -178,12 +169,8 @@ public class btDbvtAabbMm implements Serializable {
  }
 
  public boolean contain(btDbvtAabbMm a) {
-  return ((mi.x() <= a.mi.x()) &&
-   (mi.y() <= a.mi.y()) &&
-   (mi.z() <= a.mi.z()) &&
-   (mx.x() >= a.mx.x()) &&
-   (mx.y() >= a.mx.y()) &&
-   (mx.z() >= a.mx.z()));
+  return ((mi.x() <= a.mi.x()) && (mi.y() <= a.mi.y()) && (mi.z() <= a.mi.z())
+   && (mx.x() >= a.mx.x()) && (mx.y() >= a.mx.y()) && (mx.z() >= a.mx.z()));
  }
 
  public int classify(final btVector3 n, float o, int s) {
@@ -276,4 +263,5 @@ public class btDbvtAabbMm implements Serializable {
   mi.set(volume.mi);
   mx.set(volume.mx);
  }
+
 };

@@ -1,16 +1,15 @@
 /*
-Bullet Continuous Collision Detection and Physics Library, http://bulletphysics.org
-Copyright (C) 2006, 2007 Sony Computer Entertainment Inc. 
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library, http://bulletphysics.org
+ * Copyright (C) 2006, 2007 Sony Computer Entertainment Inc.  *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Dynamics.Constraint;
 
@@ -26,7 +25,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btUniversalConstraint extends btGeneric6DofConstraint implements Serializable {
+public class btUniversalConstraint extends btGeneric6DofConstraint implements
+ Serializable {
 
  public static final float UNIV_EPS = (0.01f);
  final btVector3 m_anchor = new btVector3();
@@ -36,7 +36,8 @@ public class btUniversalConstraint extends btGeneric6DofConstraint implements Se
  // constructor
  // anchor, axis1 and axis2 are in world coordinate system
  // axis1 must be orthogonal to axis2
- public btUniversalConstraint(btRigidBody rbA, btRigidBody rbB, final btVector3 anchor,
+ public btUniversalConstraint(btRigidBody rbA, btRigidBody rbB,
+  final btVector3 anchor,
   final btVector3 axis1, final btVector3 axis2) {
   super(rbA, rbB, btTransform.getIdentity(), btTransform.getIdentity(), true);
   m_anchor.set(anchor);
@@ -66,8 +67,10 @@ public class btUniversalConstraint extends btGeneric6DofConstraint implements Se
   // sei limits
   setLinearLowerLimit(new btVector3());
   setLinearUpperLimit(new btVector3());
-  setAngularLowerLimit(new btVector3(0.f, -SIMD_HALF_PI + UNIV_EPS, -SIMD_PI + UNIV_EPS));
-  setAngularUpperLimit(new btVector3(0.f, SIMD_HALF_PI - UNIV_EPS, SIMD_PI - UNIV_EPS));
+  setAngularLowerLimit(new btVector3(0.f, -SIMD_HALF_PI + UNIV_EPS, -SIMD_PI
+   + UNIV_EPS));
+  setAngularUpperLimit(new btVector3(0.f, SIMD_HALF_PI - UNIV_EPS, SIMD_PI
+   - UNIV_EPS));
  }
 
  // access
@@ -121,4 +124,5 @@ public class btUniversalConstraint extends btGeneric6DofConstraint implements Se
   m_frameInB.set(m_rbB.getCenterOfMassTransform().invert().mul(frameInW));
   calculateTransforms();
  }
+
 }

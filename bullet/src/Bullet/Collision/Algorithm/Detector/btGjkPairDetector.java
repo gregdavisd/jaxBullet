@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Algorithm.Detector;
 
@@ -29,7 +29,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface implements Serializable {
+public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface
+ implements Serializable {
 
  static final float REL_ERROR2 = 1.0e-6f;
  static float gGjkEpaPenetrationTolerance = 0.001f;
@@ -54,7 +55,8 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
  int m_fixContactNormalDirection;
 
  public btGjkPairDetector(btConvexShape objectA, btConvexShape objectB,
-  btSimplexSolverInterface simplexSolver, btConvexPenetrationDepthSolver penetrationDepthSolver) {
+  btSimplexSolverInterface simplexSolver,
+  btConvexPenetrationDepthSolver penetrationDepthSolver) {
   m_cachedSeparatingAxis.set(0f, 1f, 0f);
   m_penetrationDepthSolver = penetrationDepthSolver;
   m_simplexSolver = simplexSolver;
@@ -70,7 +72,8 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
   m_fixContactNormalDirection = 1;
  }
 
- public btGjkPairDetector(btConvexShape objectA, btConvexShape objectB, int shapeTypeA,
+ public btGjkPairDetector(btConvexShape objectA, btConvexShape objectB,
+  int shapeTypeA,
   int shapeTypeB,
   float marginA, float marginB, btSimplexSolverInterface simplexSolver,
   btConvexPenetrationDepthSolver penetrationDepthSolver) {
@@ -90,12 +93,14 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
  }
 
  @Override
- public void getClosestPoints(ClosestPointInput input, Result output, btIDebugDraw debugDraw,
+ public void getClosestPoints(ClosestPointInput input, Result output,
+  btIDebugDraw debugDraw,
   boolean swapResults) {
   getClosestPointsNonVirtual(input, output, debugDraw);
  }
 
- void getClosestPointsNonVirtual(ClosestPointInput input, Result output, btIDebugDraw debugDraw) {
+ void getClosestPointsNonVirtual(ClosestPointInput input, Result output,
+  btIDebugDraw debugDraw) {
   m_cachedSeparatingDistance = 0.f;
   float distance = 0f;
   final btVector3 normalInB = new btVector3();
@@ -103,7 +108,8 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
   final btVector3 pointOnB = new btVector3();
   final btTransform localTransA = new btTransform(input.m_transformA);
   final btTransform localTransB = new btTransform(input.m_transformB);
-  final btVector3 positionOffset = localTransA.getOrigin().add(localTransB.getOrigin()).scale(0.5f);
+  final btVector3 positionOffset = localTransA.getOrigin().add(localTransB
+   .getOrigin()).scale(0.5f);
   localTransA.setOrigin(localTransA.getOrigin().sub(positionOffset));
   localTransB.setOrigin(localTransB.getOrigin().sub(positionOffset));
   boolean check2d = m_minkowskiA.isConvex2d() && m_minkowskiB.isConvex2d();
@@ -130,14 +136,18 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
    m_simplexSolver.reset();
    for (;;) //while (true)
    {
-    final btVector3 seperatingAxisInA = input.m_transformA.transposeTransform3x3(new btVector3(
-     m_cachedSeparatingAxis).negate());
-    final btVector3 seperatingAxisInB = input.m_transformB.transposeTransform3x3(new btVector3(
-     m_cachedSeparatingAxis));
-    final btVector3 pInA = m_minkowskiA.localGetSupportVertexWithoutMarginNonVirtual(
-     seperatingAxisInA);
-    final btVector3 qInB = m_minkowskiB.localGetSupportVertexWithoutMarginNonVirtual(
-     seperatingAxisInB);
+    final btVector3 seperatingAxisInA = input.m_transformA
+     .transposeTransform3x3(new btVector3(
+      m_cachedSeparatingAxis).negate());
+    final btVector3 seperatingAxisInB = input.m_transformB
+     .transposeTransform3x3(new btVector3(
+      m_cachedSeparatingAxis));
+    final btVector3 pInA = m_minkowskiA
+     .localGetSupportVertexWithoutMarginNonVirtual(
+      seperatingAxisInA);
+    final btVector3 qInB = m_minkowskiB
+     .localGetSupportVertexWithoutMarginNonVirtual(
+      seperatingAxisInB);
     final btVector3 pWorld = localTransA.transform(new btVector3(pInA));
     final btVector3 qWorld = localTransB.transform(new btVector3(qInB));
     if (check2d) {
@@ -147,7 +157,8 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
     final btVector3 w = new btVector3(pWorld).sub(qWorld);
     delta = m_cachedSeparatingAxis.dot(w);
     // potential exit, they don't overlap
-    if ((delta > 0.0f) && (delta * delta > squaredDistance * input.m_maximumDistanceSquared)) {
+    if ((delta > 0.0f) && (delta * delta > squaredDistance
+     * input.m_maximumDistanceSquared)) {
      m_degenerateSimplex = 10;
      checkSimplex = true;
      //checkPenetration = false;
@@ -190,7 +201,8 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
     squaredDistance = newCachedSeparatingAxis.lengthSquared();
     //redundant m_simplexSolver.compute_points(pointOnA, pointOnB);
     //are we getting any closer ?
-    if (previousSquaredDistance - squaredDistance <= SIMD_EPSILON * previousSquaredDistance) {
+    if (previousSquaredDistance - squaredDistance <= SIMD_EPSILON
+     * previousSquaredDistance) {
 //				m_simplexSolver.backup_closest(m_cachedSeparatingAxis);
      checkSimplex = true;
      m_degenerateSimplex = 12;
@@ -200,7 +212,8 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
     //degeneracy, this is typically due to invalid/uninitialized worldtransforms for a btCollisionObject   
     if (m_curIter++ > gGjkMaxIter) {
      System.out.printf("btGjkPairDetector maxIter exceeded:%d\n", m_curIter);
-     System.out.printf("sepAxis=(%f,%f,%f), squaredDistance = %f, shapeTypeA=%d,shapeTypeB=%d\n",
+     System.out.printf(
+      "sepAxis=(%f,%f,%f), squaredDistance = %f, shapeTypeA=%d,shapeTypeB=%d\n",
       m_cachedSeparatingAxis.getX(),
       m_cachedSeparatingAxis.getY(),
       m_cachedSeparatingAxis.getZ(),
@@ -240,11 +253,10 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
      m_lastUsedMethod = 2;
     }
    }
-   boolean catchDegeneratePenetrationCase =
-    (m_catchDegeneracies != 0 &&
-    m_penetrationDepthSolver != null &&
-    m_degenerateSimplex != 0 &&
-    ((distance + margin) < gGjkEpaPenetrationTolerance));
+   boolean catchDegeneratePenetrationCase
+    = (m_catchDegeneracies != 0 && m_penetrationDepthSolver != null
+    && m_degenerateSimplex != 0 && ((distance + margin)
+    < gGjkEpaPenetrationTolerance));
    //if (checkPenetration && !isValid)
    if (checkPenetration && (!isValid || catchDegeneratePenetrationCase)) {
     //penetration case
@@ -286,13 +298,16 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
       } else {
        m_lastUsedMethod = 9;
       }
-     } else /*this is another degenerate case, where the initial GJK calculation reports a degenerate case
-      EPA reports no penetration, and the second GJK (using the supporting vector without margin)
-      reports a valid positive distance. Use the results of the second GJK instead of failing.
-      thanks to Jacob.Langford for the reproduction case
-      http://code.google.com/p/bullet/issues/detail?id=250
+     } else /*
+      * this is another degenerate case, where the initial GJK calculation
+      * reports a degenerate case EPA reports no penetration, and the second GJK
+      * (using the supporting vector without margin) reports a valid positive
+      * distance. Use the results of the second GJK instead of failing. thanks
+      * to Jacob.Langford for the reproduction case
+      * http://code.google.com/p/bullet/issues/detail?id=250
       */ if (m_cachedSeparatingAxis.lengthSquared() > 0f) {
-      float distance2 = (new btVector3(tmpPointOnA).sub(tmpPointOnB)).length() - margin;
+      float distance2 = (new btVector3(tmpPointOnA).sub(tmpPointOnB)).length()
+       - margin;
       //only replace valid distances when the distance is less
       if (!isValid || (distance2 < distance)) {
        distance = distance2;
@@ -311,7 +326,8 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
     }
    }
   }
-  if (isValid && ((distance < 0) || (distance * distance < input.m_maximumDistanceSquared))) {
+  if (isValid && ((distance < 0) || (distance * distance
+   < input.m_maximumDistanceSquared))) {
    m_cachedSeparatingAxis.set(normalInB);
    m_cachedSeparatingDistance = distance;
    {
@@ -321,14 +337,18 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
     ///until then, detect the issue and revert the normal
     float d1;
     {
-     final btVector3 seperatingAxisInA = input.m_transformA.transposeTransform3x3(new btVector3(
-      normalInB));
-     final btVector3 seperatingAxisInB = input.m_transformB.transposeTransform3x3(new btVector3(
-      normalInB).negate());
-     final btVector3 pInA = m_minkowskiA.localGetSupportVertexWithoutMarginNonVirtual(
-      seperatingAxisInA);
-     final btVector3 qInB = m_minkowskiB.localGetSupportVertexWithoutMarginNonVirtual(
-      seperatingAxisInB);
+     final btVector3 seperatingAxisInA = input.m_transformA
+      .transposeTransform3x3(new btVector3(
+       normalInB));
+     final btVector3 seperatingAxisInB = input.m_transformB
+      .transposeTransform3x3(new btVector3(
+       normalInB).negate());
+     final btVector3 pInA = m_minkowskiA
+      .localGetSupportVertexWithoutMarginNonVirtual(
+       seperatingAxisInA);
+     final btVector3 qInB = m_minkowskiB
+      .localGetSupportVertexWithoutMarginNonVirtual(
+       seperatingAxisInB);
      final btVector3 pWorld = localTransA.transform(new btVector3(pInA));
      final btVector3 qWorld = localTransB.transform(new btVector3(qInB));
      final btVector3 w = new btVector3(pWorld).sub(qWorld);
@@ -336,15 +356,19 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
     }
     float d0;
     {
-     final btVector3 seperatingAxisInA = input.m_transformA.transposeTransform3x3(new btVector3(
-      normalInB)
-      .negate());
-     final btVector3 seperatingAxisInB = input.m_transformB.transposeTransform3x3(new btVector3(
-      normalInB));
-     final btVector3 pInA = m_minkowskiA.localGetSupportVertexWithoutMarginNonVirtual(
-      seperatingAxisInA);
-     final btVector3 qInB = m_minkowskiB.localGetSupportVertexWithoutMarginNonVirtual(
-      seperatingAxisInB);
+     final btVector3 seperatingAxisInA = input.m_transformA
+      .transposeTransform3x3(new btVector3(
+       normalInB)
+       .negate());
+     final btVector3 seperatingAxisInB = input.m_transformB
+      .transposeTransform3x3(new btVector3(
+       normalInB));
+     final btVector3 pInA = m_minkowskiA
+      .localGetSupportVertexWithoutMarginNonVirtual(
+       seperatingAxisInA);
+     final btVector3 qInB = m_minkowskiB
+      .localGetSupportVertexWithoutMarginNonVirtual(
+       seperatingAxisInB);
      final btVector3 pWorld = localTransA.transform(new btVector3(pInA));
      final btVector3 qWorld = localTransB.transform(new btVector3(qInB));
      final btVector3 w = new btVector3(pWorld).sub(qWorld);
@@ -382,7 +406,8 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
   return m_cachedSeparatingDistance;
  }
 
- void setPenetrationDepthSolver(btConvexPenetrationDepthSolver penetrationDepthSolver) {
+ void setPenetrationDepthSolver(
+  btConvexPenetrationDepthSolver penetrationDepthSolver) {
   m_penetrationDepthSolver = penetrationDepthSolver;
  }
 
@@ -390,4 +415,5 @@ public class btGjkPairDetector extends btDiscreteCollisionDetectorInterface impl
  void setIgnoreMargin(boolean ignoreMargin) {
   m_ignoreMargin = ignoreMargin;
  }
+
 };

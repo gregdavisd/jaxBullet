@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2011 Advanced Micro Devices, Inc.  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2011 Advanced Micro Devices, Inc.  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 ///This file was written by Erwin Coumans
 ///Separating axis rest based on work from Pierre Terdiman, see
@@ -53,15 +53,17 @@ public class btConvexPolyhedron implements Serializable {
    int NbTris = numVertices;
    for (int j = 0; j < NbTris; j++) {
     int k = (j + 1) % numVertices;
-    btInternalVertexPair vp = new btInternalVertexPair(m_faces.get(i).m_indices[j], m_faces.get(
+    btInternalVertexPair vp = new btInternalVertexPair(
+     m_faces.get(i).m_indices[j], m_faces.get(
      i).m_indices[k]);
     btInternalEdge edptr = edges.get(vp);
-    final btVector3 edge = new btVector3(m_vertices.get(vp.m_v1)).sub(m_vertices.get(vp.m_v0));
+    final btVector3 edge = new btVector3(m_vertices.get(vp.m_v1)).sub(m_vertices
+     .get(vp.m_v0));
     edge.normalize();
     boolean found = false;
     for (int p = 0; p < m_uniqueEdges.size(); p++) {
-     if (IsAlmostZero(new btVector3(m_uniqueEdges.get(p)).sub(edge)) ||
-      IsAlmostZero(new btVector3(m_uniqueEdges.get(p)).add(edge))) {
+     if (IsAlmostZero(new btVector3(m_uniqueEdges.get(p)).sub(edge))
+      || IsAlmostZero(new btVector3(m_uniqueEdges.get(p)).add(edge))) {
       found = true;
       break;
      }
@@ -156,7 +158,8 @@ public class btConvexPolyhedron implements Serializable {
      FoundBox = true;
      break;
     }
-    m_extents.setElement(LargestExtent, m_extents.getElement(LargestExtent) - Step);
+    m_extents.setElement(LargestExtent, m_extents.getElement(LargestExtent)
+     - Step);
    }
    if (!FoundBox) {
     m_extents.x = m_extents.y = m_extents.z = r;
@@ -224,7 +227,8 @@ public class btConvexPolyhedron implements Serializable {
   return true;
  }
 
- public void project(final btTransform trans, final btVector3 dir, float[] minProj, float[] maxProj,
+ public void project(final btTransform trans, final btVector3 dir,
+  float[] minProj, float[] maxProj,
   final btVector3 witnesPtMin, final btVector3 witnesPtMax) {
   minProj[0] = FLT_MAX;
   maxProj[0] = -FLT_MAX;
@@ -260,4 +264,5 @@ public class btConvexPolyhedron implements Serializable {
  private boolean IsAlmostZero(final btVector3 v) {
   return !(btFabs(v.x()) > 1e-6 || btFabs(v.y()) > 1e-6 || btFabs(v.z()) > 1e-6);
  }
+
 };

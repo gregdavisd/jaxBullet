@@ -56,9 +56,11 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
   */
  public OpenGLFrame() {
   initComponents();
-  blank_cursor = Toolkit.getDefaultToolkit().createCustomCursor(Toolkit.getDefaultToolkit()
+  blank_cursor = Toolkit.getDefaultToolkit().createCustomCursor(Toolkit
+   .getDefaultToolkit()
    .createImage(new byte[0]), new Point(), "blank");
  }
+
  private final ArrayBlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(16);
  private MouseListener mouse;
  private MouseMotionListener mouse_motion;
@@ -75,8 +77,10 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
   int getEventX;
   int getEventY;
 
-  public LWJGLMouseEvent(int getEventButton, boolean getEventButtonState, int getEventDWheel,
-   int getEventDX, int getEventDY, long getEventNanoseconds, int getEventX, int getEventY) {
+  public LWJGLMouseEvent(int getEventButton, boolean getEventButtonState,
+   int getEventDWheel,
+   int getEventDX, int getEventDY, long getEventNanoseconds, int getEventX,
+   int getEventY) {
    this.getEventButton = getEventButton;
    this.getEventButtonState = getEventButtonState;
    this.getEventDWheel = getEventDWheel;
@@ -86,6 +90,7 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
    this.getEventX = getEventX;
    this.getEventY = getEventY;
   }
+
  }
 
  private void get_lwjgl_mouse_events(List<LWJGLMouseEvent> events) {
@@ -94,8 +99,9 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
    */
   if (Mouse.isCreated()) {
    while (Mouse.next()) {
-    events.add(new LWJGLMouseEvent(Mouse.getEventButton(), Mouse.getEventButtonState(), Mouse
-     .getEventDWheel(), Mouse.getDX(), Mouse.getDY(),
+    events.add(new LWJGLMouseEvent(Mouse.getEventButton(), Mouse
+     .getEventButtonState(), Mouse
+      .getEventDWheel(), Mouse.getDX(), Mouse.getDY(),
      Mouse.getEventNanoseconds(), Mouse.getEventX(), Mouse.getEventY()));
    }
   }
@@ -118,27 +124,32 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
    return e;
   } else {
    /*
-    * use grabbed_base as reference and add deltas to grabbed_pos which is a large virtual mouse
-    * space. grabbed_base is the previous mouse position for calculating the delta, grabbed_base is
-    * also reset by center_mouse_cursor
+    * use grabbed_base as reference and add deltas to grabbed_pos which is a
+    * large virtual mouse space. grabbed_base is the previous mouse position for
+    * calculating the delta, grabbed_base is also reset by center_mouse_cursor
     */
    Point2i current = new Point2i(e.getX(), e.getY());
    Point2i delta = new Point2i(current).sub(grabbed_base);
    grabbed_pos.add(delta);
    grabbed_base.add(delta);
    if (!(e instanceof MouseWheelEvent)) {
-    MouseEvent new_e = new MouseEvent((Component) e.getSource(), e.getID(), e.getWhen(),
-     e.getModifiers(), grabbed_pos.getX(), grabbed_pos.getY(), 0, 0, e.getClickCount(), e
-     .isPopupTrigger(),
+    MouseEvent new_e = new MouseEvent((Component) e.getSource(), e.getID(), e
+     .getWhen(),
+     e.getModifiers(), grabbed_pos.getX(), grabbed_pos.getY(), 0, 0, e
+     .getClickCount(), e
+      .isPopupTrigger(),
      e.getButton());
     return new_e;
    } else {
     MouseWheelEvent we = (MouseWheelEvent) e;
-    MouseWheelEvent new_e = new MouseWheelEvent((Component) e.getSource(), e.getID(), e.getWhen(),
-     e.getModifiers(), grabbed_pos.getX(), grabbed_pos.getY(), e.getXOnScreen(), e.getYOnScreen(),
+    MouseWheelEvent new_e = new MouseWheelEvent((Component) e.getSource(), e
+     .getID(), e.getWhen(),
+     e.getModifiers(), grabbed_pos.getX(), grabbed_pos.getY(), e.getXOnScreen(),
+     e.getYOnScreen(),
      e.getClickCount(),
-     e.isPopupTrigger(), we.getScrollType(), we.getScrollAmount(), we.getWheelRotation(), we
-     .getPreciseWheelRotation());
+     e.isPopupTrigger(), we.getScrollType(), we.getScrollAmount(), we
+     .getWheelRotation(), we
+      .getPreciseWheelRotation());
     return new_e;
    }
   }
@@ -158,11 +169,13 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
   pos.set(pos.x, canvas.getHeight() - pos.y + 1);
   return pos;
  }
+
  private boolean grabbed = false;
 
  public boolean is_grabbed() {
   return grabbed;
  }
+
  final Point2i start_grabbed = new Point2i();
  final Point2i grabbed_base = new Point2i();
 
@@ -234,7 +247,8 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
    */
   try {
    for (LWJGLMouseEvent event : events) {
-    Point2i e_pos = lwjgl_mouse_canvas_pos_to_awt_canvas(new Point2i(event.getEventX,
+    Point2i e_pos = lwjgl_mouse_canvas_pos_to_awt_canvas(new Point2i(
+     event.getEventX,
      event.getEventY));
 //    Point2i e_pos = new Point2i(event.getEventX, event.getEventY);
     if (event.getEventDX != 0 || event.getEventDY != 0) {
@@ -244,7 +258,8 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
        e_pos.x, e_pos.y, 0, 0, 1, false, 0);
      } else {
       e = new MouseEvent(canvas, MOUSE_MOVED, event.getEventNanoseconds, 0,
-       grabbed_pos.x + event.getEventDX, grabbed_pos.y - event.getEventDY, 0, 0, 1, false, 0);
+       grabbed_pos.x + event.getEventDX, grabbed_pos.y - event.getEventDY, 0, 0,
+       1, false, 0);
      }
      queue.add((Runnable) () -> mouseMoved(e));
     }
@@ -270,8 +285,9 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
       id = MOUSE_RELEASED;
      }
      if (button != -1) {
-      final MouseEvent e =
-       new MouseEvent(canvas, id, event.getEventNanoseconds, 0, e_pos.x, e_pos.y, 0, 0,
+      final MouseEvent e
+       = new MouseEvent(canvas, id, event.getEventNanoseconds, 0, e_pos.x,
+        e_pos.y, 0, 0,
         1, false, button);
       queue.add(new Runnable() {
        @Override
@@ -282,6 +298,7 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
          mouseReleased(e);
         }
        }
+
       });
      }
      {
@@ -298,7 +315,8 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
   mouse_wheel = (MouseWheelListener) listener;
   final OpenGLFrame me = this;
   /*
-   * Swing mouse events are captured and put into a queue for later processing on the OpenGL thread
+   * Swing mouse events are captured and put into a queue for later processing
+   * on the OpenGL thread
    *
    */
   java.awt.EventQueue.invokeLater(new Runnable() {
@@ -358,6 +376,7 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
 //     }
 //    });
    }
+
   });
  }
 
@@ -403,11 +422,13 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
    return new_e;
   } else {
    MouseWheelEvent we = (MouseWheelEvent) e;
-   MouseWheelEvent new_e = new MouseWheelEvent((Component) e.getSource(), e.getID(), e.getWhen(),
+   MouseWheelEvent new_e = new MouseWheelEvent((Component) e.getSource(), e
+    .getID(), e.getWhen(),
     e.getModifiers(), p.x, p.y, e.getXOnScreen(), e.getYOnScreen(),
     e.getClickCount(),
-    e.isPopupTrigger(), we.getScrollType(), we.getScrollAmount(), we.getWheelRotation(), we
-    .getPreciseWheelRotation());
+    e.isPopupTrigger(), we.getScrollType(), we.getScrollAmount(), we
+    .getWheelRotation(), we
+     .getPreciseWheelRotation());
    return new_e;
   }
  }
@@ -417,8 +438,9 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
  }
 
  /**
-  * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify
-  * this code. The content of this method is always regenerated by the Form Editor.
+  * This method is called from within the constructor to initialize the form.
+  * WARNING: Do NOT modify this code. The content of this method is always
+  * regenerated by the Form Editor.
   */
  @SuppressWarnings("unchecked")
  // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -452,8 +474,8 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
 
  private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
   Insets insets = getInsets();
-  canvas.setBounds(0, 0, getWidth() - insets.left - insets.right, getHeight() - insets.top -
-   insets.bottom);
+  canvas.setBounds(0, 0, getWidth() - insets.left - insets.right, getHeight()
+   - insets.top - insets.bottom);
  }//GEN-LAST:event_formComponentResized
 
  private void formWindowLostFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowLostFocus
@@ -473,8 +495,9 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
    */
   //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
   /*
-   * If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel. For
-   * details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+   * If Nimbus (introduced in Java SE 6) is not available, stay with the default
+   * look and feel. For details see
+   * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
    */
   try {
    for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
@@ -484,8 +507,8 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
      break;
     }
    }
-  } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
-   javax.swing.UnsupportedLookAndFeelException ex) {
+  } catch (ClassNotFoundException | InstantiationException
+   | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
    java.util.logging.Logger.getLogger(OpenGLFrame.class.getName()).log(
     java.util.logging.Level.SEVERE, null, ex);
   }
@@ -542,4 +565,5 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
  public void mouseWheelMoved(MouseWheelEvent e) {
   mouse_wheel.mouseWheelMoved((MouseWheelEvent) apply_grabbing_to_event(e));
  }
+
 }

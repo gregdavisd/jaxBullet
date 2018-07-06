@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -56,29 +56,37 @@ public class btTriangleMeshShape extends btConcaveShape implements Serializable 
   final btTransform ident = new btTransform();
   ident.setIdentity();
   SupportVertexCallback supportCallback = new SupportVertexCallback(vec, ident);
-  final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT), (BT_LARGE_FLOAT));
+  final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT),
+   (BT_LARGE_FLOAT));
   processAllTriangles(supportCallback, new btVector3(aabbMax).negate(), aabbMax);
   supportVertex = supportCallback.getSupportVertexLocal();
   return supportVertex;
  }
 
- /* building the AABB in the constructor relies on C++ calling non-derived methods from base constructor.
-Whereas Java calls the derived methods from the constructor of the base class. Hence the non virtual duplicates used only in the constructor.
+ /*
+  * building the AABB in the constructor relies on C++ calling non-derived
+  * methods from base constructor. Whereas Java calls the derived methods from
+  * the constructor of the base class. Hence the non virtual duplicates used
+  * only in the constructor.
   */
  private btVector3 localGetSupportingVertexNV(final btVector3 vec) {
   final btVector3 supportVertex;
   final btTransform ident = new btTransform();
   ident.setIdentity();
   SupportVertexCallback supportCallback = new SupportVertexCallback(vec, ident);
-  final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT), (BT_LARGE_FLOAT));
-  processAllTrianglesNV(supportCallback, new btVector3(aabbMax).negate(), aabbMax);
+  final btVector3 aabbMax = new btVector3((BT_LARGE_FLOAT), (BT_LARGE_FLOAT),
+   (BT_LARGE_FLOAT));
+  processAllTrianglesNV(supportCallback, new btVector3(aabbMax).negate(),
+   aabbMax);
   supportVertex = supportCallback.getSupportVertexLocal();
   return supportVertex;
  }
 
- private void processAllTrianglesNV(btTriangleCallback callback, final btVector3 aabbMin,
+ private void processAllTrianglesNV(btTriangleCallback callback,
+  final btVector3 aabbMin,
   final btVector3 aabbMax) {
-  FilteredCallback filterCallback = new FilteredCallback(callback, aabbMin, aabbMax);
+  FilteredCallback filterCallback = new FilteredCallback(callback, aabbMin,
+   aabbMax);
   m_meshInterface.InternalProcessAllTriangles(filterCallback, aabbMin, aabbMax);
  }
 
@@ -100,21 +108,27 @@ Whereas Java calls the derived methods from the constructor of the base class. H
  }
 
  @Override
- public void getAabb(final btTransform trans, final btVector3 aabbMin, final btVector3 aabbMax) {
-  final btVector3 localHalfExtents = new btVector3(m_localAabbMax).sub(m_localAabbMin).scale(0.5f);
+ public void getAabb(final btTransform trans, final btVector3 aabbMin,
+  final btVector3 aabbMax) {
+  final btVector3 localHalfExtents = new btVector3(m_localAabbMax).sub(
+   m_localAabbMin).scale(0.5f);
   localHalfExtents.add(new btVector3(getMargin(), getMargin(), getMargin()));
-  final btVector3 localCenter = new btVector3(m_localAabbMax).add(m_localAabbMin).scale(0.5f);
+  final btVector3 localCenter = new btVector3(m_localAabbMax)
+   .add(m_localAabbMin).scale(0.5f);
   final btMatrix3x3 abs_b = trans.getBasis().abs();
   final btVector3 center = trans.transform(new btVector3(localCenter));
-  final btVector3 extent = localHalfExtents.dot3(abs_b.getRow(0), abs_b.getRow(1), abs_b.getRow(2));
+  final btVector3 extent = localHalfExtents.dot3(abs_b.getRow(0), abs_b
+   .getRow(1), abs_b.getRow(2));
   aabbMin.set(center).sub(extent);
   aabbMax.set(center).add(extent);
  }
 
  @Override
- public void processAllTriangles(btTriangleCallback callback, final btVector3 aabbMin,
+ public void processAllTriangles(btTriangleCallback callback,
+  final btVector3 aabbMin,
   final btVector3 aabbMax) {
-  FilteredCallback filterCallback = new FilteredCallback(callback, aabbMin, aabbMax);
+  FilteredCallback filterCallback = new FilteredCallback(callback, aabbMin,
+   aabbMax);
   m_meshInterface.InternalProcessAllTriangles(filterCallback, aabbMin, aabbMax);
  }
 
@@ -187,6 +201,5 @@ Whereas Java calls the derived methods from the constructor of the base class. H
   }
   return true;
  }
-
 
 }

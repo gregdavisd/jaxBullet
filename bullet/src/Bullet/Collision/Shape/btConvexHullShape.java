@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -27,9 +27,11 @@ import java.util.Arrays;
  *
  * @author Gregery Barton
  */
-public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape implements Serializable {
+public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape
+ implements Serializable {
 
- /* have roll own growing array because can't get a backed array from ArrayList
+ /*
+  * have roll own growing array because can't get a backed array from ArrayList
   */
  btVector3[] m_unscaledPoints;
  int point_count;
@@ -45,7 +47,8 @@ public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape implem
   int use_stride = stride != 0 ? stride : 3;
   for (int i = 0; i < numPoints; i++) {
    int offset = i * use_stride;
-   m_unscaledPoints[i] = new btVector3(points[offset + 0], points[offset + 1], points[offset + 2]);
+   m_unscaledPoints[i] = new btVector3(points[offset + 0], points[offset + 1],
+    points[offset + 2]);
   }
   recalcLocalAabb();
  }
@@ -64,7 +67,8 @@ public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape implem
 
  public void addPoint(final btVector3 point, boolean recalculateLocalAabb) {
   if (point_count == m_unscaledPoints.length) {
-   m_unscaledPoints = Arrays.copyOf(m_unscaledPoints, Math.max(point_count * 2, 16));
+   m_unscaledPoints = Arrays.copyOf(m_unscaledPoints, Math.max(point_count * 2,
+    16));
   }
   m_unscaledPoints[point_count] = new btVector3(point);
   ++point_count;
@@ -127,7 +131,8 @@ public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape implem
  }
 
  @Override
- public void batchedUnitVectorGetSupportingVertexWithoutMargin(btVector3[] vectors,
+ public void batchedUnitVectorGetSupportingVertexWithoutMargin(
+  btVector3[] vectors,
   btVector3[] supportVerticesOut, int numVectors) {
   //use 'w' component of supportVerticesOut?
   {
@@ -153,7 +158,8 @@ public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape implem
  }
 
  @Override
- public void project(final btTransform trans, final btVector3 dir, float[] minProj, float[] maxProj,
+ public void project(final btTransform trans, final btVector3 dir,
+  float[] minProj, float[] maxProj,
   final btVector3 witnesPtMin, final btVector3 witnesPtMax) {
   minProj[0] = FLT_MAX;
   maxProj[0] = -FLT_MAX;
@@ -220,7 +226,8 @@ public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape implem
  }
 
  @Override
- public void getPlane(final btVector3 planeNormal, final btVector3 planeSupport, int i) {
+ public void getPlane(final btVector3 planeNormal, final btVector3 planeSupport,
+  int i) {
   assert (false);
  }
 
@@ -267,4 +274,5 @@ public class btConvexHullShape extends btPolyhedralConvexAabbCachingShape implem
   }
   return super.equals(obj);
  }
+
 }

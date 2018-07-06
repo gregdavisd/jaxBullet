@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Broadphase;
 ///btNullPairCache skips add/removal of overlapping pairs. Userful for benchmarking and unit testing.
@@ -46,7 +46,8 @@ public class btNullPairCache implements btOverlappingPairCache, Serializable {
  }
 
  @Override
- public void cleanProxyFromPairs(btBroadphaseProxy proxy, btDispatcher dispatcher) {
+ public void cleanProxyFromPairs(btBroadphaseProxy proxy,
+  btDispatcher dispatcher) {
  }
 
  @Override
@@ -54,11 +55,13 @@ public class btNullPairCache implements btOverlappingPairCache, Serializable {
  }
 
  @Override
- public void processAllOverlappingPairs(btOverlapCallback callback, btDispatcher dispatcher) {
+ public void processAllOverlappingPairs(btOverlapCallback callback,
+  btDispatcher dispatcher) {
  }
 
  @Override
- public btBroadphasePair findPair(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1) {
+ public btBroadphasePair findPair(btBroadphaseProxy proxy0,
+  btBroadphaseProxy proxy1) {
   return null;
  }
 
@@ -68,7 +71,8 @@ public class btNullPairCache implements btOverlappingPairCache, Serializable {
  }
 
  @Override
- public void setInternalGhostPairCallback(btOverlappingPairCallback ghostPairCallback) {
+ public void setInternalGhostPairCallback(
+  btOverlappingPairCallback ghostPairCallback) {
  }
 
  /**
@@ -91,7 +95,8 @@ public class btNullPairCache implements btOverlappingPairCache, Serializable {
   * @return
   */
  @Override
- public Object removeOverlappingPair(btBroadphaseProxy proxy0, btBroadphaseProxy proxy1,
+ public Object removeOverlappingPair(btBroadphaseProxy proxy0,
+  btBroadphaseProxy proxy1,
   btDispatcher dispatcher) {
   return 0;
  }
@@ -102,7 +107,8 @@ public class btNullPairCache implements btOverlappingPairCache, Serializable {
   * @param dispatcher
   */
  @Override
- public void removeOverlappingPairsContainingProxy(btBroadphaseProxy proxy0, btDispatcher dispatcher) {
+ public void removeOverlappingPairsContainingProxy(btBroadphaseProxy proxy0,
+  btDispatcher dispatcher) {
  }
 
  @Override
@@ -113,4 +119,5 @@ public class btNullPairCache implements btOverlappingPairCache, Serializable {
  @Override
  public void incrementalCleanup(int ni, btDispatcher dispatcher) {
  }
+
 }

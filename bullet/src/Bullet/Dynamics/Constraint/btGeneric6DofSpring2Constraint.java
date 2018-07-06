@@ -1,39 +1,39 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose,
-including commercial applications, and to alter it and redistribute it freely,
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 
  /*
-2014 May: btGeneric6DofSpring2Constraint is created from the original (2.82.2712) btGeneric6DofConstraint by Gabor Puhr and Tamas Umenhoffer
-Pros:
-- Much more accurate and stable in a lot of situation. (Especially when a sleeping chain of RBs connected with 6dof2 is pulled)
-- Stable and accurate spring with minimal energy loss that works with all of the solvers. (latter is not true for the original 6dof spring)
-- Servo motor functionality
-- Much more accurate bouncing. 0 really means zero bouncing (not true for the original 6odf) and there is only a minimal energy loss when the value is 1 (because of the solvers' precision)
-- Rotation order for the Euler system can be set. (One axis' freedom is still limited to pi/2)
-
-Cons:
-- It is slower than the original 6dof. There is no exact ratio, but half speed is a good estimation. (with PGS)
-- At bouncing the correct velocity is calculated, but not the correct position. (it is because of the solver can correct position or velocity, but not both.)
+ * 2014 May: btGeneric6DofSpring2Constraint is created from the original (2.82.2712) btGeneric6DofConstraint by Gabor Puhr and Tamas Umenhoffer
+ * Pros:
+ * - Much more accurate and stable in a lot of situation. (Especially when a sleeping chain of RBs connected with 6dof2 is pulled)
+ * - Stable and accurate spring with minimal energy loss that works with all of the solvers. (latter is not true for the original 6dof spring)
+ * - Servo motor functionality
+ * - Much more accurate bouncing. 0 really means zero bouncing (not true for the original 6odf) and there is only a minimal energy loss when the value is 1 (because of the solvers' precision)
+ * - Rotation order for the Euler system can be set. (One axis' freedom is still limited to pi/2)
+ *
+ * Cons:
+ * - It is slower than the original 6dof. There is no exact ratio, but half speed is a good estimation. (with PGS)
+ * - At bouncing the correct velocity is calculated, but not the correct position. (it is because of the solver can correct position or velocity, but not both.)
  */
 /// 2009 March: btGeneric6DofConstraint refactored by Roman Ponomarev
 /// Added support for generic constraint solver through getInfo1/getInfo2 methods
 
 /*
-2007-09-09
-btGeneric6DofConstraint Refactored by Francisco Le?n
-email: projectileman@yahoo.com
-http://gimpact.sf.net
+ * 2007-09-09
+ * btGeneric6DofConstraint Refactored by Francisco Le?n
+ * email: projectileman@yahoo.com
+ * http://gimpact.sf.net
  */
 package Bullet.Dynamics.Constraint;
 
@@ -57,7 +57,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements Serializable {
+public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
+ Serializable {
  //enum RotateOrder
 
  public static final int RO_XYZ = 0;
@@ -72,27 +73,33 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
  public static final int BT_6DOF_FLAGS_CFM_MOTO2 = 4;
  public static final int BT_6DOF_FLAGS_ERP_MOTO2 = 8;
  public static final int BT_6DOF_FLAGS_AXIS_SHIFT2 = 4; // bits per axis
+ private static final long serialVersionUID = 1L;
  final btTransform m_frameInA = new btTransform();
  final btTransform m_frameInB = new btTransform();
- final btJacobianEntry[] m_jacLinear = {new btJacobianEntry(), new btJacobianEntry(),
+ final btJacobianEntry[] m_jacLinear = {new btJacobianEntry(),
+  new btJacobianEntry(),
   new btJacobianEntry()};
- final btJacobianEntry[] m_jacAng = {new btJacobianEntry(), new btJacobianEntry(),
+ final btJacobianEntry[] m_jacAng = {new btJacobianEntry(),
+  new btJacobianEntry(),
   new btJacobianEntry(),};
  final btTranslationalLimitMotor2 m_linearLimits = new btTranslationalLimitMotor2();
- final btRotationalLimitMotor2[] m_angularLimits = {new btRotationalLimitMotor2(),
+ final btRotationalLimitMotor2[] m_angularLimits = {
+  new btRotationalLimitMotor2(),
   new btRotationalLimitMotor2(), new btRotationalLimitMotor2()};
  int m_rotateOrder;
  final btTransform m_calculatedTransformA = new btTransform();
  final btTransform m_calculatedTransformB = new btTransform();
  final btVector3 m_calculatedAxisAngleDiff = new btVector3();
- final btVector3[] m_calculatedAxis = {new btVector3(), new btVector3(), new btVector3()};
+ final btVector3[] m_calculatedAxis = {new btVector3(), new btVector3(),
+  new btVector3()};
  final btVector3 m_calculatedLinearDiff = new btVector3();
  float m_factA;
  float m_factB;
  boolean m_hasStaticBody;
  int m_flags;
 
- public int setAngularLimits(btConstraintInfo2 info, int row_offset, final btTransform transA,
+ public int setAngularLimits(btConstraintInfo2 info, int row_offset,
+  final btTransform transA,
   final btTransform transB, final btVector3 linVelA, final btVector3 linVelB,
   final btVector3 angVelA, final btVector3 angVelB) {
   int row = row_offset;
@@ -127,8 +134,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   }
   for (int ii = 0; ii < 3; ii++) {
    int i = cIdx[ii];
-   if (m_angularLimits[i].m_currentLimit != 0 || m_angularLimits[i].m_enableMotor ||
-    m_angularLimits[i].m_enableSpring) {
+   if (m_angularLimits[i].m_currentLimit != 0
+    || m_angularLimits[i].m_enableMotor || m_angularLimits[i].m_enableSpring) {
     final btVector3 axis = getAxis(i);
     int flags = m_flags >> ((i + 3) * BT_6DOF_FLAGS_AXIS_SHIFT2);
     if (0 == (flags & BT_6DOF_FLAGS_CFM_STOP2)) {
@@ -143,27 +150,30 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
     if (0 == (flags & BT_6DOF_FLAGS_ERP_MOTO2)) {
      m_angularLimits[i].m_motorERP = info.erp;
     }
-    row += get_limit_motor_info2(m_angularLimits[i], transA, transB, linVelA, linVelB, angVelA,
+    row += get_limit_motor_info2(m_angularLimits[i], transA, transB, linVelA,
+     linVelB, angVelA,
      angVelB, info, row, axis, 1);
    }
   }
   return row;
  }
 
- public int setLinearLimits(btConstraintInfo2 info, int row, final btTransform transA,
+ public int setLinearLimits(btConstraintInfo2 info, int row,
+  final btTransform transA,
   final btTransform transB, final btVector3 linVelA, final btVector3 linVelB,
   final btVector3 angVelA, final btVector3 angVelB) {
   int do_row = row;
   //solve linear limits
   btRotationalLimitMotor2 limot = new btRotationalLimitMotor2();
   for (int i = 0; i < 3; i++) {
-   if (m_linearLimits.m_currentLimit[i] != 0 || m_linearLimits.m_enableMotor[i] ||
-    m_linearLimits.m_enableSpring[i]) { // re-use rotational motor code
+   if (m_linearLimits.m_currentLimit[i] != 0 || m_linearLimits.m_enableMotor[i]
+    || m_linearLimits.m_enableSpring[i]) { // re-use rotational motor code
     limot.m_bounce = m_linearLimits.m_bounce.getElement(i);
     limot.m_currentLimit = m_linearLimits.m_currentLimit[i];
     limot.m_currentPosition = m_linearLimits.m_currentLinearDiff.getElement(i);
     limot.m_currentLimitError = m_linearLimits.m_currentLimitError.getElement(i);
-    limot.m_currentLimitErrorHi = m_linearLimits.m_currentLimitErrorHi.getElement(i);
+    limot.m_currentLimitErrorHi = m_linearLimits.m_currentLimitErrorHi
+     .getElement(i);
     limot.m_enableMotor = m_linearLimits.m_enableMotor[i];
     limot.m_servoMotor = m_linearLimits.m_servoMotor[i];
     limot.m_servoTarget = m_linearLimits.m_servoTarget.getElement(i);
@@ -192,26 +202,35 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
     int indx2 = (i + 2) % 3;
     int rotAllowed = 1; // rotations around orthos to current axis (it is used only when one of the body is static)
     final float D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION = 1.0e-3f;
-    boolean indx1Violated = m_angularLimits[indx1].m_currentLimit == 1 ||
-     m_angularLimits[indx1].m_currentLimit == 2 ||
-     (m_angularLimits[indx1].m_currentLimit == 3 && (m_angularLimits[indx1].m_currentLimitError <
-     -D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION || m_angularLimits[indx1].m_currentLimitError >
-     D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION)) ||
-     (m_angularLimits[indx1].m_currentLimit == 4 && (m_angularLimits[indx1].m_currentLimitError <
-     -D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION || m_angularLimits[indx1].m_currentLimitErrorHi >
-     D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION));
-    boolean indx2Violated = m_angularLimits[indx2].m_currentLimit == 1 ||
-     m_angularLimits[indx2].m_currentLimit == 2 ||
-     (m_angularLimits[indx2].m_currentLimit == 3 && (m_angularLimits[indx2].m_currentLimitError <
-     -D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION || m_angularLimits[indx2].m_currentLimitError >
-     D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION)) ||
-     (m_angularLimits[indx2].m_currentLimit == 4 && (m_angularLimits[indx2].m_currentLimitError <
-     -D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION || m_angularLimits[indx2].m_currentLimitErrorHi >
-     D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION));
+    boolean indx1Violated = m_angularLimits[indx1].m_currentLimit == 1
+     || m_angularLimits[indx1].m_currentLimit == 2
+     || (m_angularLimits[indx1].m_currentLimit == 3
+     && (m_angularLimits[indx1].m_currentLimitError
+     < -D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION
+     || m_angularLimits[indx1].m_currentLimitError
+     > D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION))
+     || (m_angularLimits[indx1].m_currentLimit == 4
+     && (m_angularLimits[indx1].m_currentLimitError
+     < -D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION
+     || m_angularLimits[indx1].m_currentLimitErrorHi
+     > D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION));
+    boolean indx2Violated = m_angularLimits[indx2].m_currentLimit == 1
+     || m_angularLimits[indx2].m_currentLimit == 2
+     || (m_angularLimits[indx2].m_currentLimit == 3
+     && (m_angularLimits[indx2].m_currentLimitError
+     < -D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION
+     || m_angularLimits[indx2].m_currentLimitError
+     > D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION))
+     || (m_angularLimits[indx2].m_currentLimit == 4
+     && (m_angularLimits[indx2].m_currentLimitError
+     < -D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION
+     || m_angularLimits[indx2].m_currentLimitErrorHi
+     > D6_LIMIT_ERROR_THRESHOLD_FOR_ROTATION));
     if (indx1Violated && indx2Violated) {
      rotAllowed = 0;
     }
-    do_row += get_limit_motor_info2(limot, transA, transB, linVelA, linVelB, angVelA, angVelB, info,
+    do_row += get_limit_motor_info2(limot, transA, transB, linVelA, linVelB,
+     angVelA, angVelB, info,
      do_row, axis, 0, rotAllowed);
    }
   }
@@ -219,19 +238,23 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
  }
 
  public void calculateLinearInfo() {
-  m_calculatedLinearDiff.set(m_calculatedTransformB.getOrigin()).sub(m_calculatedTransformA
-   .getOrigin());
-  m_calculatedTransformA.getBasis().invert().transform(m_calculatedLinearDiff.set(
-   m_calculatedLinearDiff));
+  m_calculatedLinearDiff.set(m_calculatedTransformB.getOrigin()).sub(
+   m_calculatedTransformA
+    .getOrigin());
+  m_calculatedTransformA.getBasis().invert().transform(m_calculatedLinearDiff
+   .set(
+    m_calculatedLinearDiff));
   for (int i = 0; i < 3; i++) {
-   m_linearLimits.m_currentLinearDiff.setElement(i, m_calculatedLinearDiff.getElement(i));
+   m_linearLimits.m_currentLinearDiff.setElement(i, m_calculatedLinearDiff
+    .getElement(i));
    m_linearLimits.testLimitValue(i, m_calculatedLinearDiff.getElement(i));
   }
  }
 
  public void calculateAngleInfo() {
-  final btMatrix3x3 relative_frame = m_calculatedTransformA.getBasis().invert().mul(
-   m_calculatedTransformB.getBasis());
+  final btMatrix3x3 relative_frame = m_calculatedTransformA.getBasis().invert()
+   .mul(
+    m_calculatedTransformB.getBasis());
   switch (m_rotateOrder) {
    case RO_XYZ: matrixToEulerXYZ(relative_frame, m_calculatedAxisAngleDiff);
     break;
@@ -363,8 +386,10 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   m_angularLimits[axis_index].testLimitValue(angle);
  }
 
- public void calculateJacobi(btRotationalLimitMotor2 limot, final btTransform transA,
-  final btTransform transB, btConstraintInfo2 info, int srow, final btVector3 ax1, int rotational,
+ public void calculateJacobi(btRotationalLimitMotor2 limot,
+  final btTransform transA,
+  final btTransform transB, btConstraintInfo2 info, int srow,
+  final btVector3 ax1, int rotational,
   int rotAllowed) {
   btVector3[] J1 = rotational != 0 ? info.m_J1angularAxis : info.m_J1linearAxis;
   btVector3[] J2 = rotational != 0 ? info.m_J2angularAxis : info.m_J2linearAxis;
@@ -390,18 +415,22 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   }
  }
 
- public int get_limit_motor_info2(btRotationalLimitMotor2 limot, final btTransform transA,
+ public int get_limit_motor_info2(btRotationalLimitMotor2 limot,
+  final btTransform transA,
   final btTransform transB, final btVector3 linVelA, final btVector3 linVelB,
   final btVector3 angVelA, final btVector3 angVelB,
-  btConstraintInfo2 info, int row, final btVector3 ax1, int rotational, int rotAllowed) {
+  btConstraintInfo2 info, int row, final btVector3 ax1, int rotational,
+  int rotAllowed) {
   int count = 0;
   int srow = row * info.rowskip;
   if (limot.m_currentLimit == 4) {
-   float vel = rotational != 0 ? angVelA.dot(ax1) - angVelB.dot(ax1) : linVelA.dot(ax1) - linVelB
+   float vel = rotational != 0 ? angVelA.dot(ax1) - angVelB.dot(ax1) : linVelA
+    .dot(ax1) - linVelB
     .dot(ax1);
-   calculateJacobi(limot, transA, transB, info, srow, ax1, rotational, rotAllowed);
-   info.m_constraintError[srow].set(info.fps * limot.m_stopERP * limot.m_currentLimitError *
-    (rotational != 0 ? -1 : 1));
+   calculateJacobi(limot, transA, transB, info, srow, ax1, rotational,
+    rotAllowed);
+   info.m_constraintError[srow].set(info.fps * limot.m_stopERP
+    * limot.m_currentLimitError * (rotational != 0 ? -1 : 1));
    if (rotational != 0) {
     if (info.m_constraintError[srow].get() - vel * limot.m_stopERP > 0) {
      float bounceerror = -limot.m_bounce * vel;
@@ -420,9 +449,10 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
    info.cfm[srow].set(limot.m_stopCFM);
    srow += info.rowskip;
    ++count;
-   calculateJacobi(limot, transA, transB, info, srow, ax1, rotational, rotAllowed);
-   info.m_constraintError[srow].set(info.fps * limot.m_stopERP * limot.m_currentLimitErrorHi *
-    (rotational != 0 ? -1 : 1));
+   calculateJacobi(limot, transA, transB, info, srow, ax1, rotational,
+    rotAllowed);
+   info.m_constraintError[srow].set(info.fps * limot.m_stopERP
+    * limot.m_currentLimitErrorHi * (rotational != 0 ? -1 : 1));
    if (rotational != 0) {
     if (info.m_constraintError[srow].get() - vel * limot.m_stopERP < 0) {
      float bounceerror = -limot.m_bounce * vel;
@@ -442,9 +472,10 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
    srow += info.rowskip;
    ++count;
   } else if (limot.m_currentLimit == 3) {
-   calculateJacobi(limot, transA, transB, info, srow, ax1, rotational, rotAllowed);
-   info.m_constraintError[srow].set(info.fps * limot.m_stopERP * limot.m_currentLimitError *
-    (rotational != 0 ? -1 : 1));
+   calculateJacobi(limot, transA, transB, info, srow, ax1, rotational,
+    rotAllowed);
+   info.m_constraintError[srow].set(info.fps * limot.m_stopERP
+    * limot.m_currentLimitError * (rotational != 0 ? -1 : 1));
    info.m_lowerLimit[srow].set(-SIMD_INFINITY);
    info.m_upperLimit[srow].set(SIMD_INFINITY);
    info.cfm[srow].set(limot.m_stopCFM);
@@ -452,7 +483,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
    ++count;
   }
   if (limot.m_enableMotor && !limot.m_servoMotor) {
-   calculateJacobi(limot, transA, transB, info, srow, ax1, rotational, rotAllowed);
+   calculateJacobi(limot, transA, transB, info, srow, ax1, rotational,
+    rotAllowed);
    float tag_vel = rotational != 0 ? limot.m_targetVelocity : -limot.m_targetVelocity;
    float mot_fact = getMotorFactor(limot.m_currentPosition,
     limot.m_loLimit,
@@ -468,7 +500,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   }
   if (limot.m_enableMotor && limot.m_servoMotor) {
    float error = limot.m_currentPosition - limot.m_servoTarget;
-   calculateJacobi(limot, transA, transB, info, srow, ax1, rotational, rotAllowed);
+   calculateJacobi(limot, transA, transB, info, srow, ax1, rotational,
+    rotAllowed);
    float targetvelocity = error < 0 ? -limot.m_targetVelocity : limot.m_targetVelocity;
    float tag_vel = -targetvelocity;
    float mot_fact;
@@ -479,17 +512,18 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
      lowLimit = error > 0 ? limot.m_servoTarget : -SIMD_INFINITY;
      hiLimit = error < 0 ? limot.m_servoTarget : SIMD_INFINITY;
     } else {
-     lowLimit = error > 0 && limot.m_servoTarget > limot.m_loLimit ? limot.m_servoTarget :
-      limot.m_loLimit;
-     hiLimit = error < 0 && limot.m_servoTarget < limot.m_hiLimit ? limot.m_servoTarget :
-      limot.m_hiLimit;
+     lowLimit = error > 0 && limot.m_servoTarget > limot.m_loLimit ? limot.m_servoTarget
+      : limot.m_loLimit;
+     hiLimit = error < 0 && limot.m_servoTarget < limot.m_hiLimit ? limot.m_servoTarget
+      : limot.m_hiLimit;
     }
-    mot_fact = getMotorFactor(limot.m_currentPosition, lowLimit, hiLimit, tag_vel, info.fps *
-     limot.m_motorERP);
+    mot_fact = getMotorFactor(limot.m_currentPosition, lowLimit, hiLimit,
+     tag_vel, info.fps * limot.m_motorERP);
    } else {
     mot_fact = 0;
    }
-   info.m_constraintError[srow].set(mot_fact * targetvelocity * (rotational != 0 ? -1 : 1));
+   info.m_constraintError[srow].set(mot_fact * targetvelocity
+    * (rotational != 0 ? -1 : 1));
    info.m_lowerLimit[srow].set(-limot.m_maxMotorForce);
    info.m_upperLimit[srow].set(limot.m_maxMotorForce);
    info.cfm[srow].set(limot.m_motorCFM);
@@ -498,7 +532,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   }
   if (limot.m_enableSpring) {
    float error = limot.m_currentPosition - limot.m_equilibriumPoint;
-   calculateJacobi(limot, transA, transB, info, srow, ax1, rotational, rotAllowed);
+   calculateJacobi(limot, transA, transB, info, srow, ax1, rotational,
+    rotAllowed);
    //float cfm = 1.0 / ((1.0/info.fps)*limot.m_springStiffness+ limot.m_springDamping);
    //if(cfm > 0.99999)
    //	cfm = 0.99999;
@@ -509,7 +544,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
    float dt = BT_ONE / info.fps;
    float kd = limot.m_springDamping;
    float ks = limot.m_springStiffness;
-   float vel = rotational != 0 ? angVelA.dot(ax1) - angVelB.dot(ax1) : linVelA.dot(ax1) - linVelB
+   float vel = rotational != 0 ? angVelA.dot(ax1) - angVelB.dot(ax1) : linVelA
+    .dot(ax1) - linVelB
     .dot(ax1);
 //		float erp = 0.1;
    float cfm = BT_ZERO;
@@ -545,21 +581,25 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   return count;
  }
 
- public int get_limit_motor_info2(btRotationalLimitMotor2 limot, final btTransform transA,
+ public int get_limit_motor_info2(btRotationalLimitMotor2 limot,
+  final btTransform transA,
   final btTransform transB, final btVector3 linVelA, final btVector3 linVelB,
   final btVector3 angVelA, final btVector3 angVelB,
   btConstraintInfo2 info, int row, final btVector3 ax1, int rotational) {
-  return get_limit_motor_info2(limot, transA, transB, linVelA, linVelB, angVelA, angVelB, info, row,
+  return get_limit_motor_info2(limot, transA, transB, linVelA, linVelB, angVelA,
+   angVelB, info, row,
    ax1,
    rotational, 0);
  }
 
- public btGeneric6DofSpring2Constraint(btRigidBody rbA, btRigidBody rbB, final btTransform frameInA,
+ public btGeneric6DofSpring2Constraint(btRigidBody rbA, btRigidBody rbB,
+  final btTransform frameInA,
   final btTransform frameInB) {
   this(rbA, rbB, frameInA, frameInB, RO_XYZ);
  }
 
- public btGeneric6DofSpring2Constraint(btRigidBody rbA, btRigidBody rbB, final btTransform frameInA,
+ public btGeneric6DofSpring2Constraint(btRigidBody rbA, btRigidBody rbB,
+  final btTransform frameInA,
   final btTransform frameInB, int rotOrder) {
   super(D6_SPRING_2_CONSTRAINT_TYPE, rbA, rbB);
   m_frameInA.set(frameInA);
@@ -569,11 +609,13 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   calculateTransforms();
  }
 
- public btGeneric6DofSpring2Constraint(btRigidBody rbB, final btTransform frameInB) {
+ public btGeneric6DofSpring2Constraint(btRigidBody rbB,
+  final btTransform frameInB) {
   this(rbB, frameInB, RO_XYZ);
  }
 
- public btGeneric6DofSpring2Constraint(btRigidBody rbB, final btTransform frameInB, int rotOrder) {
+ public btGeneric6DofSpring2Constraint(btRigidBody rbB,
+  final btTransform frameInB, int rotOrder) {
   super(D6_SPRING_2_CONSTRAINT_TYPE, getFixedBody(), rbB);
   m_frameInB.set(frameInB);
   m_rotateOrder = rotOrder;
@@ -590,7 +632,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
  @Override
  public void getInfo1(btConstraintInfo1 info) {
   //prepare constraint
-  calculateTransforms(m_rbA.getCenterOfMassTransform(), m_rbB.getCenterOfMassTransform());
+  calculateTransforms(m_rbA.getCenterOfMassTransform(), m_rbB
+   .getCenterOfMassTransform());
   info.m_numConstraintRows = 0;
   info.nub = 0;
   int i;
@@ -634,7 +677,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   final btVector3 angVelA = m_rbA.getAngularVelocityPtr();
   final btVector3 angVelB = m_rbB.getAngularVelocityPtr();
   // for stability better to solve angular limits first
-  int row = setAngularLimits(info, 0, transA, transB, linVelA, linVelB, angVelA, angVelB);
+  int row = setAngularLimits(info, 0, transA, transB, linVelA, linVelB, angVelA,
+   angVelB);
   setLinearLimits(info, row, transA, transB, linVelA, linVelB, angVelA, angVelB);
  }
 
@@ -647,7 +691,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
  }
 
  // Calculates the global transform for the joint offset for body A an B, and also calculates the angle differences between the bodies.
- public void calculateTransforms(final btTransform transA, final btTransform transB) {
+ public void calculateTransforms(final btTransform transA,
+  final btTransform transB) {
   m_calculatedTransformA.set(transA).mul(m_frameInA);
   m_calculatedTransformB.set(transB).mul(m_frameInB);
   calculateLinearInfo();
@@ -665,7 +710,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
  }
 
  public final void calculateTransforms() {
-  calculateTransforms(m_rbA.getCenterOfMassTransform(), m_rbB.getCenterOfMassTransform());
+  calculateTransforms(m_rbA.getCenterOfMassTransform(), m_rbB
+   .getCenterOfMassTransform());
  }
 
  // Gets the global transform of the offset for body A
@@ -937,7 +983,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   int i;
   m_linearLimits.m_equilibriumPoint.set(m_calculatedLinearDiff);
   for (i = 0; i < 3; i++) {
-   m_angularLimits[i].m_equilibriumPoint = m_calculatedAxisAngleDiff.getElement(i);
+   m_angularLimits[i].m_equilibriumPoint = m_calculatedAxisAngleDiff.getElement(
+    i);
   }
  }
 
@@ -946,9 +993,11 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   assert ((index >= 0) && (index < 6));
   calculateTransforms();
   if (index < 3) {
-   m_linearLimits.m_equilibriumPoint.setElement(index, m_calculatedLinearDiff.getElement(index));
+   m_linearLimits.m_equilibriumPoint.setElement(index, m_calculatedLinearDiff
+    .getElement(index));
   } else {
-   m_angularLimits[index - 3].m_equilibriumPoint = m_calculatedAxisAngleDiff.getElement(index - 3);
+   m_angularLimits[index - 3].m_equilibriumPoint = m_calculatedAxisAngleDiff
+    .getElement(index - 3);
   }
  }
 
@@ -1018,19 +1067,23 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   if ((axis >= 0) && (axis < 3)) {
    switch (num) {
     case BT_CONSTRAINT_STOP_ERP:
-     assert ((m_flags & (BT_6DOF_FLAGS_ERP_STOP2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_ERP_STOP2 << (axis
+      * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_linearLimits.m_stopERP.getElement(axis);
      break;
     case BT_CONSTRAINT_STOP_CFM:
-     assert ((m_flags & (BT_6DOF_FLAGS_CFM_STOP2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_CFM_STOP2 << (axis
+      * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_linearLimits.m_stopCFM.getElement(axis);
      break;
     case BT_CONSTRAINT_ERP:
-     assert ((m_flags & (BT_6DOF_FLAGS_ERP_MOTO2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_ERP_MOTO2 << (axis
+      * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_linearLimits.m_motorERP.getElement(axis);
      break;
     case BT_CONSTRAINT_CFM:
-     assert ((m_flags & (BT_6DOF_FLAGS_CFM_MOTO2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_CFM_MOTO2 << (axis
+      * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_linearLimits.m_motorCFM.getElement(axis);
      break;
     default:
@@ -1039,19 +1092,23 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   } else if ((axis >= 3) && (axis < 6)) {
    switch (num) {
     case BT_CONSTRAINT_STOP_ERP:
-     assert ((m_flags & (BT_6DOF_FLAGS_ERP_STOP2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_ERP_STOP2 << (axis
+      * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_angularLimits[axis - 3].m_stopERP;
      break;
     case BT_CONSTRAINT_STOP_CFM:
-     assert ((m_flags & (BT_6DOF_FLAGS_CFM_STOP2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_CFM_STOP2 << (axis
+      * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_angularLimits[axis - 3].m_stopCFM;
      break;
     case BT_CONSTRAINT_ERP:
-     assert ((m_flags & (BT_6DOF_FLAGS_ERP_MOTO2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_ERP_MOTO2 << (axis
+      * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_angularLimits[axis - 3].m_motorERP;
      break;
     case BT_CONSTRAINT_CFM:
-     assert ((m_flags & (BT_6DOF_FLAGS_CFM_MOTO2 << (axis * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
+     assert ((m_flags & (BT_6DOF_FLAGS_CFM_MOTO2 << (axis
+      * BT_6DOF_FLAGS_AXIS_SHIFT2))) != 0);
      retVal = m_angularLimits[axis - 3].m_motorCFM;
      break;
     default:
@@ -1069,7 +1126,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   return mat.getElement(i, j);
  }
 
- public static boolean matrixToEulerXYZ(final btMatrix3x3 mat, final btVector3 xyz) {
+ public static boolean matrixToEulerXYZ(final btMatrix3x3 mat,
+  final btVector3 xyz) {
   // rot =  cy*cz          -cy*sz           sy
   //        cz*sx*sy+cx*sz  cx*cz-sx*sy*sz -cy*sx
   //       -cx*cz*sy+sx*sz  cz*sx+cx*sy*sz  cx*cy
@@ -1096,7 +1154,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   return false;
  }
 
- public static boolean matrixToEulerXZY(final btMatrix3x3 mat, final btVector3 xyz) {
+ public static boolean matrixToEulerXZY(final btMatrix3x3 mat,
+  final btVector3 xyz) {
   // rot =  cy*cz          -sz           sy*cz
   //        cy*cx*sz+sx*sy  cx*cz        sy*cx*sz-cy*sx
   //        cy*sx*sz-cx*sy  sx*cz        sy*sx*sz+cx*cy
@@ -1121,7 +1180,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   return false;
  }
 
- public static boolean matrixToEulerYXZ(final btMatrix3x3 mat, final btVector3 xyz) {
+ public static boolean matrixToEulerYXZ(final btMatrix3x3 mat,
+  final btVector3 xyz) {
   // rot =  cy*cz+sy*sx*sz  cz*sy*sx-cy*sz  cx*sy
   //        cx*sz           cx*cz           -sx
   //        cy*sx*sz-cz*sy  sy*sz+cy*cz*sx  cy*cx
@@ -1146,7 +1206,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   return false;
  }
 
- public static boolean matrixToEulerYZX(final btMatrix3x3 mat, final btVector3 xyz) {
+ public static boolean matrixToEulerYZX(final btMatrix3x3 mat,
+  final btVector3 xyz) {
   // rot =  cy*cz   sy*sx-cy*cx*sz   cx*sy+cy*sz*sx
   //        sz           cz*cx           -cz*sx
   //        -cz*sy  cy*sx+cx*sy*sz   cy*cx-sy*sz*sx
@@ -1171,7 +1232,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   return false;
  }
 
- public static boolean matrixToEulerZXY(final btMatrix3x3 mat, final btVector3 xyz) {
+ public static boolean matrixToEulerZXY(final btMatrix3x3 mat,
+  final btVector3 xyz) {
   // rot =  cz*cy-sz*sx*sy    -cx*sz   cz*sy+cy*sz*sx
   //        cy*sz+cz*sx*sy     cz*cx   sz*sy-cz*xy*sx
   //        -cx*sy              sx     cx*cy
@@ -1196,7 +1258,8 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   return false;
  }
 
- public static boolean matrixToEulerZYX(final btMatrix3x3 mat, final btVector3 xyz) {
+ public static boolean matrixToEulerZYX(final btMatrix3x3 mat,
+  final btVector3 xyz) {
   // rot =  cz*cy   cz*sy*sx-cx*sz   sz*sx+cz*cx*sy
   //        cy*sz   cz*cx+sz*sy*sx   cx*sz*sy-cz*sx
   //        -sy          cy*sx         cy*cx
@@ -1220,4 +1283,5 @@ public class btGeneric6DofSpring2Constraint extends btTypedConstraint implements
   }
   return false;
  }
+
 };

@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Dynamics.CollisionObjects;
 
@@ -39,17 +39,19 @@ import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 import static javax.vecmath.VecMath.is_good_matrix;
 
 /**
- * The btRigidBody is the main class for rigid body objects. It is derived from btCollisionObject,
- * so it keeps a pointer to a btCollisionShape. It is recommended for performance and memory use to
- * share btCollisionShape objects whenever possible. There are 3 types of rigid bodies: - A) Dynamic
- * rigid bodies, with positive mass. Motion is controlled by rigid body dynamics. - B) Fixed objects
- * with zero mass. They are not moving (basically collision objects) - C) Kinematic objects, which
- * are objects without mass, but the user can move them. There is on-way interaction, and Bullet
- * calculates a velocity based on the timestep and previous and current world transform. Bullet
- * automatically deactivates dynamic rigid bodies, when the velocity is below a threshold for a
- * given time. Deactivated (sleeping) rigid bodies don't take any processing time, except a minor
- * broadphase collision detection impact (to allow active objects to activate/wake up sleeping
- * objects)
+ * The btRigidBody is the main class for rigid body objects. It is derived from
+ * btCollisionObject, so it keeps a pointer to a btCollisionShape. It is
+ * recommended for performance and memory use to share btCollisionShape objects
+ * whenever possible. There are 3 types of rigid bodies: - A) Dynamic rigid
+ * bodies, with positive mass. Motion is controlled by rigid body dynamics. - B)
+ * Fixed objects with zero mass. They are not moving (basically collision
+ * objects) - C) Kinematic objects, which are objects without mass, but the user
+ * can move them. There is on-way interaction, and Bullet calculates a velocity
+ * based on the timestep and previous and current world transform. Bullet
+ * automatically deactivates dynamic rigid bodies, when the velocity is below a
+ * threshold for a given time. Deactivated (sleeping) rigid bodies don't take
+ * any processing time, except a minor broadphase collision detection impact (to
+ * allow active objects to activate/wake up sleeping objects)
  *
  * @author Gregery Barton
  */
@@ -81,7 +83,8 @@ public class btRigidBody extends btCollisionObject implements Serializable {
  //m_optionalMotionState allows to automatic synchronize the world transform for active objects
  protected btMotionState m_optionalMotionState;
  //keep track of typed constraints referencing this rigid body, to disable collision between linked bodies
- protected final ArrayList<btTypedConstraint> m_constraintRefs = new ArrayList<>(0);
+ protected final ArrayList<btTypedConstraint> m_constraintRefs = new ArrayList<>(
+  0);
  protected int m_rigidbodyFlags;
  //protected int m_debugBodyId;
  protected final btVector3 m_deltaLinearVelocity = new btVector3();
@@ -99,14 +102,17 @@ public class btRigidBody extends btCollisionObject implements Serializable {
 
  ///btRigidBody constructor for backwards compatibility. 
  ///To specify friction (etc) during rigid body construction, please use the other constructor (using btRigidBodyConstructionInfo)
- public btRigidBody(float mass, btMotionState motionState, btCollisionShape collisionShape) {
+ public btRigidBody(float mass, btMotionState motionState,
+  btCollisionShape collisionShape) {
   this(mass, motionState, collisionShape, new btVector3());
   assert (is_good_matrix(m_worldTransform));
  }
 
- public btRigidBody(float mass, btMotionState motionState, btCollisionShape collisionShape,
+ public btRigidBody(float mass, btMotionState motionState,
+  btCollisionShape collisionShape,
   final btVector3 localInertia) {
-  btRigidBodyConstructionInfo cinfo = new btRigidBodyConstructionInfo(mass, motionState,
+  btRigidBodyConstructionInfo cinfo = new btRigidBodyConstructionInfo(mass,
+   motionState,
    collisionShape, localInertia);
   setupRigidBody(cinfo);
   assert (is_good_matrix(m_worldTransform));
@@ -173,12 +179,14 @@ public class btRigidBody extends btCollisionObject implements Serializable {
  }
 
  /// continuous collision detection needs prediction
- public void predictIntegratedTransform(float timeStep, final btTransform predictedTransform) {
+ public void predictIntegratedTransform(float timeStep,
+  final btTransform predictedTransform) {
   if (DEBUG_BLOCKS) {
    assert (is_good_matrix(m_worldTransform));
   }
   btTransformUtil
-   .integrateTransform(m_worldTransform, m_linearVelocity, m_angularVelocity, timeStep,
+   .integrateTransform(m_worldTransform, m_linearVelocity, m_angularVelocity,
+    timeStep,
     predictedTransform);
   if (DEBUG_BLOCKS) {
    assert (is_good_matrix(predictedTransform));
@@ -196,7 +204,8 @@ public class btRigidBody extends btCollisionObject implements Serializable {
      assert (is_good_matrix(m_worldTransform));
     }
    }
-   btTransformUtil.calculateVelocity(m_interpolationWorldTransform, m_worldTransform, timeStep,
+   btTransformUtil.calculateVelocity(m_interpolationWorldTransform,
+    m_worldTransform, timeStep,
     m_linearVelocity, m_angularVelocity);
    m_interpolationLinearVelocity.set(m_linearVelocity);
    m_interpolationAngularVelocity.set(m_angularVelocity);
@@ -251,8 +260,9 @@ public class btRigidBody extends btCollisionObject implements Serializable {
   if (m_additionalDamping) {
    //Additional damping can help avoiding lowpass jitter motion, help stability for ragdolls etc.
    //Such damping is undesirable, so once the overall simulation quality of the rigid body dynamics system has improved, this should become obsolete
-   if ((m_angularVelocity.lengthSquared() < m_additionalAngularDampingThresholdSqr) &&
-    (m_linearVelocity.lengthSquared() < m_additionalLinearDampingThresholdSqr)) {
+   if ((m_angularVelocity.lengthSquared()
+    < m_additionalAngularDampingThresholdSqr) && (m_linearVelocity
+     .lengthSquared() < m_additionalLinearDampingThresholdSqr)) {
     m_angularVelocity.scale(m_additionalDampingFactor);
     m_linearVelocity.scale(m_additionalDampingFactor);
    }
@@ -324,6 +334,7 @@ public class btRigidBody extends btCollisionObject implements Serializable {
  public btMatrix3x3 getInvInertiaTensorWorldPtr() {
   return m_invInertiaTensorWorld;
  }
+
  public static final float MAX_ANGVEL = SIMD_HALF_PI;
 
  public void integrateVelocities(float step) {
@@ -331,7 +342,8 @@ public class btRigidBody extends btCollisionObject implements Serializable {
    return;
   }
   m_linearVelocity.add(new btVector3(m_totalForce).scale(m_inverseMass * step));
-  m_angularVelocity.add(m_invInertiaTensorWorld.transform(new btVector3(m_totalTorque)).scale(step));
+  m_angularVelocity.add(m_invInertiaTensorWorld.transform(new btVector3(
+   m_totalTorque)).scale(step));
   /// clamp angular velocity. collision calculations will fail on higher angular velocities	
   float angvel = m_angularVelocity.length();
   if (angvel * step > MAX_ANGVEL) {
@@ -390,11 +402,13 @@ public class btRigidBody extends btCollisionObject implements Serializable {
 
  public void applyForce(final btVector3 force, final btVector3 rel_pos) {
   applyCentralForce(force);
-  applyTorque(new btVector3(rel_pos).cross(new btVector3(force).mul(m_linearFactor)));
+  applyTorque(new btVector3(rel_pos).cross(new btVector3(force).mul(
+   m_linearFactor)));
  }
 
  public void applyCentralImpulse(final btVector3 impulse) {
-  m_linearVelocity.add(new btVector3(impulse).mul(m_linearFactor).scale(m_inverseMass));
+  m_linearVelocity.add(new btVector3(impulse).mul(m_linearFactor).scale(
+   m_inverseMass));
  }
 
  public void applyTorqueImpulse(final btVector3 torque) {
@@ -405,11 +419,14 @@ public class btRigidBody extends btCollisionObject implements Serializable {
  public void applyImpulse(final btVector3 impulse, final btVector3 rel_pos) {
   if (m_inverseMass != (0.f)) {
    applyCentralImpulse(impulse);
-   /* in c++ this test evaluates m_angularFactor via   (float*)operator which is always non-zero
+   /*
+    * in c++ this test evaluates m_angularFactor via (float*)operator which is
+    * always non-zero
     */
 //			if (m_angularFactor)
 //			{
-   applyTorqueImpulse(new btVector3(rel_pos).cross(new btVector3(impulse).mul(m_linearFactor)));
+   applyTorqueImpulse(new btVector3(rel_pos).cross(new btVector3(impulse).mul(
+    m_linearFactor)));
 //			}
   }
  }
@@ -508,24 +525,29 @@ public class btRigidBody extends btCollisionObject implements Serializable {
   }
  }
 
- public float computeImpulseDenominator(final btVector3 pos, final btVector3 normal) {
+ public float computeImpulseDenominator(final btVector3 pos,
+  final btVector3 normal) {
   final btVector3 r0 = new btVector3(pos).sub(getCenterOfMassPosition());
   final btVector3 c0 = new btVector3(r0).cross(normal);
-  final btVector3 vec = (getInvInertiaTensorWorld().transposeTransform(c0)).cross(r0);
+  final btVector3 vec = (getInvInertiaTensorWorld().transposeTransform(c0))
+   .cross(r0);
   return m_inverseMass + normal.dot(vec);
  }
 
  public float computeAngularImpulseDenominator(final btVector3 axis) {
-  final btVector3 vec = getInvInertiaTensorWorld().transposeTransform(new btVector3(axis));
+  final btVector3 vec = getInvInertiaTensorWorld().transposeTransform(
+   new btVector3(axis));
   return axis.dot(vec);
  }
 
  public void updateDeactivation(float timeStep) {
-  if ((getActivationState() == ISLAND_SLEEPING) || (getActivationState() == DISABLE_DEACTIVATION)) {
+  if ((getActivationState() == ISLAND_SLEEPING) || (getActivationState()
+   == DISABLE_DEACTIVATION)) {
    return;
   }
-  if ((getLinearVelocity().lengthSquared() < m_linearSleepingThreshold * m_linearSleepingThreshold) &&
-   (getAngularVelocity().lengthSquared() < m_angularSleepingThreshold * m_angularSleepingThreshold)) {
+  if ((getLinearVelocity().lengthSquared() < m_linearSleepingThreshold
+   * m_linearSleepingThreshold) && (getAngularVelocity().lengthSquared()
+   < m_angularSleepingThreshold * m_angularSleepingThreshold)) {
    m_deactivationTime += timeStep;
   } else {
    m_deactivationTime = (0.f);
@@ -541,7 +563,8 @@ public class btRigidBody extends btCollisionObject implements Serializable {
   if (gDisableDeactivation || (gDeactivationTime == (0.f))) {
    return false;
   }
-  if ((getActivationState() == ISLAND_SLEEPING) || (getActivationState() == WANTS_DEACTIVATION)) {
+  if ((getActivationState() == ISLAND_SLEEPING) || (getActivationState()
+   == WANTS_DEACTIVATION)) {
    return true;
   }
   return m_deactivationTime > gDeactivationTime;
@@ -569,6 +592,7 @@ public class btRigidBody extends btCollisionObject implements Serializable {
    motionState.getWorldTransform(m_worldTransform);
   }
  }
+
  //for experimental overriding of friction/contact solver func
  int m_contactSolverType;
  int m_frictionSolverType;
@@ -647,9 +671,9 @@ public class btRigidBody extends btCollisionObject implements Serializable {
   if (DEBUG_BLOCKS) {
    assert (is_good_matrix(m_worldTransform));
   }
-  final btMatrix3x3 I =
-   m_worldTransform.getBasis().mul(inertiaLocal).mul(
-   m_worldTransform.getBasis().transpose());
+  final btMatrix3x3 I
+   = m_worldTransform.getBasis().mul(inertiaLocal).mul(
+    m_worldTransform.getBasis().transpose());
   // use newtons method to find implicit solution for new angular velocity (w')
   // f(w') = -(T*step + Iw) + Iw' + w' + w'xIw'*step = 0 
   // df/dw' = I + 1xIw'*step + w'xI*step
@@ -686,7 +710,8 @@ public class btRigidBody extends btCollisionObject implements Serializable {
   final btMatrix3x3 skew1 = new btMatrix3x3();
   om.getSkewSymmetricMatrix(skew1);
   // Jacobian
-  final btMatrix3x3 J = new btMatrix3x3(skew0).mul(Ib).sub(skew1).mul(step).add(Ib);
+  final btMatrix3x3 J = new btMatrix3x3(skew0).mul(Ib).sub(skew1).mul(step).add(
+   Ib);
 //	btMatrix3x3 Jinv = J.inverse();
 //	btVector3 omega_div = Jinv*f;
   final btVector3 omega_div = J.solve33(f);
@@ -701,8 +726,9 @@ public class btRigidBody extends btCollisionObject implements Serializable {
  ///explicit version is best avoided, it gains energy
  public btVector3 computeGyroscopicForceExplicit(float maxGyroscopicForce) {
   final btVector3 inertiaLocal = getLocalInertia();
-  final btMatrix3x3 inertiaTensorWorld = getWorldTransformPtr().getBasis().mul(inertiaLocal).mul(
-   getWorldTransformPtr().getBasis().transpose());
+  final btMatrix3x3 inertiaTensorWorld = getWorldTransformPtr().getBasis().mul(
+   inertiaLocal).mul(
+    getWorldTransformPtr().getBasis().transpose());
   final btVector3 tmp = inertiaTensorWorld.transform(getAngularVelocity());
   final btVector3 gf = getAngularVelocity().cross(tmp);
   float l2 = gf.lengthSquared();
@@ -721,17 +747,20 @@ public class btRigidBody extends btCollisionObject implements Serializable {
   return inertiaLocal;
  }
 
- public static btVector3 evalEulerEqn(final btVector3 w1, final btVector3 w0, final btVector3 T,
+ public static btVector3 evalEulerEqn(final btVector3 w1, final btVector3 w0,
+  final btVector3 T,
   float dt,
   final btMatrix3x3 I) {
   //btVector3 w2 = I*w1 + w1.cross(I*w1)*dt - (T*dt + I*w0);
   final btVector3 a = I.transform(new btVector3(w1));
   final btVector3 b = new btVector3(w1).cross(a).scale(dt);
-  final btVector3 c = new btVector3(T).scale(dt).add(I.transform(new btVector3(w0)));
+  final btVector3 c = new btVector3(T).scale(dt).add(I.transform(new btVector3(
+   w0)));
   return a.add(b).sub(c);
  }
 
- public static btMatrix3x3 evalEulerEqnDeriv(final btVector3 w1, final btVector3 w0, float dt,
+ public static btMatrix3x3 evalEulerEqnDeriv(final btVector3 w1,
+  final btVector3 w0, float dt,
   final btMatrix3x3 I) {
   final btMatrix3x3 w1x = new btMatrix3x3();
   final btMatrix3x3 Iw1x = new btMatrix3x3();
@@ -741,4 +770,5 @@ public class btRigidBody extends btCollisionObject implements Serializable {
   final btMatrix3x3 dfw1 = w1x.mul(I).sub(Iw1x).mul(dt).add(I);
   return dfw1;
  }
+
 };

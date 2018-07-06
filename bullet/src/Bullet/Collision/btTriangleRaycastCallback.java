@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision;
 
@@ -21,7 +21,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-abstract public class btTriangleRaycastCallback implements btTriangleCallback, Serializable {
+abstract public class btTriangleRaycastCallback implements btTriangleCallback,
+ Serializable {
 
  //input
  final btVector3 m_from = new btVector3();
@@ -74,7 +75,8 @@ abstract public class btTriangleRaycastCallback implements btTriangleCallback, S
   * @param triangleIndex
   */
  @Override
- public boolean processTriangle(btVector3[] triangle, int partId, int triangleIndex) {
+ public boolean processTriangle(btVector3[] triangle, int partId,
+  int triangleIndex) {
   final btVector3 vert0 = triangle[0];
   final btVector3 vert1 = triangle[1];
   final btVector3 vert2 = triangle[2];
@@ -119,10 +121,12 @@ abstract public class btTriangleRaycastCallback implements btTriangleCallback, S
        triangleNormal.normalize();
        //@BP Mod - Allow for unflipped normal when raycasting against backfaces
        if (((m_flags & kF_KeepUnflippedNormal) == 0) && (dist_a <= 0.0f)) {
-        m_hitFraction = reportHit(new btVector3(triangleNormal).negate(), distance, partId,
+        m_hitFraction = reportHit(new btVector3(triangleNormal).negate(),
+         distance, partId,
          triangleIndex);
        } else {
-        m_hitFraction = reportHit(triangleNormal, distance, partId, triangleIndex);
+        m_hitFraction = reportHit(triangleNormal, distance, partId,
+         triangleIndex);
        }
       }
      }
@@ -132,6 +136,8 @@ abstract public class btTriangleRaycastCallback implements btTriangleCallback, S
   return true;
  }
 
- abstract float reportHit(final btVector3 hitNormalLocal, float hitFraction, int partId,
+ abstract float reportHit(final btVector3 hitNormalLocal, float hitFraction,
+  int partId,
   int triangleIndex);
+
 }

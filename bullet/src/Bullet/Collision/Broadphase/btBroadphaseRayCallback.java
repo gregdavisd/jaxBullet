@@ -21,7 +21,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-abstract public class btBroadphaseRayCallback implements btBroadphaseAabbCallback, Serializable {
+abstract public class btBroadphaseRayCallback implements
+ btBroadphaseAabbCallback, Serializable {
  ///added some cached data to accelerate ray-AABB tests
 
  final btVector3 m_rayDirectionInverse = new btVector3();

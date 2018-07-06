@@ -1,17 +1,17 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2013 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
-
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2013 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ *
  */
 package Bullet.Collision;
 
@@ -35,7 +35,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btCompoundCompoundLeafCallback extends btDbvt.ICollide implements Serializable {
+public class btCompoundCompoundLeafCallback extends btDbvt.ICollide implements
+ Serializable {
 
  int m_numOverlapPairs;
  static btShapePairCallback gCompoundCompoundChildShapePairCallback = null;
@@ -72,19 +73,23 @@ public class btCompoundCompoundLeafCallback extends btDbvt.ICollide implements S
   int childIndex1 = leaf1.dataAsInt();
   assert (childIndex0 >= 0);
   assert (childIndex1 >= 0);
-  btCompoundShape compoundShape0 = (btCompoundShape) (m_compound0ColObjWrap.getCollisionShape());
+  btCompoundShape compoundShape0 = (btCompoundShape) (m_compound0ColObjWrap
+   .getCollisionShape());
   assert (childIndex0 < compoundShape0.getNumChildShapes());
-  btCompoundShape compoundShape1 = (btCompoundShape) (m_compound1ColObjWrap.getCollisionShape());
+  btCompoundShape compoundShape1 = (btCompoundShape) (m_compound1ColObjWrap
+   .getCollisionShape());
   assert (childIndex1 < compoundShape1.getNumChildShapes());
   btCollisionShape childShape0 = compoundShape0.getChildShape(childIndex0);
   btCollisionShape childShape1 = compoundShape1.getChildShape(childIndex1);
   //backup
   final btTransform orgTrans0 = m_compound0ColObjWrap.getWorldTransform();
   final btTransform childTrans0 = compoundShape0.getChildTransform(childIndex0);
-  final btTransform newChildWorldTrans0 = new btTransform(orgTrans0).mul(childTrans0);
+  final btTransform newChildWorldTrans0 = new btTransform(orgTrans0).mul(
+   childTrans0);
   final btTransform orgTrans1 = m_compound1ColObjWrap.getWorldTransform();
   final btTransform childTrans1 = compoundShape1.getChildTransform(childIndex1);
-  final btTransform newChildWorldTrans1 = new btTransform(orgTrans1).mul(childTrans1);
+  final btTransform newChildWorldTrans1 = new btTransform(orgTrans1).mul(
+   childTrans1);
   //perform an AABB check first
   final btVector3 aabbMin0 = new btVector3();
   final btVector3 aabbMax0 = new btVector3();
@@ -92,21 +97,29 @@ public class btCompoundCompoundLeafCallback extends btDbvt.ICollide implements S
   final btVector3 aabbMax1 = new btVector3();
   childShape0.getAabb(newChildWorldTrans0, aabbMin0, aabbMax0);
   childShape1.getAabb(newChildWorldTrans1, aabbMin1, aabbMax1);
-  final btVector3 thresholdVec = new btVector3(m_resultOut.m_closestPointDistanceThreshold,
-   m_resultOut.m_closestPointDistanceThreshold, m_resultOut.m_closestPointDistanceThreshold);
+  final btVector3 thresholdVec = new btVector3(
+   m_resultOut.m_closestPointDistanceThreshold,
+   m_resultOut.m_closestPointDistanceThreshold,
+   m_resultOut.m_closestPointDistanceThreshold);
   aabbMin0.sub(thresholdVec);
   aabbMax0.add(thresholdVec);
   if (gCompoundCompoundChildShapePairCallback != null) {
-   if (!gCompoundCompoundChildShapePairCallback.callback(childShape0, childShape1)) {
+   if (!gCompoundCompoundChildShapePairCallback.callback(childShape0,
+    childShape1)) {
     return;
    }
   }
   if (TestAabbAgainstAabb2(aabbMin0, aabbMax0, aabbMin1, aabbMax1)) {
-   btCollisionObjectWrapper compoundWrap0 = new btCollisionObjectWrapper(this.m_compound0ColObjWrap,
-    childShape0, m_compound0ColObjWrap.getCollisionObject(), newChildWorldTrans0, -1, childIndex0);
-   btCollisionObjectWrapper compoundWrap1 = new btCollisionObjectWrapper(this.m_compound1ColObjWrap,
-    childShape1, m_compound1ColObjWrap.getCollisionObject(), newChildWorldTrans1, -1, childIndex1);
-   btSimplePair pair = m_childCollisionAlgorithmCache.findPair(childIndex0, childIndex1);
+   btCollisionObjectWrapper compoundWrap0 = new btCollisionObjectWrapper(
+    this.m_compound0ColObjWrap,
+    childShape0, m_compound0ColObjWrap.getCollisionObject(), newChildWorldTrans0,
+    -1, childIndex0);
+   btCollisionObjectWrapper compoundWrap1 = new btCollisionObjectWrapper(
+    this.m_compound1ColObjWrap,
+    childShape1, m_compound1ColObjWrap.getCollisionObject(), newChildWorldTrans1,
+    -1, childIndex1);
+   btSimplePair pair = m_childCollisionAlgorithmCache.findPair(childIndex0,
+    childIndex1);
    btCollisionAlgorithm colAlgo;
    if (m_resultOut.m_closestPointDistanceThreshold > 0) {
     colAlgo = m_dispatcher.findAlgorithm(compoundWrap0, compoundWrap1, null,
@@ -114,9 +127,11 @@ public class btCompoundCompoundLeafCallback extends btDbvt.ICollide implements S
    } else if (pair != null) {
     colAlgo = (btCollisionAlgorithm) pair.m_userPointer;
    } else {
-    colAlgo = m_dispatcher.findAlgorithm(compoundWrap0, compoundWrap1, m_sharedManifold,
+    colAlgo = m_dispatcher.findAlgorithm(compoundWrap0, compoundWrap1,
+     m_sharedManifold,
      BT_CONTACT_POINT_ALGORITHMS);
-    pair = m_childCollisionAlgorithmCache.addOverlappingPair(childIndex0, childIndex1);
+    pair = m_childCollisionAlgorithmCache.addOverlappingPair(childIndex0,
+     childIndex1);
     assert (pair != null);
     pair.m_userPointer = colAlgo;
    }
@@ -129,9 +144,11 @@ public class btCompoundCompoundLeafCallback extends btDbvt.ICollide implements S
    m_resultOut.setBody1Wrap(compoundWrap1);
    m_resultOut.setShapeIdentifiersA(-1, childIndex0);
    m_resultOut.setShapeIdentifiersB(-1, childIndex1);
-   colAlgo.processCollision(compoundWrap0, compoundWrap1, m_dispatchInfo, m_resultOut);
+   colAlgo.processCollision(compoundWrap0, compoundWrap1, m_dispatchInfo,
+    m_resultOut);
    m_resultOut.setBody0Wrap(tmpWrap0);
    m_resultOut.setBody1Wrap(tmpWrap1);
   }
  }
+
 };

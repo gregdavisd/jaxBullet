@@ -1,17 +1,17 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2013 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
-
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2013 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ *
  */
 package Bullet.Collision.Algorithm;
 
@@ -42,7 +42,8 @@ import java.util.Collection;
  *
  * @author Gregery Barton
  */
-public class btCompoundCompoundCollisionAlgorithm extends btCompoundCollisionAlgorithm implements
+public class btCompoundCompoundCollisionAlgorithm extends btCompoundCollisionAlgorithm
+ implements
  Serializable {
 
  final btHashedSimplePairCache m_childCollisionAlgorithmCache;
@@ -52,7 +53,8 @@ public class btCompoundCompoundCollisionAlgorithm extends btCompoundCollisionAlg
 
  @Override
  void removeChildAlgorithms() {
-  Collection<btSimplePair> pairs = m_childCollisionAlgorithmCache.getOverlappingPairArray();
+  Collection<btSimplePair> pairs = m_childCollisionAlgorithmCache
+   .getOverlappingPairArray();
   int numChildren = pairs.size();
   int i;
   for (btSimplePair pair : pairs) {
@@ -66,16 +68,19 @@ public class btCompoundCompoundCollisionAlgorithm extends btCompoundCollisionAlg
 
 //	void	preallocateChildAlgorithms(  btCollisionObjectWrapper* body0Wrap,  btCollisionObjectWrapper* body1Wrap);
  btCompoundCompoundCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
-  btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap, boolean isSwapped) {
+  btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap,
+  boolean isSwapped) {
   super(ci, body0Wrap, body1Wrap, isSwapped);
   m_childCollisionAlgorithmCache = new btHashedSimplePairCache();
   btCollisionObjectWrapper col0ObjWrap = body0Wrap;
   assert (col0ObjWrap.getCollisionShape().isCompound());
   btCollisionObjectWrapper col1ObjWrap = body1Wrap;
   assert (col1ObjWrap.getCollisionShape().isCompound());
-  btCompoundShape compoundShape0 = (btCompoundShape) (col0ObjWrap.getCollisionShape());
+  btCompoundShape compoundShape0 = (btCompoundShape) (col0ObjWrap
+   .getCollisionShape());
   m_compoundShapeRevision0 = compoundShape0.getUpdateRevision();
-  btCompoundShape compoundShape1 = (btCompoundShape) (col1ObjWrap.getCollisionShape());
+  btCompoundShape compoundShape1 = (btCompoundShape) (col1ObjWrap
+   .getCollisionShape());
   m_compoundShapeRevision1 = compoundShape1.getUpdateRevision();
  }
 
@@ -85,14 +90,17 @@ public class btCompoundCompoundCollisionAlgorithm extends btCompoundCollisionAlg
  }
 
  @Override
- public void processCollision(btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap,
+ public void processCollision(btCollisionObjectWrapper body0Wrap,
+  btCollisionObjectWrapper body1Wrap,
   btDispatcherInfo dispatchInfo, btManifoldResult resultOut) {
   btCollisionObjectWrapper col0ObjWrap = body0Wrap;
   btCollisionObjectWrapper col1ObjWrap = body1Wrap;
   assert (col0ObjWrap.getCollisionShape().isCompound());
   assert (col1ObjWrap.getCollisionShape().isCompound());
-  btCompoundShape compoundShape0 = (btCompoundShape) (col0ObjWrap.getCollisionShape());
-  btCompoundShape compoundShape1 = (btCompoundShape) (col1ObjWrap.getCollisionShape());
+  btCompoundShape compoundShape0 = (btCompoundShape) (col0ObjWrap
+   .getCollisionShape());
+  btCompoundShape compoundShape1 = (btCompoundShape) (col1ObjWrap
+   .getCollisionShape());
   btDbvt tree0 = compoundShape0.getDynamicAabbTree();
   btDbvt tree1 = compoundShape1.getDynamicAabbTree();
   if (tree0 == null || tree1 == null) {
@@ -101,8 +109,9 @@ public class btCompoundCompoundCollisionAlgorithm extends btCompoundCollisionAlg
   }
   ///btCompoundShape might have changed:
   ////make sure the internal child collision algorithm caches are still valid
-  if ((compoundShape0.getUpdateRevision() != m_compoundShapeRevision0) || (compoundShape1
-   .getUpdateRevision() != m_compoundShapeRevision1)) {
+  if ((compoundShape0.getUpdateRevision() != m_compoundShapeRevision0)
+   || (compoundShape1
+    .getUpdateRevision() != m_compoundShapeRevision1)) {
    ///clear all
    removeChildAlgorithms();
    m_compoundShapeRevision0 = compoundShape0.getUpdateRevision();
@@ -113,7 +122,8 @@ public class btCompoundCompoundCollisionAlgorithm extends btCompoundCollisionAlg
   ///so we should add a 'refreshManifolds' in the btCollisionAlgorithm
   {
    ArrayList<btPersistentManifold> manifold = new ArrayList<>(0);
-   Collection<btSimplePair> pairs = m_childCollisionAlgorithmCache.getOverlappingPairArray();
+   Collection<btSimplePair> pairs = m_childCollisionAlgorithmCache
+    .getOverlappingPairArray();
    for (btSimplePair pair : pairs) {
     if (pair.m_userPointer != null) {
      btCollisionAlgorithm algo = (btCollisionAlgorithm) pair.m_userPointer;
@@ -129,18 +139,23 @@ public class btCompoundCompoundCollisionAlgorithm extends btCompoundCollisionAlg
     }
    }
   }
-  btCompoundCompoundLeafCallback callback = new btCompoundCompoundLeafCallback(col0ObjWrap,
-   col1ObjWrap, this.m_dispatcher, dispatchInfo, resultOut, this.m_childCollisionAlgorithmCache,
+  btCompoundCompoundLeafCallback callback = new btCompoundCompoundLeafCallback(
+   col0ObjWrap,
+   col1ObjWrap, this.m_dispatcher, dispatchInfo, resultOut,
+   this.m_childCollisionAlgorithmCache,
    m_sharedManifold);
-  final btTransform xform = col0ObjWrap.getWorldTransform().invert().mul(col1ObjWrap
-   .getWorldTransform());
-  MycollideTT(tree0.m_root, tree1.m_root, xform, callback, resultOut.m_closestPointDistanceThreshold);
+  final btTransform xform = col0ObjWrap.getWorldTransform().invert().mul(
+   col1ObjWrap
+    .getWorldTransform());
+  MycollideTT(tree0.m_root, tree1.m_root, xform, callback,
+   resultOut.m_closestPointDistanceThreshold);
   //printf("#compound-compound child/leaf overlap =%d                      \r",callback.m_numOverlapPairs);
   //remove non-overlapping child pairs
   {
    assert (m_removePairs.isEmpty());
    //iterate over all children, perform an AABB check inside ProcessChildShape
-   Collection<btSimplePair> pairs = m_childCollisionAlgorithmCache.getOverlappingPairArray();
+   Collection<btSimplePair> pairs = m_childCollisionAlgorithmCache
+    .getOverlappingPairArray();
    //ArrayList<btPersistentManifold> manifoldArray = new ArrayList<>(0);
    final btVector3 aabbMin0 = new btVector3();
    final btVector3 aabbMax0 = new btVector3();
@@ -154,12 +169,15 @@ public class btCompoundCompoundCollisionAlgorithm extends btCompoundCollisionAlg
       btCollisionShape childShape0;
       childShape0 = compoundShape0.getChildShape(pair.m_indexA);
       orgTrans0 = col0ObjWrap.getWorldTransform();
-      final btTransform childTrans0 = compoundShape0.getChildTransform(pair.m_indexA);
+      final btTransform childTrans0 = compoundShape0.getChildTransform(
+       pair.m_indexA);
       final btTransform newChildWorldTrans0 = orgTrans0.mul(childTrans0);
       childShape0.getAabb(newChildWorldTrans0, aabbMin0, aabbMax0);
      }
-     final btVector3 thresholdVec = new btVector3(resultOut.m_closestPointDistanceThreshold,
-      resultOut.m_closestPointDistanceThreshold, resultOut.m_closestPointDistanceThreshold);
+     final btVector3 thresholdVec = new btVector3(
+      resultOut.m_closestPointDistanceThreshold,
+      resultOut.m_closestPointDistanceThreshold,
+      resultOut.m_closestPointDistanceThreshold);
      aabbMin0.sub(thresholdVec);
      aabbMax0.add(thresholdVec);
      {
@@ -167,7 +185,8 @@ public class btCompoundCompoundCollisionAlgorithm extends btCompoundCollisionAlg
       final btTransform orgTrans1;
       childShape1 = compoundShape1.getChildShape(pair.m_indexB);
       orgTrans1 = col1ObjWrap.getWorldTransform();
-      final btTransform childTrans1 = compoundShape1.getChildTransform(pair.m_indexB);
+      final btTransform childTrans1 = compoundShape1.getChildTransform(
+       pair.m_indexB);
       final btTransform newChildWorldTrans1 = orgTrans1.mul(childTrans1);
       childShape1.getAabb(newChildWorldTrans1, aabbMin1, aabbMax1);
      }
@@ -180,7 +199,8 @@ public class btCompoundCompoundCollisionAlgorithm extends btCompoundCollisionAlg
     }
    }
    for (int i = 0; i < m_removePairs.size(); i++) {
-    m_childCollisionAlgorithmCache.removeOverlappingPair(m_removePairs.get(i).m_indexA,
+    m_childCollisionAlgorithmCache.removeOverlappingPair(
+     m_removePairs.get(i).m_indexA,
      m_removePairs.get(i).m_indexB);
    }
    m_removePairs.clear();
@@ -188,18 +208,22 @@ public class btCompoundCompoundCollisionAlgorithm extends btCompoundCollisionAlg
  }
 
  @Override
- public float calculateTimeOfImpact(btCollisionObject body0, btCollisionObject body1,
+ public float calculateTimeOfImpact(btCollisionObject body0,
+  btCollisionObject body1,
   btDispatcherInfo dispatchInfo, btManifoldResult resultOut) {
   assert (false);
   return 0.f;
  }
 
  @Override
- public void getAllContactManifolds(ArrayList<btPersistentManifold> manifoldArray) {
-  Collection<btSimplePair> pairs = m_childCollisionAlgorithmCache.getOverlappingPairArray();
+ public void getAllContactManifolds(
+  ArrayList<btPersistentManifold> manifoldArray) {
+  Collection<btSimplePair> pairs = m_childCollisionAlgorithmCache
+   .getOverlappingPairArray();
   for (btSimplePair pair : pairs) {
    if (pair.m_userPointer != null) {
-    ((btCollisionAlgorithm) pair.m_userPointer).getAllContactManifolds(manifoldArray);
+    ((btCollisionAlgorithm) pair.m_userPointer).getAllContactManifolds(
+     manifoldArray);
    }
   }
  }
@@ -207,19 +231,25 @@ public class btCompoundCompoundCollisionAlgorithm extends btCompoundCollisionAlg
  public static class CreateFunc extends btCollisionAlgorithmCreateFunc {
 
   @Override
-  public btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
+  public btCollisionAlgorithm CreateCollisionAlgorithm(
+   btCollisionAlgorithmConstructionInfo ci,
    btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap) {
-   return new btCompoundCompoundCollisionAlgorithm(ci, body0Wrap, body1Wrap, false);
+   return new btCompoundCompoundCollisionAlgorithm(ci, body0Wrap, body1Wrap,
+    false);
   }
+
  }
 
  public static class SwappedCreateFunc extends btCollisionAlgorithmCreateFunc {
 
   @Override
-  public btCollisionAlgorithm CreateCollisionAlgorithm(btCollisionAlgorithmConstructionInfo ci,
+  public btCollisionAlgorithm CreateCollisionAlgorithm(
+   btCollisionAlgorithmConstructionInfo ci,
    btCollisionObjectWrapper body0Wrap, btCollisionObjectWrapper body1Wrap) {
-   return new btCompoundCompoundCollisionAlgorithm(ci, body0Wrap, body1Wrap, true);
+   return new btCompoundCompoundCollisionAlgorithm(ci, body0Wrap, body1Wrap,
+    true);
   }
+
  };
 
  static void MycollideTT(btDbvtNode root0,
@@ -257,9 +287,12 @@ public class btCompoundCompoundCollisionAlgorithm extends btCompoundCollisionAlg
   final btVector3 newmin = new btVector3();
   final btVector3 newmax = new btVector3();
   btTransformAabb(b.mins(), b.maxs(), 0.f, xform, newmin, newmax);
-  newmin.sub(new btVector3(distanceThreshold, distanceThreshold, distanceThreshold));
-  newmax.add(new btVector3(distanceThreshold, distanceThreshold, distanceThreshold));
+  newmin.sub(new btVector3(distanceThreshold, distanceThreshold,
+   distanceThreshold));
+  newmax.add(new btVector3(distanceThreshold, distanceThreshold,
+   distanceThreshold));
   btDbvtAabbMm newb = btDbvtAabbMm.fromMM(newmin, newmax);
   return intersect(a, newb);
  }
+
 }

@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2015 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2015 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package bullet_examples.apps.api;
 
@@ -57,7 +57,8 @@ public class MotorizedHingeDemo extends DiscreteDemoContainer {
    btRigidBody pDoorBody = createRigidBody(1.0f, doorTrans, pDoorShape);
    pDoorBody.setActivationState(DISABLE_DEACTIVATION);
    final btVector3 btPivotA = new btVector3(10.f + 2.1f, -2.0f, 0.0f); // right next to the door slightly outside
-   spDoorHinge = new btHingeAccumulatedAngleConstraint(pDoorBody, btPivotA, btAxisA);
+   spDoorHinge = new btHingeAccumulatedAngleConstraint(pDoorBody, btPivotA,
+    btAxisA);
    world().addConstraint(spDoorHinge);
    spDoorHinge.setDbgDrawSize((5.f));
   }
@@ -80,7 +81,8 @@ public class MotorizedHingeDemo extends DiscreteDemoContainer {
     final btVector3 angVelA = bodyA.getAngularVelocity();
     final btVector3 angVelB = bodyB.getAngularVelocity();
     {
-     final btVector3 ax1 = trA.transform3x3(hinge.getFrameOffsetA().getBasisColumn(2));
+     final btVector3 ax1 = trA.transform3x3(hinge.getFrameOffsetA()
+      .getBasisColumn(2));
      float vel = angVelA.dot(ax1);
      vel -= angVelB.dot(ax1);
      //printf("hinge velocity (q) = %f\n", vel);
@@ -100,7 +102,8 @@ public class MotorizedHingeDemo extends DiscreteDemoContainer {
 
  @Override
  public void resetCamera() {
-  camera().set(new btQuaternion(0.0777956f, -0.056463785f, -0.004413125f, 0.99535936f),
+  camera().set(new btQuaternion(0.0777956f, -0.056463785f, -0.004413125f,
+   0.99535936f),
    new btVector3(16.957514f, 11.647476f, 85.99799f));
  }
 
@@ -117,10 +120,11 @@ public class MotorizedHingeDemo extends DiscreteDemoContainer {
 
  @Override
  public String get_description() {
-  return "Adjust the sliders and the hinged door will go round and round and round.  " +
-   "The btHingeAccumulatedAngleConstraint accumulates all of its rotation so you know how many times it has rotated" +
-   " in a particular direction and the accumulated rotation can be undone by rotating the other way. " +
-   "Try to get the door to fly off its hinge by setting the iterations too low" +
-   " and manipulating the sliders.";
+  return "Adjust the sliders and the hinged door will go round and round and round.  "
+   + "The btHingeAccumulatedAngleConstraint accumulates all of its rotation so you know how many times it has rotated"
+   + " in a particular direction and the accumulated rotation can be undone by rotating the other way. "
+   + "Try to get the door to fly off its hinge by setting the iterations too low"
+   + " and manipulating the sliders.";
  }
+
 }

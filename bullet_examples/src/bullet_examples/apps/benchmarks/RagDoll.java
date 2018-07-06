@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package bullet_examples.apps.benchmarks;
 
@@ -61,7 +61,8 @@ public class RagDoll {
  btRigidBody[] m_bodies = new btRigidBody[BODYPART_COUNT];
  btTypedConstraint[] m_joints = new btTypedConstraint[JOINT_COUNT];
 
- private btRigidBody createRigidBody(float mass, final btTransform startTransform,
+ private btRigidBody createRigidBody(float mass,
+  final btTransform startTransform,
   btCollisionShape shape) {
   boolean isDynamic = (mass != 0.f);
   final btVector3 localInertia = new btVector3();
@@ -69,7 +70,8 @@ public class RagDoll {
    shape.calculateLocalInertia(mass, localInertia);
   }
   btDefaultMotionState myMotionState = new btDefaultMotionState(startTransform);
-  btRigidBodyConstructionInfo rbInfo = new btRigidBodyConstructionInfo(mass, myMotionState, shape,
+  btRigidBodyConstructionInfo rbInfo = new btRigidBodyConstructionInfo(mass,
+   myMotionState, shape,
    localInertia);
   btRigidBody body = new btRigidBody(rbInfo);
   m_ownerWorld.addRigidBody(body);
@@ -79,17 +81,26 @@ public class RagDoll {
  RagDoll(btDynamicsWorld ownerWorld, final btVector3 positionOffset, float scale) {
   m_ownerWorld = (ownerWorld);
   // Setup the geometry
-  m_shapes[BODYPART_PELVIS] = new btCapsuleShape((0.15f) * scale, (0.20f) * scale);
+  m_shapes[BODYPART_PELVIS] = new btCapsuleShape((0.15f) * scale, (0.20f)
+   * scale);
   m_shapes[BODYPART_SPINE] = new btCapsuleShape((0.15f) * scale, (0.28f) * scale);
   m_shapes[BODYPART_HEAD] = new btCapsuleShape((0.10f) * scale, (0.05f) * scale);
-  m_shapes[BODYPART_LEFT_UPPER_LEG] = new btCapsuleShape((0.07f) * scale, (0.45f) * scale);
-  m_shapes[BODYPART_LEFT_LOWER_LEG] = new btCapsuleShape((0.05f) * scale, (0.37f) * scale);
-  m_shapes[BODYPART_RIGHT_UPPER_LEG] = new btCapsuleShape((0.07f) * scale, (0.45f) * scale);
-  m_shapes[BODYPART_RIGHT_LOWER_LEG] = new btCapsuleShape((0.05f) * scale, (0.37f) * scale);
-  m_shapes[BODYPART_LEFT_UPPER_ARM] = new btCapsuleShape((0.05f) * scale, (0.33f) * scale);
-  m_shapes[BODYPART_LEFT_LOWER_ARM] = new btCapsuleShape((0.04f) * scale, (0.25f) * scale);
-  m_shapes[BODYPART_RIGHT_UPPER_ARM] = new btCapsuleShape((0.05f) * scale, (0.33f) * scale);
-  m_shapes[BODYPART_RIGHT_LOWER_ARM] = new btCapsuleShape((0.04f) * scale, (0.25f) * scale);
+  m_shapes[BODYPART_LEFT_UPPER_LEG] = new btCapsuleShape((0.07f) * scale,
+   (0.45f) * scale);
+  m_shapes[BODYPART_LEFT_LOWER_LEG] = new btCapsuleShape((0.05f) * scale,
+   (0.37f) * scale);
+  m_shapes[BODYPART_RIGHT_UPPER_LEG] = new btCapsuleShape((0.07f) * scale,
+   (0.45f) * scale);
+  m_shapes[BODYPART_RIGHT_LOWER_LEG] = new btCapsuleShape((0.05f) * scale,
+   (0.37f) * scale);
+  m_shapes[BODYPART_LEFT_UPPER_ARM] = new btCapsuleShape((0.05f) * scale,
+   (0.33f) * scale);
+  m_shapes[BODYPART_LEFT_LOWER_ARM] = new btCapsuleShape((0.04f) * scale,
+   (0.25f) * scale);
+  m_shapes[BODYPART_RIGHT_UPPER_ARM] = new btCapsuleShape((0.05f) * scale,
+   (0.33f) * scale);
+  m_shapes[BODYPART_RIGHT_LOWER_ARM] = new btCapsuleShape((0.04f) * scale,
+   (0.25f) * scale);
   // Setup all the rigid bodies
   final btTransform offset = new btTransform();
   offset.setIdentity();
@@ -97,52 +108,67 @@ public class RagDoll {
   final btTransform transform = new btTransform();
   transform.setIdentity();
   transform.setOrigin(new btVector3((0.f), (1.f), (0.f)).scale(scale));
-  m_bodies[BODYPART_PELVIS] = createRigidBody((1.f), new btTransform(offset).mul(transform),
+  m_bodies[BODYPART_PELVIS] = createRigidBody((1.f), new btTransform(offset)
+   .mul(transform),
    m_shapes[BODYPART_PELVIS]);
   transform.setIdentity();
   transform.setOrigin(new btVector3((0.f), (1.2f), (0.f)).scale(scale));
-  m_bodies[BODYPART_SPINE] = createRigidBody((1.f), new btTransform(offset).mul(transform),
+  m_bodies[BODYPART_SPINE] = createRigidBody((1.f), new btTransform(offset).mul(
+   transform),
    m_shapes[BODYPART_SPINE]);
   transform.setIdentity();
   transform.setOrigin(new btVector3((0.f), (1.6f), (0.f)).scale(scale));
-  m_bodies[BODYPART_HEAD] = createRigidBody((1.f), new btTransform(offset).mul(transform),
+  m_bodies[BODYPART_HEAD] = createRigidBody((1.f), new btTransform(offset).mul(
+   transform),
    m_shapes[BODYPART_HEAD]);
   transform.setIdentity();
   transform.setOrigin(new btVector3((-0.18f), (0.65f), (0.f)).scale(scale));
-  m_bodies[BODYPART_LEFT_UPPER_LEG] = createRigidBody((1.f), new btTransform(offset).mul(transform),
+  m_bodies[BODYPART_LEFT_UPPER_LEG] = createRigidBody((1.f), new btTransform(
+   offset).mul(transform),
    m_shapes[BODYPART_LEFT_UPPER_LEG]);
   transform.setIdentity();
   transform.setOrigin(new btVector3((-0.18f), (0.2f), (0.f)).scale(scale));
-  m_bodies[BODYPART_LEFT_LOWER_LEG] = createRigidBody((1.f), new btTransform(offset).mul(transform),
+  m_bodies[BODYPART_LEFT_LOWER_LEG] = createRigidBody((1.f), new btTransform(
+   offset).mul(transform),
    m_shapes[BODYPART_LEFT_LOWER_LEG]);
   transform.setIdentity();
   transform.setOrigin(new btVector3((0.18f), (0.65f), (0.f)).scale(scale));
-  m_bodies[BODYPART_RIGHT_UPPER_LEG] =
-   createRigidBody((1.f), new btTransform(offset).mul(transform), m_shapes[BODYPART_RIGHT_UPPER_LEG]);
+  m_bodies[BODYPART_RIGHT_UPPER_LEG]
+   = createRigidBody((1.f), new btTransform(offset).mul(transform),
+    m_shapes[BODYPART_RIGHT_UPPER_LEG]);
   transform.setIdentity();
   transform.setOrigin(new btVector3((0.18f), (0.2f), (0.f)).scale(scale));
-  m_bodies[BODYPART_RIGHT_LOWER_LEG] =
-   createRigidBody((1.f), new btTransform(offset).mul(transform), m_shapes[BODYPART_RIGHT_LOWER_LEG]);
+  m_bodies[BODYPART_RIGHT_LOWER_LEG]
+   = createRigidBody((1.f), new btTransform(offset).mul(transform),
+    m_shapes[BODYPART_RIGHT_LOWER_LEG]);
   transform.setIdentity();
   transform.setOrigin(new btVector3((-0.35f), (1.45f), (0.f)).scale(scale));
-  transform.setBasis(new btMatrix3x3().setEulerZYX(0, 0, (float) Math.PI / 2.0f));
-  m_bodies[BODYPART_LEFT_UPPER_ARM] = createRigidBody((1.f), new btTransform(offset).mul(transform),
+  transform
+   .setBasis(new btMatrix3x3().setEulerZYX(0, 0, (float) Math.PI / 2.0f));
+  m_bodies[BODYPART_LEFT_UPPER_ARM] = createRigidBody((1.f), new btTransform(
+   offset).mul(transform),
    m_shapes[BODYPART_LEFT_UPPER_ARM]);
   transform.setIdentity();
   transform.setOrigin(new btVector3((-0.7f), (1.45f), (0.f)).scale(scale));
-  transform.setBasis(new btMatrix3x3().setEulerZYX(0, 0, (float) Math.PI / 2.0f));
-  m_bodies[BODYPART_LEFT_LOWER_ARM] = createRigidBody((1.f), new btTransform(offset).mul(transform),
+  transform
+   .setBasis(new btMatrix3x3().setEulerZYX(0, 0, (float) Math.PI / 2.0f));
+  m_bodies[BODYPART_LEFT_LOWER_ARM] = createRigidBody((1.f), new btTransform(
+   offset).mul(transform),
    m_shapes[BODYPART_LEFT_LOWER_ARM]);
   transform.setIdentity();
   transform.setOrigin(new btVector3((0.35f), (1.45f), (0.f)).scale(scale));
-  transform.setBasis(new btMatrix3x3().setEulerZYX(0, 0, -(float) Math.PI / 2.0f));
-  m_bodies[BODYPART_RIGHT_UPPER_ARM] =
-   createRigidBody((1.f), new btTransform(offset).mul(transform), m_shapes[BODYPART_RIGHT_UPPER_ARM]);
+  transform.setBasis(new btMatrix3x3()
+   .setEulerZYX(0, 0, -(float) Math.PI / 2.0f));
+  m_bodies[BODYPART_RIGHT_UPPER_ARM]
+   = createRigidBody((1.f), new btTransform(offset).mul(transform),
+    m_shapes[BODYPART_RIGHT_UPPER_ARM]);
   transform.setIdentity();
   transform.setOrigin(new btVector3((0.7f), (1.45f), (0.f)).scale(scale));
-  transform.setBasis(new btMatrix3x3().setEulerZYX(0, 0, -(float) Math.PI / 2.0f));
-  m_bodies[BODYPART_RIGHT_LOWER_ARM] =
-   createRigidBody((1.f), new btTransform(offset).mul(transform), m_shapes[BODYPART_RIGHT_LOWER_ARM]);
+  transform.setBasis(new btMatrix3x3()
+   .setEulerZYX(0, 0, -(float) Math.PI / 2.0f));
+  m_bodies[BODYPART_RIGHT_LOWER_ARM]
+   = createRigidBody((1.f), new btTransform(offset).mul(transform),
+    m_shapes[BODYPART_RIGHT_LOWER_ARM]);
   // Setup some damping on the m_bodies
   for (int i = 0; i < BODYPART_COUNT; ++i) {
    m_bodies[i].setDamping((0.05f), (0.85f));
@@ -160,8 +186,9 @@ public class RagDoll {
   localA.setOrigin(new btVector3((0.f), (0.15f), (0.f)).scale(scale));
   localB.setBasis(new btMatrix3x3().setEulerZYX(0, (float) Math.PI / 2.0f, 0));
   localB.setOrigin(new btVector3((0.f), (-0.15f), (0.f)).scale(scale));
-  hingeC =
-   new btHingeConstraint(m_bodies[BODYPART_PELVIS], m_bodies[BODYPART_SPINE], localA, localB);
+  hingeC
+   = new btHingeConstraint(m_bodies[BODYPART_PELVIS], m_bodies[BODYPART_SPINE],
+    localA, localB);
   hingeC.setLimit((-(float) Math.PI / 4.0f), ((float) Math.PI / 2.0f));
   m_joints[JOINT_PELVIS_SPINE] = hingeC;
   m_ownerWorld.addConstraint(m_joints[JOINT_PELVIS_SPINE], true);
@@ -171,18 +198,23 @@ public class RagDoll {
   localA.setOrigin(new btVector3((0.f), (0.30f), (0.f)).scale(scale));
   localB.setBasis(new btMatrix3x3().setEulerZYX(0f, 0f, (float) Math.PI / 2.0f));
   localB.setOrigin(new btVector3((0.f), (-0.14f), (0.f)).scale(scale));
-  coneC = new btConeTwistConstraint(m_bodies[BODYPART_SPINE], m_bodies[BODYPART_HEAD], localA,
+  coneC = new btConeTwistConstraint(m_bodies[BODYPART_SPINE],
+   m_bodies[BODYPART_HEAD], localA,
    localB);
-  coneC.setLimit((float) Math.PI / 4.0f, (float) Math.PI / 4.0f, (float) Math.PI / 2.0f);
+  coneC.setLimit((float) Math.PI / 4.0f, (float) Math.PI / 4.0f, (float) Math.PI
+   / 2.0f);
   m_joints[JOINT_SPINE_HEAD] = coneC;
   m_ownerWorld.addConstraint(m_joints[JOINT_SPINE_HEAD], true);
   localA.setIdentity();
   localB.setIdentity();
-  localA.setBasis(new btMatrix3x3().setEulerZYX(0, 0, -(float) Math.PI / 4.0f * 5));
+  localA.setBasis(new btMatrix3x3().setEulerZYX(0, 0, -(float) Math.PI / 4.0f
+   * 5));
   localA.setOrigin(new btVector3((-0.18f), (-0.10f), (0.f)).scale(scale));
-  localB.setBasis(new btMatrix3x3().setEulerZYX(0f, 0f, -(float) Math.PI / 4.0f * 5));
+  localB.setBasis(new btMatrix3x3().setEulerZYX(0f, 0f, -(float) Math.PI / 4.0f
+   * 5));
   localB.setOrigin(new btVector3((0.f), (0.225f), (0.f)).scale(scale));
-  coneC = new btConeTwistConstraint(m_bodies[BODYPART_PELVIS], m_bodies[BODYPART_LEFT_UPPER_LEG],
+  coneC = new btConeTwistConstraint(m_bodies[BODYPART_PELVIS],
+   m_bodies[BODYPART_LEFT_UPPER_LEG],
    localA, localB);
   coneC.setLimit((float) Math.PI / 4.0f, (float) Math.PI / 4.0f, 0);
   m_joints[JOINT_LEFT_HIP] = coneC;
@@ -204,7 +236,8 @@ public class RagDoll {
   localA.setOrigin(new btVector3((0.18f), (-0.10f), (0.f)).scale(scale));
   localB.setBasis(new btMatrix3x3().setEulerZYX(0f, 0f, (float) Math.PI / 4.0f));
   localB.setOrigin(new btVector3((0.f), (0.225f), (0.f)).scale(scale));
-  coneC = new btConeTwistConstraint(m_bodies[BODYPART_PELVIS], m_bodies[BODYPART_RIGHT_UPPER_LEG],
+  coneC = new btConeTwistConstraint(m_bodies[BODYPART_PELVIS],
+   m_bodies[BODYPART_RIGHT_UPPER_LEG],
    localA, localB);
   coneC.setLimit((float) Math.PI / 4.0f, (float) Math.PI / 4.0f, 0);
   m_joints[JOINT_RIGHT_HIP] = coneC;
@@ -226,7 +259,8 @@ public class RagDoll {
   localA.setOrigin(new btVector3((-0.2f), (0.15f), (0.f)).scale(scale));
   localB.setBasis(new btMatrix3x3().setEulerZYX(0f, 0f, (float) Math.PI / 2.0f));
   localB.setOrigin(new btVector3((0.f), (-0.18f), (0.f)).scale(scale));
-  coneC = new btConeTwistConstraint(m_bodies[BODYPART_SPINE], m_bodies[BODYPART_LEFT_UPPER_ARM],
+  coneC = new btConeTwistConstraint(m_bodies[BODYPART_SPINE],
+   m_bodies[BODYPART_LEFT_UPPER_ARM],
    localA, localB);
   coneC.setLimit((float) Math.PI / 2.0f, (float) Math.PI / 2.0f, 0);
   m_joints[JOINT_LEFT_SHOULDER] = coneC;
@@ -248,7 +282,8 @@ public class RagDoll {
   localA.setOrigin(new btVector3((0.2f), (0.15f), (0.f)).scale(scale));
   localB.setBasis(new btMatrix3x3().setEulerZYX(0, 0, (float) Math.PI / 2.0f));
   localB.setOrigin(new btVector3((0.f), (-0.18f), (0.f)).scale(scale));
-  coneC = new btConeTwistConstraint(m_bodies[BODYPART_SPINE], m_bodies[BODYPART_RIGHT_UPPER_ARM],
+  coneC = new btConeTwistConstraint(m_bodies[BODYPART_SPINE],
+   m_bodies[BODYPART_RIGHT_UPPER_ARM],
    localA, localB);
   coneC.setLimit((float) Math.PI / 2.0f, (float) Math.PI / 2.0f, 0);
   m_joints[JOINT_RIGHT_SHOULDER] = coneC;
@@ -265,4 +300,5 @@ public class RagDoll {
   m_joints[JOINT_RIGHT_ELBOW] = hingeC;
   m_ownerWorld.addConstraint(m_joints[JOINT_RIGHT_ELBOW], true);
  }
+
 }

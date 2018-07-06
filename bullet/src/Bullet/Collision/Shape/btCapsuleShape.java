@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2009 Erwin Coumans  http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -27,7 +27,8 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-public class btCapsuleShape extends btConvexInternalShape implements Serializable {
+public class btCapsuleShape extends btConvexInternalShape implements
+ Serializable {
 
  int m_upAxis;
 
@@ -53,7 +54,8 @@ public class btCapsuleShape extends btConvexInternalShape implements Serializabl
   ident.setIdentity();
   float radius = getRadius();
   final btVector3 halfExtents = new btVector3(radius, radius, radius);
-  halfExtents.setElement(getUpAxis(), halfExtents.getElement(getUpAxis()) + getHalfHeight());
+  halfExtents.setElement(getUpAxis(), halfExtents.getElement(getUpAxis())
+   + getHalfHeight());
   float lx = (2.f) * halfExtents.getElement(0);
   float ly = (2.f) * halfExtents.getElement(1);
   float lz = (2.f) * halfExtents.getElement(2);
@@ -105,7 +107,8 @@ public class btCapsuleShape extends btConvexInternalShape implements Serializabl
  }
 
  @Override
- public void batchedUnitVectorGetSupportingVertexWithoutMargin(btVector3[] vectors,
+ public void batchedUnitVectorGetSupportingVertexWithoutMargin(
+  btVector3[] vectors,
   btVector3[] supportVerticesOut, int numVectors) {
   for (int j = 0; j < numVectors; j++) {
    float maxDot = ((-BT_LARGE_FLOAT));
@@ -147,12 +150,15 @@ public class btCapsuleShape extends btConvexInternalShape implements Serializabl
  }
 
  @Override
- public void getAabb(final btTransform t, final btVector3 aabbMin, final btVector3 aabbMax) {
-  final btVector3 halfExtents = new btVector3(getRadius(), getRadius(), getRadius());
+ public void getAabb(final btTransform t, final btVector3 aabbMin,
+  final btVector3 aabbMax) {
+  final btVector3 halfExtents = new btVector3(getRadius(), getRadius(),
+   getRadius());
   halfExtents.setElement(m_upAxis, getRadius() + getHalfHeight());
   final btMatrix3x3 abs_b = t.getBasis().abs();
   final btVector3 center = t.getOrigin();
-  final btVector3 extent = halfExtents.dot3(abs_b.getRow(0), abs_b.getRow(1), abs_b.getRow(2));
+  final btVector3 extent = halfExtents.dot3(abs_b.getRow(0), abs_b.getRow(1),
+   abs_b.getRow(2));
   aabbMin.set(center).sub(extent);
   aabbMax.set(center).add(extent);
  }
@@ -177,7 +183,8 @@ public class btCapsuleShape extends btConvexInternalShape implements Serializabl
 
  @Override
  public void setLocalScaling(final btVector3 scaling) {
-  final btVector3 unScaledImplicitShapeDimensions = new btVector3(m_implicitShapeDimensions).div(
+  final btVector3 unScaledImplicitShapeDimensions = new btVector3(
+   m_implicitShapeDimensions).div(
    m_localScaling);
   super.setLocalScaling(scaling);
   m_implicitShapeDimensions.set(btMul(unScaledImplicitShapeDimensions, scaling));
@@ -218,4 +225,5 @@ public class btCapsuleShape extends btConvexInternalShape implements Serializabl
   }
   return super.equals(obj);
  }
+
 }

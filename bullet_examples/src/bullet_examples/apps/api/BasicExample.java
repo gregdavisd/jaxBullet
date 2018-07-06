@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2015 Google Inc. http://bulletphysics.org
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2015 Google Inc. http://bulletphysics.org
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package bullet_examples.apps.api;
 
@@ -75,7 +75,8 @@ public class BasicExample extends DiscreteDemoContainer {
 
  @Override
  public void resetCamera() {
-  camera().set(new btQuaternion(0.13435361f, -0.37949604f, -0.055803467f, 0.91368365f),
+  camera().set(new btQuaternion(0.13435361f, -0.37949604f, -0.055803467f,
+   0.91368365f),
    new btVector3(11.757509f, 5.198874f, 11.65576f));
  }
 
@@ -86,14 +87,15 @@ public class BasicExample extends DiscreteDemoContainer {
 
  @Override
  public String get_description() {
-  return "A block of blocks crashing down. Changing parameters will yield differently shaped piles of blocks. " +
-   "At high precisions conservation of momentum will cause a shockwave that bounces the top blocks. " +
-   "Box to Box collision is performed by the btBoxBoxDetector class. Select cycle check box for the simulation " +
-   "to automatically reset once all blocks are deactivated.";
+  return "A block of blocks crashing down. Changing parameters will yield differently shaped piles of blocks. "
+   + "At high precisions conservation of momentum will cause a shockwave that bounces the top blocks. "
+   + "Box to Box collision is performed by the btBoxBoxDetector class. Select cycle check box for the simulation "
+   + "to automatically reset once all blocks are deactivated.";
  }
 
  @Override
  protected int getDebugMode() {
   return 0;
  }
+
 }

@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Dynamics;
 
@@ -28,14 +28,16 @@ import java.io.Serializable;
  *
  * @author Gregery Barton
  */
-abstract public class btDynamicsWorld extends btCollisionWorld implements Serializable {
+abstract public class btDynamicsWorld extends btCollisionWorld implements
+ Serializable {
 
  btInternalTickCallback m_internalTickCallback;
  btInternalTickCallback m_internalPreTickCallback;
  Object m_worldUserInfo;
  final btContactSolverInfo m_solverInfo = new btContactSolverInfo();
 
- public btDynamicsWorld(btDispatcher dispatcher, btBroadphaseInterface broadphase,
+ public btDynamicsWorld(btDispatcher dispatcher,
+  btBroadphaseInterface broadphase,
   btCollisionConfiguration collisionConfiguration) {
   super(dispatcher, broadphase, collisionConfiguration);
   m_internalTickCallback = null;
@@ -47,7 +49,8 @@ abstract public class btDynamicsWorld extends btCollisionWorld implements Serial
  ///By default, Bullet will subdivide the timestep in constant substeps of each 'fixedTimeStep'.
  ///in order to keep the simulation real-time, the maximum number of substeps can be clamped to 'maxSubSteps'.
  ///You can disable subdividing the timestep/substepping by passing maxSubSteps=0 as second argument to stepSimulation, but in that case you have to keep the timeStep constant.
- public abstract int stepSimulation(float timeStep, int maxSubSteps, float fixedTimeStep);
+ public abstract int stepSimulation(float timeStep, int maxSubSteps,
+  float fixedTimeStep);
 
  public final int stepSimulation(float timeStep) {
   assert (timeStep >= 0);
@@ -108,7 +111,8 @@ abstract public class btDynamicsWorld extends btCollisionWorld implements Serial
  abstract void clearForces();
 
  /// Set the callback for when an internal tick (simulation substep) happens, optional user info
- public void setInternalTickCallback(btInternalTickCallback cb, Object worldUserInfo,
+ public void setInternalTickCallback(btInternalTickCallback cb,
+  Object worldUserInfo,
   boolean isPreTick) {
   if (isPreTick) {
    m_internalPreTickCallback = cb;
@@ -118,7 +122,8 @@ abstract public class btDynamicsWorld extends btCollisionWorld implements Serial
   m_worldUserInfo = worldUserInfo;
  }
 
- public void setInternalTickCallback(btInternalTickCallback cb, Object worldUserInfo) {
+ public void setInternalTickCallback(btInternalTickCallback cb,
+  Object worldUserInfo) {
   setInternalTickCallback(cb, worldUserInfo, false);
  }
 
@@ -137,25 +142,18 @@ abstract public class btDynamicsWorld extends btCollisionWorld implements Serial
  public btContactSolverInfo getSolverInfo() {
   return m_solverInfo;
  }
-/*
- ///obsolete, use addAction instead.
- public void addVehicle(btActionInterface vehicle) {
-  //(void)vehicle;
- }
- ///obsolete, use removeAction instead
 
- public void removeVehicle(btActionInterface vehicle) {
-  //(void)vehicle;
- }
- ///obsolete, use addAction instead.
-
- public void addCharacter(btActionInterface character) {
-  //(void)character;
- }
- ///obsolete, use removeAction instead
-
- public void removeCharacter(btActionInterface character) {
-  //(void)character;
- }
-*/
+ /*
+  * ///obsolete, use addAction instead. public void addVehicle(btActionInterface
+  * vehicle) { //(void)vehicle; } ///obsolete, use removeAction instead
+  *
+  * public void removeVehicle(btActionInterface vehicle) { //(void)vehicle; }
+  * ///obsolete, use addAction instead.
+  *
+  * public void addCharacter(btActionInterface character) { //(void)character; }
+  * ///obsolete, use removeAction instead
+  *
+  * public void removeCharacter(btActionInterface character) {
+  * //(void)character; }
+  */
 }

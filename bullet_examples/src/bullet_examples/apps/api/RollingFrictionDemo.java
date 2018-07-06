@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package bullet_examples.apps.api;
 
@@ -48,7 +48,8 @@ public class RollingFrictionDemo extends DiscreteDemoContainer {
  static final int ARRAY_SIZE_Y = 5;
  static final int ARRAY_SIZE_Z = 5;
 //maximum number of objects (and allow user to shoot additional boxes)
- static final int MAX_PROXIES = (ARRAY_SIZE_X * ARRAY_SIZE_Y * ARRAY_SIZE_Z + 1024);
+ static final int MAX_PROXIES = (ARRAY_SIZE_X * ARRAY_SIZE_Y * ARRAY_SIZE_Z
+  + 1024);
 ///scaling of the objects (0.1 = 20 centimeter boxes )
  static final float SCALING = 1.f;
  static final float START_POS_X = -5;
@@ -61,11 +62,13 @@ public class RollingFrictionDemo extends DiscreteDemoContainer {
   world().setGravity(new btVector3(0, 0, -10));
   {
    ///create a few basic rigid bodies
-   btCollisionShape groundShape = new btBoxShape(new btVector3((12.f), (10.f), (25.f)));
+   btCollisionShape groundShape = new btBoxShape(new btVector3((12.f), (10.f),
+    (25.f)));
    final btTransform groundTransform = new btTransform();
    groundTransform.setIdentity();
    groundTransform.setOrigin(new btVector3(0, 0, -28));
-   groundTransform.set3x3(new btQuaternion(new btVector3(0, 1, 0), SIMD_PI * 0.03f));
+   groundTransform.set3x3(new btQuaternion(new btVector3(0, 1, 0), SIMD_PI
+    * 0.03f));
    //We can also use DemoApplication::localCreateRigidBody, but for clarity it is provided here:
    float mass = 0;
    //rigidbody is dynamic if and only if mass is non zero, otherwise static
@@ -76,7 +79,8 @@ public class RollingFrictionDemo extends DiscreteDemoContainer {
    }
    //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
    btDefaultMotionState myMotionState = new btDefaultMotionState(groundTransform);
-   btRigidBodyConstructionInfo rbInfo = new btRigidBodyConstructionInfo(mass, myMotionState,
+   btRigidBodyConstructionInfo rbInfo = new btRigidBodyConstructionInfo(mass,
+    myMotionState,
     groundShape, localInertia);
    btRigidBody body = new btRigidBody(rbInfo);
    body.setFriction(.5f);
@@ -85,7 +89,8 @@ public class RollingFrictionDemo extends DiscreteDemoContainer {
   }
   {
    ///create a few basic rigid bodies
-   btCollisionShape groundShape = new btBoxShape(new btVector3((100.f), (100.f), (50.f)));
+   btCollisionShape groundShape = new btBoxShape(new btVector3((100.f), (100.f),
+    (50.f)));
    final btTransform groundTransform = new btTransform();
    groundTransform.setIdentity();
    groundTransform.setOrigin(new btVector3(0f, 0f, -54f));
@@ -99,7 +104,8 @@ public class RollingFrictionDemo extends DiscreteDemoContainer {
    }
    //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
    btDefaultMotionState myMotionState = new btDefaultMotionState(groundTransform);
-   btRigidBodyConstructionInfo rbInfo = new btRigidBodyConstructionInfo(mass, myMotionState,
+   btRigidBodyConstructionInfo rbInfo = new btRigidBodyConstructionInfo(mass,
+    myMotionState,
     groundShape, localInertia);
    btRigidBody body = new btRigidBody(rbInfo);
    body.setFriction(.5f);
@@ -147,14 +153,17 @@ public class RollingFrictionDemo extends DiscreteDemoContainer {
         colShape.calculateLocalInertia(mass, localInertia);
        }
        //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-       btDefaultMotionState myMotionState = new btDefaultMotionState(startTransform);
-       btRigidBodyConstructionInfo rbInfo = new btRigidBodyConstructionInfo(mass, myMotionState,
+       btDefaultMotionState myMotionState = new btDefaultMotionState(
+        startTransform);
+       btRigidBodyConstructionInfo rbInfo = new btRigidBodyConstructionInfo(mass,
+        myMotionState,
         colShape, localInertia);
        btRigidBody body = new btRigidBody(rbInfo);
        body.setFriction(1.f);
        body.setRollingFriction(.1f);
        body.setSpinningFriction(.1f);
-       body.setAnisotropicFriction(colShape.getAnisotropicRollingFrictionDirection(),
+       body.setAnisotropicFriction(colShape
+        .getAnisotropicRollingFrictionDirection(),
         CF_ANISOTROPIC_ROLLING_FRICTION);
        world().addRigidBody(body);
       }
@@ -166,7 +175,8 @@ public class RollingFrictionDemo extends DiscreteDemoContainer {
 
  @Override
  public void resetCamera() {
-  camera().set(new btQuaternion(-0.10754126f, -0.0019145795f, -2.0712907E-4f, -0.99419874f),
+  camera().set(new btQuaternion(-0.10754126f, -0.0019145795f, -2.0712907E-4f,
+   -0.99419874f),
    new btVector3(2.3444018f, 25.343372f, 109.90401f));
  }
 
@@ -177,13 +187,14 @@ public class RollingFrictionDemo extends DiscreteDemoContainer {
 
  @Override
  public String get_description() {
-  return "Damping is often not good enough to keep rounded objects from rolling down a sloped surface. " +
-   "Instead, you can set the rolling friction for a rigid body. Generally it is best to leave the rolling friction " +
-   "to zero, to avoid artifacts.";
+  return "Damping is often not good enough to keep rounded objects from rolling down a sloped surface. "
+   + "Instead, you can set the rolling friction for a rigid body. Generally it is best to leave the rolling friction "
+   + "to zero, to avoid artifacts.";
  }
 
  @Override
  protected int getDebugMode() {
   return 0;
  }
+
 }

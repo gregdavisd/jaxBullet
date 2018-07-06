@@ -1,16 +1,16 @@
 /*
-Bullet Continuous Collision Detection and Physics Library
-Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Bullet Continuous Collision Detection and Physics Library
+ * Copyright (c) 2003-2006 Erwin Coumans  http://continuousphysics.com/Bullet/
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 
  /* Hinge Constraint by Dirk Gregorius. Limits added by Marcus Hennix at Starbreeze Studios */
@@ -33,8 +33,9 @@ import static Bullet.LinearMath.btVector3.btPlaneSpace1;
 import java.io.Serializable;
 
 /**
- * hinge constraint between two rigidbodies each with a pivotpoint that descibes the axis location
- * in local space axis defines the orientation of the hinge axis
+ * hinge constraint between two rigidbodies each with a pivotpoint that descibes
+ * the axis location in local space axis defines the orientation of the hinge
+ * axis
  *
  * @author Gregery Barton
  */
@@ -48,7 +49,8 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
  public static final int BT_HINGE_FLAGS_ERP_NORM = 8;
  final btJacobianEntry[] m_jac = {new btJacobianEntry(), new btJacobianEntry(),
   new btJacobianEntry()}; //3 orthogonal linear constraints
- final btJacobianEntry[] m_jacAng = {new btJacobianEntry(), new btJacobianEntry(),
+ final btJacobianEntry[] m_jacAng = {new btJacobianEntry(),
+  new btJacobianEntry(),
   new btJacobianEntry()}; //2 orthogonal angular constraints+ 1 for limit/motor
  final btTransform m_rbAFrame = new btTransform(); // constraint axii. Assumes z is hinge axis.
  final btTransform m_rbBFrame = new btTransform();
@@ -79,12 +81,14 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
  float m_stopCFM;
  float m_stopERP;
 
- public btHingeConstraint(btRigidBody rbA, btRigidBody rbB, final btVector3 pivotInA,
+ public btHingeConstraint(btRigidBody rbA, btRigidBody rbB,
+  final btVector3 pivotInA,
   final btVector3 pivotInB, final btVector3 axisInA, final btVector3 axisInB) {
   this(rbA, rbB, pivotInA, pivotInB, axisInA, axisInB, false);
  }
 
- public btHingeConstraint(btRigidBody rbA, btRigidBody rbB, final btVector3 pivotInA,
+ public btHingeConstraint(btRigidBody rbA, btRigidBody rbB,
+  final btVector3 pivotInA,
   final btVector3 pivotInB, final btVector3 axisInA, final btVector3 axisInB,
   boolean useReferenceFrameA) {
   super(HINGE_CONSTRAINT_TYPE, rbA, rbB);
@@ -121,14 +125,16 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
   final btVector3 rbAxisB1 = quatRotate(rotationArc, rbAxisA1);
   final btVector3 rbAxisB2 = new btVector3(axisInB).cross(rbAxisB1);
   m_rbBFrame.setOrigin(pivotInB);
-  m_rbBFrame.set3x3(new btMatrix3x3(rbAxisB1.getX(), rbAxisB2.getX(), axisInB.getX(),
+  m_rbBFrame.set3x3(new btMatrix3x3(rbAxisB1.getX(), rbAxisB2.getX(), axisInB
+   .getX(),
    rbAxisB1.getY(), rbAxisB2.getY(), axisInB.getY(),
    rbAxisB1.getZ(), rbAxisB2.getZ(), axisInB.getZ()));
   //start with free
   m_referenceSign = m_useReferenceFrameA ? (-1.f) : (1.f);
  }
 
- public btHingeConstraint(btRigidBody rbA, final btVector3 pivotInA, final btVector3 axisInA) {
+ public btHingeConstraint(btRigidBody rbA, final btVector3 pivotInA,
+  final btVector3 axisInA) {
   this(rbA, pivotInA, axisInA, false);
  }
 
@@ -152,26 +158,32 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
   final btVector3 rbAxisA2 = new btVector3();
   btPlaneSpace1(axisInA, rbAxisA1, rbAxisA2);
   m_rbAFrame.setOrigin(pivotInA);
-  m_rbAFrame.set3x3(new btMatrix3x3(rbAxisA1.getX(), rbAxisA2.getX(), axisInA.getX(),
+  m_rbAFrame.set3x3(new btMatrix3x3(rbAxisA1.getX(), rbAxisA2.getX(), axisInA
+   .getX(),
    rbAxisA1.getY(), rbAxisA2.getY(), axisInA.getY(),
    rbAxisA1.getZ(), rbAxisA2.getZ(), axisInA.getZ()));
-  final btVector3 axisInB = rbA.getCenterOfMassTransform().transform3x3(new btVector3(axisInA));
+  final btVector3 axisInB = rbA.getCenterOfMassTransform().transform3x3(
+   new btVector3(axisInA));
   final btQuaternion rotationArc = shortestArcQuat(axisInA, axisInB);
   final btVector3 rbAxisB1 = quatRotate(rotationArc, rbAxisA1);
   final btVector3 rbAxisB2 = new btVector3(axisInB).cross(rbAxisB1);
-  m_rbBFrame.setOrigin(rbA.getCenterOfMassTransform().transform(new btVector3(pivotInA)));
-  m_rbBFrame.set3x3(new btMatrix3x3(rbAxisB1.getX(), rbAxisB2.getX(), axisInB.getX(),
+  m_rbBFrame.setOrigin(rbA.getCenterOfMassTransform().transform(new btVector3(
+   pivotInA)));
+  m_rbBFrame.set3x3(new btMatrix3x3(rbAxisB1.getX(), rbAxisB2.getX(), axisInB
+   .getX(),
    rbAxisB1.getY(), rbAxisB2.getY(), axisInB.getY(),
    rbAxisB1.getZ(), rbAxisB2.getZ(), axisInB.getZ()));
   m_referenceSign = m_useReferenceFrameA ? (-1.f) : (1.f);
  }
 
- public btHingeConstraint(btRigidBody rbA, btRigidBody rbB, final btTransform rbAFrame,
+ public btHingeConstraint(btRigidBody rbA, btRigidBody rbB,
+  final btTransform rbAFrame,
   final btTransform rbBFrame) {
   this(rbA, rbB, rbAFrame, rbBFrame, false);
  }
 
- public btHingeConstraint(btRigidBody rbA, btRigidBody rbB, final btTransform rbAFrame,
+ public btHingeConstraint(btRigidBody rbA, btRigidBody rbB,
+  final btTransform rbAFrame,
   final btTransform rbBFrame, boolean useReferenceFrameA) {
   super(HINGE_CONSTRAINT_TYPE, rbA, rbB);
   m_rbAFrame.set(rbAFrame);
@@ -193,7 +205,8 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
   this(rbA, rbAFrame, false);
  }
 
- public btHingeConstraint(btRigidBody rbA, final btTransform rbAFrame, boolean useReferenceFrameA) {
+ public btHingeConstraint(btRigidBody rbA, final btTransform rbAFrame,
+  boolean useReferenceFrameA) {
   super(HINGE_CONSTRAINT_TYPE, rbA);
   m_rbAFrame.set(rbAFrame);
   m_rbBFrame.set(rbAFrame);
@@ -208,92 +221,82 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
   m_stopCFM = 0;
   m_stopERP = 0;
   ///not providing rigidbody B means implicitly using worldspace for body B
-  m_rbBFrame.setOrigin(m_rbA.getCenterOfMassTransform().transform(m_rbAFrame.getOrigin()));
+  m_rbBFrame.setOrigin(m_rbA.getCenterOfMassTransform().transform(m_rbAFrame
+   .getOrigin()));
   m_referenceSign = m_useReferenceFrameA ? (-1.f) : (1.f);
  }
 
  @Override
  public void buildJacobian() {
   if (m_useSolveConstraintObsolete) {
-   /* dead code */
-   assert(false);
    /*
-   m_appliedImpulse = (0.f);
-   m_accMotorImpulse = (0.f);
-   if (!m_angularOnly) {
-    final btVector3 pivotAInW = m_rbA.getCenterOfMassTransform().transform(m_rbAFrame.getOrigin());
-    final btVector3 pivotBInW = m_rbB.getCenterOfMassTransform().transform(m_rbBFrame.getOrigin());
-    final btVector3 relPos = new btVector3(pivotBInW).sub(pivotAInW);
-    btVector3[] normal = {new btVector3(), new btVector3(), new btVector3()};
-    if (relPos.lengthSquared() > SIMD_EPSILON) {
-     normal[0].set(relPos).normalize();
-    } else {
-     normal[0].set((1.0f), 0f, 0f);
-    }
-    btPlaneSpace1(normal[0], normal[1], normal[2]);
-    for (int i = 0; i < 3; i++) {
-     m_jac[i] = new btJacobianEntry(
-      m_rbA.getCenterOfMassTransform().getBasis().transpose(),
-      m_rbB.getCenterOfMassTransform().getBasis().transpose(),
-      new btVector3(pivotAInW).sub(m_rbA.getCenterOfMassPosition()),
-      new btVector3(pivotBInW).sub(m_rbB.getCenterOfMassPosition()),
-      normal[i],
-      m_rbA.getInvInertiaDiagLocal(),
-      m_rbA.getInvMass(),
-      m_rbB.getInvInertiaDiagLocal(),
-      m_rbB.getInvMass());
-    }
-   }
-   //calculate two perpendicular jointAxis, orthogonal to hingeAxis
-   //these two jointAxis require equal angular velocities for both bodies
-   //this is unused for now, it's a todo
-   final btVector3 jointAxis0local = new btVector3();
-   final btVector3 jointAxis1local = new btVector3();
-   btPlaneSpace1(m_rbAFrame.getBasisColumn(2), jointAxis0local, jointAxis1local);
-   final btVector3 jointAxis0 = getRigidBodyA()
-    .getCenterOfMassTransform()
-    .transform3x3(new btVector3(jointAxis0local));
-   final btVector3 jointAxis1 = getRigidBodyA().getCenterOfMassTransform().transform3x3(
-    new btVector3(jointAxis1local));
-   final btVector3 hingeAxisWorld = getRigidBodyA().getCenterOfMassTransform().transform3x3(
-    m_rbAFrame.getBasisColumn(2));
-   m_jacAng[0] = new btJacobianEntry(jointAxis0,
-    m_rbA.getCenterOfMassTransform().getBasis().transpose(),
-    m_rbB.getCenterOfMassTransform().getBasis().transpose(),
-    m_rbA.getInvInertiaDiagLocal(),
-    m_rbB.getInvInertiaDiagLocal());
-   m_jacAng[1] = new btJacobianEntry(jointAxis1,
-    m_rbA.getCenterOfMassTransform().getBasis().transpose(),
-    m_rbB.getCenterOfMassTransform().getBasis().transpose(),
-    m_rbA.getInvInertiaDiagLocal(),
-    m_rbB.getInvInertiaDiagLocal());
-   m_jacAng[2] = new btJacobianEntry(hingeAxisWorld,
-    m_rbA.getCenterOfMassTransform().getBasis().transpose(),
-    m_rbB.getCenterOfMassTransform().getBasis().transpose(),
-    m_rbA.getInvInertiaDiagLocal(),
-    m_rbB.getInvInertiaDiagLocal());
-   // clear accumulator
-   m_accLimitImpulse = (0.f);
-   // test angular limit
-   testLimit(m_rbA.getCenterOfMassTransform(), m_rbB.getCenterOfMassTransform());
-   //Compute K = J*W*J' for hinge axis
-   final btVector3 axisA = getRigidBodyA().getCenterOfMassTransform().transform3x3(m_rbAFrame
-    .getBasisColumn(2));
-   m_kHinge = 1.0f / (getRigidBodyA().computeAngularImpulseDenominator(axisA) +
-    getRigidBodyB().computeAngularImpulseDenominator(axisA));
-*/
+    * dead code
+    */
+   assert (false);
+   /*
+    * m_appliedImpulse = (0.f); m_accMotorImpulse = (0.f); if (!m_angularOnly) {
+    * final btVector3 pivotAInW =
+    * m_rbA.getCenterOfMassTransform().transform(m_rbAFrame.getOrigin()); final
+    * btVector3 pivotBInW =
+    * m_rbB.getCenterOfMassTransform().transform(m_rbBFrame.getOrigin()); final
+    * btVector3 relPos = new btVector3(pivotBInW).sub(pivotAInW); btVector3[]
+    * normal = {new btVector3(), new btVector3(), new btVector3()}; if
+    * (relPos.lengthSquared() > SIMD_EPSILON) {
+    * normal[0].set(relPos).normalize(); } else { normal[0].set((1.0f), 0f, 0f);
+    * } btPlaneSpace1(normal[0], normal[1], normal[2]); for (int i = 0; i < 3;
+    * i++) { m_jac[i] = new btJacobianEntry(
+    * m_rbA.getCenterOfMassTransform().getBasis().transpose(),
+    * m_rbB.getCenterOfMassTransform().getBasis().transpose(), new
+    * btVector3(pivotAInW).sub(m_rbA.getCenterOfMassPosition()), new
+    * btVector3(pivotBInW).sub(m_rbB.getCenterOfMassPosition()), normal[i],
+    * m_rbA.getInvInertiaDiagLocal(), m_rbA.getInvMass(),
+    * m_rbB.getInvInertiaDiagLocal(), m_rbB.getInvMass()); } } //calculate two
+    * perpendicular jointAxis, orthogonal to hingeAxis //these two jointAxis
+    * require equal angular velocities for both bodies //this is unused for now,
+    * it's a todo final btVector3 jointAxis0local = new btVector3(); final
+    * btVector3 jointAxis1local = new btVector3();
+    * btPlaneSpace1(m_rbAFrame.getBasisColumn(2), jointAxis0local,
+    * jointAxis1local); final btVector3 jointAxis0 = getRigidBodyA()
+    * .getCenterOfMassTransform() .transform3x3(new btVector3(jointAxis0local));
+    * final btVector3 jointAxis1 =
+    * getRigidBodyA().getCenterOfMassTransform().transform3x3( new
+    * btVector3(jointAxis1local)); final btVector3 hingeAxisWorld =
+    * getRigidBodyA().getCenterOfMassTransform().transform3x3(
+    * m_rbAFrame.getBasisColumn(2)); m_jacAng[0] = new
+    * btJacobianEntry(jointAxis0,
+    * m_rbA.getCenterOfMassTransform().getBasis().transpose(),
+    * m_rbB.getCenterOfMassTransform().getBasis().transpose(),
+    * m_rbA.getInvInertiaDiagLocal(), m_rbB.getInvInertiaDiagLocal());
+    * m_jacAng[1] = new btJacobianEntry(jointAxis1,
+    * m_rbA.getCenterOfMassTransform().getBasis().transpose(),
+    * m_rbB.getCenterOfMassTransform().getBasis().transpose(),
+    * m_rbA.getInvInertiaDiagLocal(), m_rbB.getInvInertiaDiagLocal());
+    * m_jacAng[2] = new btJacobianEntry(hingeAxisWorld,
+    * m_rbA.getCenterOfMassTransform().getBasis().transpose(),
+    * m_rbB.getCenterOfMassTransform().getBasis().transpose(),
+    * m_rbA.getInvInertiaDiagLocal(), m_rbB.getInvInertiaDiagLocal()); // clear
+    * accumulator m_accLimitImpulse = (0.f); // test angular limit
+    * testLimit(m_rbA.getCenterOfMassTransform(),
+    * m_rbB.getCenterOfMassTransform()); //Compute K = J*W*J' for hinge axis
+    * final btVector3 axisA =
+    * getRigidBodyA().getCenterOfMassTransform().transform3x3(m_rbAFrame
+    * .getBasisColumn(2)); m_kHinge = 1.0f /
+    * (getRigidBodyA().computeAngularImpulseDenominator(axisA) +
+    * getRigidBodyB().computeAngularImpulseDenominator(axisA));
+    */
   }
  }
 
  @Override
  public void getInfo1(btConstraintInfo1 info) {
   if (m_useSolveConstraintObsolete) {
-      /* dead code */
-   assert(false);
    /*
-   info.m_numConstraintRows = 0;
-   info.nub = 0;
-*/
+    * dead code
+    */
+   assert (false);
+   /*
+    * info.m_numConstraintRows = 0; info.nub = 0;
+    */
   } else {
    info.m_numConstraintRows = 5; // Fixed 3 linear + 2 angular
    info.nub = 1;
@@ -309,12 +312,13 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
 
  public void getInfo1NonVirtual(btConstraintInfo1 info) {
   if (m_useSolveConstraintObsolete) {
-      /* dead code */
-   assert(false);
    /*
-   info.m_numConstraintRows = 0;
-   info.nub = 0;
-*/
+    * dead code
+    */
+   assert (false);
+   /*
+    * info.m_numConstraintRows = 0; info.nub = 0;
+    */
   } else {
    //always add the 'limit' row, to avoid computation (data is not available yet)
    info.m_numConstraintRows = 6; // Fixed 3 linear + 2 angular
@@ -325,11 +329,14 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
  @Override
  public void getInfo2(btConstraintInfo2 info) {
   if (m_useOffsetForConstraintFrame) {
-   getInfo2InternalUsingFrameOffset(info, m_rbA.getCenterOfMassTransform(), m_rbB
-    .getCenterOfMassTransform(), m_rbA.getAngularVelocity(), m_rbB.getAngularVelocity());
+   getInfo2InternalUsingFrameOffset(info, m_rbA.getCenterOfMassTransform(),
+    m_rbB
+     .getCenterOfMassTransform(), m_rbA.getAngularVelocity(), m_rbB
+    .getAngularVelocity());
   } else {
-   getInfo2Internal(info, m_rbA.getCenterOfMassTransform(), m_rbB.getCenterOfMassTransform(), m_rbA
-    .getAngularVelocity(), m_rbB.getAngularVelocity());
+   getInfo2Internal(info, m_rbA.getCenterOfMassTransform(), m_rbB
+    .getCenterOfMassTransform(), m_rbA
+     .getAngularVelocity(), m_rbB.getAngularVelocity());
   }
  }
 
@@ -381,7 +388,8 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
   float k = info.fps * normalErp;
   if (!m_angularOnly) {
    for (i = 0; i < 3; i++) {
-    info.m_constraintError[i * skip].set(k * (pivotBInW.getElement(i) - pivotAInW.getElement(i)));
+    info.m_constraintError[i * skip].set(k * (pivotBInW.getElement(i)
+     - pivotAInW.getElement(i)));
    }
   }
   // make rotations around X and Y equal
@@ -453,9 +461,10 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
     if ((m_flags & BT_HINGE_FLAGS_CFM_NORM) != 0) {
      info.cfm[srow].set(m_normalCFM);
     }
-    float mot_fact = getMotorFactor(m_hingeAngle, lostop, histop, m_motorTargetVelocity, info.fps *
-     currERP);
-    info.m_constraintError[srow].plusEquals(mot_fact * m_motorTargetVelocity * m_referenceSign);
+    float mot_fact = getMotorFactor(m_hingeAngle, lostop, histop,
+     m_motorTargetVelocity, info.fps * currERP);
+    info.m_constraintError[srow].plusEquals(mot_fact * m_motorTargetVelocity
+     * m_referenceSign);
     info.m_lowerLimit[srow].set(-m_maxMotorImpulse);
     info.m_upperLimit[srow].set(m_maxMotorImpulse);
    }
@@ -503,7 +512,8 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
   } // if angular limit or powered
  }
 
- public void getInfo2InternalUsingFrameOffset(btConstraintInfo2 info, final btTransform transA,
+ public void getInfo2InternalUsingFrameOffset(btConstraintInfo2 info,
+  final btTransform transA,
   final btTransform transB, final btVector3 angVelA, final btVector3 angVelB) {
   assert (!m_useSolveConstraintObsolete);
   int i, s = info.rowskip;
@@ -531,7 +541,8 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
   // as weighted sum of Z-orthos of frameA and frameB in WCS
   final btVector3 ax1A = trA.getBasisColumn(2);
   final btVector3 ax1B = trB.getBasisColumn(2);
-  final btVector3 ax1 = new btVector3(ax1A).scale(factA).add(new btVector3(ax1B).scale(factB));
+  final btVector3 ax1 = new btVector3(ax1A).scale(factA).add(new btVector3(ax1B)
+   .scale(factB));
   ax1.normalize();
   // fill first 3 rows 
   // we want: velA + wA x relA == velB + wB x relB
@@ -673,9 +684,10 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
     if ((m_flags & BT_HINGE_FLAGS_CFM_NORM) != 0) {
      info.cfm[srow].set(m_normalCFM);
     }
-    float mot_fact = getMotorFactor(m_hingeAngle, lostop, histop, m_motorTargetVelocity, info.fps *
-     currERP);
-    info.m_constraintError[srow].plusEquals(mot_fact * m_motorTargetVelocity * m_referenceSign);
+    float mot_fact = getMotorFactor(m_hingeAngle, lostop, histop,
+     m_motorTargetVelocity, info.fps * currERP);
+    info.m_constraintError[srow].plusEquals(mot_fact * m_motorTargetVelocity
+     * m_referenceSign);
     info.m_lowerLimit[srow].set(-m_maxMotorImpulse);
     info.m_upperLimit[srow].set(m_maxMotorImpulse);
    }
@@ -754,7 +766,8 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
   m_angularOnly = angularOnly;
  }
 
- public void enableAngularMotor(boolean enableMotor, float targetVelocity, float maxMotorImpulse) {
+ public void enableAngularMotor(boolean enableMotor, float targetVelocity,
+  float maxMotorImpulse) {
   m_enableAngularMotor = enableMotor;
   m_motorTargetVelocity = targetVelocity;
   m_maxMotorImpulse = maxMotorImpulse;
@@ -774,19 +787,22 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
  public void setMotorTargetVelocity(float motorTargetVelocity) {
   m_motorTargetVelocity = motorTargetVelocity;
  }
+
  static final btVector3 vHinge = new btVector3(0f, 0f, (1f));
 
  // qAinB is rotation of body A wrt body B.
  public void setMotorTarget(final btQuaternion qAinB, float dt) {
   // convert target from body to constraint space
-  final btQuaternion qConstraint = m_rbBFrame.getRotation().conjugate().mul(qAinB).mul(m_rbAFrame
-   .getRotation());
+  final btQuaternion qConstraint = m_rbBFrame.getRotation().conjugate().mul(
+   qAinB).mul(m_rbAFrame
+    .getRotation());
   qConstraint.normalize();
   // extract "pure" hinge component
   final btVector3 vNoHinge = quatRotate(qConstraint, vHinge);
   vNoHinge.normalize();
   final btQuaternion qNoHinge = shortestArcQuat(vHinge, vNoHinge);
-  final btQuaternion qHinge = new btQuaternion(qNoHinge).conjugate().mul(qConstraint);
+  final btQuaternion qHinge = new btQuaternion(qNoHinge).conjugate().mul(
+   qConstraint);
   qHinge.normalize();
   // compute angular target, clamped to limits
   float targetAngle = qHinge.getAngle();
@@ -804,7 +820,8 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
  public void setMotorTarget(float targetAngle, float dt) {
   float _targetAngle = m_limit.fit(targetAngle);
   // compute angular velocity
-  float curAngle = getHingeAngle(m_rbA.getCenterOfMassTransform(), m_rbB.getCenterOfMassTransform());
+  float curAngle = getHingeAngle(m_rbA.getCenterOfMassTransform(), m_rbB
+   .getCenterOfMassTransform());
   float dAngle = _targetAngle - curAngle;
   m_motorTargetVelocity = dAngle / dt;
  }
@@ -843,20 +860,24 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
   final btVector3 rbAxisA2 = new btVector3();
   btPlaneSpace1(axisInA, rbAxisA1, rbAxisA2);
   final btVector3 pivotInA = m_rbAFrame.getOrigin();
-  m_rbAFrame.set3x3(new btMatrix3x3(rbAxisA1.getX(), rbAxisA2.getX(), axisInA.getX(),
+  m_rbAFrame.set3x3(new btMatrix3x3(rbAxisA1.getX(), rbAxisA2.getX(), axisInA
+   .getX(),
    rbAxisA1.getY(), rbAxisA2.getY(), axisInA.getY(),
    rbAxisA1.getZ(), rbAxisA2.getZ(), axisInA.getZ()));
-  final btVector3 axisInB = m_rbA.getCenterOfMassTransform().transform3x3(new btVector3(axisInA));
+  final btVector3 axisInB = m_rbA.getCenterOfMassTransform().transform3x3(
+   new btVector3(axisInA));
   final btQuaternion rotationArc = shortestArcQuat(axisInA, axisInB);
   final btVector3 rbAxisB1 = quatRotate(rotationArc, rbAxisA1);
   final btVector3 rbAxisB2 = new btVector3(axisInB).cross(rbAxisB1);
   m_rbBFrame.setOrigin(m_rbB.getCenterOfMassTransform().invert().transform(m_rbA
    .getCenterOfMassTransform().transform(new btVector3(pivotInA))));
-  m_rbBFrame.set3x3(new btMatrix3x3(rbAxisB1.getX(), rbAxisB2.getX(), axisInB.getX(),
+  m_rbBFrame.set3x3(new btMatrix3x3(rbAxisB1.getX(), rbAxisB2.getX(), axisInB
+   .getX(),
    rbAxisB1.getY(), rbAxisB2.getY(), axisInB.getY(),
    rbAxisB1.getZ(), rbAxisB2.getZ(), axisInB.getZ()));
-  m_rbBFrame.set3x3(new btMatrix3x3(m_rbB.getCenterOfMassTransform().getBasis().invert().mul(
-   m_rbBFrame.getBasis())));
+  m_rbBFrame.set3x3(new btMatrix3x3(m_rbB.getCenterOfMassTransform().getBasis()
+   .invert().mul(
+    m_rbBFrame.getBasis())));
  }
 
  public boolean hasLimit() {
@@ -873,7 +894,8 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
 
  ///The getHingeAngle gives the hinge angle in range [-PI,PI]
  final public float getHingeAngle() {
-  return getHingeAngle(m_rbA.getCenterOfMassTransform(), m_rbB.getCenterOfMassTransform());
+  return getHingeAngle(m_rbA.getCenterOfMassTransform(), m_rbB
+   .getCenterOfMassTransform());
  }
 
  public float getHingeAngle(final btTransform transA, final btTransform transB) {
@@ -1004,4 +1026,5 @@ public class btHingeConstraint extends btTypedConstraint implements Serializable
  public int getFlags() {
   return m_flags;
  }
+
 }

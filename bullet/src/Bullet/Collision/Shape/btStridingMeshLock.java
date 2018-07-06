@@ -1,15 +1,15 @@
 /*
-Copyright (c) 2017 Gregery Barton
-
-This software is provided 'as-is', without any express or implied warranty.
-In no event will the authors be held liable for any damages arising from the use of this software.
-Permission is granted to anyone to use this software for any purpose, 
-including commercial applications, and to alter it and redistribute it freely, 
-subject to the following restrictions:
-
-1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
-2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-3. This notice may not be removed or altered from any source distribution.
+ * Copyright (c) 2017 Gregery Barton
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it freely,
+ * subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 package Bullet.Collision.Shape;
 
@@ -18,12 +18,12 @@ import Bullet.LinearMath.btVector3;
 import java.nio.FloatBuffer;
 
 /**
- * Striding mesh interface adapted for java.Assumes that X,Y,Z are packed together in that order,
- * however there can be a stride between vertices. Note that the original bullet would
- * process_all_triangles a specified number of faces with numFaces, this interface processes a
- * specified number of vertices with numIndices. Return from overridden
- * getLockedReadOnlyVertexIndexBase(). Callbacks can return false to stop processing any further
- * triangles.
+ * Striding mesh interface adapted for java.Assumes that X,Y,Z are packed
+ * together in that order, however there can be a stride between vertices. Note
+ * that the original bullet would process_all_triangles a specified number of
+ * faces with numFaces, this interface processes a specified number of vertices
+ * with numIndices. Return from overridden getLockedReadOnlyVertexIndexBase().
+ * Callbacks can return false to stop processing any further triangles.
  *
  * @author Gregery Barton
  */
@@ -42,7 +42,8 @@ public class btStridingMeshLock {
   */
  public final Object vertexBuffer;
  /**
-  * distance between vertices in the vertexBuffer (in Java style array indices not bytes)
+  * distance between vertices in the vertexBuffer (in Java style array indices
+  * not bytes)
   */
  public final int stride;
  /**
@@ -74,15 +75,19 @@ public class btStridingMeshLock {
  /**
   *
   * @param vertexBuffer Store the Java array containing vertex points
-  * @param stride distance between vertices in the vertexBuffer (in Java style array indices of
-  * elements not bytes)
+  * @param stride distance between vertices in the vertexBuffer (in Java style
+  * array indices of elements not bytes)
   * @param indexBuffer Store Java array of indices
   * @param indexBufferType arrangement of indices (TRIANGLES or TRIANGLE_STRIP)
-  * @param indexBase base index into indexBuffer (in Java style array indices not bytes)
-  * @param indexStride distance between subsequent indices (in Java style array indices not bytes)
-  * @param numIndices number of indices to process_all_triangles in the indexBuffer
+  * @param indexBase base index into indexBuffer (in Java style array indices
+  * not bytes)
+  * @param indexStride distance between subsequent indices (in Java style array
+  * indices not bytes)
+  * @param numIndices number of indices to process_all_triangles in the
+  * indexBuffer
   */
- public btStridingMeshLock(Object vertexBuffer, int stride, Object indexBuffer, int indexBufferType,
+ public btStridingMeshLock(Object vertexBuffer, int stride, Object indexBuffer,
+  int indexBufferType,
   int indexBase, int indexStride, int numIndices) {
   this.vertexBuffer = vertexBuffer;
   this.stride = stride;
@@ -114,12 +119,14 @@ public class btStridingMeshLock {
   triangle_internal = new TriangleIndicesBTVectorCallback();
  }
 
- private void stream_triangle_indices(GenericIndexBuffer indices, int start_triangle_index) {
+ private void stream_triangle_indices(GenericIndexBuffer indices,
+  int start_triangle_index) {
   int end = indexBase + (numIndices * indexStride);
   int[] triangle = new int[3];
   int triangle_stride = (3 * indexStride);
   int triangle_index = start_triangle_index;
-  for (int i = indexBase + (start_triangle_index * 3); i < end; i += triangle_stride) {
+  for (int i = indexBase + (start_triangle_index * 3); i < end;
+   i += triangle_stride) {
    triangle[0] = indices.get(i);
    triangle[1] = indices.get(i + indexStride);
    triangle[2] = indices.get(i + (2 * indexStride));
@@ -130,7 +137,8 @@ public class btStridingMeshLock {
   }
  }
 
- private void stream_strip_indices(GenericIndexBuffer indices, int start_triangle_index) {
+ private void stream_strip_indices(GenericIndexBuffer indices,
+  int start_triangle_index) {
   if (numIndices < 3) {
    return;
   }
@@ -146,8 +154,8 @@ public class btStridingMeshLock {
   int end = indexBase + (numIndices * indexStride);
   for (; i < end; i += indexStride) {
    triangle[2] = indices.get(i);
-   if (!((triangle[0] == triangle[1]) || (triangle[0] == triangle[2]) ||
-    (triangle[1] == triangle[2]))) {
+   if (!((triangle[0] == triangle[1]) || (triangle[0] == triangle[2])
+    || (triangle[1] == triangle[2]))) {
     if (ccw) {
      if (!triangle_internal.triangle(triangle, triangle_index)) {
       return;
@@ -203,6 +211,7 @@ public class btStridingMeshLock {
  static interface GenericIndexBuffer {
 
   int get(int i);
+
  }
 
  static class InvalidIndexBuffer implements GenericIndexBuffer {
@@ -211,6 +220,7 @@ public class btStridingMeshLock {
   public int get(int i) {
    return 0;
   }
+
  }
 
  static class IntArrayIndexBuffer implements GenericIndexBuffer {
@@ -225,6 +235,7 @@ public class btStridingMeshLock {
   public int get(int i) {
    return buffer[i];
   }
+
  }
 
  static class ShortArrayIndexBuffer implements GenericIndexBuffer {
@@ -239,6 +250,7 @@ public class btStridingMeshLock {
   public int get(int i) {
    return buffer[i];
   }
+
  }
 
  static class ByteArrayIndexBuffer implements GenericIndexBuffer {
@@ -253,11 +265,13 @@ public class btStridingMeshLock {
   public int get(int i) {
    return buffer[i];
   }
+
  }
 
  static interface GenericVertexDataBuffer {
 
   float get(int i);
+
  }
 
  static class InvalidVertexDataBuffer implements GenericVertexDataBuffer {
@@ -266,6 +280,7 @@ public class btStridingMeshLock {
   public float get(int i) {
    return 0.0f;
   }
+
  }
 
  static class DoubleVertexDataBuffer implements GenericVertexDataBuffer {
@@ -280,6 +295,7 @@ public class btStridingMeshLock {
   public float get(int i) {
    return (float) buffer[i];
   }
+
  }
 
  static class FloatVertexDataBuffer implements GenericVertexDataBuffer {
@@ -294,6 +310,7 @@ public class btStridingMeshLock {
   public float get(int i) {
    return (float) buffer[i];
   }
+
  }
 
  static class FloatBufferVertexDataBuffer implements GenericVertexDataBuffer {
@@ -308,6 +325,7 @@ public class btStridingMeshLock {
   public float get(int i) {
    return buffer.get(i);
   }
+
  }
 
  static class ShortVertexDataBuffer implements GenericVertexDataBuffer {
@@ -322,16 +340,20 @@ public class btStridingMeshLock {
   public float get(int i) {
    return buffer[i];
   }
+
  }
 
  private interface TriangleIndicesCallback {
 
   boolean triangle(int[] indices, int index);
+
  }
 
- private final class TriangleIndicesBTVectorCallback implements TriangleIndicesCallback {
+ private final class TriangleIndicesBTVectorCallback implements
+  TriangleIndicesCallback {
 
-  final btVector3[] v = new btVector3[]{new btVector3(), new btVector3(), new btVector3()};
+  final btVector3[] v = new btVector3[]{new btVector3(), new btVector3(),
+   new btVector3()};
 
   public TriangleIndicesBTVectorCallback() {
   }
@@ -346,7 +368,9 @@ public class btStridingMeshLock {
 
   void set(final btVector3 vec, int index) {
    int offset = index * stride;
-   vec.set(gen_buffer.get(offset), gen_buffer.get(offset + 1), gen_buffer.get(offset + 2));
+   vec.set(gen_buffer.get(offset), gen_buffer.get(offset + 1), gen_buffer.get(
+    offset + 2));
   }
+
  }
 }
