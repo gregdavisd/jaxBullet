@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import static javax.vecmath.VecMath.DEBUG_BLOCKS;
+ 
 
 /**
  * The bt32BitAxisSweep3 allows higher precision quantization and more objects
@@ -34,6 +34,7 @@ import static javax.vecmath.VecMath.DEBUG_BLOCKS;
  */
 public class btAxisSweep3 extends btBroadphaseInterface implements Serializable {
 
+ public static final boolean DEBUG_BLOCKS=false;
  protected short m_bpHandleMask;
  protected short m_handleSentinel;
 

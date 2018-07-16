@@ -93,21 +93,17 @@ public class btVector4 extends Tuple4f<btVector4> implements Serializable {
  public float x() {
   return x;
  }
-
- ;
+ 
  public float y() {
   return y;
  }
-
- ;
+ 
  public float z() {
   return z;
  }
-
- ;
+ 
  public float w() {
   return w;
  }
-
-;
+ 
 }

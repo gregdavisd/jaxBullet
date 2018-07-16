@@ -58,7 +58,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.vecmath.FloatSmartPointer;
-import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 
 /**
  *
@@ -67,8 +66,8 @@ import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 public class btSequentialImpulseConstraintSolver extends btConstraintSolver
  implements Serializable {
 
+ public static final boolean DEBUG_BLOCKS = false;
  private static final long serialVersionUID = 1L;
- private long m_btSeed2 = ThreadLocalRandom.current().nextLong();
 
  private static float gResolveSingleConstraintRowGeneric_scalar_reference(
   btSolverBody body1,
@@ -153,6 +152,7 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver
   }
  }
 
+ private long m_btSeed2 = ThreadLocalRandom.current().nextLong();
  private final ArrayList<btSolverBody> solver = new ArrayList<>(0);
  private final ArrayList<btSolverConstraint> contact = new ArrayList<>(0);
  private final ArrayList<btSolverConstraint> non_contact = new ArrayList<>(0);
@@ -1859,6 +1859,13 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver
   return result;
  }
 
+ private void shuffle_list(List list) {
+  for (int j = 0; j < list.size(); ++j) {
+   int swapi = btRandInt2(j + 1);
+   Collections.swap(list, j, swapi);
+  }
+ }
+
  private static class btSingleConstraintRowSolverImpl implements
   btSingleConstraintRowSolver,
   Serializable {
@@ -1966,12 +1973,4 @@ public class btSequentialImpulseConstraintSolver extends btConstraintSolver
   }
 
  }
-
- private void shuffle_list(List list) {
-  for (int j = 0; j < list.size(); ++j) {
-   int swapi = btRandInt2(j + 1);
-   Collections.swap(list, j, swapi);
-  }
- }
-
 }

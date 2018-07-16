@@ -19,7 +19,6 @@ import static Bullet.LinearMath.btScalar.SIMD_EPSILON;
 import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
-import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 import static javax.vecmath.VecMath.is_good_matrix;
 
 /**
@@ -32,6 +31,7 @@ import static javax.vecmath.VecMath.is_good_matrix;
  */
 public class btSubsimplexConvexCast extends btConvexCast implements Serializable {
 
+ public static final boolean DEBUG_BLOCKS = false;
  static final int MAX_ITERATIONS = 32;
  final btSimplexSolverInterface m_simplexSolver;
  final btConvexShape m_convexA;

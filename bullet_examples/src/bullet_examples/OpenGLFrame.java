@@ -411,28 +411,6 @@ public class OpenGLFrame extends javax.swing.JFrame implements MouseListener,
   return !treasure;
  }
 
- private MouseEvent event_glass_to_canvas(MouseEvent e) {
-  Point p = e.getPoint();
-  p = SwingUtilities.convertPoint(this, p, canvas);
-  if (!(e instanceof MouseWheelEvent)) {
-   MouseEvent new_e = new MouseEvent(getGlassPane(), e.getID(), e.getWhen(), e
-    .getModifiers(),
-    p.x, p.y, 0, 0, e.getClickCount(), e.isPopupTrigger(), e
-    .getButton());
-   return new_e;
-  } else {
-   MouseWheelEvent we = (MouseWheelEvent) e;
-   MouseWheelEvent new_e = new MouseWheelEvent((Component) e.getSource(), e
-    .getID(), e.getWhen(),
-    e.getModifiers(), p.x, p.y, e.getXOnScreen(), e.getYOnScreen(),
-    e.getClickCount(),
-    e.isPopupTrigger(), we.getScrollType(), we.getScrollAmount(), we
-    .getWheelRotation(), we
-     .getPreciseWheelRotation());
-   return new_e;
-  }
- }
-
  public Canvas canvas() {
   return canvas;
  }

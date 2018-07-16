@@ -201,7 +201,9 @@ public class btDbvt implements Serializable {
  }
 
  public void optimizeIncremental(int passes) {
-  return;
+  /*
+   * In Java, rearranging an array won't change the memory location of the contained objects.
+   */
 //  int do_passes = passes;
 //  if (do_passes < 0) {
 //   do_passes = m_leaves;

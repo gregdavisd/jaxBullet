@@ -18,6 +18,7 @@ import Bullet.Collision.ConvexResultCallback;
 import Bullet.Collision.Shape.btConvexShape;
 import Bullet.Collision.btCollisionObject;
 import Bullet.Collision.btCollisionWorld;
+import static Bullet.Collision.btCollisionWorld.objectQuerySingle;
 import static Bullet.LinearMath.btScalar.BT_LARGE_FLOAT;
 import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
@@ -75,7 +76,7 @@ public class btSingleSweepCallback extends btBroadphaseRayCallback implements
   //only perform raycast if filterMask matches
   if (m_resultCallback.needsCollision(collisionObject.getBroadphaseHandle())) {
    //RigidcollisionObject* collisionObject = ctrl.GetRigidcollisionObject();
-   m_world.objectQuerySingle(m_castShape, m_convexFromTrans, m_convexToTrans,
+   objectQuerySingle(m_castShape, m_convexFromTrans, m_convexToTrans,
     collisionObject,
     collisionObject.getCollisionShape(),
     collisionObject.getWorldTransformPtr(),

@@ -28,7 +28,6 @@ import Bullet.LinearMath.btTransform;
 import Bullet.LinearMath.btVector3;
 import java.io.Serializable;
 import java.util.ArrayList;
-import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 import static javax.vecmath.VecMath.is_good_matrix;
 
 /**
@@ -40,6 +39,7 @@ import static javax.vecmath.VecMath.is_good_matrix;
 /// They can be added to the btCollisionWorld.
 public class btCollisionObject implements Serializable {
 
+ public static boolean DEBUG_BLOCKS = false;
 //island management, m_activationState1
  public static final int ACTIVE_TAG = 1;
  public static final int ISLAND_SLEEPING = 2;

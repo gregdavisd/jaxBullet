@@ -13,14 +13,6 @@
  */
 package bullet_examples;
 
-import bullet_examples.apps.api.TestHingeTorque;
-import bullet_examples.apps.api.MotorDemo;
-import bullet_examples.apps.api.GyroscopicDemo;
-import bullet_examples.apps.api.BasicExample;
-import bullet_examples.apps.api.AllConstraintDemo;
-import bullet_examples.apps.api.RollingFrictionDemo;
-import bullet_examples.apps.api.MotorizedHingeDemo;
-import bullet_examples.apps.api.Dof6Spring2Demo;
 import static Bullet.Collision.btIDebugDraw.DBG_DrawAabb;
 import static Bullet.Collision.btIDebugDraw.DBG_DrawConstraintLimits;
 import static Bullet.Collision.btIDebugDraw.DBG_DrawConstraints;
@@ -29,16 +21,29 @@ import static Bullet.Collision.btIDebugDraw.DBG_DrawFrames;
 import static Bullet.Collision.btIDebugDraw.DBG_DrawNormals;
 import static Bullet.Collision.btIDebugDraw.DBG_DrawWireframe;
 import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_INTERLEAVE_CONTACT_AND_FRICTION_CONSTRAINTS;
+import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_RANDOMIZE_ORDER;
 import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_USE_2_FRICTION_DIRECTIONS;
 import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_USE_WARMSTARTING;
 import Bullet.Dynamics.btContactSolverInfo;
+import bullet_examples.apps.api.AllConstraintDemo;
+import bullet_examples.apps.api.BasicExample;
+import bullet_examples.apps.api.Dof6Spring2Demo;
+import bullet_examples.apps.api.GyroscopicDemo;
+import bullet_examples.apps.api.MotorDemo;
+import bullet_examples.apps.api.MotorizedHingeDemo;
 import bullet_examples.apps.api.RigidBodySoftContact;
+import bullet_examples.apps.api.RollingFrictionDemo;
+import bullet_examples.apps.api.TestHingeTorque;
 import bullet_examples.apps.benchmarks.ConvexStack;
 import bullet_examples.apps.benchmarks.ConvexVsMesh;
 import bullet_examples.apps.benchmarks.PrimVsMesh;
 import bullet_examples.apps.benchmarks.RagDollsBenchmark;
 import bullet_examples.apps.benchmarks.ThousandBoxes;
 import bullet_examples.apps.benchmarks.ThousandStack;
+import bullet_examples.apps.character.CharacterDemo;
+import bullet_examples.apps.raycast.RaytestDemo;
+import bullet_examples.apps.vehicle.ForkLiftDemo;
+import com.leeheegee.throttle.Throttle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -46,13 +51,8 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.PixelFormat;
-import static Bullet.Dynamics.ConstraintSolver.btSolverMode.SOLVER_RANDOMIZE_ORDER;
-import bullet_examples.apps.character.CharacterDemo;
-import bullet_examples.apps.raycast.RaytestDemo;
-import bullet_examples.apps.vehicle.ForkLiftDemo;
 
 /**
  *
@@ -60,6 +60,7 @@ import bullet_examples.apps.vehicle.ForkLiftDemo;
  */
 public class ExampleBrowserFrame extends javax.swing.JFrame {
 
+ public static final boolean DEBUG_BLOCKS = false;
  static boolean reset = false;
  static boolean vsync = false;
  static boolean update_debug_flags = false;

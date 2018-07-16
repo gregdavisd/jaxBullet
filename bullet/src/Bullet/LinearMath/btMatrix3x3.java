@@ -30,23 +30,23 @@ import javax.vecmath.Matrix4f;
 public final class btMatrix3x3 extends Matrix3f<btMatrix3x3> implements
  Serializable {
 
- static final int M00 = 0;
- static final int M01 = 4;
- static final int M02 = 8;
- static final int M03 = 12;
- static final int M10 = 1;
- static final int M11 = 5;
- static final int M12 = 9;
- static final int M13 = 13;
- static final int M20 = 2;
- static final int M21 = 6;
- static final int M22 = 10;
- static final int M23 = 14;
- static final int M30 = 3;
- static final int M31 = 7;
- static final int M32 = 11;
- static final int M33 = 15;
- static final int C4X4 = 16;
+ private static final int M00 = 0;
+ private static final int M01 = 4;
+ private static final int M02 = 8;
+ private static final int M03 = 12;
+ private static final int M10 = 1;
+ private static final int M11 = 5;
+ private static final int M12 = 9;
+ private static final int M13 = 13;
+ private static final int M20 = 2;
+ private static final int M21 = 6;
+ private static final int M22 = 10;
+ private static final int M23 = 14;
+ private static final int M30 = 3;
+ private static final int M31 = 7;
+ private static final int M32 = 11;
+ private static final int M33 = 15;
+ private static final int C4X4 = 16;
 
  /**
   *

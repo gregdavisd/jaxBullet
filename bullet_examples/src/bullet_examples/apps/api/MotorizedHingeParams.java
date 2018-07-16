@@ -13,7 +13,7 @@
  */
 package bullet_examples.apps.api;
 
-import bullet_examples.Throttle;
+import com.leeheegee.throttle.Throttle;
 
 /**
  *

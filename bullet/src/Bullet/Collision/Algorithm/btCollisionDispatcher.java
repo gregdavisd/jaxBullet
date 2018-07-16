@@ -26,17 +26,61 @@ import Bullet.Collision.btNearCallback;
 import Bullet.Collision.btPersistentManifold;
 import static Bullet.Collision.btPersistentManifold.gContactBreakingThreshold;
 import static Bullet.Collision.ebtDispatcherQueryType.BT_CONTACT_POINT_ALGORITHMS;
+import static Bullet.Extras.btMinMax.btMin;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import static javax.vecmath.VecMath.DEBUG_BLOCKS;
-import static Bullet.Extras.btMinMax.btMin;
 
 /**
  *
  * @author Gregery Barton
  */
 public class btCollisionDispatcher implements btDispatcher, Serializable {
+
+ public static boolean DEBUG_BLOCKS = false;
+ public static final int CD_STATIC_STATIC_REPORTED = 1;
+ public static final int CD_USE_RELATIVE_CONTACT_BREAKING_THRESHOLD = 2;
+ public static final int CD_DISABLE_CONTACTPOOL_DYNAMIC_ALLOCATION = 4;
+ static int gNumManifold = 0;
+
+ //by default, Bullet will use this near callback
+ static void defaultNearCallback(btBroadphasePair collisionPair,
+  btCollisionDispatcher dispatcher,
+  btDispatcherInfo dispatchInfo) {
+  btCollisionObject colObj0 = (btCollisionObject) collisionPair.m_pProxy0.m_clientObject;
+  btCollisionObject colObj1 = (btCollisionObject) collisionPair.m_pProxy1.m_clientObject;
+  if (dispatcher.needsCollision(colObj0, colObj1)) {
+   btCollisionObjectWrapper obj0Wrap = new btCollisionObjectWrapper(null,
+    colObj0
+     .getCollisionShape(), colObj0, colObj0.getWorldTransformPtr(), -1, -1);
+   btCollisionObjectWrapper obj1Wrap = new btCollisionObjectWrapper(null,
+    colObj1
+     .getCollisionShape(), colObj1, colObj1.getWorldTransformPtr(), -1, -1);
+   //dispatcher will keep algorithms persistent in the collision pair
+   if (collisionPair.m_algorithm == null) {
+    collisionPair.m_algorithm = dispatcher.findAlgorithm(obj0Wrap, obj1Wrap,
+     null,
+     BT_CONTACT_POINT_ALGORITHMS);
+   }
+   if (collisionPair.m_algorithm != null) {
+    btManifoldResult contactPointResult = new btManifoldResult(obj0Wrap,
+     obj1Wrap);
+    if (dispatchInfo.m_dispatchFunc == btDispatcherInfo.DISPATCH_DISCRETE) {
+     //discrete collision detection query
+     collisionPair.m_algorithm
+      .processCollision(obj0Wrap, obj1Wrap, dispatchInfo, contactPointResult);
+    } else {
+     //continuous collision detection query, time of impact (toi)
+     float toi = collisionPair.m_algorithm.calculateTimeOfImpact(colObj0,
+      colObj1, dispatchInfo,
+      contactPointResult);
+     if (dispatchInfo.m_timeOfImpact > toi) {
+      dispatchInfo.m_timeOfImpact = toi;
+     }
+    }
+   }
+  }
+ }
 
  int m_dispatcherFlags;
  final ArrayList<btPersistentManifold> m_manifoldsPtr = new ArrayList<>(0);
@@ -47,9 +91,22 @@ public class btCollisionDispatcher implements btDispatcher, Serializable {
  final btCollisionAlgorithmCreateFunc[][] m_doubleDispatchClosestPoints
   = new btCollisionAlgorithmCreateFunc[MAX_BROADPHASE_COLLISION_TYPES][MAX_BROADPHASE_COLLISION_TYPES];
  btCollisionConfiguration m_collisionConfiguration;
- public static final int CD_STATIC_STATIC_REPORTED = 1;
- public static final int CD_USE_RELATIVE_CONTACT_BREAKING_THRESHOLD = 2;
- public static final int CD_DISABLE_CONTACTPOOL_DYNAMIC_ALLOCATION = 4;
+
+ public btCollisionDispatcher(btCollisionConfiguration collisionConfiguration) {
+  m_dispatcherFlags = CD_USE_RELATIVE_CONTACT_BREAKING_THRESHOLD;
+  m_collisionConfiguration = collisionConfiguration;
+  int i;
+  setNearCallback(new DefaultNearCallback());
+  for (i = 0; i < MAX_BROADPHASE_COLLISION_TYPES; i++) {
+   for (int j = 0; j < MAX_BROADPHASE_COLLISION_TYPES; j++) {
+    m_doubleDispatchContactPoints[i][j] = m_collisionConfiguration
+     .getCollisionAlgorithmCreateFunc(i, j);
+    assert (m_doubleDispatchContactPoints[i][j] != null);
+    m_doubleDispatchClosestPoints[i][j] = m_collisionConfiguration
+     .getClosestPointsAlgorithmCreateFunc(i, j);
+   }
+  }
+ }
 
  int getDispatcherFlags() {
   return m_dispatcherFlags;
@@ -73,68 +130,6 @@ public class btCollisionDispatcher implements btDispatcher, Serializable {
  public btPersistentManifold getManifoldByIndexInternal(int index) {
   return m_manifoldsPtr.get(index);
  }
-
- static class DefaultNearCallback implements btNearCallback {
-
-  @Override
-  public void callback(btBroadphasePair collisionPair,
-   btCollisionDispatcher dispatcher,
-   btDispatcherInfo dispatchInfo) {
-   btCollisionObject colObj0 = (btCollisionObject) collisionPair.m_pProxy0.m_clientObject;
-   btCollisionObject colObj1 = (btCollisionObject) collisionPair.m_pProxy1.m_clientObject;
-   if (dispatcher.needsCollision(colObj0, colObj1)) {
-    btCollisionObjectWrapper obj0Wrap = new btCollisionObjectWrapper(null,
-     colObj0
-      .getCollisionShape(), colObj0, colObj0.getWorldTransformPtr(), -1, -1);
-    btCollisionObjectWrapper obj1Wrap = new btCollisionObjectWrapper(null,
-     colObj1
-      .getCollisionShape(), colObj1, colObj1.getWorldTransformPtr(), -1, -1);
-    //dispatcher will keep algorithms persistent in the collision pair
-    if (collisionPair.m_algorithm == null) {
-     collisionPair.m_algorithm = dispatcher.findAlgorithm(obj0Wrap, obj1Wrap,
-      null,
-      BT_CONTACT_POINT_ALGORITHMS);
-    }
-    if (collisionPair.m_algorithm != null) {
-     btManifoldResult contactPointResult = new btManifoldResult(obj0Wrap,
-      obj1Wrap);
-     if (dispatchInfo.m_dispatchFunc == btDispatcherInfo.DISPATCH_DISCRETE) {
-      //discrete collision detection query
-      collisionPair.m_algorithm.processCollision(obj0Wrap, obj1Wrap,
-       dispatchInfo,
-       contactPointResult);
-     } else {
-      //continuous collision detection query, time of impact (toi)
-      float toi = collisionPair.m_algorithm.calculateTimeOfImpact(colObj0,
-       colObj1, dispatchInfo,
-       contactPointResult);
-      if (dispatchInfo.m_timeOfImpact > toi) {
-       dispatchInfo.m_timeOfImpact = toi;
-      }
-     }
-    }
-   }
-  }
-
- }
-
- public btCollisionDispatcher(btCollisionConfiguration collisionConfiguration) {
-  m_dispatcherFlags = CD_USE_RELATIVE_CONTACT_BREAKING_THRESHOLD;
-  m_collisionConfiguration = collisionConfiguration;
-  int i;
-  setNearCallback(new DefaultNearCallback());
-  for (i = 0; i < MAX_BROADPHASE_COLLISION_TYPES; i++) {
-   for (int j = 0; j < MAX_BROADPHASE_COLLISION_TYPES; j++) {
-    m_doubleDispatchContactPoints[i][j] = m_collisionConfiguration
-     .getCollisionAlgorithmCreateFunc(i, j);
-    assert (m_doubleDispatchContactPoints[i][j] != null);
-    m_doubleDispatchClosestPoints[i][j] = m_collisionConfiguration
-     .getClosestPointsAlgorithmCreateFunc(i, j);
-   }
-  }
- }
-
- static int gNumManifold = 0;
 
  @Override
  public btPersistentManifold getNewManifold(btCollisionObject body0,
@@ -258,45 +253,6 @@ public class btCollisionDispatcher implements btDispatcher, Serializable {
   return m_nearCallback;
  }
 
- //by default, Bullet will use this near callback
- static void defaultNearCallback(btBroadphasePair collisionPair,
-  btCollisionDispatcher dispatcher,
-  btDispatcherInfo dispatchInfo) {
-  btCollisionObject colObj0 = (btCollisionObject) collisionPair.m_pProxy0.m_clientObject;
-  btCollisionObject colObj1 = (btCollisionObject) collisionPair.m_pProxy1.m_clientObject;
-  if (dispatcher.needsCollision(colObj0, colObj1)) {
-   btCollisionObjectWrapper obj0Wrap = new btCollisionObjectWrapper(null,
-    colObj0
-     .getCollisionShape(), colObj0, colObj0.getWorldTransformPtr(), -1, -1);
-   btCollisionObjectWrapper obj1Wrap = new btCollisionObjectWrapper(null,
-    colObj1
-     .getCollisionShape(), colObj1, colObj1.getWorldTransformPtr(), -1, -1);
-   //dispatcher will keep algorithms persistent in the collision pair
-   if (collisionPair.m_algorithm == null) {
-    collisionPair.m_algorithm = dispatcher.findAlgorithm(obj0Wrap, obj1Wrap,
-     null,
-     BT_CONTACT_POINT_ALGORITHMS);
-   }
-   if (collisionPair.m_algorithm != null) {
-    btManifoldResult contactPointResult = new btManifoldResult(obj0Wrap,
-     obj1Wrap);
-    if (dispatchInfo.m_dispatchFunc == btDispatcherInfo.DISPATCH_DISCRETE) {
-     //discrete collision detection query
-     collisionPair.m_algorithm
-      .processCollision(obj0Wrap, obj1Wrap, dispatchInfo, contactPointResult);
-    } else {
-     //continuous collision detection query, time of impact (toi)
-     float toi = collisionPair.m_algorithm.calculateTimeOfImpact(colObj0,
-      colObj1, dispatchInfo,
-      contactPointResult);
-     if (dispatchInfo.m_timeOfImpact > toi) {
-      dispatchInfo.m_timeOfImpact = toi;
-     }
-    }
-   }
-  }
- }
-
  btCollisionConfiguration getCollisionConfiguration() {
   return m_collisionConfiguration;
  }
@@ -305,4 +261,47 @@ public class btCollisionDispatcher implements btDispatcher, Serializable {
   m_collisionConfiguration = config;
  }
 
+ static class DefaultNearCallback implements btNearCallback {
+
+  @Override
+  public void callback(btBroadphasePair collisionPair,
+   btCollisionDispatcher dispatcher,
+   btDispatcherInfo dispatchInfo) {
+   btCollisionObject colObj0 = (btCollisionObject) collisionPair.m_pProxy0.m_clientObject;
+   btCollisionObject colObj1 = (btCollisionObject) collisionPair.m_pProxy1.m_clientObject;
+   if (dispatcher.needsCollision(colObj0, colObj1)) {
+    btCollisionObjectWrapper obj0Wrap = new btCollisionObjectWrapper(null,
+     colObj0
+      .getCollisionShape(), colObj0, colObj0.getWorldTransformPtr(), -1, -1);
+    btCollisionObjectWrapper obj1Wrap = new btCollisionObjectWrapper(null,
+     colObj1
+      .getCollisionShape(), colObj1, colObj1.getWorldTransformPtr(), -1, -1);
+    //dispatcher will keep algorithms persistent in the collision pair
+    if (collisionPair.m_algorithm == null) {
+     collisionPair.m_algorithm = dispatcher.findAlgorithm(obj0Wrap, obj1Wrap,
+      null,
+      BT_CONTACT_POINT_ALGORITHMS);
+    }
+    if (collisionPair.m_algorithm != null) {
+     btManifoldResult contactPointResult = new btManifoldResult(obj0Wrap,
+      obj1Wrap);
+     if (dispatchInfo.m_dispatchFunc == btDispatcherInfo.DISPATCH_DISCRETE) {
+      //discrete collision detection query
+      collisionPair.m_algorithm.processCollision(obj0Wrap, obj1Wrap,
+       dispatchInfo,
+       contactPointResult);
+     } else {
+      //continuous collision detection query, time of impact (toi)
+      float toi = collisionPair.m_algorithm.calculateTimeOfImpact(colObj0,
+       colObj1, dispatchInfo,
+       contactPointResult);
+      if (dispatchInfo.m_timeOfImpact > toi) {
+       dispatchInfo.m_timeOfImpact = toi;
+      }
+     }
+    }
+   }
+  }
+
+ }
 };

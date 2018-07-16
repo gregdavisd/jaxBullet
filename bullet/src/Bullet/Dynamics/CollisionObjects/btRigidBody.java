@@ -35,7 +35,6 @@ import Bullet.LinearMath.btVector3;
 import static Bullet.common.btAlignedObjectArray.findLinearSearch;
 import java.io.Serializable;
 import java.util.ArrayList;
-import static javax.vecmath.VecMath.DEBUG_BLOCKS;
 import static javax.vecmath.VecMath.is_good_matrix;
 
 /**
@@ -56,11 +55,47 @@ import static javax.vecmath.VecMath.is_good_matrix;
  * @author Gregery Barton
  */
 public class btRigidBody extends btCollisionObject implements Serializable {
- //'temporarily' global variables
 
+ //'temporarily' global variables
+ public static final boolean DEBUG_BLOCKS = false;
  public static float gDeactivationTime = (2.f);
  public static boolean gDisableDeactivation = false;
  static int uniqueId = 0;
+ public static final float MAX_ANGVEL = SIMD_HALF_PI;
+
+ ///to keep collision detection and dynamics separate we don't store a rigidbody pointer
+ ///but a rigidbody is derived from btCollisionObject, so we can safely perform an upcast
+ public static btRigidBody upcast(btCollisionObject colObj) {
+  if ((colObj.getInternalType() & CO_RIGID_BODY) != 0) {
+   return (btRigidBody) colObj;
+  }
+  return null;
+ }
+
+ public static btVector3 evalEulerEqn(final btVector3 w1, final btVector3 w0,
+  final btVector3 T,
+  float dt,
+  final btMatrix3x3 I) {
+  //btVector3 w2 = I*w1 + w1.cross(I*w1)*dt - (T*dt + I*w0);
+  final btVector3 a = I.transform(new btVector3(w1));
+  final btVector3 b = new btVector3(w1).cross(a).scale(dt);
+  final btVector3 c = new btVector3(T).scale(dt).add(I.transform(new btVector3(
+   w0)));
+  return a.add(b).sub(c);
+ }
+
+ public static btMatrix3x3 evalEulerEqnDeriv(final btVector3 w1,
+  final btVector3 w0, float dt,
+  final btMatrix3x3 I) {
+  final btMatrix3x3 w1x = new btMatrix3x3();
+  final btMatrix3x3 Iw1x = new btMatrix3x3();
+  final btVector3 Iwi = (I.transform(new btVector3(w1)));
+  w1.getSkewSymmetricMatrix(w1x);
+  Iwi.getSkewSymmetricMatrix(Iw1x);
+  final btMatrix3x3 dfw1 = w1x.mul(I).sub(Iw1x).mul(dt).add(I);
+  return dfw1;
+ }
+
  protected final btMatrix3x3 m_invInertiaTensorWorld = new btMatrix3x3();
  protected final btVector3 m_linearVelocity = new btVector3();
  protected final btVector3 m_angularVelocity = new btVector3();
@@ -93,6 +128,9 @@ public class btRigidBody extends btCollisionObject implements Serializable {
  protected final btVector3 m_invMass = new btVector3();
  protected final btVector3 m_pushVelocity = new btVector3();
  protected final btVector3 m_turnVelocity = new btVector3();
+ //for experimental overriding of friction/contact solver func
+ int m_contactSolverType;
+ int m_frictionSolverType;
 
  ///btRigidBody constructor using construction info
  public btRigidBody(btRigidBodyConstructionInfo constructionInfo) {
@@ -167,15 +205,6 @@ public class btRigidBody extends btCollisionObject implements Serializable {
 
  public void proceedToTransform(final btTransform newTrans) {
   setCenterOfMassTransform(newTrans);
- }
-
- ///to keep collision detection and dynamics separate we don't store a rigidbody pointer
- ///but a rigidbody is derived from btCollisionObject, so we can safely perform an upcast
- public static btRigidBody upcast(btCollisionObject colObj) {
-  if ((colObj.getInternalType() & CO_RIGID_BODY) != 0) {
-   return (btRigidBody) colObj;
-  }
-  return null;
  }
 
  /// continuous collision detection needs prediction
@@ -334,8 +363,6 @@ public class btRigidBody extends btCollisionObject implements Serializable {
  public btMatrix3x3 getInvInertiaTensorWorldPtr() {
   return m_invInertiaTensorWorld;
  }
-
- public static final float MAX_ANGVEL = SIMD_HALF_PI;
 
  public void integrateVelocities(float step) {
   if (isStaticOrKinematicObject()) {
@@ -593,10 +620,6 @@ public class btRigidBody extends btCollisionObject implements Serializable {
   }
  }
 
- //for experimental overriding of friction/contact solver func
- int m_contactSolverType;
- int m_frictionSolverType;
-
  public void setAngularFactor(final btVector3 angFac) {
   m_angularFactor.set(angFac);
  }
@@ -745,30 +768,6 @@ public class btRigidBody extends btCollisionObject implements Serializable {
    inertia.y() != (0.0f) ? (1.0f) / inertia.y() : (0.0f),
    inertia.z() != (0.0f) ? (1.0f) / inertia.z() : (0.0f));
   return inertiaLocal;
- }
-
- public static btVector3 evalEulerEqn(final btVector3 w1, final btVector3 w0,
-  final btVector3 T,
-  float dt,
-  final btMatrix3x3 I) {
-  //btVector3 w2 = I*w1 + w1.cross(I*w1)*dt - (T*dt + I*w0);
-  final btVector3 a = I.transform(new btVector3(w1));
-  final btVector3 b = new btVector3(w1).cross(a).scale(dt);
-  final btVector3 c = new btVector3(T).scale(dt).add(I.transform(new btVector3(
-   w0)));
-  return a.add(b).sub(c);
- }
-
- public static btMatrix3x3 evalEulerEqnDeriv(final btVector3 w1,
-  final btVector3 w0, float dt,
-  final btMatrix3x3 I) {
-  final btMatrix3x3 w1x = new btMatrix3x3();
-  final btMatrix3x3 Iw1x = new btMatrix3x3();
-  final btVector3 Iwi = (I.transform(new btVector3(w1)));
-  w1.getSkewSymmetricMatrix(w1x);
-  Iwi.getSkewSymmetricMatrix(Iw1x);
-  final btMatrix3x3 dfw1 = w1x.mul(I).sub(Iw1x).mul(dt).add(I);
-  return dfw1;
  }
 
 };
