@@ -66,9 +66,9 @@ public class btTriangleIndexVertexArray extends btStridingMeshInterface
  public btStridingMeshLock getLockedReadOnlyVertexIndexBase(int subpart) {
   btIndexedMesh mesh = m_indexedMeshes.get(subpart);
   btStridingMeshLock lock = new btStridingMeshLock(
-   mesh.m_vertexBase.toBackedArray(),
+   mesh.m_vertexBase ,
    mesh.m_vertexStride,
-   mesh.m_triangleIndexBase.toBackedArray(),
+   mesh.m_triangleIndexBase ,
    TRIANGLES,
    0,
    1,

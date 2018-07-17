@@ -16,6 +16,11 @@ package Bullet.Collision.Shape;
 import Bullet.Collision.btTriangleCallback;
 import Bullet.LinearMath.btVector3;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+import org.apache.commons.collections.primitives.ArrayFloatList;
+import org.apache.commons.collections.primitives.ArrayIntList;
+import org.apache.commons.collections.primitives.ArrayShortList;
 
 /**
  * Striding mesh interface adapted for java.Assumes that X,Y,Z are packed
@@ -104,6 +109,8 @@ public class btStridingMeshLock {
    gen_buffer = new DoubleVertexDataBuffer((double[]) vertexBuffer);
   } else if (vertexBuffer instanceof short[]) {
    gen_buffer = new ShortVertexDataBuffer((short[]) vertexBuffer);
+  }else if (vertexBuffer instanceof ArrayFloatList){
+   gen_buffer = new ArrayFloatListVertexDataBuffer((ArrayFloatList) vertexBuffer);
   } else {
    gen_buffer = new InvalidVertexDataBuffer();
   }
@@ -113,7 +120,15 @@ public class btStridingMeshLock {
    gen_indices = new ShortArrayIndexBuffer((short[]) indexBuffer);
   } else if (indexBuffer instanceof byte[]) {
    gen_indices = new ByteArrayIndexBuffer((byte[]) indexBuffer);
-  } else {
+  } else if (indexBuffer instanceof ShortBuffer) {
+   gen_indices = new ShortBufferIndexBuffer((ShortBuffer) indexBuffer);
+  } else if (indexBuffer instanceof IntBuffer) {
+   gen_indices = new IntBufferIndexBuffer((IntBuffer) indexBuffer);
+  } else if (indexBuffer instanceof ArrayIntList) {
+   gen_indices = new ArrayIntListIndexBuffer((ArrayIntList) indexBuffer);
+  }else if (indexBuffer instanceof ArrayShortList) {
+   gen_indices = new ArrayShortListIndexBuffer((ArrayShortList) indexBuffer);
+  }else {
    gen_indices = new InvalidIndexBuffer();
   }
   triangle_internal = new TriangleIndicesBTVectorCallback();
@@ -252,7 +267,62 @@ public class btStridingMeshLock {
   }
 
  }
+ static class ShortBufferIndexBuffer implements GenericIndexBuffer {
 
+  final ShortBuffer buffer;
+
+  ShortBufferIndexBuffer(ShortBuffer buffer) {
+   this.buffer = buffer;
+  }
+
+  @Override
+  public int get(int i) {
+   return buffer.get(i);
+  }
+
+ }
+ static class IntBufferIndexBuffer implements GenericIndexBuffer {
+
+  final IntBuffer buffer;
+
+  IntBufferIndexBuffer(IntBuffer buffer) {
+   this.buffer = buffer;
+  }
+
+  @Override
+  public int get(int i) {
+   return buffer.get(i);
+  }
+
+ }
+ static class ArrayIntListIndexBuffer implements GenericIndexBuffer {
+
+  final ArrayIntList buffer;
+
+  ArrayIntListIndexBuffer(ArrayIntList buffer) {
+   this.buffer = buffer;
+  }
+
+  @Override
+  public int get(int i) {
+   return buffer.get(i);
+  }
+
+ }
+ static class ArrayShortListIndexBuffer implements GenericIndexBuffer {
+
+  final ArrayShortList buffer;
+
+  ArrayShortListIndexBuffer(ArrayShortList buffer) {
+   this.buffer = buffer;
+  }
+
+  @Override
+  public int get(int i) {
+   return buffer.get(i);
+  }
+
+ }
  static class ByteArrayIndexBuffer implements GenericIndexBuffer {
 
   final byte[] buffer;
@@ -312,7 +382,20 @@ public class btStridingMeshLock {
   }
 
  }
+ static class ArrayFloatListVertexDataBuffer implements GenericVertexDataBuffer {
 
+  final ArrayFloatList buffer;
+
+  ArrayFloatListVertexDataBuffer(ArrayFloatList buffer) {
+   this.buffer = buffer;
+  }
+
+  @Override
+  public float get(int i) {
+   return (float) buffer.get(i);
+  }
+
+ }
  static class FloatBufferVertexDataBuffer implements GenericVertexDataBuffer {
 
   final FloatBuffer buffer;

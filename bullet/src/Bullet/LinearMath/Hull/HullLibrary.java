@@ -82,7 +82,7 @@ public class HullLibrary implements Serializable {
     btVector3[] vertexScratch = new btVector3[hr.mVcount];
     init(vertexScratch);
     BringOutYourDead(hr.mVertices, hr.mVcount, vertexScratch, ovcount,
-     hr.m_Indices.toBackedArray(),
+     hr.m_Indices ,
      hr.mIndexCount);
     ret = QE_OK;
     if (desc.HasHullFlag(QF_TRIANGLES)) // if he wants the results as triangle!
@@ -113,13 +113,13 @@ public class HullLibrary implements Serializable {
    ArrayIntList Indices = new ArrayIntList();
    Indices.ensureCapacity(hr.mFaceCount * 3);
    for (int i = 0; i < hr.mFaceCount; i++) {
-    Indices.add(hr.m_Indices.get((i * 3) + 2));
-    Indices.add(hr.m_Indices.get((i * 3) + 1));
-    Indices.add(hr.m_Indices.get(i * 3));
+    Indices.add(hr.m_Indices[(i * 3) + 2]);
+    Indices.add(hr.m_Indices[(i * 3) + 1]);
+    Indices.add(hr.m_Indices[i * 3]);
    }
    result.m_Indices = Indices.toBackedArray();
   } else {
-   result.m_Indices = Arrays.copyOfRange(hr.m_Indices.toBackedArray(), 0,
+   result.m_Indices = Arrays.copyOfRange(hr.m_Indices, 0,
     hr.mIndexCount);
   }
  }
@@ -132,13 +132,13 @@ public class HullLibrary implements Serializable {
   for (int i = 0; i < hr.mFaceCount; i++) {
    dest.add(3);
    if (desc.HasHullFlag(QF_REVERSE_ORDER)) {
-    dest.add(hr.m_Indices.get((i * 3) + 2));
-    dest.add(hr.m_Indices.get((i * 3) + 1));
-    dest.add(hr.m_Indices.get((i * 3)));
+    dest.add(hr.m_Indices[(i * 3) + 2]);
+    dest.add(hr.m_Indices[(i * 3) + 1]);
+    dest.add(hr.m_Indices[(i * 3)]);
    } else {
-    dest.add(hr.m_Indices.get((i * 3)));
-    dest.add(hr.m_Indices.get((i * 3) + 1));
-    dest.add(hr.m_Indices.get((i * 3) + 2));
+    dest.add(hr.m_Indices[(i * 3)]);
+    dest.add(hr.m_Indices[(i * 3) + 1]);
+    dest.add(hr.m_Indices[(i * 3) + 2]);
    }
   }
   result.m_Indices = dest.toBackedArray();
@@ -156,7 +156,9 @@ public class HullLibrary implements Serializable {
  boolean ComputeHull(int vcount, btVector3[] vertices, PHullResult result,
   int vlimit) {
   int[] tris_count = new int[1];
-  int ret = calchull(vertices, vcount, result.m_Indices, tris_count, vlimit);
+  ArrayIntList out_indices=new ArrayIntList();
+  int ret = calchull(vertices, vcount, out_indices, tris_count, vlimit);
+  result.m_Indices=out_indices.toBackedArray();
   if (ret == 0) {
    return false;
   }
@@ -236,17 +238,17 @@ public class HullLibrary implements Serializable {
   final btVector3 bmin = new btVector3(verts[0]);
   final btVector3 bmax = new btVector3(verts[0]);
   ArrayIntList isextreme = new ArrayIntList(verts_count);
-  ArrayIntList allow = new ArrayIntList(verts_count);
+     int[] allow = new int[verts_count];
   float epsilon;
   for (j = 0; j < verts_count; j++) {
-   allow.add(1);
+   allow[j]=1;
    isextreme.add(0);
    bmin.setMin(verts[j]);
    bmax.setMax(verts[j]);
   }
   epsilon = new btVector3(bmax).sub(bmin).length() * (0.001f);
   assert (epsilon != 0.0);
-  Int4 p = FindSimplex(verts, verts_count, allow.toBackedArray());
+  Int4 p = FindSimplex(verts, verts_count, allow );
   if (p.x == -1) {
    return 0; // simplex failed
   }
@@ -274,7 +276,7 @@ public class HullLibrary implements Serializable {
    assert (t != null);
    assert (t.vmax < 0);
    final btVector3 n = TriNormal(verts[t.x], verts[t.y], verts[t.z]);
-   t.vmax = maxdirsterid(verts, verts_count, n, allow.toBackedArray());
+   t.vmax = maxdirsterid(verts, verts_count, n, allow );
    t.rise = n.dot(new btVector3(verts[t.vmax]).sub(verts[t.x]));
   }
   btHullTriangle te;
@@ -329,7 +331,7 @@ public class HullLibrary implements Serializable {
      break;
     }
     final btVector3 n = TriNormal(verts[t.x], verts[t.y], verts[t.z]);
-    t.vmax = maxdirsterid(verts, verts_count, n, allow.toBackedArray());
+    t.vmax = maxdirsterid(verts, verts_count, n, allow );
     if (isextreme.get(t.vmax) != 0) {
      t.vmax = -1; // already done that vertex - algorithm needs to be able to terminate.
     } else {
@@ -701,9 +703,8 @@ public class HullLibrary implements Serializable {
  }
 
  void ReleaseHull(PHullResult result) {
-  if (!result.m_Indices.isEmpty()) {
-   result.m_Indices.clear();
-  }
+ 
+  result.m_Indices=new int[0];
   result.mVcount = 0;
   result.mIndexCount = 0;
   result.mVertices = null;

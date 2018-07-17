@@ -740,7 +740,7 @@ public class btDbvt implements Serializable {
        /*
         * Insert 0
         */
-       j = nearest(stack.toBackedArray(), stock, nes[q].value, 0, stack.size());
+       j = nearest(stack, stock, nes[q].value, 0, stack.size());
        stack.add(0);
        //void * memmove ( void * destination,   void * source, size_t num );
        for (int k = stack.size() - 1; k > j; --k) {
@@ -750,7 +750,7 @@ public class btDbvt implements Serializable {
        /*
         * Insert 1
         */
-       j = nearest(stack.toBackedArray(), stock, nes[1 - q].value, j, stack
+       j = nearest(stack , stock, nes[1 - q].value, j, stack
         .size());
        stack.add(0);
        for (int k = stack.size() - 1; k > j; --k) {
@@ -798,13 +798,13 @@ public class btDbvt implements Serializable {
  }
 
  // Helpers	
- static int nearest(int[] i, ArrayList<sStkNPS> a, float v, int l, int h) {
+ static int nearest(ArrayIntList i, ArrayList<sStkNPS> a, float v, int l, int h) {
   int m;
   int ll = l;
   int hh = h;
   while (ll < hh) {
    m = (ll + hh) >>> 1;
-   if (a.get(i[m]).value >= v) {
+   if (a.get(i.get(m)).value >= v) {
     ll = m + 1;
    } else {
     hh = m;

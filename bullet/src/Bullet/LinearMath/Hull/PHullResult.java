@@ -35,5 +35,5 @@ public class PHullResult implements Serializable {
  public int mIndexCount;
  public int mFaceCount;
  public btVector3[] mVertices;
- public final ArrayIntList m_Indices = new ArrayIntList();
+ public   int[] m_Indices ;
 }
